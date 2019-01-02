@@ -2,3 +2,4 @@ node_modules/
 /*.js
 /services/utils.js
 /services/injectRoute.js
+/.idea

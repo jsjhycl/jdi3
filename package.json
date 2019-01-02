@@ -4,7 +4,11 @@
   "description": "jdi window app",
   "main": "main.js",
   "dependencies": {
-    "jquery": "^3.3.1"
+    "co": "^4.6.0",
+    "jquery": "^3.3.1",
+    "mz": "^2.7.0",
+    "unzip": "^0.1.11",
+    "xml2js": "^0.4.19"
   },
   "devDependencies": {
     "electron": "^4.0.0"

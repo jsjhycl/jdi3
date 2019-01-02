@@ -13,7 +13,6 @@ function createMainWindow() {
             nativeWindowOpen:true
         }
     });
-    // win.maximize();
     win.loadURL('http://172.18.152.111:3000/');
     // win.loadURL('http://xcv.jingkan.net/');
     win.on('closed', () => {

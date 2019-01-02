@@ -17,9 +17,9 @@ function createMainWindow() {
     win.on('closed', () => {
         (<BrowserWindow|null>win) = null;
     });
-    win.webContents.on('new-window',(event,url,frameName,disposition,options,additionalFeatures)=>{
-       //有更多的控制以后再说，目前用到"定制功能"
-    //    console.log("frameName:",frameName,"disposition:",disposition,"options:",options,"additionalFeatures:",additionalFeatures,"url:",url)
+    win.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures) => {
+        //有更多的控制以后再说，目前用到"定制功能"
+        //    console.log("frameName:",frameName,"disposition:",disposition,"options:",options,"additionalFeatures:",additionalFeatures,"url:",url)
     });
 }
 

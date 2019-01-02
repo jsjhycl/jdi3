@@ -1,0 +1,20 @@
+{
+  "name": "jdi3",
+  "version": "1.0.0",
+  "description": "jdi window app",
+  "main": "main.js",
+  "dependencies": {
+    "jquery": "^3.3.1"
+  },
+  "devDependencies": {
+    "electron": "^4.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "jdi"
+  ],
+  "author": "ycl",
+  "license": "ISC"
+}

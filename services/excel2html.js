@@ -7,12 +7,12 @@ let fs = require('fs'),
 	xmlParser = new xml2js.Parser({explicitArray: false});
 // config = require('../config');
 let config = {
-	dataPath: './data/',
-	paramConfig: './data/configs/paramConfig.json',
-	defaultStyle: './data/configs/defaultStyle.json',
-	colorIndex: './data/configs/color.json',
-	themeColor: './data/configs/themeColor.json',
-	jsPath: './data/configs/defaultJS.json',
+	dataPath: path.join(__dirname, '../data/temp'),
+	paramConfig: path.join(__dirname, '../data/configs/paramConfig.json'),
+	defaultStyle: path.join(__dirname, '../data/configs/defaultStyle.json'),
+	colorIndex: path.join(__dirname, '../data/configs/color.json'),
+	themeColor: path.join(__dirname, '../data/configs/themeColor.json'),
+	jsPath: path.join(__dirname, '../data/configs/defaultJS.json'),
 }
 
 function xml2json(content) {

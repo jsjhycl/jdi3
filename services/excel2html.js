@@ -983,13 +983,13 @@ function reviseByPath(filePath) {
 	})
 }
 
-let _utils = require("./utils");
-
-function excute() {
-	let files = _utils.openFileDialog(["xlsx"]);
-	return reviseByPath(files[0])
+function excute(fileName) {
+	if(fileName) return reviseByPath(fileName);
+	else{
+		let files = require("./utils").openFileDialog(["xlsx"]);
+		return reviseByPath(files[0])
+	}
 }
-
 // module.exports = {
 // 	getFiles: getFiles,
 // 	deletePath: deletePath,

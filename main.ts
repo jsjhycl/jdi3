@@ -1,12 +1,13 @@
 import {app, BrowserWindow, Menu, globalShortcut } from 'electron';
 import path =require('path');
+import { appMenu } from './menus';
 
 let win:BrowserWindow;
 
 function createMainWindow() {
     win = new BrowserWindow({
         autoHideMenuBar:true,
-        width:1400,
+        width:1430,
         height:800,
         webPreferences:{
             preload:path.join(__dirname,'preload.js'),
@@ -18,13 +19,13 @@ function createMainWindow() {
         (<BrowserWindow|null>win) = null;
     });
     win.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures) => {
-        //有更多的控制以后再说，目前用到"定制功能"
+        //有更多的控制以后再说，目前用到"定制功能 "
         //    console.log("frameName:",frameName,"disposition:",disposition,"options:",options,"additionalFeatures:",additionalFeatures,"url:",url)
     });
 }
 
 app.on('ready',()=>{
-    // Menu.setApplicationMenu(null);
+    Menu.setApplicationMenu(appMenu);
     globalShortcut.register('CommandOrControl+F12',()=>{
         let isOpen =win.webContents.isDevToolsOpened();
         if(!isOpen) win.webContents.openDevTools();

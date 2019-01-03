@@ -3,6 +3,6 @@ node_modules/
 /services/utils.js
 /services/injectRoute.js
 .idea
-dist/
+/dist/
 data/temp/
 temp.html

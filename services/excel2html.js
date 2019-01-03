@@ -389,6 +389,8 @@ function singleCell(c, htmls, shareObj, styleObj, themestyle, tintColor, colorOb
 			if (si.t.$) {
 				if (si.t.$["xml:space"] == "preserve" && !si.t._)
 					cellobj.val = ' ';
+				else
+					cellobj.val = si.t._ || '';
 			} else
 				cellobj.val = si.t || '';
 			contents.push(cellobj);
@@ -402,6 +404,8 @@ function singleCell(c, htmls, shareObj, styleObj, themestyle, tintColor, colorOb
 					if (r.t.$) {
 						if (r.t.$["xml:space"] == "preserve" && !r.t._)
 							cellobj.val = ' ';
+						else
+							cellobj.val = r.t._ || '';
 					} else
 						cellobj.val = r.t || '';
 				}
@@ -502,7 +506,7 @@ function param2Style(paramobj, themestyle, tintColor, colorObj, paramConfig) {
 					if (!tint)
 						stylevalue = colorstr;
 					else {
-						if(colorstr.indexOf("#") == 0)colorstr = colorstr.substr(1);
+						if (colorstr.indexOf("#") == 0) colorstr = colorstr.substr(1);
 						let firrgb = parseInt(colorstr.substring(0, 2), 16),
 							secrgb = parseInt(colorstr.substring(2, 4), 16),
 							lastrgb = parseInt(colorstr.substring(4, 6), 16);
@@ -985,12 +989,13 @@ function reviseByPath(filePath) {
 }
 
 function excute(fileName) {
-	if(fileName) return reviseByPath(fileName);
-	else{
+	if (fileName) return reviseByPath(fileName);
+	else {
 		let files = require("./utils").openFileDialog(["xlsx"]);
 		return reviseByPath(files[0])
 	}
 }
+
 // module.exports = {
 // 	getFiles: getFiles,
 // 	deletePath: deletePath,

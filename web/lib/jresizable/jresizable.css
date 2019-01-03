@@ -1,0 +1,7 @@
+﻿.resizable {
+    position: absolute;
+    display: block;
+}
+
+.resizable .resizable-node {
+}

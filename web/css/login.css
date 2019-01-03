@@ -1,0 +1,89 @@
+html {
+    min-height: 100%;
+    background: url("../images/bg.jpg") no-repeat center center;
+    background-size: 100% 100%;
+}
+
+body {
+    background-color: transparent;
+}
+
+.container {
+    /*padding-top: 30px;*/
+    padding-top: 60px;
+}
+
+.login-title h1,
+.login-title p {
+    margin: 10px 0;
+    font-weight: normal;
+    line-height: 1.5;
+    color: white;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.login-title h1 {
+    font-size: 28px;
+    opacity: .9;
+}
+
+.login-title p {
+    font-size: 18px;
+    opacity: .6;
+}
+
+.login-box {
+    /*padding-top: 20px;*/
+    padding-top: 50px;
+    padding-bottom: 30px;
+}
+
+.login-box .login-box-header {
+    padding: 20px 20px 15px;
+    background-color: white;
+    border-radius: 5px 5px 0 0;
+}
+
+.login-box .login-box-header h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: normal;
+    text-align: center;
+    opacity: .9;
+}
+
+.login-box .login-box-body {
+    padding: 20px;
+    background-color: #eee;
+    border-radius: 0 0 5px 5px;
+}
+
+.login-box .login-box-body .form-group {
+    margin-bottom: 15px;
+}
+
+.login-box .login-box-body .form-group:last-child {
+    margin-bottom: 0;
+}
+
+.login-box .login-box-body .form-group .input-group {
+    margin: auto;
+}
+
+.login-box .login-box-body .form-group .form-control {
+    background-color: transparent;
+}
+
+.login-box .login-box-body .form-group .checkbox {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.login-box .login-box-body .form-group .btn {
+    width: 100%;
+}
+
+.login-msg .alert {
+    display: block;
+}

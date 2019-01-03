@@ -1,0 +1,560 @@
+﻿body {
+    margin: 86px 260px 0 140px;
+}
+
+#controlbar,
+#toolbar,
+#propertybar {
+    z-index: 800;
+}
+
+#controlbar,
+#propertybar {
+    position: fixed;
+    top: 51px;
+    bottom: 0;
+    display: block;
+    background-color: #2d323d;
+}
+
+#controlbar ul li,
+.property-group .property-header {
+    font-size: 14px;
+    color: #ededed;
+    border-bottom: 1px solid #383e4c;
+    border-top: 1px solid #22262e;
+    -moz-transition: all .15s linear;
+    -o-transition: all .15s linear;
+    -webkit-transition: all .15s linear;
+    transition: all .15s linear;
+}
+
+#controlbar ul li:hover,
+.property-group .property-header:hover {
+    background-color: #4d5669;
+}
+
+#controlbar {
+    left: 0;
+    width: 140px;
+}
+
+#controlbar ul {
+    margin: 0;
+    padding: 0;
+}
+
+#controlbar ul li {
+    padding: 15px 0;
+    text-align: center;
+    cursor: move;
+}
+
+#controlbar ul li[data-type=img],
+#controlbar ul li[data-type=div] {
+    cursor: pointer;
+}
+
+#propertybar {
+    right: 0;
+    width: 260px;
+}
+
+.property-group .property-header {
+    position: relative;
+    cursor: pointer;
+}
+
+.property-group .property-header .property-toggle {
+    position: absolute;
+    left: 5px;
+    top: 10px;
+    display: block;
+    width: 16px;
+    height: 16px;
+    font-size: 17px;
+    line-height: 16px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+}
+
+.property-group .property-header[aria-expanded=true] .property-toggle:before {
+    content: "\2212";
+}
+
+.property-group .property-header .property-toggle:before,
+.property-group .property-header[aria-expanded=false] .property-toggle:before {
+    content: "\002b";
+}
+
+.property-group .property-header .property-title {
+    margin: 0;
+    padding: 10px 0;
+    font-size: 14px;
+    text-indent: 24px;
+}
+
+.property-group .property-body .property-table {
+    width: 100%;
+}
+
+.property-group .property-body .property-table tr td {
+    padding: 6px 0;
+    font-size: 12px;
+    color: #ededed;
+    text-indent: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    background-color: #22262e;
+    border: 1px dotted #4d5669;
+}
+
+.property-group .property-body .property-table tr:hover td {
+    background-color: #2d323d;
+}
+
+.property-group .property-body .property-table tr:first-child td {
+    border-top: none;
+}
+
+.property-group .property-body .property-table tr:last-child td {
+    border-bottom: none;
+}
+
+.property-group .property-body .property-table tr td:first-child {
+    width: 80px;
+}
+
+.property-group .property-body .property-table tr td:last-child {
+    width: 180px;
+}
+
+.property-group .property-body .property-table tr td label {
+    display: inline;
+    margin: 0;
+    font-weight: normal;
+}
+
+.property-group .property-body .property-table tr td [type=text],
+.property-group .property-body .property-table tr td textarea,
+.property-group .property-body .property-table tr td select {
+    width: 92%;
+    color: #333;
+    border-radius: 2px;
+}
+
+.property-group .property-body .property-table tr td [type=text],
+.property-group .property-body .property-table tr td textarea {
+    text-indent: 5px;
+    background-color: white;
+    border: 1px solid lightgray;
+}
+
+.property-group .property-body .property-table tr td [type=text].w75,
+.property-group .property-body .property-table tr td textarea.w75 {
+    margin-right: 5px;
+    width: 75%;
+}
+
+.property-group .property-body .property-table tr td textarea.w75 {
+    height: 30px;
+    vertical-align: middle;
+}
+
+.property-group .property-body .property-table tr td [type=text].w70 {
+    margin-right: 5px;
+    width: 70%;
+}
+
+.property-group .property-body .property-table tr td [type=checkbox] {
+    cursor: pointer;
+}
+
+#toolbar {
+    position: fixed;
+    top: 51px;
+    right: 260px;
+    left: 140px;
+    margin: 0;
+    padding: 2px 0;
+    background-color: white;
+    border-bottom: 1px solid lightgray;
+}
+/* #toolbar .btn-group .selected {
+    border-top: 1px solid rgb(242,149,54);
+    border-bottom: 1px solid rgb(242,149,54);
+    background: rgb(241,192,92);
+} */
+
+#name {
+    float: left;
+    margin: 0;
+    padding: 0;
+    height: 30px;
+    line-height: 30px;
+    text-indent: 15px;
+}
+
+#designer {
+    width: 100%;
+    background-color: white;
+    overflow: auto;
+}
+
+/*按钮栏*/
+#buttonbar {
+    float: right;
+    margin-right: 10px;
+}
+
+#buttonbar .btn {
+    height: 30px;
+}
+
+.icon {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    font-size: 12px;
+    color: #333;
+    line-height: 1;
+    text-align: center;
+    background-image: url('../images/toolbar.png');
+    background-repeat: no-repeat;
+}
+
+.icon.icon-align-left {
+    background-position: 0 0;
+}
+
+.icon.icon-align-center {
+    background-position: -22px 0;
+}
+
+.icon.icon-align-right {
+    background-position: -43px 0;
+}
+
+.icon.icon-align-top {
+    background-position: -65px 0;
+}
+
+.icon.icon-align-middle {
+    background-position: -86px 0;
+}
+
+.icon.icon-align-bottom {
+    background-position: -108px 0;
+}
+
+.icon.icon-equal-width {
+    background-position: -171px 0;
+}
+
+.icon.icon-equal-height {
+    background-position: -150px 0;
+}
+
+.icon.icon-equal-all {
+    background-position: -193px 0;
+}
+
+.icon.icon-horizon-space {
+    background-position: -86px 0;
+}
+
+.icon.icon-vertical-space {
+    background-position: -22px 0;
+}
+
+.icon.icon-put-top {
+    background-position: -129px 0;
+}
+
+.icon.icon-put-bottom {
+    background-position: -129px 0;
+}
+
+.icon.icon-fx {
+    background-position: -213px 0;
+}
+
+/*模态框样式*/
+.modal .modal-header {
+    cursor: move;
+}
+
+.modal .modal-body .nav-tabs {
+    margin-bottom: 15px;
+}
+
+.modal .modal-body .control-label {
+    padding: 2px 0;
+    font-weight: normal;
+}
+
+.modal .modal-body .checkbox-inline {
+    padding-top: 0;
+}
+
+.modal .modal-body .form-horizontal .control-label {
+    padding-top: 7px;
+}
+
+#copySendModal {
+    z-index: 1051;
+}
+
+#copyValueModal,
+#conditionsModal {
+    z-index: 1052;
+}
+
+/* 插入函数模态框 */
+#insertFunctionModal,
+#insertFunctionArgsModal {
+    position: fixed;
+    top: 30%;
+    left: 40%;
+    width: 320px;
+    height: auto;
+    display: none;
+    z-index: 10000;
+    background: #FFF;
+    box-shadow: 12px 12px 20px #999, 0 0 20px #999;
+}
+#insertFunctionModal .insert-fns {
+    border: 1px solid #ccc;
+    height: 130px;
+    overflow-y: scroll;
+    font-size: 12px;
+}
+#insertFunctionModal .custom-insertFn {
+    float: right;
+    color: #999;
+    text-decoration: underline;
+    cursor: pointer;
+}
+#insertFunctionModal .insert-fn-desc p {
+    margin-bottom: 2px;
+}
+#insertFunctionModal .insert-fn-desc p:last-child {
+    margin-bottom: 0;
+}
+
+#insertFunctionModal .remote-fns-select,
+#insertFunctionArgsModal .function-args input,
+#insertFunctionModal .insert-fns-select {
+    height: 28px !important;
+    padding: 0px !important;
+    text-indent: 8px;
+}
+.insert-fns .insert-fn-item {
+    padding-left: 5px;
+    box-sizing: border-box;
+}
+.insert-fns .insert-fn-item.selected {
+    color: #fff;
+    background-color: rgb(51, 153, 255);
+}
+#insertFunctionArgsModal .modal-header,
+#insertFunctionArgsModal .modal-footer,
+#insertFunctionModal .modal-header,
+#insertFunctionModal .modal-footer {
+    padding: 8px 15px;
+    background: #fff;
+}
+#insertFunctionArgsModal .modal-body {
+    min-height: 50px;
+    background: #fff;
+}
+#insertFunctionArgsModal .modal-footer .btn,
+#insertFunctionModal .modal-footer .btn {
+    padding: 2px 8px;
+    font-size: 12px;
+}
+#insertFunctionArgsModal .function-args {
+    overflow: hidden;
+}
+#insertFunctionArgsModal .function-args .form-group > div {
+    position: relative;
+}
+#insertFunctionArgsModal .function-args label {
+    padding-top: 3px;
+    padding-right: 0;
+    text-align: right;
+}
+#insertFunctionArgsModal .custom-insertFn.selected,
+#insertFunctionArgsModal .function-args input.selected {
+    outline: none;
+    border: 1px solid #F00;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(255,0,0,.6);
+}
+#insertFunctionArgsModal textarea.custom-insertFn {
+    width: 100%;
+    resize: vertical;
+}
+
+/*表格样式*/
+.ltable tbody tr td {
+    padding: 3px 0;
+}
+
+.ctable thead tr th .add,
+.ctable tbody tr td .remove,
+.ctable tbody tr td select,
+.ctable tbody tr td input,
+.ctable tbody tr td .btn-config {
+    padding: 2px 4px;
+    height: 26px;
+    font-size: 12px;
+}
+
+.ctable tbody tr td {
+    vertical-align: middle;
+}
+
+.ctable tbody tr td .btn-config {
+    float: right;
+    margin-right: 2px;
+    padding: 2px 6px;
+}
+
+.ctable tbody tr td select,
+.ctable tbody tr td input {
+    display: block;
+    margin: auto;
+    width: 95%;
+}
+
+.ctable tbody tr td select[multiple] {
+    height: auto;
+}
+
+.ctable tbody tr td .btn-config + input {
+    margin-left: 5px;
+    width: 80%;
+}
+
+
+
+
+/* 视图样式 */
+/* workspace 元素切换样式 */
+.workspace-node-switch {
+    text-decoration: underline;
+    white-space: nowrap;
+    /* overflow: hidden; */
+}
+
+.tooltip-inner {
+    white-space: wrap;
+    word-break: break-all;
+}
+
+.workspace-node-switch.selected {
+    color: #F00;
+}
+
+#workspace_copy .workspace-node-switch,    /* 12/14 添加 */
+#workspace .workspace-node-switch {
+    color: #dafffe;
+    text-align: center;
+    background-color: #64a8a6;
+    border-radius: 6px;
+    cursor: pointer;
+    opacity: 1;
+    -webkit-box-shadow: 0 0 0 1px #4e8381 inset,
+    0 0 0 2px #74b6b4 inset,
+    0 4px 0 0 #4a7c7b,
+    0 5px 0 0 #355655,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+    -moz-box-shadow: 0 0 0 1px #4e8381 inset,
+    0 0 0 2px #74b6b4 inset,
+    0 4px 0 0 #4a7c7b,
+    0 5px 0 0 #355655,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+    box-shadow: 0 0 0 1px #4e8381 inset,
+    0 0 0 2px #74b6b4 inset,
+    0 4px 0 0 #4a7c7b,
+    0 5px 0 0 #355655,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+}
+#workspace_copy .workspace-node-switch:hover,  /* 12/14 添加 */
+#workspace .workspace-node-switch:hover {
+    background-color: #73c2c0;
+}
+
+#workspace_copy .workspace-node-switch.selected,   /* 12/14 添加 */
+#workspace .workspace-node-switch.selected {
+    color: #ffdada;
+    background-color: #cc3747;
+    -webkit-box-shadow: 0 0 0 1px #8d1b27 inset,
+    0 0 0 2px #dd4356 inset,
+    0 4px 0 0 #8d1b27,
+    0 5px 0 0 #65141c,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+    -moz-box-shadow: 0 0 0 1px #8d1b27 inset,
+    0 0 0 2px #dd4356 inset,
+    0 4px 0 0 #8d1b27,
+    0 5px 0 0 #65141c,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+    box-shadow: 0 0 0 1px #8d1b27 inset,
+    0 0 0 2px #dd4356 inset,
+    0 4px 0 0 #8d1b27,
+    0 5px 0 0 #65141c,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+}
+
+
+
+
+
+/* 插入函数 新 */
+#mask {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 900;
+    display: block;
+    background-color: transparent;
+}
+#mask .copy-dom.selected {
+    background: linear-gradient(rgb(254,220,178), rgb(253,228,147));
+}
+#wsCopy {
+    background: #fff;
+}
+#workspace_copy .check-fn-node {
+    position: absolute;
+    z-index: 511;
+    background-color: #fff;
+    border: 3px dashed #6a1;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+}
+#workspace_copy .workspace-node-switch.originSelected {
+    color: white;
+    background-color: red;
+    -webkit-box-shadow: 0 0 0 1px #f00 inset,
+    0 0 0 2px pink inset,
+    0 4px 0 0 #700,
+    0 5px 0 0 #f00,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+    -moz-box-shadow: 0 0 0 1px #4e8381 inset,
+    0 0 0 2px #74b6b4 inset,
+    0 4px 0 0 #4a7c7b,
+    0 5px 0 0 #355655,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+    box-shadow: 0 0 0 1px #4e8381 inset,
+    0 0 0 2px #74b6b4 inset,
+    0 4px 0 0 #4a7c7b,
+    0 5px 0 0 #355655,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+}

@@ -1,0 +1,98 @@
+﻿html,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+label,
+ol,
+ul,
+li,
+dl,
+dt,
+dd,
+div,
+form,
+pre,
+fieldset,
+legend {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    background-color: #fff;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+main,
+menu,
+nav,
+section,
+summary {
+    display: block;
+}
+
+audio,
+canvas,
+progress,
+video {
+    display: inline-block;
+    vertical-align: baseline;
+}
+
+cite,
+mark {
+    font-style: normal;
+    background-color: white;
+}
+
+ul,
+li {
+    list-style: none;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+a {
+    color: #333333;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.clearfix {
+    *zoom: 1;
+}
+
+.clearfix:after {
+    display: block;
+    height: 0;
+    content: ".";
+    visibility: hidden;
+    overflow: hidden;
+    clear: both;
+}
+
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right;
+}

@@ -1,0 +1,85 @@
+.editor {
+    display: block;
+    width: 100%;
+}
+
+.editor .editor-toolbar {
+    margin: auto;
+    padding: 0;
+    width: 100%;
+    height: 26px;
+    background-color: #ddd;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    list-style: none;
+}
+
+.editor .editor-toolbar:after {
+    display: block;
+    overflow: hidden;
+    clear: both;
+    height: 0;
+    visibility: hidden;
+    content: ".";
+}
+
+.editor .editor-toolbar li {
+    float: left;
+    list-style: none;
+}
+
+.editor .editor-toolbar li .editor-toolbar-icon {
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+    background-size: 24px 24px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.editor .editor-toolbar li .editor-toolbar-icon[data-command=Img] {
+    background-image: url("./images/m.gif");
+}
+
+.editor .editor-toolbar li .editor-toolbar-icon[data-command=Bold] {
+    background-image: url("./images/b.gif");
+}
+
+.editor .editor-toolbar li .editor-toolbar-icon[data-command=Underline] {
+    background: url("./images/u.gif") no-repeat center center;
+    background-size: 24px 24px;
+}
+
+.editor .editor-toolbar li .editor-toolbar-icon[data-command=Italic] {
+    background: url("./images/i.gif") no-repeat center center;
+    background-size: 24px 24px;
+}
+
+.editor .editor-toolbar li .editor-toolbar-label,
+.editor .editor-toolbar li .editor-toolbar-select {
+    display: inline-block;
+    line-height: 26px;
+    vertical-align: middle;
+}
+
+.editor .editor-toolbar li .editor-toolbar-label {
+    margin-left: 5px;
+    font-size: 12px;
+}
+
+.editor .editor-toolbar li .editor-toolbar-select {
+    margin-left: 2px;
+}
+
+.editor .editor-iframe {
+    display: block;
+    margin: auto;
+    padding: 0;
+    width: 100%;
+    border: none;
+    overflow: hidden;
+}

@@ -1,0 +1,13 @@
+.viewer {
+    position: fixed;
+    z-index: 510;
+    background-color: rgba(0, 0, 0, .2);
+    overflow: hidden;
+}
+
+.viewer .viewer-node {
+    position: absolute;
+    z-index: 511;
+    background-color: #fff;
+    border: 3px dashed #6a1;
+}

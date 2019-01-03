@@ -1,0 +1,51 @@
+.jpage {
+}
+
+.jpage .jpage-header {
+    padding: 10px 15px;
+    border-bottom: 1px solid lightgray;
+}
+
+.jpage .jpage-header .jpage-form {
+    position: relative;
+}
+
+.jpage .jpage-header .jpage-form .control-label {
+    width: 80px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.jpage .jpage-header .jpage-form .jpage-search {
+    position: absolute;
+    right: 15px;
+    bottom: 0;
+}
+
+.jpage .jpage-body {
+    padding-top: 10px;
+}
+
+.jpage .jpage-body .jpage-table {
+    margin-bottom: 0;
+}
+
+.jpage .jpage-body .jpage-table thead tr th {
+    border-bottom: none;
+}
+
+.jpage .jpage-body .jpage-table .remove {
+    padding: 3px 6px;
+}
+
+.jpage .jpage-footer {
+    text-align: center;
+}
+
+.jpage .jpage-footer .jpage-pagination {
+    margin: 15px 0;
+}
+
+.jpage .jpage-footer .jpage-pagination li a {
+    cursor: pointer;
+}

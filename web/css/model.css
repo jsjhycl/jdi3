@@ -1,0 +1,50 @@
+#workspace {
+    position: relative;
+    margin: auto;
+    background-color: #fff;
+    cursor: crosshair;
+}
+#workspace_copy .workspace-node,   /* 12/24 添加 */
+#workspace .workspace-node {
+    opacity: 1;
+}
+
+.workspace-node {
+    position: absolute;
+    opacity: .5;
+    cursor: move;
+}
+
+#workspace.focus {
+    border: 2px solid red;
+}
+
+#workspace .focus {
+    background-color: red;
+}
+#workspace_copy .workspace-node[data-type="div"],   /* 12/24 添加 */
+#workspace .workspace-node[data-type="div"] {
+    border: 1px solid lightgray;
+}
+
+#workspace_copy [data-type=text],
+#workspace_copy [data-type=button],
+#workspace_copy [data-type=checkbox],
+#workspace_copy [data-type=img],
+#workspace_copy [data-type=div],    /* 12/24 添加 */
+#workspace [data-type=text],
+#workspace [data-type=button],
+#workspace [data-type=checkbox],
+#workspace [data-type=img],
+#workspace [data-type=div] {
+    font-family: 宋体, 微软雅黑, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+}
+#workspace_copy [data-type=text],   /* 12/24 添加 */
+#workspace [data-type=text] {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}

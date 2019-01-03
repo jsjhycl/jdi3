@@ -1,0 +1,62 @@
+﻿.jcontextmenu,
+.jcontextmenu .menu .submenu {
+    position: absolute;
+    z-index: 9999;
+    display: none;
+    padding: 5px 0;
+    background-color: white;
+    border: 1px solid #bababa;
+    -moz-box-shadow: 1px 1px 1px #8e8e8e;
+    -webkit-box-shadow: 1px 1px 1px #8e8e8e;
+    box-shadow: 1px 1px 1px #8e8e8e;
+}
+
+.jcontextmenu * {
+    margin: 0;
+    padding: 0;
+}
+
+.jcontextmenu .menu {
+    display: block;
+    width: 100%;
+}
+
+.jcontextmenu .menu .menuitem {
+    position: relative;
+}
+
+.jcontextmenu .menu .menuitem a {
+    position: relative;
+    display: block;
+    min-width: 120px;
+    padding: 6px 15px 6px 30px;
+    font-size: 13px;
+    color: #333;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.jcontextmenu .menu .menuitem a:hover {
+    color: white;
+    background-color: rgb(66, 129, 244);
+    cursor: pointer;
+    -moz-transition: all .2s;
+    -o-transition: all .2s;
+    -webkit-transition: all .2s;
+    transition: all .2s;
+}
+
+.jcontextmenu .menu .menuitem a .arrow {
+    float: right;
+}
+
+.jcontextmenu .menu .menuitem .submenu {
+    left: 100%;
+    top: -10px;
+    margin-left: .5px;
+}
+
+.jcontextmenu .menu .separator {
+    margin: 3px 0;
+    border-top: 1px solid #d9d9d9;
+}

@@ -1,0 +1,306 @@
+.eg {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: none;
+    background-color: rgba(0, 0, 0, .3);
+}
+
+.eg .eg-dialog {
+    position: relative;
+    display: block;
+    margin: auto;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.eg .eg-dialog .eg-content,
+.eg .eg-dialog .eg-sidebar,
+.eg .eg-dialog .eg-function,
+.eg .eg-dialog .eg-insertFn {
+    float: left;
+    height: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+/*内容区域样式*/
+.eg .eg-dialog .eg-content {
+    overflow: auto;
+    background-color: white;
+}
+
+.eg .eg-dialog .eg-content .eg-page {
+    position: relative;
+    margin: auto;
+    background-color: #f8f8f8;
+    outline: 1px dashed gainsboro;
+}
+.eg .eg-dialog .eg-content .eg-page .eg-elem {
+    color: #dafffe;
+    text-align: center;
+    background-color: #64a8a6;
+    border-radius: 6px;
+    cursor: pointer;
+    opacity: 1;
+    -webkit-box-shadow: 0 0 0 1px #4e8381 inset,
+    0 0 0 2px #74b6b4 inset,
+    0 4px 0 0 #4a7c7b,
+    0 5px 0 0 #355655,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+    -moz-box-shadow: 0 0 0 1px #4e8381 inset,
+    0 0 0 2px #74b6b4 inset,
+    0 4px 0 0 #4a7c7b,
+    0 5px 0 0 #355655,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+    box-shadow: 0 0 0 1px #4e8381 inset,
+    0 0 0 2px #74b6b4 inset,
+    0 4px 0 0 #4a7c7b,
+    0 5px 0 0 #355655,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+}
+.eg .eg-dialog .eg-content .eg-page .eg-elem:hover {
+    background-color: #73c2c0;
+}
+
+.eg .eg-dialog .eg-content .eg-page .eg-elem.current{
+    color: white;
+    background-color: red;
+    -webkit-box-shadow: 0 0 0 1px #f00 inset,
+    0 0 0 2px pink inset,
+    0 4px 0 0 #700,
+    0 5px 0 0 #f00,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+    -moz-box-shadow: 0 0 0 1px #4e8381 inset,
+    0 0 0 2px #74b6b4 inset,
+    0 4px 0 0 #4a7c7b,
+    0 5px 0 0 #355655,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+    box-shadow: 0 0 0 1px #4e8381 inset,
+    0 0 0 2px #74b6b4 inset,
+    0 4px 0 0 #4a7c7b,
+    0 5px 0 0 #355655,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+}
+.eg .eg-dialog .eg-content .eg-page .eg-elem.selected {
+    color: #ffdada;
+    background-color: #cc3747;
+    -webkit-box-shadow: 0 0 0 1px #8d1b27 inset,
+    0 0 0 2px #dd4356 inset,
+    0 4px 0 0 #8d1b27,
+    0 5px 0 0 #65141c,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+    -moz-box-shadow: 0 0 0 1px #8d1b27 inset,
+    0 0 0 2px #dd4356 inset,
+    0 4px 0 0 #8d1b27,
+    0 5px 0 0 #65141c,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+    box-shadow: 0 0 0 1px #8d1b27 inset,
+    0 0 0 2px #dd4356 inset,
+    0 4px 0 0 #8d1b27,
+    0 5px 0 0 #65141c,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+}
+
+.eg .eg-dialog .eg-content .eg-page .eg-elem.selected:hover {
+    background-color: #dd3c4d;
+}
+
+/*侧边栏样式*/
+.eg .eg-dialog .eg-sidebar {
+    position: relative;
+    width: 250px;
+    background-color: #2d323d;
+}
+
+/*关闭按钮样式*/
+.eg .eg-dialog .eg-sidebar .eg-close {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    display: block;
+    width: 20px;
+    height: 20px;
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: bold;
+    color: lightgray;
+    text-align: center;
+    border: 2px solid lightgray;
+    border-radius: 100%;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+.eg .eg-dialog .eg-sidebar .eg-close:hover {
+    color: white;
+    border: 2px solid white;
+    cursor: pointer;
+}
+
+/*工具栏样式*/
+.eg .eg-dialog .eg-sidebar .eg-toolbar {
+    position: absolute;
+    top: 35px;
+    right: 0;
+    left: 0;
+    overflow-y: auto;
+}
+
+/*结果栏样式*/
+.eg .eg-dialog .eg-sidebar .eg-result {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #22262e;
+}
+
+.eg .eg-dialog .eg-sidebar .eg-result .eg-expr {
+    display: block;
+    margin: auto;
+    padding: 5px;
+    width: 95%;
+    height: 100px;
+    font-size: 12px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+}
+
+.eg .eg-dialog .eg-sidebar .eg-result .cfooter {
+    border-top: 1px solid #383e4c;
+}
+
+.eg .eg-dialog .eg-sidebar .eg-result .cfooter .btn {
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+.eg .eg-dialog .eg-sidebar .eg-result .cfooter .btn.eg-save,
+.eg .eg-dialog .eg-function .cfooter .btn.function-save,
+.eg .eg-dialog .eg-insertFn .cfooter .btn.function-save {
+    margin-right: 10px;
+}
+
+/*悬浮栏样式*/
+.eg .eg-dialog .eg-function,
+.eg .eg-dialog .eg-insertFn {
+    display: none;
+    padding-top: 50px;
+    width: 0;
+}
+
+.eg .eg-dialog .eg-function .form-group,
+.eg .eg-dialog .eg-insertFn .form-group {
+    margin: 15px;
+}
+
+.eg .eg-dialog .eg-function .control-label,
+.eg .eg-dialog .eg-insertFn .control-label {
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.eg .eg-dialog .eg-function .form-control, 
+.eg .eg-dialog .eg-insertFn .form-control {
+    padding: 2px;
+    margin: auto;
+    font-size: 12px;
+}
+
+.eg .eg-dialog .eg-function .function-args .form-control,
+.eg .eg-dialog .eg-insertFn .function-args .form-control {
+    max-width: 100px;
+}
+
+.eg .eg-dialog .eg-function .table thead th,
+.eg .eg-dialog .eg-function .table tbody td {
+    font-size: 12px;
+    font-weight: normal;
+    text-align: center;
+}
+
+.eg .eg-dialog .eg-function .table tbody td input.active,
+.eg .eg-dialog .eg-insertFn .table tbody td input.active {
+    border: 1px solid red;
+}
+
+.eg .eg-dialog .eg-function .cfooter .btn,
+.eg .eg-dialog .eg-insertFn .cfooter .btn {
+    padding: 2px 4px;
+    font-size: 12px;
+}
+
+.eg-insertFn .insert-args-table {
+  margin-top: 20px;
+  font-size: 12px;
+}
+
+.eg-insertFn .insert-args-table tr th, 
+.eg-insertFn .insert-args-table tr td {
+  border: 1px solid #ccc;
+}
+/* .eg-insertFn .insert-args-table tr td input {
+  text-indent: 15px;
+  border: none;
+  outline: none;
+} */
+
+
+/*自定义面板样式*/
+.cpanel {
+    display: block;
+}
+
+.cpanel .cpanel-header {
+    margin: 0;
+    padding: 5px 10px;
+    background-color: #2d323d;
+    border-top: 1px solid #22262e;
+    border-bottom: 1px solid #383e4c;
+}
+
+.cpanel .cpanel-header:hover {
+    background-color: #4d5669;
+    cursor: pointer;
+}
+
+.cpanel .cpanel-header .cpanel-title {
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    font-weight: normal;
+    color: #ededed;
+}
+
+.cpanel .cpanel-body {
+    display: block;
+    padding: 10px;
+    text-align: left;
+    background-color: #22262e;
+}
+
+.cpanel .cpanel-body .btn {
+    margin: 2px;
+    padding: 2px 5px;
+    font-size: 12px;
+}
+
+.cpanel .cpanel-body[data-type="remote"] .btn.active,
+.cpanel .cpanel-body[data-type="insert"] .btn.active {
+    color: #fff;
+    background-color: #c9302c;
+    border-color: #ac2925;
+}
+
+.cfooter {
+    padding: 10px 0;
+    text-align: center;
+}

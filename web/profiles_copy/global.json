@@ -1,0 +1,9 @@
+{
+  	"userId":"用户编号",
+	"userName":"用户名",
+	"grade":"等级",
+	"postion":"岗位",
+	"password":"密码",
+	"email":"邮箱",
+	"tel":"电话"
+}

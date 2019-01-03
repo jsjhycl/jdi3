@@ -1,0 +1,48 @@
+body {
+    margin-top: 76px;
+}
+
+.navbar {
+    z-index: 900;
+    margin: 0;
+    background-color: #375471;
+    border-radius: 0;
+}
+
+.navbar .navbar-header {
+    margin: 0 15px;
+}
+
+.navbar .navbar-header .navbar-brand {
+    font-size: 18px;
+    color: white;
+}
+
+.navbar .navbar-left,
+.navbar .navbar-right {
+    margin-right: 15px;
+    font-size: 14px;
+}
+
+.navbar .navbar-left li a.item,
+.navbar .navbar-right li a.item {
+    padding: 15px 20px;
+    color: white;
+    background-color: #406182;
+    border-right: 1px solid #415e7b;
+    border-left: 1px solid #2d4a67;
+    cursor: pointer;
+}
+
+.navbar .navbar-left li a.item#recall {
+    color: red;
+}
+
+.navbar .navbar-left li a.item:hover,
+.navbar .navbar-right li a.item:hover {
+    background-color: #486d93;
+}
+
+.main {
+    display: block;
+}

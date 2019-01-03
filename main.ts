@@ -14,7 +14,7 @@ function createMainWindow() {
             nativeWindowOpen:true
         }
     });
-    win.loadURL('http://172.18.152.111:3000/');
+    win.loadFile('./web/designer/index.html');
     win.on('closed', () => {
         (<BrowserWindow|null>win) = null;
     });

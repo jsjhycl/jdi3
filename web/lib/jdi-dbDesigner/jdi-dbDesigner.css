@@ -1,0 +1,22 @@
+.dbdesigner {
+}
+
+.dbdesigner .dbdesigner-table {
+}
+
+.dbdesigner .dbdesigner-table thead tr th {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.dbdesigner .dbdesigner-table thead tr th .check-all {
+    margin-left: 5px;
+}
+
+.dbdesigner .dbdesigner-table tbody tr td {
+    text-align: center;
+}
+
+.dbdesigner .dbdesigner-table tbody tr td select {
+    min-width: 150px;
+}

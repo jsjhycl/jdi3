@@ -1,0 +1,195 @@
+.pm {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: none;
+    background-color: rgba(0, 0, 0, .3);
+}
+
+.pm .pm-dialog {
+    position: relative;
+    display: block;
+    margin: auto;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/*关闭按钮样式*/
+.pm .pm-dialog .pm-close {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    display: block;
+    width: 20px;
+    height: 20px;
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: bold;
+    color: lightgray;
+    text-align: center;
+    border: 2px solid lightgray;
+    border-radius: 100%;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+.pm .pm-dialog .pm-close:hover {
+    color: white;
+    border: 2px solid white;
+    cursor: pointer;
+}
+
+.pm .pm-dialog .pm-content,
+.pm .pm-dialog .pm-sidebar {
+    float: left;
+    height: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+/*内容区域样式*/
+.pm .pm-dialog .pm-content {
+    overflow: auto;
+    background-color: white;
+}
+
+.pm .pm-dialog .pm-content .pm-page {
+    position: relative;
+    margin: auto;
+    background-color: #f8f8f8;
+    outline: 1px dashed gainsboro;
+}
+
+.pm .pm-dialog .pm-content .pm-page .pm-elem {
+    color: #dafffe;
+    text-align: center;
+    background-color: #64a8a6;
+    border-radius: 6px;
+    cursor: pointer;
+    opacity: 1;
+    -webkit-box-shadow: 0 0 0 1px #4e8381 inset,
+    0 0 0 2px #74b6b4 inset,
+    0 4px 0 0 #4a7c7b,
+    0 5px 0 0 #355655,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+    -moz-box-shadow: 0 0 0 1px #4e8381 inset,
+    0 0 0 2px #74b6b4 inset,
+    0 4px 0 0 #4a7c7b,
+    0 5px 0 0 #355655,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+    box-shadow: 0 0 0 1px #4e8381 inset,
+    0 0 0 2px #74b6b4 inset,
+    0 4px 0 0 #4a7c7b,
+    0 5px 0 0 #355655,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+}
+
+.pm .pm-dialog .pm-content .pm-page .pm-elem:hover {
+    background-color: #73c2c0;
+}
+
+.pm .pm-dialog .pm-content .pm-page .pm-elem.selected {
+    color: #ffdada;
+    background-color: #ed748e;
+    -webkit-box-shadow: 0 0 0 1px #df5570 inset,
+    0 0 0 2px #f488a1 inset,
+    0 4px 0 0 #d03d57,
+    0 5px 0 0 #b12d40,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+    -moz-box-shadow: 0 0 0 1px #b12d40 inset,
+    0 0 0 2px #f488a1 inset,
+    0 4px 0 0 #d03d57,
+    0 5px 0 0 #b12d40,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+    box-shadow: 0 0 0 1px #b12d40 inset,
+    0 0 0 2px #f488a1 inset,
+    0 4px 0 0 #d03d57,
+    0 5px 0 0 #b12d40,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+}
+
+.pm .pm-dialog .pm-content .pm-page .pm-elem.selected:hover {
+    background-color: #df5570;
+}
+
+.pm .pm-dialog .pm-content .pm-page .pm-elem.applied {
+    color: #ffdada;
+    background-color: #cc3747;
+    -webkit-box-shadow: 0 0 0 1px #8d1b27 inset,
+    0 0 0 2px #dd4356 inset,
+    0 4px 0 0 #8d1b27,
+    0 5px 0 0 #65141c,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+    -moz-box-shadow: 0 0 0 1px #8d1b27 inset,
+    0 0 0 2px #dd4356 inset,
+    0 4px 0 0 #8d1b27,
+    0 5px 0 0 #65141c,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+    box-shadow: 0 0 0 1px #8d1b27 inset,
+    0 0 0 2px #dd4356 inset,
+    0 4px 0 0 #8d1b27,
+    0 5px 0 0 #65141c,
+    0 8px 0 0 rgba(0, 0, 0, .15);
+}
+
+.pm .pm-dialog .pm-content .pm-page .pm-elem.applied:hover {
+    background-color: #dd3c4d;
+}
+
+/*侧边栏样式*/
+.pm .pm-dialog .pm-sidebar {
+    position: relative;
+    width: 200px;
+    background-color: #2d323d;
+}
+
+/*属性栏样式*/
+.pm .pm-dialog .pm-sidebar .pm-propertybar .property-group .property-body .property-table tr td:first-child {
+    width: 60px;
+}
+
+.pm .pm-dialog .pm-sidebar .pm-propertybar .property-group .property-body .property-table tr td:last-child {
+    width: 140px;
+}
+
+.pm .pm-dialog .pm-sidebar .pm-propertybar .property-group .property-body .property-table tr td [type=text],
+.pm .pm-dialog .pm-sidebar .pm-propertybar .property-group .property-body .property-table tr td select {
+    /*width: 92%;*/
+}
+
+.pm .pm-dialog .pm-sidebar .pm-button,
+.pm .pm-dialog .pm-sidebar .pm-result {
+    padding: 10px 0;
+    text-align: center;
+    background-color: #22262e;
+}
+
+.pm .pm-dialog .pm-sidebar .pm-button {
+    border-top: 1px solid #383e4c;
+    border-bottom: 1px solid #383e4c;
+}
+
+.pm .pm-dialog .pm-sidebar .pm-button .pm-apply,
+.pm .pm-dialog .pm-sidebar .pm-button .pm-remove {
+    font-size: 12px;
+    padding: 2px 4px;
+}
+
+.pm .pm-dialog .pm-sidebar .pm-result {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-top: 1px solid #383e4c;
+    border-bottom-right-radius: 10px;
+}
+
+.pm .pm-dialog .pm-sidebar .pm-apply,
+.pm .pm-dialog .pm-sidebar .pm-save {
+    margin-right: 15px;
+}

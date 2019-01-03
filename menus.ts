@@ -11,7 +11,6 @@ const appMenuTemplate: MenuItemConstructorOptions[] = [
                 label: 'Excel转Html',
                 click:()=>{
                     let file = openFileDialog(["xlsx"])[0];
-                    console.log(xml2html);
                     xml2html(file)
                     .then((html:any)=>{
                         fs.writeFileSync('temp.html',html);

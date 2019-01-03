@@ -502,6 +502,7 @@ function param2Style(paramobj, themestyle, tintColor, colorObj, paramConfig) {
 					if (!tint)
 						stylevalue = colorstr;
 					else {
+						if(colorstr.indexOf("#") == 0)colorstr = colorstr.substr(1);
 						let firrgb = parseInt(colorstr.substring(0, 2), 16),
 							secrgb = parseInt(colorstr.substring(2, 4), 16),
 							lastrgb = parseInt(colorstr.substring(4, 6), 16);

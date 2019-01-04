@@ -703,7 +703,7 @@ function json2table(htmls, styles, resultName) {
 					html += ' format="' + item.format.replace(/"/g, '`') + '"';
 				if (item.rotation)
 					html += ' rotation="' + item.rotation + '"';
-				html += '><div class="item';
+				html += '><div class="td_item_all';
 				if (eleClass.length >= 0)
 					html += ' ' + eleClass.join(" ");
 				html += '" style="height:' + defaultdivhgt + ';"><div class="item_contain">';

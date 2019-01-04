@@ -69,13 +69,6 @@ function navbar() {
     var insertFnModal = new InsertFnModal($("#insertFunctionModal"));
     insertFnModal.execute();
 
-    // (function() {
-    //     $('.navbar.navbar-fixed-top a').on('click', function(event) {
-    //         let canclose = $(event.currentTarget).prop('href') != '';
-    //         if (canclose) { $("#insertFunctionModal .close, #insertFunctionArgsModal .close").trigger('click') }
-    //     })
-    // })();
-
     //保存
     (function save() {
         $("#save").click(function () {

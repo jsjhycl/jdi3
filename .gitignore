@@ -1,7 +1,7 @@
 node_modules/
 /*.js
-/services/utils.js
-/services/injectRoute.js
+/main/*.js
+/render/*.js
 .idea
 /dist/
 data/temp/

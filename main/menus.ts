@@ -1,7 +1,7 @@
 import { Menu, MenuItemConstructorOptions, shell } from 'electron';
 import fs from 'fs';
-import { openFileDialog } from './services/utilmain';
-let xml2html =require('./services/excel2html');
+import { openFileDialog } from './utils';
+let xml2html =require('../services/excel2html');
 
 const appMenuTemplate: MenuItemConstructorOptions[] = [
     {

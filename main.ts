@@ -1,6 +1,6 @@
 import {app, BrowserWindow, Menu, globalShortcut } from 'electron';
 import path =require('path');
-import { appMenu } from './menus';
+import { appMenu } from './main/menus';
 
 let win:BrowserWindow;
 
@@ -10,7 +10,7 @@ function createMainWindow() {
         width:1430,
         height:800,
         webPreferences:{
-            preload:path.join(__dirname,'preload.js'),
+            preload:path.join(__dirname,'./render/injectGlobal'),
             nativeWindowOpen:true
         }
     });

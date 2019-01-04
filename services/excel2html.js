@@ -991,7 +991,7 @@ function reviseByPath(filePath) {
 function excute(fileName) {
 	if (fileName) return reviseByPath(fileName);
 	else {
-		let files = require("./utils").openFileDialog(["xlsx"]);
+		let files = require("../render/utils").openFileDialog(["xlsx"]);
 		return reviseByPath(files[0])
 	}
 }

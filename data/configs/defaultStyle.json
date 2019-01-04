@@ -25,7 +25,7 @@
 		"min-width": "72px"
 	},
 	{
-		"className": ".item",
+		"className": ".td_item_all",
 		"display": "flex",
 		"padding-top": "1px",
 		"padding-right": "1px",

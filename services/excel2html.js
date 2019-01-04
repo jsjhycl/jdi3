@@ -972,6 +972,7 @@ function excel2html() {
 
 function reviseByPath(filePath) {
 	let fileName = path.basename(filePath);
+	if (!fileName.match(/.*xlsx$/i)) return Promise.reject("文件格式不正确");
 	return new Promise((resolve, reject) => {
 		let resStream = unzip.Extract({path: config.dataPath + fileName});
 		fs.createReadStream(filePath).pipe(resStream);

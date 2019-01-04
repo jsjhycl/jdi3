@@ -64,7 +64,7 @@
 			jdi.importExcel().then(o => {
 				var editor = textboxio.getActiveEditor();
 				editor.content.set(o);
-			}).catch(err => console.log(err))
+			}).catch(err => alert(err))
 		})
 	}
 	

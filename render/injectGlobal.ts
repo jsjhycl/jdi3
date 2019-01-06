@@ -1,15 +1,17 @@
+import { globalShortcut } from "electron";
+
 /**
  * This Module Can use Node & Electron
  */
-//#region 
+//#region 如果使用loadUrl时可以解决与jquery的兼容问题
 // @ts-ignore
-window.nodeRequire = require;
-// @ts-ignore
-delete window.require;
-// @ts-ignore
-delete window.exports;
-// @ts-ignore
-delete window.module;
+// window.nodeRequire = require;
+// // @ts-ignore
+// delete window.require;
+// // @ts-ignore
+// delete window.exports;
+// // @ts-ignore
+// delete window.module;
 //#endregion
 
 let importExcel=require('../services/excel2html');

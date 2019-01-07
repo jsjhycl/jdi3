@@ -71,16 +71,17 @@ function getFiles(dirName, resultName) {
 		styles = styles.concat(defaultStyles, styleObj.styles);
 		delete styleObj.styles;
 		let htmls = [];
-		let sheets = yield mfs.readdir(path.join(dirpath, 'worksheets'));
-		for (let sheet of sheets) {
-			if (sheet.indexOf(".xml") > 0) {
-				let sheetContent = (yield mfs.readFile(path.join(dirpath, 'worksheets', sheet))).toString();
-				sheetContent = yield xml2json(sheetContent);
-				let sheetHtml = analyzeSheet(sheetContent, analyzeShareJson(sharedString), styles, styleObj, themeObj.styles, tintColor, colorObj, paramConfig);
-				sheetHtml.name = sheetShip.hasOwnProperty(sheet) ? sheetShip[sheet] : sheet.substr(0, sheet.lastIndexOf("."));
-				htmls.push(sheetHtml);
-			}
+		// let sheets = yield mfs.readdir(path.join(dirpath, 'worksheets'));
+		// for (let sheet of sheets) {//多个表处理
+		let sheet = 'sheet1.xml';
+		if (sheet.indexOf(".xml") > 0) {
+			let sheetContent = (yield mfs.readFile(path.join(dirpath, 'worksheets', sheet))).toString();
+			sheetContent = yield xml2json(sheetContent);
+			let sheetHtml = analyzeSheet(sheetContent, analyzeShareJson(sharedString), styles, styleObj, themeObj.styles, tintColor, colorObj, paramConfig);
+			sheetHtml.name = sheetShip.hasOwnProperty(sheet) ? sheetShip[sheet] : sheet.substr(0, sheet.lastIndexOf("."));
+			htmls.push(sheetHtml);
 		}
+		// }
 		return json2table(htmls, styles, resultName);
 	}).catch(err => {
 		console.log(err);

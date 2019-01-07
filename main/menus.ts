@@ -23,7 +23,15 @@ const appMenuTemplate: MenuItemConstructorOptions[] = [
                 role: "toggledevtools"
             },
             {
-                type:"separator"
+                label:'刷新',
+                role:"reload"
+            },
+            {
+                label:'强制刷新',
+                role:"forcereload"
+            },
+            {
+                type: "separator"
             },
             {
                 label: '关闭',

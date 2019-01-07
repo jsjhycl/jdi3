@@ -6,7 +6,7 @@ let win:BrowserWindow;
 
 function createMainWindow() {
     win = new BrowserWindow({
-        autoHideMenuBar:true,
+        // autoHideMenuBar:true,
         width:1430,
         height:800,
         webPreferences:{
@@ -15,6 +15,8 @@ function createMainWindow() {
         }
     });
     win.loadFile('./web/designer/index.html');
+    // win.loadURL('https://xcv.jingkan.net');
+    // win.loadFile('./index.html');
     win.on('closed', () => {
         (<BrowserWindow|null>win) = null;
     });

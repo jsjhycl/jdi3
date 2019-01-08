@@ -422,8 +422,10 @@ function singleCell(c, htmls, shareObj, styleObj, themestyle, tintColor, colorOb
 				if (si.rPh.t.$) {
 					if (si.rPh.t.$["xml:space"] == "preserve" && !si.rPh.t._)
 						cellobj.val = ' ';
+					else
+						cellobj.val = si.rPh.t._ || '';
 				} else
-					cellobj.val = si.rPh.r.t || '';
+					cellobj.val = si.rPh.t || '';
 				if (si.phoneticPr.$.fontId >= 1) {
 					cellobj.style = param2Style(styleObj.fonts[Number(si.phoneticPr.$.fontId)], themestyle, tintColor, colorObj, paramConfig);
 					cellobj.style["className"] = "pinyin";

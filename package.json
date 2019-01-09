@@ -6,12 +6,14 @@
   "dependencies": {
     "co": "^4.6.0",
     "jquery": "^3.3.1",
+    "mkdirp": "^0.5.1",
     "mz": "^2.7.0",
     "unzip": "^0.1.11",
     "xml2js": "^0.4.19"
   },
   "devDependencies": {
     "@types/jquery": "^3.3.29",
+    "@types/mkdirp": "^0.5.2",
     "electron": "^4.0.0"
   },
   "scripts": {

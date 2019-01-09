@@ -8,3 +8,5 @@ data/temp/
 temp.html
 .vscode
 test.ts
+/_*/
+services/ioHelper.js

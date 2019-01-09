@@ -45,7 +45,7 @@ function saveImage(source: string | nativeImage, resourceId: string,name:string)
 /**
  * 保存资源文件，目前统一保存为utf-8格式
  * @param resourceId 资源号
- * @param name 资源名
+ * @p  name 资源名
  * @param content 文件内容
  * return 保存的文件名
  */

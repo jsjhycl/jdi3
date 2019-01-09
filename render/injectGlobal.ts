@@ -15,12 +15,16 @@ import { globalShortcut } from "electron";
 //#endregion
 
 let importExcel=require('../services/excel2html');
+import {saveImage,saveFile} from '../services/ioHelper';
+import { openFileDialog } from "./utils";
 // @ts-ignore
 window.jdi= {
     hello:hello,
-    importExcel:importExcel
+    importExcel:importExcel,
+    saveFile:saveFile,
+    saveImage:saveImage,
+    openFileDialog:openFileDialog
 }
-
 /**
  * 测试函数，此函数成功，说明注入成功
  */

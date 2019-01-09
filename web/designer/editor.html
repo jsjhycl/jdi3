@@ -71,13 +71,6 @@
 	
 	function apply() {
 		$("#apply").click(function () {
-			// var editor = textboxio.getActiveEditor(),
-			// 	content = editor.content.get().replace(/\s*<br\s*\/>/g, '<br />'),
-			//     $temp = $('<div>' + content + '</div>');
-			// var $temp = $(".ephox-hare-content-iframe").contents().find(".ephox-candy-mountain");
-			// if ($temp.find(".sheet_contain").length > 0)
-			// 	$temp = $temp.find(".sheet_contain");
-			
 			var editor = textboxio.getActiveEditor(),
 				content = editor.content.get().replace(/\s*<br\s*\/>/g, '<br />'),
 				$temp = $('<div>' + content + '</div>'),
@@ -95,10 +88,9 @@
 			content = (style || '') + $temp.html() + (script || '');
 			if (content) {
 				try {
+					// window.opener.back ? window.opener.back(content) : window.opener.eval("back(`" + content + "`)");
 					window.opener["back"](content);
 					window.close();
-					// localStorage.cache = content;
-					// window.close();
 				} catch (e) {
 					alert(e);
 				}

@@ -1,0 +1,6 @@
+{
+  "时间控件": "datetimepicker('{ID}','Y-m-d H:i:s')",
+  "自定义时间控件": "datetime('{ID}','年')",
+  "当前时间函数": "now('yyyy/MM/dd HH:mm:ss')",
+  "人民币函数": "rmb()"
+}

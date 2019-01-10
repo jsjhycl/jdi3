@@ -1,4 +1,6 @@
-import { nativeImage } from "electron";
+import {nativeImage, remote} from "electron";
+
+let {clipboard} = remote;
 import mkdirp from 'mkdirp';
 import path from 'path';
 
@@ -7,36 +9,52 @@ import fs from 'fs';
 /**
  * 资源路径
  */
-let resourcePath =path.join(__dirname,'../_template');
-if(!fs.existsSync(resourcePath)) mkdirp.sync(resourcePath);
+let resourcePath = path.join(__dirname, '../_template');
+if (!fs.existsSync(resourcePath)) mkdirp.sync(resourcePath);
 
-function getFileName(resourceId:string,name:string):string{
-    let fullPath =path.join(resourcePath,resourceId);
-    let fileName =path.join(fullPath,name);
-    if(!fs.existsSync(fullPath)) mkdirp.sync(fullPath);
+function getFileName(resourceId: string, name: string): string {
+    let fullPath = path.join(resourcePath, resourceId);
+    let fileName = path.join(fullPath, name);
+    if (!fs.existsSync(fullPath)) mkdirp.sync(fullPath);
     return fileName;
 }
 
 /**
- * 导入选中的图片文件到库中
- * @param sourceFilename 原文件名
+ * 定义图片传入参数的接口
+ * @param sourceName 传入的文件名称
  * @param resourceId 资源号
- * @param name 图片名
+ * @param name 保存图片名称
  */
-function saveImage(sourceFilename:string,resourceId:string,name:string):string;
+interface sourceImage {
+    sourceName?: string,
+    resourceId: string,
+    name: string
+}
+
+/**
+ * 定义文件保存传入参数的接口
+ * @param resourceId 资源号
+ * @param name 资源名
+ * @param content 文件内容
+ */
+interface sourceFile {
+    resourceId: string,
+    name: string,
+    content: string
+}
+
 /**
  * 保存剪切板等其他来源的原生图形到文件
- * @param nativeImage 剪切板中的原生图形
- * @param resourceId 资源号
- * @param name 素材(图片)名
+ * return 保存的图片绝对路径
  */
-function saveImage(nativeImage:nativeImage,resourceId:string,name:string):string;
-function saveImage(source: string | nativeImage, resourceId: string,name:string): string {
-    let targetFileName =getFileName(resourceId,name);
-    if (typeof source === 'string') {
-        fs.copyFileSync(source, targetFileName);
+function saveImage(source: sourceImage): string;
+function saveImage(source: sourceImage): string {
+    let targetFileName = getFileName(source.resourceId, source.name);
+    if (source.sourceName) {
+        fs.copyFileSync(source.sourceName, targetFileName);
     } else {
-        let buffers =name.endsWith('png')? source.toPNG():source.toJPEG(40);
+        let sourceClipboard = clipboard.readImage();
+        let buffers = source.name.endsWith('png') ? sourceClipboard.toPNG() : sourceClipboard.toJPEG(40);
         fs.writeFileSync(targetFileName, buffers);
     }
     return targetFileName;
@@ -44,15 +62,12 @@ function saveImage(source: string | nativeImage, resourceId: string,name:string)
 
 /**
  * 保存资源文件，目前统一保存为utf-8格式
- * @param resourceId 资源号
- * @p  name 资源名
- * @param content 文件内容
- * return 保存的文件名
+ * return 保存的文件绝对路径
  */
-function saveFile(resourceId:string,name:string,content:string):string{
-    let fileName =getFileName(resourceId,name);
-    fs.writeFileSync(fileName,content,'utf-8');
+function saveFile(source: sourceFile): string {
+    let fileName = getFileName(source.resourceId, source.name);
+    fs.writeFileSync(fileName, source.content, 'utf-8');
     return fileName;
 }
 
-export {saveImage,saveFile}
+export {saveImage, saveFile}

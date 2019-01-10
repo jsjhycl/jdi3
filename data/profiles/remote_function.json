@@ -1,0 +1,175 @@
+[
+  {
+    "id": 1,
+    "fname": "服务器时间",
+    "desc": "获取服务器当前时间",
+    "args": []
+  },
+  {
+    "id": 2,
+    "fname": "服务器求和",
+    "desc": "获取整数和",
+    "args": [
+      {
+        "name": "参数1",
+        "type": "Number"
+      },
+      {
+        "name": "参数2",
+        "type": "Number"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "fname": "getid",
+    "desc": "获取唯一编号",
+    "args": [
+      {
+        "name": "表名",
+        "type": "String"
+      },
+      {
+        "name": "列名",
+        "type": "String"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "fname": "getArea",
+    "desc": "获取一级地区",
+    "group": "行政区划",
+    "args": [
+      {
+        "name": "类型",
+        "type": "Number",
+        "value": 0,
+        "readonly": true
+      },
+      {
+        "name": "关联元素",
+        "type": "String",
+        "value": "",
+        "readonly": true
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "fname": "getArea",
+    "desc": "获取二级地区",
+    "group": "行政区划",
+    "args": [
+      {
+        "name": "类型",
+        "type": "Number",
+        "value": 1,
+        "readonly": true
+      },
+      {
+        "name": "关联元素",
+        "type": "Element"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "fname": "getArea",
+    "desc": "获取三级地区",
+    "group": "行政区划",
+    "args": [
+      {
+        "name": "类型",
+        "type": "Number",
+        "value": 2,
+        "readonly": true
+      },
+      {
+        "name": "关联元素",
+        "type": "Element"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "fname": "getDataSource",
+    "desc": "获取一级部门",
+    "group": "部门分类",
+    "args": [
+      {
+        "name": "类型",
+        "type": "String",
+        "value": "一级部门",
+        "readonly": true
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "fname": "getDataSource",
+    "desc": "获取二级部门",
+    "group": "部门分类",
+    "args": [
+      {
+        "name": "类型",
+        "type": "String",
+        "value": "二级部门",
+        "readonly": true
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "fname": "getDataSource",
+    "desc": "获取三级部门",
+    "group": "部门分类",
+    "args": [
+      {
+        "name": "类型",
+        "type": "String",
+        "value": "三级部门",
+        "readonly": true
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "fname": "getDataSource",
+    "desc": "获取职务",
+    "args": [
+      {
+        "name": "类型",
+        "type": "String",
+        "value": "职务",
+        "readonly": true
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "fname": "getDataSource",
+    "desc": "获取项目类型",
+    "args": [
+      {
+        "name": "类型",
+        "type": "String",
+        "value": "项目类型",
+        "readonly": true
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "fname": "getDataSource",
+    "desc": "获取服务商类型",
+    "args": [
+      {
+        "name": "类型",
+        "type": "String",
+        "value": "服务商类型",
+        "readonly": true
+      }
+    ]
+  }
+]

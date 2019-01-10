@@ -1,0 +1,22 @@
+[
+  {
+    "name": "保存",
+    "value": "save"
+  },
+  {
+    "name": "上传",
+    "value": "upload"
+  },
+  {
+    "name": "登录",
+    "value": "login"
+  },
+  {
+    "name": "全选",
+    "value": "checkAll"
+  },
+  {
+    "name": "取消",
+    "value": "cancelAll"
+  }
+]

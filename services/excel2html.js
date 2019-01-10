@@ -85,7 +85,7 @@ function getFiles(dirName, resultName) {
 		return json2table(htmls, styles, resultName);
 	}).catch(err => {
 		console.log(err);
-		return false;
+		return err;
 	})
 }
 
@@ -745,7 +745,8 @@ function json2table(htmls, styles, resultName) {
 		style += '}\n';
 	}
 	style += '</style>';
-	return writeHtml(htmlstrs, style, resultName);
+	return style + htmlstrs[0].data;
+	// return writeHtml(htmlstrs, style, resultName);
 }
 
 function writeHtml(htmlstrs, style, resultName) {

@@ -10,3 +10,4 @@ temp.html
 test.ts
 /_*/
 services/ioHelper.js
+services/fileApi.js

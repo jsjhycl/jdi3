@@ -1,4 +1,4 @@
-import { globalShortcut } from "electron";
+import {globalShortcut} from "electron";
 
 /**
  * This Module Can use Node & Electron
@@ -14,21 +14,24 @@ import { globalShortcut } from "electron";
 // delete window.module;
 //#endregion
 
-let importExcel=require('../services/excel2html');
-import {saveImage,saveFile} from '../services/ioHelper';
-import { openFileDialog } from "./utils";
+let importExcel = require('../services/excel2html');
+import {saveImage, saveFile} from '../services/ioHelper';
+import {openFileDialog} from "./utils";
+import {getProfile} from "../services/fileApi";
 // @ts-ignore
-window.jdi= {
-    hello:hello,
-    importExcel:importExcel,
-    saveFile:saveFile,
-    saveImage:saveImage,
-    openFileDialog:openFileDialog
+window.jdi = {
+    hello: hello,
+    importExcel: importExcel,
+    saveFile: saveFile,
+    saveImage: saveImage,
+    openFileDialog: openFileDialog,
+    getProfile: getProfile
 }
+
 /**
  * 测试函数，此函数成功，说明注入成功
  */
-function hello(){
-console.log(importExcel);
+function hello() {
+    console.log(importExcel);
     console.log('preload is ok.');
 }

@@ -24,6 +24,9 @@ $.cajax = function (options, isPrompt) {
         oUrl = options.url;
         nUrl = ip + oUrl;
     options.url = nUrl;
+	options.headers = {
+		"X-Requested-with": "XMLHttpRequest"
+	}
 
     return $.ajax(options);
 };

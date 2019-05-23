@@ -17,7 +17,7 @@ import {globalShortcut} from "electron";
 let importExcel = require('../services/excel2html');
 import {saveImage, saveFile} from '../services/ioHelper';
 import {openFileDialog} from "./utils";
-import {getProfile} from "../services/fileApi";
+import * as fileApi from "../services/fileApi";
 // @ts-ignore
 window.jdi = {
     hello: hello,
@@ -25,7 +25,7 @@ window.jdi = {
     saveFile: saveFile,
     saveImage: saveImage,
     openFileDialog: openFileDialog,
-    getProfile: getProfile
+    fileApi: fileApi
 }
 
 /**

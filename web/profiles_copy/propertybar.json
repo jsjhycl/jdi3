@@ -297,18 +297,4 @@
       }
     ]
   }
-  //  {
-  //    "name": "抄送属性",
-  //    "value": "copySend",
-  //    "isPM": true,
-  //    "items": [
-  //      {
-  //        "name": "抄送",
-  //        "value": "copySend",
-  //        "controlType": "textbox_btn",
-  //        "dataType": "Array",
-  //        "isPM": true
-  //      }
-  //    ]
-  //  }
 ]

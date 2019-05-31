@@ -289,6 +289,11 @@
         "value": "db.desc",
         "controlType": "textbox",
         "dataType": "String"
+      },{
+        "name":"字段分段",
+        "value":"db.filedSegmentation",
+        "controlType":"textbox",
+        "dataType":"String"
       }
     ]
   }

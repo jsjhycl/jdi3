@@ -69,6 +69,14 @@ DbDesignerModal.prototype = {
                         template: function (value) {
                             return '<input class="form-control" data-key="desc" type="text" value="' + value + '">';
                         }
+                    }, {//新增加
+                        name: "fieldSplit",
+                        text: "字段分段",
+                        key: "db.fieldSplit",
+                        group: true,
+                        template: function (vaule) {
+                            return '<input class="form-control" data-key="fieldSplit" type="text" value="' + value + '">'
+                        }
                     }
                 ],
                 getProperty: new Property().getProperty
@@ -88,7 +96,8 @@ DbDesignerModal.prototype = {
                 isSave: item.isSave,
                 table: item.table,
                 field: item.field,
-                desc: item.desc
+                desc: item.desc,
+                fieldSplit:item.fieldSplit//新增加
             });
         });
     },

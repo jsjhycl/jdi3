@@ -130,19 +130,20 @@ Property.prototype = {
                 var table = db.table;
                 if (table) {
                     var field = db.field,
+                        fieldSplit = db.fieldSplit,
                         desc = db.desc;
                     if (result.hasOwnProperty(table)) {
                         var fields = result[table]["fields"];
                         if (!Array.isArray(fields)) {
                             fields = [];
                         }
-                        fields.push({name: field, desc: desc, type: "String"});
+                        fields.push({name: field, desc: desc, type: "String", fieldSplit: fieldSplit});
                     } else {
                         result[table] = {
                             desc: defaultName === table ? defaultDesc : table,
                             fields: []
                         };
-                        result[table].fields.push({name: field, desc: desc, type: "String"});
+                        result[table].fields.push({name: field, desc: desc, type: "String", fieldSplit: fieldSplit});
                     }
                 }
             }

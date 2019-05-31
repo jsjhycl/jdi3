@@ -35,7 +35,28 @@ var ModalHelper = (function () {
             Common.fillSelect($select, defaultOption, options, field, isPrompt);
         });
     }
+    function setFieldSplitSelect($select, defaultOption, table, $field, fieldSplit, isPrompt) {
+        if (!$select || $select.length <= 0) return;
+        defaultOption = defaultOption || null;
+        isPrompt = !!isPrompt;
+        if (!$field || !table) {
+            Common.fillSelect($select, defaultOption, null, null, isPrompt)
+        }
 
+        new Db().getFields(table, function (fields) {
+            var options = !Array.isArray(fields) ? [] : fields,
+            fieldSplits=[];
+            options.forEach(function (item) {
+                if (item.value == $field && item.fieldSplit) {
+                    var i = item.fieldSplit;
+                    for (i; i >= 1; i--) {
+                        fieldSplits[i] = {name:"插入",value:i}
+                    }
+                }
+            })
+            Common.fillSelect($select, defaultOption, fieldSplits, fieldSplit, isPrompt);
+        });
+    }
     function setInputData($input, value, isJSON) {
         if (!$input || $input.length <= 0) return;
 
@@ -63,6 +84,7 @@ var ModalHelper = (function () {
     return {
         setTableSelect: setTableSelect,
         setFieldSelect: setFieldSelect,
+        setFieldSplitSelect: setFieldSplitSelect,
         setInputData: setInputData,
         setSelectData: setSelectData
     };

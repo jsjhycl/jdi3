@@ -53,7 +53,7 @@ Db.prototype = {
         new StructureService().getFields(table, function (fields) {
             var result = Array.isArray(fields) ? fields : [];
             result = result.map(function (item) {
-                return {name: item.desc, value: item.name};
+                return {name: item.desc, value: item.name, fieldSplit: item.fieldSplit};
             });
             if (result.length > 0) {
                 result.unshift({name: "编号", value: "_id"});

@@ -24,17 +24,18 @@ function CopySendModal($modal, $element) {
                 '<td><select class="form-control" data-key="state"></select></td>' +
                 '<td><select class="form-control" data-key="table"></select></td>' +
                 '<td><select class="form-control" data-key="field"></select></td>' +
+                '<td><select class="form-control" data-key="fieldSplit"></select></td>' +//增加抄送
                 TableHelper.buildBtnInputTd("btn-config btn-conditions", null, "conditions") +
                 TableHelper.buildBtnInputTd("btn-config btn-value", null, "value") +
                 '<td><button class="btn btn-danger btn-sm remove">删除</button></td></tr>');
         that.$tbody.append($tr);
-
-        var element, state, table, field, conditions, value;
+        var element, state, table, field, fieldSplit, conditions, value;
         if (DataType.isObject(data)) {
             element = data.element;
             state = data.state;
             table = data.table;
             field = data.field;
+            fieldSplit = data.fieldSplit;
             conditions = data.conditions;
             value = data.value;
         }
@@ -42,10 +43,10 @@ function CopySendModal($modal, $element) {
         ModalHelper.setSelectData($tr.find('[data-key="state"]'), null, STATE_CONFIG, state, false);
         ModalHelper.setTableSelect(true, $tr.find('[data-key="table"]'), {name: "请选择抄送表", value: ""}, table, true);
         ModalHelper.setFieldSelect($tr.find('[data-key="field"]'), {name: "请选择抄送列", value: ""}, table, field, true);
+        ModalHelper.setFieldSplitSelect($tr.find('[data-key="fieldSplit"]'), {name:"插入",value:"0"}, table, field, fieldSplit, true)
         ModalHelper.setInputData($tr.find('[data-key="conditions"]'), conditions, true);
         ModalHelper.setInputData($tr.find('[data-key="value"]'), value, true);
     };
-
     this._removeItem = function ($tr) {
         $tr.remove();
     };
@@ -69,6 +70,7 @@ CopySendModal.prototype = {
                 state = $(this).find('[data-key="state"]').val(),
                 table = $(this).find('[data-key="table"]').val(),
                 field = $(this).find('[data-key="field"]').val(),
+                fieldSplit = $(this).find('[data-key="fieldSplit"]').val();
                 conditions = $(this).find('[data-key="conditions"]').val() || null,
                 value = $(this).find('[data-key="value"]').val() || null;
             if (state !== "1") return true;
@@ -78,6 +80,7 @@ CopySendModal.prototype = {
                 state: 1,
                 table: table,
                 field: field,
+                fieldSplit:Number(fieldSplit),
                 conditions: Common.parseData(conditions),
                 value: Common.parseData(value)
             });
@@ -160,5 +163,12 @@ CopySendModal.prototype = {
                 table = $(this).val();
             ModalHelper.setFieldSelect($fieldSelect, {name: "请选择抄送列", value: ""}, table, null, true);
         });
+        //处理字段属性
+        that.$modal.on("change",'[data-key="field"]', function () {
+            var $fieldSplitSelect = $(this).parents("tr").find('[data-key="fieldSplit"]'),
+            field = $(this).val();
+            var table = $(this).parents("tr").find('[data-key="table"]').val();
+            ModalHelper.setFieldSplitSelect($fieldSplitSelect,{name: "插入", value: "0"}, table, field, null, true)
+        })
     }
 };

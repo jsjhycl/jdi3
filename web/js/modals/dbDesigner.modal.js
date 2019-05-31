@@ -74,7 +74,7 @@ DbDesignerModal.prototype = {
                         text: "字段分段",
                         key: "db.fieldSplit",
                         group: true,
-                        template: function (vaule) {
+                        template: function (value) {
                             return '<input class="form-control" data-key="fieldSplit" type="text" value="' + value + '">'
                         }
                     }
@@ -91,7 +91,7 @@ DbDesignerModal.prototype = {
         var property = new Property();
         data.forEach(function (item) {
             if (!item.isSave) return true;
-
+            
             property.setValue(item.id, "db", {
                 isSave: item.isSave,
                 table: item.table,

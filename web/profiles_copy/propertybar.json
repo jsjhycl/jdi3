@@ -293,7 +293,7 @@
         "name":"字段分段",
         "value":"db.filedSegmentation",
         "controlType":"textbox",
-        "dataType":"String"
+        "dataType":"Number"
       }
     ]
   }

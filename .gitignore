@@ -13,3 +13,4 @@ services/ioHelper.js
 services/fileApi.js
 _template
 说明.txt
+/.svn/

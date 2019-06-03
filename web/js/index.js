@@ -1,5 +1,7 @@
 ﻿//初始化
 function init() {
+	//筛选
+	new Filter('初始化', '加载').set();
 	//初始化属性栏
 	new Propertybar($("#propertybar")).init(false, null);
 	//初始化工作区
@@ -120,7 +122,8 @@ function navbar() {
 			if (!id) return;
 			
 			var href = "http://36.33.216.13:3001/home/model?id=" + id + "&type=preview";
-			$(this).attr("href", href);
+			// $(this).attr("href", href);
+			require('electron').shell.openExternal(href)
 		});
 	})();
 	
@@ -414,9 +417,12 @@ function workspace() {
 			new Property().clearDOM();
 		}
 	});
-	
+	$workspace.on("click",function(){
+		$("#delete").css('color','white')
+	})
 	//jresizable
 	$workspace.on("click", ".workspace-node", function (event) {
+		$("#delete").css('color','red')
 		event.stopPropagation();
 		$(this).jresizable({
 			mode: "single",

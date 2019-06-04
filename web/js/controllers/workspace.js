@@ -389,11 +389,6 @@ Workspace.prototype = {
             that.init(id, name, type, subtype, flow, customId, relTemplate);
             var settingData = ret1[0],
                 propertyData = ret2[0];
-            that.$workspace.css({
-                "width": settingData.width,
-                "height": settingData.height,
-                "background-color": settingData.bgColor
-            });
             var control = new Control(),
                 contextMenu = new ContextMenu();
             for (var i = 0; i < settingData.items.length; i++) {
@@ -432,6 +427,20 @@ Workspace.prototype = {
                 });
             }
             GLOBAL_PROPERTY = propertyData;
+
+            // 调整工作区大小
+            let max_h = 0, max_w = 0;
+            that.$workspace.find('div, p, img').each(function(i, el) {
+                max_w = $(el).width() > max_w ? $(el).width() : max_w;
+                max_h = $(el).height() > max_h ? $(el).height() : max_h;
+            });
+            that.$workspace.css({
+                "width": settingData.width > max_w ? settingData.width : max_w,
+                "height": settingData.height > max_h ? settingData.height : max_h,
+                "background-color": settingData.bgColor
+            });
+            new Ruler().drawCoordinates()
+
         }).fail(function () {
             that.init(id, name, type, subtype, flow, customId, relTemplate);
             alert("数据加载出错！");
@@ -460,5 +469,5 @@ Workspace.prototype = {
         that.$workspace.removeAttr("data-id data-name data-type data-subtype").empty();
         $('#property [id^="property_"]').val("");
         $(".container-fluid").hide();
-    }, 
+    },
 };

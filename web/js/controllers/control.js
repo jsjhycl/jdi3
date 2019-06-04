@@ -109,7 +109,7 @@ Control.prototype = {
     },
     remove: function () {
         var $selected = $("#workspace").find(".resizable");
-        if ($selected.length <= 0) return;
+        if ($selected.length <= 0) return alert("请选择需要删除的元素");
 
         var result = confirm("确定删除选中的元素吗？");
         if (!result) return;

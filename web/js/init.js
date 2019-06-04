@@ -66,6 +66,8 @@ Loader.prototype = {
                 that.JS_PATH + "/controllers/propertybar.js",
                 that.JS_PATH + "/controllers/contextMenu.js",
                 that.JS_PATH + "/controllers/shortcut.js",
+                that.JS_PATH + "/controllers/ruler.js",//标尺
+                that.JS_PATH + "/controllers/keyEvent.js",//标尺
                 that.JS_PATH + "/modals/base.modal.js",
                 that.JS_PATH + "/modals/resource.modal.js",
                 that.JS_PATH + "/modals/product.modal.js",
@@ -77,6 +79,7 @@ Loader.prototype = {
                 that.JS_PATH + "/modals/record.modal.js",
                 that.JS_PATH + "/modals/submit.modal.js",
                 that.JS_PATH + "/modals/dataSource.modal.js",
+                that.JS_PATH + "/modals/prompt.modal.js",
                 that.JS_PATH + "/modals/events.modal.js",
                 that.JS_PATH + "/modals/query.modal.js",
                 that.JS_PATH + "/modals/archivePath.modal.js",

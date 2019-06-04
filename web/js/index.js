@@ -369,6 +369,7 @@ function propertybar() {
 
 //工作区
 function workspace() {
+	new KeyEvent()
 	//绘制标尺
 	new Ruler().drawCoordinates()
 	var $workspace = $("#workspace");
@@ -418,9 +419,7 @@ function workspace() {
 			new Property().clearDOM();
 		}
 	});
-	$workspace.on("click",function(){
-		$("#delete").css('color','white')
-	})
+	
 	//jresizable
 	$workspace.on("click", ".workspace-node", function (event) {
 		$("#delete").css('color','red')
@@ -453,6 +452,7 @@ function workspace() {
 	
 	//清除样式
 	$workspace.on("click", function (event) {
+		$("#delete").css('color','white')
 		var $target = $(event.target);
 		if (!$target.is(".workspace-node")) {
 			$workspace.find(".ui-selected").removeClass("ui-selected");

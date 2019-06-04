@@ -324,7 +324,9 @@
 .icon.icon-fx {
     background-position: -213px 0;
 }
-
+.icon.icon-fx-view {
+    background-position: -228px 0;
+}
 /*模态框样式*/
 .modal .modal-header {
     cursor: move;

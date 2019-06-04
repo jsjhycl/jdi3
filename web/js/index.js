@@ -466,8 +466,6 @@ function workspace() {
 	$("#designer").on("click", function () {
 		$(".jcontextmenu:visible").hide();
     });
-    
-    $("#workspace").resizable();
 }
 
 //回调函数

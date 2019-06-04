@@ -122,8 +122,7 @@ function navbar() {
 			if (!id) return;
 			
 			var href = "http://36.33.216.13:3001/home/model?id=" + id + "&type=preview";
-			// $(this).attr("href", href);
-			require('electron').shell.openExternal(href)
+			$(this).attr("href", href);
 		});
 	})();
 	
@@ -370,6 +369,8 @@ function propertybar() {
 
 //工作区
 function workspace() {
+	//绘制标尺
+	new Ruler().drawCoordinates()
 	var $workspace = $("#workspace");
 	
 	//droppable
@@ -464,7 +465,9 @@ function workspace() {
 	//清除右键菜单
 	$("#designer").on("click", function () {
 		$(".jcontextmenu:visible").hide();
-	});
+    });
+    
+    $("#workspace").resizable();
 }
 
 //回调函数
@@ -482,7 +485,11 @@ function back(html) {
 		});
 		$("#workspace").append($node);
 		contextMenu.done(2, $node);
-		
+
+
+        // 调整工作区的大小
+        $node.height() > $("#workspace").height() && $("#workspace").height(Math.ceil($node.height()));
+        $node.width() > $("#workspace").width() && $("#workspace").width(Math.ceil($node.width()));
 		$node.find(":input").each(function () {
 			var childNumber = control.createNumber("child");
 			$(this).attr({

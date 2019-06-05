@@ -25,6 +25,7 @@ WorkspaceModal.prototype = {
             "height": height,
             "background-color": bgColor
         });
+        new Ruler().drawCoordinates()
     },
     execute: function () {
         var that = this;

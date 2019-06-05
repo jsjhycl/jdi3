@@ -40,14 +40,15 @@
                 <li><a data-toggle="modal" href="#dbDesignerModal" data-first-filter="db">数据库设计器</a></li>
                 <li><a data-toggle="modal" href="#recordModal">产品记录查看器</a></li>
                 <li><a id="viewer">元素编号查看器</a></li>
+                <li><a id="controlRuler">标尺查看器</a></li>
             </ul>
         </li>
         <li><a class="item" id="save" data-first-filter="save">保存</a></li>
         <li><a class="item" id="submit" data-first-filter="submit">提交</a></li>
-        <li><a class="item" id="delete" data-zero-filter="delete">删除</a></li>
+        <li><a class="item" id="delete" data-zero-filter="delete" style="display: none">删除</a></li>
         <li><a class="item" id="recall" data-first-filter="recall" style="display: none">重新调用模板</a></li>
-        <li><a class="item" id="preview" data-zero-filter="preview" target="_blank">预览</a></li>
-            <li><a class="item" id="test" data-zero-filter="test">测试</a></li>
+        <li><a class="item" id="preview" data-zero-filter="preview" style="display: none" target="_blank">预览</a></li>
+            <li><a class="item" id="test" data-zero-filter="test" style="display: none">测试</a></li>
         <li><a class="item" data-toggle="modal" href="#workspaceModal">工作区设置</a></li>
     </ul>
 
@@ -93,8 +94,8 @@
 <link rel="stylesheet" href="../css/model.css">
 
 <!--控件栏-->
-<aside id="controlbar">
-    <ul class="control-list" data-zero-filter="asider">
+<aside id="controlbar" data-zero-filter="asider" style="display: none">
+    <ul class="control-list" >
         <li class="control-item" data-type="text" title="文本框">
             <span class="glyphicon glyphicon-subtitles"></span>
             <span>文本框</span>
@@ -199,12 +200,12 @@
     </div>
 </section>
 <!--属性栏-->
-<aside id="propertybar"></aside>
+<aside id="propertybar" data-zero-filter="asider" style="display: none"></aside>
 <!--设计器-->
 <section id="designer">
-     <div id="ruler">
-    <div id="workspace"></div>
-</div>
+    <div id="ruler">
+        <div id="workspace"></div>
+    </div>
 </section>
 
 <!-- <% include includes/modal.html %> -->
@@ -590,7 +591,7 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="height">高度</label>
-                    <input class="form-control" id="height" type="text" value="1024">
+                    <input class="form-control" id="height" type="text" value="950">
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="bgColor">背景颜色</label>

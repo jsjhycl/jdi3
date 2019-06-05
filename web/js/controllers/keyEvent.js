@@ -1,6 +1,7 @@
-function KeyEvent(){
+function KeyEvent() {
     var that = this;
-    $(document).keydown(function(event){
+    this.ruler = true;
+    $(document).keydown(function (event) {
         var code = event.keyCode;
         switch (code) {
             case 27:
@@ -23,52 +24,56 @@ function KeyEvent(){
     })
 }
 KeyEvent.prototype = {
-    $workspace :$("#workspace"),
-    escEvent:function(){
-        $("#delete").css('color','white')
-		var $target = $(event.target);
-		if (!$target.is(".workspace-node")) {
-			this.$workspace.find(".ui-selected").removeClass("ui-selected");
-			new Property().clearDOM();
-			this.$workspace.find(".workspace-node").jresizable("destroy");
-		}
-		$(".jcontextmenu:visible").hide();
+    $workspace: $("#workspace"),
+    //取消选中的元素
+    escEvent: function () {
+        $("#delete").css('color', 'white')
+        var $target = $(event.target);
+        if (!$target.is(".workspace-node")) {
+            this.$workspace.find(".ui-selected").removeClass("ui-selected");
+            new Property().clearDOM();
+            this.$workspace.find(".workspace-node").jresizable("destroy");
+        }
+        $(".jcontextmenu:visible").hide();
     },
-    moveUpEvent(event){
+    //元素的上移
+    moveUpEvent(event) {
         event.preventDefault();
         var $elm = this.$workspace.find(".ui-draggable");
-        if($elm.length<1) return;
-        $elm.each(function(){
-            var top =Number($(this).css('top').slice(0,-2));
-            $(this).css('top',top-5+'px')
-        })   
+        if ($elm.length < 1) return;
+        $elm.each(function () {
+            var top = Number($(this).css('top').slice(0, -2));
+            $(this).css('top', top - 5 + 'px')
+        })
     },
-    moveDownEvent(event){
+    //元素的下移
+    moveDownEvent(event) {
         event.preventDefault();
         var $elm = this.$workspace.find(".ui-draggable");
-        if($elm.length<1) return;
-        $elm.each(function(){
-            var top =Number($(this).css('top').slice(0,-2));
-            $(this).css('top',top+5+'px')
-        })    
+        if ($elm.length < 1) return;
+        $elm.each(function () {
+            var top = Number($(this).css('top').slice(0, -2));
+            $(this).css('top', top + 5 + 'px')
+        })
     },
-    moveLeftEvent(event){
+    //元素的左移
+    moveLeftEvent(event) {
         event.preventDefault();
         var $elm = this.$workspace.find(".ui-draggable");
-        if($elm.length<1) return;
-        $elm.each(function(){
-            var left =Number($(this).css('left').slice(0,-2));
-            $(this).css('left',left-5+'px')
-        })  
+        if ($elm.length < 1) return;
+        $elm.each(function () {
+            var left = Number($(this).css('left').slice(0, -2));
+            $(this).css('left', left - 5 + 'px')
+        })
     },
-    moveRightEvent(event){
+    //元素的右移
+    moveRightEvent(event) {
         event.preventDefault();
         var $elm = this.$workspace.find(".ui-draggable");
-        if($elm.length<1) return;
-        $elm.each(function(){
-            var left =Number($(this).css('left').slice(0,-2));
-            $(this).css('left',left+5+'px')
-        })  
-    }
-
+        if ($elm.length < 1) return;
+        $elm.each(function () {
+            var left = Number($(this).css('left').slice(0, -2));
+            $(this).css('left', left + 5 + 'px')
+        })
+    },
 }

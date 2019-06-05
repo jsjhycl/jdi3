@@ -5,9 +5,7 @@
 /* 标尺的css */
 #ruler{
     position: relative;
-    left: 200px;
-    min-width:1024px;
-
+    margin: auto;
 }
 .ruler_horizontal,.ruler_vertical{
     position: absolute;

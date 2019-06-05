@@ -131,6 +131,14 @@ function navbar() {
 		$source: $("#workspace"),
 		selector: ".workspace-node"
 	});
+	//标尺查看器
+	(function controlRuler(){
+		var flag = true;
+		$("#controlRuler").click(function(){
+			new Ruler().controlCoordinates(flag)
+			flag = !flag;
+		})
+	})()	
 }
 
 //控件栏

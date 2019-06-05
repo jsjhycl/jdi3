@@ -1,11 +1,15 @@
 function Ruler() {
-    var $ruler = $("#ruler");
-    $('<div class="rulerbox" id="rulerbox" ><div id="ruler_horizontal" class="ruler_horizontal"></div><div id="ruler_vertical" class="ruler_vertical"></div>').appendTo($ruler)
+    this.$ruler = $("#ruler");
 }
 Ruler.prototype = {
+    //绘制坐标r
     drawCoordinates: function () {
         var $ruler = $("#ruler"),
-            $ruler_width = $ruler.children("#workspace").width(),
+            $rulerbox = $("#rulerbox");
+            if (!$rulerbox.length) {
+                $('<div class="rulerbox" id="rulerbox"><div id="ruler_horizontal" class="ruler_horizontal"></div><div id="ruler_vertical" class="ruler_vertical"></div>').appendTo($ruler)
+            }
+        var $ruler_width = $ruler.children("#workspace").width(),
             $ruler_height = $ruler.children("#workspace").height(),
             rh = $('#ruler_horizontal'),
             rv = $("#ruler_vertical");
@@ -22,6 +26,15 @@ Ruler.prototype = {
             if (i % 50 === 0) {
                 $('<span class="n">' + i + '</span>').css("top", i + 2).appendTo(rv)
             }
+        }
+    },
+    //显示隐藏坐标
+    controlCoordinates: function (params) {
+        var $rulerbox = $("#rulerbox")
+        if (params) {
+            $rulerbox.css('display', 'none')
+        } else {
+            $rulerbox.css('display', 'block')
         }
     }
 }

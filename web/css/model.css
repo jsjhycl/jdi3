@@ -1,5 +1,6 @@
 #workspace {
     position: relative;
+    top:18px;
     margin: auto;
     background-color: #fff;
     cursor: crosshair;

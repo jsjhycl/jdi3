@@ -49,15 +49,20 @@ interface sourceFile {
  */
 function saveImage(source: sourceImage): string;
 function saveImage(source: sourceImage): string {
-    let targetFileName = getFileName(source.resourceId, source.name);
-    if (source.sourceName) {
-        fs.copyFileSync(source.sourceName, targetFileName);
-    } else {
-        let sourceClipboard = clipboard.readImage();
-        let buffers = source.name.endsWith('png') ? sourceClipboard.toPNG() : sourceClipboard.toJPEG(40);
-        fs.writeFileSync(targetFileName, buffers);
+    try {
+        let targetFileName = getFileName(source.resourceId, source.name);
+        if (source.sourceName) {
+            fs.copyFileSync(source.sourceName, targetFileName);
+        } else {
+            let sourceClipboard = clipboard.readImage();
+            let buffers = source.name.endsWith('png') ? sourceClipboard.toPNG() : sourceClipboard.toJPEG(40);
+            fs.writeFileSync(targetFileName, buffers);
+        }
+        return targetFileName;
+    } catch (e) {
+        console.log(e);
+        return '';
     }
-    return targetFileName;
 }
 
 /**
@@ -65,9 +70,14 @@ function saveImage(source: sourceImage): string {
  * return 保存的文件绝对路径
  */
 function saveFile(source: sourceFile): string {
-    let fileName = getFileName(source.resourceId, source.name);
-    fs.writeFileSync(fileName, source.content, 'utf-8');
-    return fileName;
+    try {
+        let fileName = getFileName(source.resourceId, source.name);
+        fs.writeFileSync(fileName, source.content, 'utf-8');
+        return fileName;
+    } catch (e) {
+        console.log(e);
+        return '';
+    }
 }
 
 export {saveImage, saveFile}

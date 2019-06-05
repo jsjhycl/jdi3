@@ -1,5 +1,7 @@
 ﻿//初始化
 function init() {
+	//筛选
+	new Filter('初始化', '加载').set();
 	//初始化属性栏
 	new Propertybar($("#propertybar")).init(false, null);
 	//初始化工作区
@@ -367,6 +369,9 @@ function propertybar() {
 
 //工作区
 function workspace() {
+	new KeyEvent()
+	//绘制标尺
+	new Ruler().drawCoordinates()
 	var $workspace = $("#workspace");
 	
 	//droppable
@@ -417,6 +422,7 @@ function workspace() {
 	
 	//jresizable
 	$workspace.on("click", ".workspace-node", function (event) {
+		$("#delete").css('color','red')
 		event.stopPropagation();
 		$(this).jresizable({
 			mode: "single",
@@ -446,6 +452,7 @@ function workspace() {
 	
 	//清除样式
 	$workspace.on("click", function (event) {
+		$("#delete").css('color','white')
 		var $target = $(event.target);
 		if (!$target.is(".workspace-node")) {
 			$workspace.find(".ui-selected").removeClass("ui-selected");
@@ -458,7 +465,7 @@ function workspace() {
 	//清除右键菜单
 	$("#designer").on("click", function () {
 		$(".jcontextmenu:visible").hide();
-	});
+    });
 }
 
 //回调函数
@@ -476,7 +483,11 @@ function back(html) {
 		});
 		$("#workspace").append($node);
 		contextMenu.done(2, $node);
-		
+
+
+        // 调整工作区的大小
+        $node.height() > $("#workspace").height() && $("#workspace").height(Math.ceil($node.height()));
+        $node.width() > $("#workspace").width() && $("#workspace").width(Math.ceil($node.width()));
 		$node.find(":input").each(function () {
 			var childNumber = control.createNumber("child");
 			$(this).attr({

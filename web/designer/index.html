@@ -31,7 +31,7 @@
                 <li><a data-toggle="modal" href="#dbDefineModal">数据库定义</a></li>
                 <li><a data-toggle="modal" href="#publishModal">发布模型</a></li>
                 <li class="divider"></li>
-                <li><a data-toggle="modal" href="#workspaceModal">工作区设置</a></li>
+                
             </ul>
         </li>
         <li class="dropdown">
@@ -44,10 +44,11 @@
         </li>
         <li><a class="item" id="save" data-first-filter="save">保存</a></li>
         <li><a class="item" id="submit" data-first-filter="submit">提交</a></li>
-        <li><a class="item" id="delete">删除</a></li>
+        <li><a class="item" id="delete" data-zero-filter="delete">删除</a></li>
         <li><a class="item" id="recall" data-first-filter="recall" style="display: none">重新调用模板</a></li>
-        <li><a class="item" id="preview" target="_blank">预览</a></li>
-        <li><a class="item" id="test">测试</a></li>
+        <li><a class="item" id="preview" data-zero-filter="preview" target="_blank">预览</a></li>
+            <li><a class="item" id="test" data-zero-filter="test">测试</a></li>
+        <li><a class="item" data-toggle="modal" href="#workspaceModal">工作区设置</a></li>
     </ul>
 
     <!-- <ul class="nav navbar-nav navbar-right">
@@ -93,7 +94,7 @@
 
 <!--控件栏-->
 <aside id="controlbar">
-    <ul class="control-list">
+    <ul class="control-list" data-zero-filter="asider">
         <li class="control-item" data-type="text" title="文本框">
             <span class="glyphicon glyphicon-subtitles"></span>
             <span>文本框</span>
@@ -128,7 +129,7 @@
                 <span class="icon icon-fx"></span>
             </button>
             <button class="btn btn-default btn-sm" data-type="functionView" id="viewAllFns" title="查看函数配置">
-                <span class="icon"></span>
+                <span class="icon icon-fx-view"></span>
             </button>
         </div>
 
@@ -201,7 +202,9 @@
 <aside id="propertybar"></aside>
 <!--设计器-->
 <section id="designer">
+     <div id="ruler">
     <div id="workspace"></div>
+</div>
 </section>
 
 <!-- <% include includes/modal.html %> -->
@@ -711,7 +714,7 @@
 
 <!--抄送模态框-->
 <section class="modal fade" id="copySendModal">
-    <div class="modal-dialog w1000px">
+    <div class="modal-dialog w1200px">
         <div class="modal-content">
             <header class="modal-header">
                 <button class="close" data-dismiss="modal">&times;</button>
@@ -725,6 +728,7 @@
                         <th>抄送状态</th>
                         <th>抄送表</th>
                         <th>抄送列</th>
+                        <th>抄送字段</th>
                         <th>抄送行</th>
                         <th>抄送值</th>
                         <th>

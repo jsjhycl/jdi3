@@ -289,21 +289,12 @@
         "value": "db.desc",
         "controlType": "textbox",
         "dataType": "String"
+      },{
+        "name":"字段分段",
+        "value":"db.filedSegmentation",
+        "controlType":"textbox",
+        "dataType":"Number"
       }
     ]
   }
-  //  {
-  //    "name": "抄送属性",
-  //    "value": "copySend",
-  //    "isPM": true,
-  //    "items": [
-  //      {
-  //        "name": "抄送",
-  //        "value": "copySend",
-  //        "controlType": "textbox_btn",
-  //        "dataType": "Array",
-  //        "isPM": true
-  //      }
-  //    ]
-  //  }
 ]

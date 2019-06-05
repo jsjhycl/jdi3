@@ -165,6 +165,50 @@ function ContextMenu() {
         $workspace.addClass("focus");
         new Property().load($workspace);
     }
+
+    // 复制当前行
+    this.copyLine = function($el, num) {
+        var $parent = $el.parents('tr'),
+            clone,
+            $target = $parent.length <= 0 ? $el : $parent.eq(0),
+            control = new Control(),
+            contextMenu = new ContextMenu(),
+            maxId;
+        // while(num > 0) {
+        for (var i = 0; i < num; i ++) {
+            clone = $target.clone();
+            if ($parent.length <= 0) {
+                var type = $el.get(0).tagName === 'INPUT' ? 'text' : $(dom).get(0).tagName.toLowerCase(),
+                    prefix = type == 'div' ? 'DIV_' : "";
+                maxId = maxId ? NumberHelper.idToName(NumberHelper.nameToId(maxId) + 1, 4) : control.createNumber(type);
+                type == 'text' && addNewProp($el.attr('id'), maxId);
+                type == 'div' ? contextMenu.done(2, $(clone)) : contextMenu.done(3, $(clone));
+                $(clone).attr({
+                    id: prefix + maxId,
+                    name: prefix + maxId,
+                }).css('top', parseFloat($el.css('top')) + (($el.height() + 10) * (i + 1)));
+            } else {
+                $(clone).find('div, input, button, checkbox').each(function(idx, dom) {
+                    var type = $(dom).get(0).tagName === 'INPUT' ? 'text' : $(dom).get(0).tagName.toLowerCase(),
+                        prefix = type == 'div' ? 'DIV_' : "";
+                    maxId = maxId ? NumberHelper.idToName(NumberHelper.nameToId(maxId) + 1, 4) : control.createNumber(type);
+                    type == 'text' && addNewProp($(dom).attr('id'), maxId);
+                    type == 'div' ? contextMenu.done(2, $(dom)) : contextMenu.done(3, $(dom));
+                    $(dom).attr({
+                        id: prefix + maxId,
+                        name: prefix + maxId,
+                    });
+                });
+            }
+            $target.after(clone[0]);
+        }
+        function addNewProp(oldId, newId) {
+            var newObj = JSON.parse(JSON.stringify(GLOBAL_PROPERTY[oldId]));
+            newObj.name = newId;
+            newObj.cname = newId;
+            GLOBAL_PROPERTY[newId] = newObj;
+        }
+    }
 }
 
 ContextMenu.prototype = {
@@ -311,6 +355,23 @@ ContextMenu.prototype = {
                             text: "选择页面",
                             handler: function () {
                                 that.selectPage();
+                            }
+                        },
+                        {type: "separator"},
+                        {
+                            type: "menuitem",
+                            text: "复制当前行",
+                            handler: function () {
+                                var $el = $(this);
+                                    
+                                new PromptModal('复制行数', function(val) {
+                                    var num = Number(val);
+                                    if (Number.isNaN(num) || num <= 0) {
+                                        alert('无效的参数')
+                                    } else {
+                                        that.copyLine($el, num);
+                                    }
+                                }).init()
                             }
                         }
                     ]

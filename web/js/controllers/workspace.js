@@ -378,6 +378,8 @@ Workspace.prototype = {
         $("#name").empty().append(text);
         that.$workspace.empty().attr(attrs);
         new Filter(type, subtype).set();
+        $("#toolbar").css('right',"260px")
+        $("#toolbar").css('left',"140px")
         GLOBAL_PROPERTY = {};
 
     },

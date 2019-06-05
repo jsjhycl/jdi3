@@ -133,7 +133,7 @@ function navbar() {
 	});
 	//标尺查看器
 	(function controlRuler(){
-		var flag = true;
+		var flag = false;
 		$("#controlRuler").click(function(){
 			new Ruler().controlCoordinates(flag)
 			flag = !flag;

@@ -7,7 +7,7 @@ Ruler.prototype = {
         var $ruler = $("#ruler"),
             $rulerbox = $("#rulerbox");
             if (!$rulerbox.length) {
-                $('<div class="rulerbox" id="rulerbox"><div id="ruler_horizontal" class="ruler_horizontal"></div><div id="ruler_vertical" class="ruler_vertical"></div>').appendTo($ruler)
+                $('<div class="rulerbox" id="rulerbox" style="display:none"><div id="ruler_horizontal" class="ruler_horizontal"></div><div id="ruler_vertical" class="ruler_vertical"></div>').appendTo($ruler)
             }
         var $ruler_width = $ruler.children("#workspace").width(),
             $ruler_height = $ruler.children("#workspace").height(),

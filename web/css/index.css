@@ -215,10 +215,13 @@
 #toolbar {
     position: fixed;
     top: 51px;
-    right: 260px;
+    /* right: 260px;
     left: 140px;
     margin: 0;
-    padding: 2px 0;
+    padding: 2px 0; */
+    right: 0;
+    left: 0;
+    margin: 0;
     background-color: white;
     border-bottom: 1px solid lightgray;
 }

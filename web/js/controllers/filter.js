@@ -70,4 +70,6 @@ Filter.prototype.set = function () {
             $(this).hide();
         }
     });
+    // $("#toolbar").css('right',"260px")
+    // $("#toolbar").css('left',"140px")
 };

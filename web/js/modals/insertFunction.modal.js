@@ -65,7 +65,7 @@ InsertFnModal.prototype = {
         // 关闭模态框
         that.$modal.on('click' + that.NAMESPACE, '.clear, .close', function(event) {
             that.$modal.hide();
-            WorkspaceUtil.resetView();
+            WorkspaceUtil.resetView(true);
         })
 
         // 选择框change事件

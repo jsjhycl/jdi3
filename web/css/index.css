@@ -258,6 +258,9 @@
 #buttonbar .btn {
     height: 30px;
 }
+#buttonbar .btn.is_using {
+    background: linear-gradient(rgb(254,220,178), rgb(253,228,147));
+}
 
 .icon {
     position: relative;
@@ -576,7 +579,7 @@
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 900;
+    z-index: 799;
     display: block;
     background-color: transparent;
 }

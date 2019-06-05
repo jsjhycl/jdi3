@@ -13,11 +13,11 @@ let WorkspaceUtil = {
      */
     switchWorkspace: function(view, $dom, flag, args) {
         this.resetView();
-
         let that = this,
             $workspace = $('#workspace'),
             $currentInput = $workspace.find('.focus'),
             $wrap = $('<div id="mask"></div>'),
+            $wrap_content = $('<div id="mask_content"></div>'),
             $wsCopy = $('<div id="workspace_copy"></div>').html($workspace.html());
         $wrap.css({height: $(document).height()});  // 2019/1/3 添加
         $wsCopy.css({
@@ -29,7 +29,6 @@ let WorkspaceUtil = {
             left: $workspace.offset().left,
             zIndex: 801
         });
-        
         if (!flag) {
             that.input2Btn(view, $wsCopy.find('input'), true, $workspace);
         }
@@ -44,7 +43,9 @@ let WorkspaceUtil = {
             })
         };
         $wsCopy.children().removeAttr('id');
-        $wrap.append($wsCopy).append($dom);
+        // $wrap_content.append($wsCopy).append($dom);
+        $wrap_content.append($wsCopy);
+        $wrap.append($wrap_content);
         $('body').append($wrap);
         that.bindEvents();
     },
@@ -74,7 +75,6 @@ let WorkspaceUtil = {
      * @param {DOMS} $doms 带转换的元素
      */
     input2Btn: function(view, $doms, flag, $originContainer) {
-        console.log($originContainer)
         $.each($doms, function(index, item) {
             let $dom = $(item),
                 id = $dom.attr('id'),
@@ -116,16 +116,18 @@ let WorkspaceUtil = {
         let that = this,
             $mask = $('#mask');
 
-        // 遮罩层关闭事件
-        $mask.off('click');
-        $mask.on('click', '.copy-dom' ,function(event) {
+        $mask.off('click.workspace');
+        $('#workspace_copy').off('click.workspace');
+        $('nav').off('click.workspace');
+        $("body").off('click.workspace')
+        $mask.on('click.workspace', '.copy-dom' ,function(event) {
             new InsertFnModal($("#insertFunctionModal")).close();
             new InsertFnArgsModal().close();
             that.resetView($mask);
         });
 
         // 选择参数事件
-        $('#workspace_copy').on('click', '.workspace-node-switch', function(event) {
+        $('#workspace_copy').on('click.workspace', '.workspace-node-switch', function(event) {
             event.stopPropagation();
             let that = this,
                 $el = $(this),
@@ -154,8 +156,11 @@ let WorkspaceUtil = {
                     }
                 }
             }
-        })
+        });
 
+        $('body').on('click.workspace', '.navbar, #controlbar', function() {
+            that.resetView(true);
+        })
     },
 
     setMask: function($container) {
@@ -177,8 +182,12 @@ let WorkspaceUtil = {
     },
 
     // 移除模态框
-    resetView: function() {
+    resetView: function(flag) {
+        flag = !!flag || false; 
         $('#mask').remove();
+        $("#insertFunctionModal").hide();
+        $("#insertFunctionArgsModal").hide();
+        flag && $('.is_using').removeClass('is_using');
     },
 }
 

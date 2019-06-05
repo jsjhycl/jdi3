@@ -1,9 +1,10 @@
-;(function ($, window, document, undefined) {
+;
+(function ($, window, document, undefined) {
     var EVENT_NAMESPACE = ".nv_event",
         CACHE_KEY = "nv_cache";
 
     function NumViewer(elements, options) {
-        this.$elements = elements;
+        this.$elements = elements; //查看元素编号
         this.options = options;
     }
 
@@ -33,7 +34,9 @@
         },
         bindEvents: function (element) {
             var that = this;
-            $(element).on("click" + EVENT_NAMESPACE, {element: element}, function (event) {
+            $(element).on("click" + EVENT_NAMESPACE, {
+                element: element
+            }, function (event) {
                 that.renderDOM(event.data.element);
             });
         },
@@ -81,11 +84,12 @@
                     $container.append($node);
                 } else {
                     $(item).find(":input").each(function (jindex, jitem) {
-                        var jposition = $(jitem).position(),
-                            $cnode = $('<div class="viewer-node">' + jitem.id + '</div>');
+                        var $cnode = $('<div class="viewer-node">' + jitem.id + '</div>'),
+                            offset = $(jitem).offset(),
+                            workapce = $("#workspace").offset();
                         $cnode.css({
-                            "left": position.left + jposition.left + "px",
-                            "top": position.top + jposition.top + "px",
+                            "left": offset.left - workapce.left + "px",
+                            "top": offset.top - workapce.top + "px",
                             "width": jitem.offsetWidth + 5,
                             "height": jitem.offsetHeight + 5
                         });
@@ -110,10 +114,8 @@
         disabled: false,
         $source: null,
         selector: null,
-        onStart: function () {
-        },
-        onStop: function () {
-        }
+        onStart: function () {},
+        onStop: function () {}
     };
 
     $.fn.numViewer.methods = {
@@ -122,12 +124,16 @@
         },
         enable: function (elements) {
             return elements.each(function () {
-                $(this).numViewer({disabled: false});
+                $(this).numViewer({
+                    disabled: false
+                });
             });
         },
         disable: function (elements) {
             return elements.each(function () {
-                $(this).numViewer({disabled: true});
+                $(this).numViewer({
+                    disabled: true
+                });
             });
         }
     };

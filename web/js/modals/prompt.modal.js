@@ -51,7 +51,7 @@ PromptModal.prototype = {
         });
     
     
-        $("#prompt").on('click', '.clear', function() {
+        $("#prompt").on('click', '.clear, .close', function() {
             that.remove();
         });
         

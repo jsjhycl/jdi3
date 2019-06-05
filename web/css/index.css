@@ -359,6 +359,7 @@
 }
 
 /* 插入函数模态框 */
+#prompt,
 #insertFunctionModal,
 #insertFunctionArgsModal {
     position: fixed;
@@ -370,6 +371,9 @@
     z-index: 10000;
     background: #FFF;
     box-shadow: 12px 12px 20px #999, 0 0 20px #999;
+}
+#prompt {
+    display: inline-block!important;
 }
 #insertFunctionModal .insert-fns {
     border: 1px solid #ccc;
@@ -405,6 +409,8 @@
     color: #fff;
     background-color: rgb(51, 153, 255);
 }
+#prompt .modal-header,
+#prompt .modal-footer,
 #insertFunctionArgsModal .modal-header,
 #insertFunctionArgsModal .modal-footer,
 #insertFunctionModal .modal-header,
@@ -416,6 +422,7 @@
     min-height: 50px;
     background: #fff;
 }
+#prompt .modal-footer .btn,
 #insertFunctionArgsModal .modal-footer .btn,
 #insertFunctionModal .modal-footer .btn {
     padding: 2px 8px;

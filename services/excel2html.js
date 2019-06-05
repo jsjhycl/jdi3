@@ -4,7 +4,9 @@ let fs = require('fs'),
 	mfs = require('mz/fs'),
 	unzip = require('unzip'),
 	xml2js = require('xml2js'),
-	xmlParser = new xml2js.Parser({explicitArray: false});
+	xmlParser = new xml2js.Parser({
+		explicitArray: false
+	});
 // config = require('../config');
 let config = {
 	dataPath: path.join(__dirname, '../data/temp'),
@@ -49,13 +51,13 @@ function getFiles(dirName, resultName) {
 		themeContent = yield xml2json(themeContent);
 		workContent = yield xml2json(workContent);
 		workRelContent = yield xml2json(workRelContent);
-		
+
 		//获取Excel版本信息
 		let appContent = (yield mfs.readFile(path.join(dirName, 'docProps', 'app.xml'))).toString();
 		appContent = yield xml2json(appContent);
 		let version = appContent.Properties.AppVersion.substr(0, appContent.Properties.AppVersion.indexOf("."));
 		let tintColor = getTintColor(version);
-		
+
 		//名称对应
 		let sheetShip = getSheetRelation(workContent, workRelContent);
 		//全局style,包含className
@@ -131,7 +133,9 @@ function getSheetRelation(workContent, workRelContent) {
 //解析style样式
 function analyzeStyle(styleObj, themestyle, tintColor, colorObj, paramConfig) {
 	//formats即是style里数据的格式转化
-	let styles = [], formats = {}, rotation = {};
+	let styles = [],
+		formats = {},
+		rotation = {};
 	let cellXfs = styleObj.styleSheet.cellXfs;
 	let borders = styleObj.styleSheet.borders.border;
 	let fonts = styleObj.styleSheet.fonts.font;
@@ -142,7 +146,12 @@ function analyzeStyle(styleObj, themestyle, tintColor, colorObj, paramConfig) {
 	cellXfs.xf.forEach((cell, index) => {
 		singleXf(cell, index, borders, fonts, numFmts, fills, dxfs, tintColor, colorObj, paramConfig, themestyle, styles, formats, rotation);
 	})
-	return {styles: styles, formats: formats, fonts: fonts, rotation: rotation}
+	return {
+		styles: styles,
+		formats: formats,
+		fonts: fonts,
+		rotation: rotation
+	}
 }
 
 //style中单个的xf表示一个class样式
@@ -153,7 +162,7 @@ function singleXf(cell, index, borders, fonts, numFmts, fills, dxfs, tintColor, 
 		let font = fonts[Number(cell.$.fontId)];
 		style = param2Style(font, themestyle, tintColor, colorObj, paramConfig);
 	}
-	
+
 	//边框的函数提取
 	function paramBorder(borderStr, borderObj, themestyle, paramConfig) {
 		let border_line = paramExistConfig(borderStr, borderObj.$.style, paramConfig);
@@ -170,9 +179,12 @@ function singleXf(cell, index, borders, fonts, numFmts, fills, dxfs, tintColor, 
 			}
 		}
 		let border_color = paramExistConfig(borderStr + '_color', border_color_value, paramConfig);
-		return {border_line: border_line, border_color: border_color};
+		return {
+			border_line: border_line,
+			border_color: border_color
+		};
 	}
-	
+
 	//边框 border单独出来
 	if (cell.$.borderId != "0") {
 		let borderStyle = {};
@@ -225,8 +237,10 @@ function singleXf(cell, index, borders, fonts, numFmts, fills, dxfs, tintColor, 
 			if (!paramConfig[align]) {
 				paramConfig[align] = '';
 				style[align] = cell.alignment.$[align];
-			} else
-				style[paramConfig[align].name] = eval(paramConfig[align].format.replace(/~/g, cell.alignment.$[align]));
+			} else{
+				// style[paramConfig[align].name] = eval(paramConfig[align].format.replace(/~/g, cell.alignment.$[align]));
+				Object.assign(style,paramConfigSplit(paramConfig[align], cell.alignment.$[align]));
+			}
 		}
 	}
 	style.className = ".style" + index;
@@ -253,7 +267,7 @@ function analyzeTheme(themeObj, tintColor, paramConfig) {
 	let styles = [];
 	let themeClr = themeObj["a:theme"]["a:themeElements"]["a:clrScheme"];
 	let themeFont = themeObj["a:theme"]["a:themeElements"]["a:fontScheme"];
-	let themeFmt = themeObj["a:theme"]["a:themeElements"]["a:fmtScheme"];//themeFmt暂时不明白什么含义
+	let themeFmt = themeObj["a:theme"]["a:themeElements"]["a:fmtScheme"]; //themeFmt暂时不明白什么含义
 	let index = 0;
 	for (let clr in themeClr) {
 		if (clr == '$') continue;
@@ -286,7 +300,10 @@ function analyzeTheme(themeObj, tintColor, paramConfig) {
 			styles.push(style);
 		}
 	}
-	return {styles: styles, tintColor: tintColor};
+	return {
+		styles: styles,
+		tintColor: tintColor
+	};
 }
 
 //解析sharedString文件(字符串样式)
@@ -305,7 +322,9 @@ function analyzeSheet(sheetobj, shareObj, styles, styleObj, themestyle, tintColo
 	//主体结构
 	let sheetData = sheetobj.worksheet.sheetData;
 	//htmls:{{content:[{val:,style:}],class:[],location:},heightwidth:{},mergeCells:[],area}
-	let htmls = {data: {}};
+	let htmls = {
+		data: {}
+	};
 	//HTML的区域大小
 	let locationArea = sheetobj.worksheet.dimension.$.ref;
 	let locationAreas = locationArea.split(":");
@@ -331,7 +350,8 @@ function analyzeSheet(sheetobj, shareObj, styles, styleObj, themestyle, tintColo
 		let width = [];
 		sheetobj.worksheet.cols.col = obj2Array(sheetobj.worksheet.cols.col);
 		for (let col of sheetobj.worksheet.cols.col) {
-			let min = Number(col.$.min), max = Number(col.$.max);
+			let min = Number(col.$.min),
+				max = Number(col.$.max);
 			for (let i = min; i <= max; i++) {
 				let widthObj = paramExistConfig("width", col.$.hidden ? 0 : col.$.width, paramConfig);
 				widthObj.col = i;
@@ -376,7 +396,13 @@ function analyzeSheet(sheetobj, shareObj, styles, styleObj, themestyle, tintColo
 
 //单个单元格的处理
 function singleCell(c, htmls, shareObj, styleObj, themestyle, tintColor, colorObj, paramConfig) {
-	let contents = [], classes = [], fun = '', format = '', rotation = 0, isStr = false, textAlign = false;//textAlign是分配数字和汉字的左右对齐
+	let contents = [],
+		classes = [],
+		fun = '',
+		format = '',
+		rotation = 0,
+		isStr = false,
+		textAlign = false; //textAlign是分配数字和汉字的左右对齐
 	//考虑函数
 	if (c.f) fun = c.f.$ ? c.f._ : c.f;
 	//考虑到字符串的情况
@@ -384,9 +410,11 @@ function singleCell(c, htmls, shareObj, styleObj, themestyle, tintColor, colorOb
 		isStr = true;
 		textAlign = true;
 		let index = Number(c.v);
-		let si = shareObj[index];//一个si是一个单元格
+		let si = shareObj[index]; //一个si是一个单元格
 		if (si.t) {
-			let cellobj = {val: ''};
+			let cellobj = {
+				val: ''
+			};
 			if (si.t.$) {
 				if (si.t.$["xml:space"] == "preserve" && !si.t._)
 					cellobj.val = ' ';
@@ -395,12 +423,15 @@ function singleCell(c, htmls, shareObj, styleObj, themestyle, tintColor, colorOb
 			} else
 				cellobj.val = si.t || '';
 			contents.push(cellobj);
-		}
-		else if (si.t == '') contents.push({val: ''});
+		} else if (si.t == '') contents.push({
+			val: ''
+		});
 		else {
 			si.r = obj2Array(si.r);
 			for (let r of si.r) {
-				let cellobj = {val: ''};
+				let cellobj = {
+					val: ''
+				};
 				if (r.t) {
 					if (r.t.$) {
 						if (r.t.$["xml:space"] == "preserve" && !r.t._)
@@ -418,7 +449,9 @@ function singleCell(c, htmls, shareObj, styleObj, themestyle, tintColor, colorOb
 				contents.push(cellobj);
 			}
 			if (si.rPh) {
-				let cellobj = {val: ""};
+				let cellobj = {
+					val: ""
+				};
 				if (si.rPh.t.$) {
 					if (si.rPh.t.$["xml:space"] == "preserve" && !si.rPh.t._)
 						cellobj.val = ' ';
@@ -434,9 +467,11 @@ function singleCell(c, htmls, shareObj, styleObj, themestyle, tintColor, colorOb
 			}
 		}
 	} else if (c.v)
-		contents.push({val: Number(c.v)});
+		contents.push({
+			val: Number(c.v)
+		});
 	if (!textAlign) classes.push("text_align_right");
-	if (c.$.s) {//要考虑数据的格式化的问题
+	if (c.$.s) { //要考虑数据的格式化的问题
 		if (styleObj.formats[c.$.s])
 			format = styleObj.formats[c.$.s];
 		if (styleObj.rotation[c.$.s]) {
@@ -447,7 +482,8 @@ function singleCell(c, htmls, shareObj, styleObj, themestyle, tintColor, colorOb
 		classes.push("borderStyle" + c.$.s);
 		classes.push("fillStyle" + c.$.s);
 	}
-	let boolen = true, location = letter2Number(c.$.r);
+	let boolen = true,
+		location = letter2Number(c.$.r);
 	if (htmls.mergeCells) {
 		for (let merge of htmls.mergeCells) {
 			let mergeResult = judgeCellIn(letter2Number(c.$.r), merge);
@@ -472,7 +508,16 @@ function singleCell(c, htmls, shareObj, styleObj, themestyle, tintColor, colorOb
 		}
 	}
 	if (boolen)
-		return {content: contents, class: classes, isStr: isStr, fun: fun, format: format, rotation: rotation, location: location, realLocation: c.$.r}
+		return {
+			content: contents,
+			class: classes,
+			isStr: isStr,
+			fun: fun,
+			format: format,
+			rotation: rotation,
+			location: location,
+			realLocation: c.$.r
+		}
 	else
 		return false;
 }
@@ -497,7 +542,8 @@ function param2Style(paramobj, themestyle, tintColor, colorObj, paramConfig) {
 							stylevalue = item.color;
 					}
 				} else {
-					let colorstr = '', tint = paramobj[param].$.tint;
+					let colorstr = '',
+						tint = paramobj[param].$.tint;
 					for (let clr of themestyle) {
 						if ('.themeclr' + Number(Number(paramobj[param].$.theme) + 1) == clr.className) {
 							for (let key in clr) {
@@ -538,7 +584,8 @@ function param2Style(paramobj, themestyle, tintColor, colorObj, paramConfig) {
 			paramConfig[param] = '';
 			style[param] = stylevalue;
 		} else {
-			style[paramConfig[param].name] = eval(paramConfig[param].format.replace(/~/g, stylevalue));//需要配置和公式等
+			Object.assign(style,paramConfigSplit(paramConfig[param], stylevalue));
+			// style[paramConfig[param].name] = eval(paramConfig[param].format.replace(/~/g, stylevalue)); //需要配置和公式等
 		}
 	}
 	delete style.$;
@@ -552,15 +599,29 @@ function paramExistConfig(param, value, paramConfig) {
 		paramConfig[param] = '';
 		obj[param] = value;
 	} else {
-		obj[paramConfig[param].name] = eval(paramConfig[param].format.replace(/~/g, value))
+		// obj[paramConfig[param].name] = eval(paramConfig[param].format.replace(/~/g, value))
+		obj = paramConfigSplit(paramConfig[param], value);
 	}
 	return obj;
 }
 
+function paramConfigSplit(paramObj, value) {
+	let obj = {};
+	if (paramObj.name.indexOf(",") > 0) {
+		let names = paramObj.name.split('|,|'),
+			formats = paramObj.format.split('|,|');
+		obj[names[0]] = eval(formats[0].replace(/~/g, value));
+		obj[names[1]] = eval(formats[1].replace(/~/g, value));
+	} else
+		obj[paramObj.name] = eval(paramObj.format.replace(/~/g, value))
+	return obj;
+}
+
 //将单元格所属行列转为纯数字，如A1->1-1
-function letter2Number(cellLetter) {//单元格所属行列名称
+function letter2Number(cellLetter) { //单元格所属行列名称
 	if (!cellLetter) return 0;
-	let firstNum = 0, lastNum = 0;
+	let firstNum = 0,
+		lastNum = 0;
 	let splitIndex = 0;
 	for (let i = 0; i < cellLetter.length; i++) {
 		if (!isNaN(cellLetter[i])) {
@@ -568,8 +629,8 @@ function letter2Number(cellLetter) {//单元格所属行列名称
 			break;
 		}
 	}
-	let firstLetter = cellLetter.substring(0, splitIndex);//字母
-	lastNum = Number(cellLetter.substr(splitIndex));//数字
+	let firstLetter = cellLetter.substring(0, splitIndex); //字母
+	lastNum = Number(cellLetter.substr(splitIndex)); //数字
 	let firstLength = firstLetter.length - 1;
 	for (let item of firstLetter) {
 		firstNum += (item.charCodeAt() - 64) * (firstLength <= 0 ? 1 : (26 * firstLength));
@@ -582,12 +643,16 @@ function letter2Number(cellLetter) {//单元格所属行列名称
 function judgeCellIn(cell, area) {
 	if (!cell || !area) return '';
 	let cells = cell.split('-');
-	let col = Number(cells[0]), row = Number(cells[1]);
+	let col = Number(cells[0]),
+		row = Number(cells[1]);
 	let areas = area.split(':');
 	let firstAreas = areas[0].split('-');
 	let lastAreas = areas[1].split('-');
-	let left = Number(firstAreas[0]), top = Number(firstAreas[1]), right = Number(lastAreas[0]), bottom = Number(lastAreas[1]);
-	if (col == left && row == top)//判断第一个
+	let left = Number(firstAreas[0]),
+		top = Number(firstAreas[1]),
+		right = Number(lastAreas[0]),
+		bottom = Number(lastAreas[1]);
+	if (col == left && row == top) //判断第一个
 		return area;
 	else if (col == right && row == top)
 		return 2
@@ -608,7 +673,8 @@ function json2table(htmls, styles, resultName) {
 		let html = '<div class="sheet_contain"><table style="border-collapse: collapse;table-layout: fixed;width: 1px;">';
 		let tdwidth = '70px';
 		let areaObj = locationIndex(htmlElement.area);
-		let widthLength = areaObj.cols + areaObj.col, firstCol = areaObj.col;
+		let widthLength = areaObj.cols + areaObj.col,
+			firstCol = areaObj.col;
 		//添加td宽度
 		html += '<colgroup>'
 		let hwexist = false;
@@ -644,7 +710,7 @@ function json2table(htmls, styles, resultName) {
 			//判断是否要添加空td和div高度问题
 			let tdIndex = firstCol;
 			for (let item of htmlElement.data[rowIndex]) {
-				let defaultdivhgt = '';//td中div的高度
+				let defaultdivhgt = ''; //td中div的高度
 				let spanobj = locationIndex(item.location);
 				if (tdIndex != spanobj.col) {
 					let colspan = spanobj.col - tdIndex;
@@ -683,7 +749,8 @@ function json2table(htmls, styles, resultName) {
 				defaultdivhgt = sumpx(defaultdivhgt, ';');
 				tdIndex = (spanobj.cols == 0 ? 1 : spanobj.cols) + spanobj.col;
 				//区分border,fill和其他样式
-				let eleClass = [], tdClass = [];
+				let eleClass = [],
+					tdClass = [];
 				if (item.class.length > 0) {
 					for (let ecls of item.class) {
 						if (ecls.indexOf('border') >= 0 || ecls.indexOf('fill') >= 0)
@@ -734,7 +801,10 @@ function json2table(htmls, styles, resultName) {
 			html += '</tr>';
 		}
 		html += '</tbody></table></div>';
-		htmlstrs.push({data: html, name: htmlElement.name + '.html'});
+		htmlstrs.push({
+			data: html,
+			name: htmlElement.name + '.html'
+		});
 	}
 	let style = '<style>';
 	for (let sty of styles) {
@@ -786,7 +856,10 @@ function formatStr(str) {
 //对单元格位置的一些解析
 function locationIndex(location) {
 	//span->span字符串,col->列起,cols->跨列多少,rows->所跨行
-	let span = '', cols = 0, col = 0, rowss = [];
+	let span = '',
+		cols = 0,
+		col = 0,
+		rowss = [];
 	if (location.indexOf(":") >= 0) {
 		let locations = location.split(':');
 		let rows = locations[0].split('-');
@@ -808,7 +881,12 @@ function locationIndex(location) {
 		col = Number(locations[0]);
 		rowss.push(Number(locations[1]));
 	}
-	return {span: span, rows: rowss, cols: cols, col: col};
+	return {
+		span: span,
+		rows: rowss,
+		cols: cols,
+		col: col
+	};
 }
 
 //字符串里的高度相加
@@ -835,7 +913,8 @@ function json2html(htmls, styles, resultName) {
 	let tem1s = areas[1].split("-");
 	let colgrid = Number(tem1s[0]) - Number(tems[0]) + 1;
 	let rowgrid = Number(tem1s[1]) - Number(tems[1]) + 1;
-	let defaultHeight = '18px', defaultWidth = '70px';
+	let defaultHeight = '18px',
+		defaultWidth = '70px';
 	let html = '<div class="container" style="display: grid;';
 	let gridColumn = 'repeat(' + colgrid + ',' + defaultWidth + ');';
 	let gridRow = 'repeat(' + rowgrid + ',' + defaultHeight + ');';
@@ -881,7 +960,7 @@ function json2html(htmls, styles, resultName) {
 		/*let whauto = '';
 		if (item.location.indexOf(":") >= 0)
 			whauto = 'width:auto;height:auto;';*/
-		let area = location2grid(item.location, Number(tems[0]), Number(tems[1]));//要考虑初始点(列行)
+		let area = location2grid(item.location, Number(tems[0]), Number(tems[1])); //要考虑初始点(列行)
 		if (area)
 			html += ' style="' + area + '"';
 		if (item.fun)
@@ -924,14 +1003,18 @@ function location2grid(location, column, row) {
 		let locations = location.split(":");
 		let rows = locations[1].split('-');
 		let cols = locations[0].split('-');
-		let column1 = Number(cols[0]) - column + 1, column2 = Number(rows[0]) + 1 - column + 1;
-		let row1 = Number(cols[1]) - row + 1, row2 = Number(rows[1]) + 1 - row + 1;
+		let column1 = Number(cols[0]) - column + 1,
+			column2 = Number(rows[0]) + 1 - column + 1;
+		let row1 = Number(cols[1]) - row + 1,
+			row2 = Number(rows[1]) + 1 - row + 1;
 		let str = "grid-column:" + column1 + ' / ' + column2 + ';' + "grid-row:" + row1 + ' / ' + row2 + ';';
 		return str;
 	} else {
 		let locations = location.split('-');
-		let column1 = Number(locations[0]) - column + 1, column2 = Number(locations[0]) + 1 - column + 1;
-		let row1 = Number(locations[1]) - row + 1, row2 = Number(locations[1]) + 1 - row + 1;
+		let column1 = Number(locations[0]) - column + 1,
+			column2 = Number(locations[0]) + 1 - column + 1;
+		let row1 = Number(locations[1]) - row + 1,
+			row2 = Number(locations[1]) + 1 - row + 1;
 		let str = "grid-column:" + column1 + ' / ' + column2 + ';' + "grid-row:" + row1 + ' / ' + row2 + ';';
 		return str;
 	}
@@ -963,7 +1046,9 @@ function excel2html() {
 			fileName = file;
 	}
 	if (!fileName) return console.log("没有文件");
-	let resStream = unzip.Extract({path: config.dataPath + fileName});
+	let resStream = unzip.Extract({
+		path: config.dataPath + fileName
+	});
 	fs.createReadStream(config.excelPath + fileName).pipe(resStream);
 	resStream.on('close', (chunk) => {
 		getFiles(config.dataPath + fileName, fileName)
@@ -978,7 +1063,9 @@ function reviseByPath(filePath) {
 	let fileName = path.basename(filePath);
 	if (!fileName.match(/.*xlsx$/i)) return Promise.reject("文件格式不正确");
 	return new Promise((resolve, reject) => {
-		let resStream = unzip.Extract({path: config.dataPath + fileName});
+		let resStream = unzip.Extract({
+			path: config.dataPath + fileName
+		});
 		fs.createReadStream(filePath).pipe(resStream);
 		resStream.on('close', (chunk) => {
 			return getFiles(config.dataPath + fileName, fileName)

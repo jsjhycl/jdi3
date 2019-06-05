@@ -245,6 +245,7 @@
 #designer {
     width: 100%;
     background-color: white;
+    margin-left: 21px;
     /* overflow: auto; */
 }
 

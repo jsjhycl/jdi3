@@ -504,6 +504,7 @@ function back(html) {
 			});
 			new Property().setDefault(childNumber);
 		});
+		new Ruler().drawCoordinates()
 		contextMenu.done(3, $node.find(":input"));
 	});
 }

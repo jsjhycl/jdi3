@@ -4,7 +4,8 @@ function toolbar() {
             width = $workspace.outerWidth(),
             height = $workspace.outerHeight(),
             $selected = $workspace.find(".resizable"),
-            type = $(this).data("type");
+            type = $(this).data("type"),
+            $target = $(event.currentTarget);
         switch (type) {
             case "align-left":
                 var $first = $selected.first();
@@ -201,12 +202,27 @@ function toolbar() {
             
             case "functionInsert":
                 //插入函数
-                    WorkspaceUtil.insertFns($(this), true);
-                    new InsertFnModal($("#insertFunctionModal")).open($(this));
+                
+                if ($target.hasClass('is_using')) {
+                        WorkspaceUtil.resetView(true);
+                    } else {
+                        WorkspaceUtil.resetView(true);
+                        $target.addClass('is_using');
+                        WorkspaceUtil.insertFns($(this), true);
+                        new InsertFnModal($("#insertFunctionModal")).open($(this));
+                    }
+
                 break;
             case "functionView":
-                    let $this = $(event.currentTarget);
-                    WorkspaceUtil.checkFn($this);
+                    
+                    if ($target.hasClass('is_using')) {
+                        WorkspaceUtil.resetView(true);
+                        // $target.removeClass('is_using');
+                    } else {
+                        WorkspaceUtil.resetView(true);
+                        WorkspaceUtil.checkFn($target);
+                        $target.addClass('is_using');
+                    }
                 break;
         }
     });

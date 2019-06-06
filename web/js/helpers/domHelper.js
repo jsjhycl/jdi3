@@ -60,7 +60,6 @@ var DomHelper = (function () {
     function copy($dom) {
         if (!$dom) return;
         let $copy = $dom.clone(true);
-        console.log($dom.offset().top,$(document).scrollTop())
         $copy.css({
             position: 'fixed',
             top: $dom.offset().top - $(document).scrollTop(),

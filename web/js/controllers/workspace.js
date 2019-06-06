@@ -1,7 +1,8 @@
-let WorkspaceUtil = {
+var WorkspaceUtil = {
     // views: {
     //     'checkFn': '显示配置表达式',
-    //     'insertFn': '插入函数'
+    //     'insertFn': '插入函数',
+    //     'numViewer': '查看元素Id'
     // },
     
     /**
@@ -13,11 +14,11 @@ let WorkspaceUtil = {
      */
     switchWorkspace: function(view, $dom, flag, args) {
         this.resetView();
-
-        let that = this,
+        var that = this,
             $workspace = $('#workspace'),
             $currentInput = $workspace.find('.focus'),
             $wrap = $('<div id="mask"></div>'),
+            $wrap_content = $('<div id="mask_content"></div>'),
             $wsCopy = $('<div id="workspace_copy"></div>').html($workspace.html());
         $wrap.css({height: $(document).height()});  // 2019/1/3 添加
         $wsCopy.css({
@@ -29,7 +30,6 @@ let WorkspaceUtil = {
             left: $workspace.offset().left,
             zIndex: 801
         });
-        
         if (!flag) {
             that.input2Btn(view, $wsCopy.find('input'), true, $workspace);
         }
@@ -39,12 +39,15 @@ let WorkspaceUtil = {
         if (args) {
             args = args.split(',')
             $.each(args, function(index, item) {
-                let id = item.toString().slice(1, -1);
+                var id = item.toString().slice(1, -1);
                 if (id) { $wsCopy.find('[data-domid=' + id + ']').addClass('selected'); }
             })
         };
+
         $wsCopy.children().removeAttr('id');
-        $wrap.append($wsCopy).append($dom);
+        // $wrap_content.append($wsCopy).append($dom);
+        $wrap_content.append($wsCopy);
+        $wrap.append($wrap_content);
         $('body').append($wrap);
         that.bindEvents();
     },
@@ -55,17 +58,21 @@ let WorkspaceUtil = {
      */
     checkFn: function($dom) {
         this.setMask();
-        let that = this,
+        var that = this,
             view = 'checkFn';
-        let $domCopy = DomHelper.copy($dom);
+        var $domCopy = DomHelper.copy($dom);
         that.switchWorkspace(view, $domCopy, false, null, null);
     },
 
     insertFns: function($dom, flag, args) {
-        let that = this,
+        var that = this,
             view = 'insertFn',
             $domCopy = DomHelper.copy($dom);
         that.switchWorkspace(view, $domCopy, flag, args, null);
+    },
+
+    numViewer: function() {
+        this.switchWorkspace('numViewer', null, false, null, null);
     },
 
     /**
@@ -74,14 +81,13 @@ let WorkspaceUtil = {
      * @param {DOMS} $doms 带转换的元素
      */
     input2Btn: function(view, $doms, flag, $originContainer) {
-        console.log($originContainer)
         $.each($doms, function(index, item) {
-            let $dom = $(item),
+            var $dom = $(item),
                 id = $dom.attr('id'),
                 $origin = $originContainer.find('#' + id);
                 isSelected = $dom.parent().hasClass('ui-draggable'),    // 当前元素是否被选中;
                 isFocus = $dom.hasClass('focus');    // 输入框有红色背景
-            let $span = $('<span data-domId="' + id + '" ></span>'),
+            var $span = $('<span data-domId="' + id + '" ></span>'),
                 // $temp = isSelected ? $dom.parent() : $dom;
                 $temp = $dom;
                 $span.css({
@@ -99,7 +105,7 @@ let WorkspaceUtil = {
                     $span.addClass('workspace-node-switch ' + (isFocus ? 'originSelected' : '') ).data('cache', isSelected ? $dom.parent().get(0).outerHTML :$dom.get(0).outerHTML).html(id);
                     break;
                 case 'checkFn':
-                    let expr =  new Property().getValue(id, 'expression');
+                    var expr =  new Property().getValue(id, 'expression');
                     expr = expr ? '=' + expr : '';
                     if (expr) {
                         $dom.attr({ 'data-toggle': 'tooltip', 'data-placement': 'top', 'title': expr});
@@ -107,27 +113,32 @@ let WorkspaceUtil = {
                     }
                     $span.addClass('check-fn-node').html(expr);
                     break;
+                case 'numViewer':
+                    $span.addClass('check-fn-node').html(id);
+                    break;
             }
             $temp.replaceWith($span)
         })
     },
 
     bindEvents: function() {
-        let that = this,
+        var that = this,
             $mask = $('#mask');
 
-        // 遮罩层关闭事件
-        $mask.off('click');
-        $mask.on('click', '.copy-dom' ,function(event) {
+        $mask.off('click.workspace');
+        $('#workspace_copy').off('click.workspace');
+        $('nav').off('click.workspace');
+        $("body").off('click.workspace')
+        $mask.on('click.workspace', '.copy-dom' ,function(event) {
             new InsertFnModal($("#insertFunctionModal")).close();
             new InsertFnArgsModal().close();
             that.resetView($mask);
         });
 
         // 选择参数事件
-        $('#workspace_copy').on('click', '.workspace-node-switch', function(event) {
+        $('#workspace_copy').on('click.workspace', '.workspace-node-switch', function(event) {
             event.stopPropagation();
-            let that = this,
+            var that = this,
                 $el = $(this),
                 val = '{'+ $el.text() + '}',
                 $argInput = $("#insertFunctionArgsModal input.selected"),
@@ -137,8 +148,8 @@ let WorkspaceUtil = {
             if (!hasArgInput && !$customTextarea) return;
             else {
                 if (!isOriginSelected) {
-                    let $tempInput = hasArgInput ? $argInput : $customTextarea;
-                    let flag = $el.hasClass('selected');
+                    var $tempInput = hasArgInput ? $argInput : $customTextarea;
+                    var flag = $el.hasClass('selected');
                     if (flag) {
                         $el.removeClass('selected');
                         $tempInput.val() && $tempInput.val($tempInput.val().replace(new RegExp(val, 'g'), ''))
@@ -154,15 +165,18 @@ let WorkspaceUtil = {
                     }
                 }
             }
-        })
+        });
 
+        $('body').on('click.workspace', '.navbar, #controlbar', function(ev) {
+            ($(ev.target).attr('id') === 'viewer') ? '' : that.resetView(true);
+        })
     },
 
     setMask: function($container) {
         if (!$container) return;
-        let arr = ['#controlbar', '.navbar.navbar-fixed-top', '#propertybar', '#toolbar'];
+        var arr = ['#controlbar', '.navbar.navbar-fixed-top', '#propertybar', '#toolbar'];
         arr.forEach(function(selector) {
-            let $el = $(selector),
+            var $el = $(selector),
                 style = {
                     position: "absolute",
                     top: $el.offset().top,
@@ -177,8 +191,12 @@ let WorkspaceUtil = {
     },
 
     // 移除模态框
-    resetView: function() {
+    resetView: function(flag) {
+        flag = !!flag || false; 
         $('#mask').remove();
+        $("#insertFunctionModal").hide();
+        $("#insertFunctionArgsModal").hide();
+        flag && $('.is_using').removeClass('is_using');
     },
 }
 
@@ -431,7 +449,7 @@ Workspace.prototype = {
             GLOBAL_PROPERTY = propertyData;
 
             // 调整工作区大小
-            let max_h = 0, max_w = 0;
+            var max_h = 0, max_w = 0;
             that.$workspace.find('div, p, img').each(function(i, el) {
                 max_w = $(el).width() > max_w ? $(el).width() : max_w;
                 max_h = $(el).height() > max_h ? $(el).height() : max_h;

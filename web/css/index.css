@@ -9,16 +9,18 @@
 }
 .ruler_horizontal,.ruler_vertical{
     position: absolute;
-    left: 0px;
+    left: -18px;
     top: 0px;
     overflow: hidden;
 }
 .ruler_horizontal{
+    margin-left: 18px;
     width: 100%;
     height: 18px;
     background: url('../images/ruler_h.png') repeat-x;
 }
 .ruler_vertical{
+    margin-top: 18px;
     width: 18px;
     height: 100%;
     background: url('../images/ruler_v.png') repeat-y;
@@ -243,7 +245,8 @@
 #designer {
     width: 100%;
     background-color: white;
-    overflow: auto;
+    margin-left: 21px;
+    /* overflow: auto; */
 }
 
 /*按钮栏*/
@@ -254,6 +257,9 @@
 
 #buttonbar .btn {
     height: 30px;
+}
+#buttonbar .btn.is_using {
+    background: linear-gradient(rgb(254,220,178), rgb(253,228,147));
 }
 
 .icon {
@@ -573,7 +579,7 @@
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 900;
+    z-index: 799;
     display: block;
     background-color: transparent;
 }

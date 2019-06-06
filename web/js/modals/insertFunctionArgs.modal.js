@@ -135,7 +135,7 @@ InsertFnArgsModal.prototype = {
 
         // 关闭模态框
         that.$modal.on('click' + that.NAMESPACE, '.close, .clear', function(event) {
-            WorkspaceUtil.resetView();
+            WorkspaceUtil.resetView(true);
             that.$modal.hide();
         })
 

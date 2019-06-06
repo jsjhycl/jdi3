@@ -127,10 +127,14 @@ function navbar() {
 	})();
 	
 	//编号查看器
-	$("#viewer").numViewer({
-		$source: $("#workspace"),
-		selector: ".workspace-node"
-	});
+	// $("#viewer").numViewer({
+	// 	$source: $("#workspace"),
+	// 	selector: ".workspace-node"
+    // });
+    $("#viewer").click(function() {
+        WorkspaceUtil.numViewer();
+    });
+
 	//标尺查看器
 	(function controlRuler(){
 		var flag = false;
@@ -435,8 +439,7 @@ function workspace() {
 		$(this).jresizable({
 			mode: "single",
 			multi: event.ctrlKey,
-			$container: $("#workspace"),
-			color: "#739fef",
+            color: "#739fef",
 			onStart: function () {
 				$workspace.selectable("disable");
 			},

@@ -9,8 +9,8 @@ let unzip = require('unzip'),
 let config = {
     profileDir: path.join(__dirname, '../data/profiles'),
     templateDir: path.join(__dirname, '../_template'),
-    uploadUrl: configs.url + '/newapi/getResource',
-    downloadUrl: configs.url + '/newapi/sendResource'
+    uploadUrl: configs.serverUrl + '/newapi/getResource',
+    downloadUrl: configs.serverUrl + '/newapi/sendResource'
 }
 
 /**
@@ -18,7 +18,7 @@ let config = {
  * return  返回配置中的url
  */
 function getConfigUrl() {
-    return configs.url;
+    return configs;
 }
 
 /**

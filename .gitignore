@@ -14,3 +14,4 @@ services/fileApi.js
 _template
 说明.txt
 /.svn/
+config.json

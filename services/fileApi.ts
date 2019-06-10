@@ -3,13 +3,22 @@ import path from 'path';
 import request from 'request';
 
 let unzip = require('unzip'),
-    zipper = require('zip-local');
+    zipper = require('zip-local'),
+    configs = require('../config.json');
 
 let config = {
     profileDir: path.join(__dirname, '../data/profiles'),
     templateDir: path.join(__dirname, '../_template'),
-    uploadUrl: 'http://172.18.152.111:3000/newapi/getResource',
-    downloadUrl: 'http://172.18.152.111:3000/newapi/sendResource'
+    uploadUrl: configs.url + '/newapi/getResource',
+    downloadUrl: configs.url + '/newapi/sendResource'
+}
+
+/**
+ * 获取配置中的url
+ * return  返回配置中的url
+ */
+function getConfigUrl() {
+    return configs.url;
 }
 
 /**
@@ -38,10 +47,10 @@ function uploadToServer(resourceId: string) {
     return requestUrl(config.uploadUrl + '/' + resourceId, fs.createReadStream(resourcezipPath))
         .then((ostr: any) => {
             let o = JSON.parse(ostr.body);
-            if (o.status == 0) return {status: 0}
-            else return {status: -1, result: o.result}
+            if (o.status == 0) return { status: 0 }
+            else return { status: -1, result: o.result }
         }).catch(err => {
-            return {status: -1, result: err}
+            return { status: -1, result: err }
         })
 }
 
@@ -52,21 +61,21 @@ function downloadFromServer(resourceId: string) {
         request(config.downloadUrl + '/' + resourceId).pipe(fsStream);
         return new Promise((resolve, reject) => {
             fsStream.on('close', (chunk: any) => {
-                let resStream = unzip.Extract({path: path.join(config.templateDir, resourceId)});
+                let resStream = unzip.Extract({ path: path.join(config.templateDir, resourceId) });
                 fs.createReadStream(zippath).pipe(resStream);
                 resStream.on('close', (chunk: any) => {
-                    return resolve({status: 0});
+                    return resolve({ status: 0 });
                 })
                 resStream.on('error', () => {
-                    return reject({status: -1, result: "解压文件出现问题"});
+                    return reject({ status: -1, result: "解压文件出现问题" });
                 })
             })
             fsStream.on('error', () => {
-                return reject({status: -1, result: "下载文件出现问题"});
+                return reject({ status: -1, result: "下载文件出现问题" });
             })
         })
     } catch (e) {
-        return Promise.reject({status: -1, result: "获取数据失败"});
+        return Promise.reject({ status: -1, result: "获取数据失败" });
     }
 }
 
@@ -109,4 +118,4 @@ function done(resolve: any, reject: any) {
     }
 }
 
-export {getProfile, uploadToServer, downloadFromServer}
+export { getProfile, uploadToServer, downloadFromServer, getConfigUrl}

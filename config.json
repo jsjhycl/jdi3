@@ -1,4 +1,4 @@
 {
-    "serverUrl": "http://36.33.216.13:3000",
-    "resolverUrl": "http://36.33.216.13:3001"
+    "serverUrl": "http://172.18.152.111:3000",
+    "resolverUrl": "http://172.18.152.111:3001"
 }

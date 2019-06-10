@@ -122,7 +122,8 @@ function navbar() {
 			if (!id) return;
 			
 			var href = "http://36.33.216.13:3001/home/model?id=" + id + "&type=preview";
-			$(this).attr("href", href);
+			// $(this).attr("href", href);
+			require('electron').shell.openExternal(href);
 		});
 	})();
 	

@@ -173,7 +173,8 @@ function ContextMenu() {
             $target = $parent.length <= 0 ? $el : $parent.eq(0),
             control = new Control(),
             contextMenu = new ContextMenu(),
-            maxId;
+            maxId,
+            arr = [];
         // while(num > 0) {
         for (var i = 0; i < num; i ++) {
             clone = $target.clone();
@@ -200,12 +201,13 @@ function ContextMenu() {
                     });
                 });
             }
-            $target.after(clone[0]);
+            arr.push(clone[0]);
         }
+        arr.reverse().map(function(i) {
+            $target.after(i);
+        })
         function addNewProp(oldId, newId) {
             var newObj = JSON.parse(JSON.stringify(GLOBAL_PROPERTY[oldId]));
-            newObj.name = newId;
-            newObj.cname = newId;
             GLOBAL_PROPERTY[newId] = newObj;
         }
     }
@@ -360,11 +362,11 @@ ContextMenu.prototype = {
                         {type: "separator"},
                         {
                             type: "menuitem",
-                            text: "复制当前行",
+                            text: "新增当前行",
                             handler: function () {
                                 var $el = $(this);
                                     
-                                new PromptModal('复制行数', function(val) {
+                                new PromptModal('新增行数', function(val) {
                                     var num = Number(val);
                                     if (Number.isNaN(num) || num <= 0) {
                                         alert('无效的参数')

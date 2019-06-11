@@ -27,7 +27,7 @@ PromptModal.prototype = {
         '<div class="form-group">'+
         '<label for="answer" class="col-sm-4 control-label">'+this.question+'</label>'+
         '<div class="col-sm-8">'+
-        '<input type="text" class="form-control" id="answer">'+
+        '<input type="text" autofocus class="form-control" id="answer" value="1">'+
         '</div>'+
         '</div>'+
         '</form>'+

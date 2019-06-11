@@ -15,6 +15,7 @@ let config = {
 	colorIndex: path.join(__dirname, '../data/configs/color.json'),
 	themeColor: path.join(__dirname, '../data/configs/themeColor.json'),
 	jsPath: path.join(__dirname, '../data/configs/defaultJS.json'),
+	radomStr: randomString(4)
 }
 
 function xml2json(content) {
@@ -33,6 +34,18 @@ function obj2Array(obj) {
 	let arrs = [];
 	arrs.push(obj);
 	return arrs;
+}
+
+//生成随机数
+function randomString(len) {
+	len = len || 32;
+	let sources = 'abcdefhijkmnprstwxyz';
+	let maxPos = sources.length;
+	let pwd = '';
+	for (i = 0; i < len; i++) {
+		pwd += sources.charAt(Math.floor(Math.random() * maxPos));
+	}
+	return pwd;
 }
 
 function getFiles(dirName, resultName) {
@@ -170,7 +183,7 @@ function singleXf(cell, index, borders, fonts, numFmts, fills, dxfs, tintColor, 
 		if (borderObj.color.$.auto || borderObj.color.$.theme) {
 			let clrIndex = Number(borderObj.color.$.auto || borderObj.color.$.theme);
 			for (let color_item of themestyle) {
-				if ('.themeclr' + Number(clrIndex + 1) == color_item.className) {
+				if ('.' + config.radomStr + '_themeclr' + Number(clrIndex + 1) == color_item.className) {
 					for (let key in color_item) {
 						if (key != 'className')
 							border_color_value = color_item[key];
@@ -206,7 +219,7 @@ function singleXf(cell, index, borders, fonts, numFmts, fills, dxfs, tintColor, 
 			Object.assign(borderStyle, border_bottom.border_line, border_bottom.border_color);
 		}
 		//border单独出来
-		borderStyle.className = ".borderStyle" + index;
+		borderStyle.className = "." + config.radomStr + "_borderStyle" + index;
 		if (Object.keys(borderStyle).length >= 2)
 			styles.push(borderStyle);
 	}
@@ -224,7 +237,7 @@ function singleXf(cell, index, borders, fonts, numFmts, fills, dxfs, tintColor, 
 			}
 		}
 		//fill单独出来
-		fillStyle.className = ".fillStyle" + index;
+		fillStyle.className = "." + config.radomStr + "_fillStyle" + index;
 		if (Object.keys(fillStyle).length >= 2)
 			styles.push(fillStyle);
 	}
@@ -237,13 +250,13 @@ function singleXf(cell, index, borders, fonts, numFmts, fills, dxfs, tintColor, 
 			if (!paramConfig[align]) {
 				paramConfig[align] = '';
 				style[align] = cell.alignment.$[align];
-			} else{
+			} else {
 				// style[paramConfig[align].name] = eval(paramConfig[align].format.replace(/~/g, cell.alignment.$[align]));
-				Object.assign(style,paramConfigSplit(paramConfig[align], cell.alignment.$[align]));
+				Object.assign(style, paramConfigSplit(paramConfig[align], cell.alignment.$[align]));
 			}
 		}
 	}
-	style.className = ".style" + index;
+	style.className = "." + config.radomStr + "_style" + index;
 	if (Object.keys(style).length >= 2)
 		styles.push(style);
 	//考虑numFmt
@@ -285,7 +298,7 @@ function analyzeTheme(themeObj, tintColor, paramConfig) {
 				(item[a].$.lastClr.length == 6 ? item[a].$.lastClr : item[a].$.lastClr.substr(2)) :
 				(item[a].$.val ? (item[a].$.val.length == 6 ? item[a].$.val : item[a].$.val.substr(2)) : '');
 			style = paramExistConfig("color", colorval, paramConfig);
-			style.className = ".themeclr" + (index == 1 ? 2 : (index == 2 ? 1 : (index == 3 ? 4 : (index == 4 ? 3 : index))));
+			style.className = "." + config.radomStr + "_themeclr" + (index == 1 ? 2 : (index == 2 ? 1 : (index == 3 ? 4 : (index == 4 ? 3 : index))));
 			styles.push(style);
 		}
 	}
@@ -296,7 +309,7 @@ function analyzeTheme(themeObj, tintColor, paramConfig) {
 		for (let f of item["a:font"]) {
 			index++;
 			let style = paramExistConfig("a:font", f.$.typeface, paramConfig);
-			style.className = '.themefont' + index;
+			style.className = '.' + config.radomStr + '_themefont' + index;
 			styles.push(style);
 		}
 	}
@@ -478,9 +491,9 @@ function singleCell(c, htmls, shareObj, styleObj, themestyle, tintColor, colorOb
 			rotation = styleObj.rotation[c.$.s];
 			classes.push("rotation");
 		}
-		classes.push("style" + c.$.s);
-		classes.push("borderStyle" + c.$.s);
-		classes.push("fillStyle" + c.$.s);
+		classes.push(config.radomStr + "_style" + c.$.s);
+		classes.push(config.radomStr + "_borderStyle" + c.$.s);
+		classes.push(config.radomStr + "_fillStyle" + c.$.s);
 	}
 	let boolen = true,
 		location = letter2Number(c.$.r);
@@ -492,9 +505,9 @@ function singleCell(c, htmls, shareObj, styleObj, themestyle, tintColor, colorOb
 					for (var ro in htmls.data) {
 						for (var co of htmls.data[ro]) {
 							if (co.location == merge) {
-								co.class.push("style" + c.$.s)
-								co.class.push("borderStyle" + c.$.s)
-								co.class.push("fillStyle" + c.$.s)
+								co.class.push(config.radomStr + "_style" + c.$.s)
+								co.class.push(config.radomStr + "_borderStyle" + c.$.s)
+								co.class.push(config.radomStr + "_fillStyle" + c.$.s)
 							}
 						}
 					}
@@ -545,7 +558,7 @@ function param2Style(paramobj, themestyle, tintColor, colorObj, paramConfig) {
 					let colorstr = '',
 						tint = paramobj[param].$.tint;
 					for (let clr of themestyle) {
-						if ('.themeclr' + Number(Number(paramobj[param].$.theme) + 1) == clr.className) {
+						if ("." + config.radomStr + "_themeclr" + Number(Number(paramobj[param].$.theme) + 1) == clr.className) {
 							for (let key in clr) {
 								if (key != 'className')
 									colorstr = clr[key];
@@ -584,7 +597,7 @@ function param2Style(paramobj, themestyle, tintColor, colorObj, paramConfig) {
 			paramConfig[param] = '';
 			style[param] = stylevalue;
 		} else {
-			Object.assign(style,paramConfigSplit(paramConfig[param], stylevalue));
+			Object.assign(style, paramConfigSplit(paramConfig[param], stylevalue));
 			// style[paramConfig[param].name] = eval(paramConfig[param].format.replace(/~/g, stylevalue)); //需要配置和公式等
 		}
 	}
@@ -682,7 +695,7 @@ function json2table(htmls, styles, resultName) {
 			if (htmlElement.heightwidth.width)
 				hwexist = true;
 		}
-		for (let i = firstCol; i <= widthLength; i++) {
+		for (let i = firstCol; i < widthLength; i++) {
 			let boolen = false;
 			if (hwexist) {
 				for (let wh of htmlElement.heightwidth.width) {
@@ -752,6 +765,9 @@ function json2table(htmls, styles, resultName) {
 				let eleClass = [],
 					tdClass = [];
 				if (item.class.length > 0) {
+					item.class = item.class.filter((element, index, self) => {
+						return self.indexOf(element) === index
+					});//需要修改
 					for (let ecls of item.class) {
 						if (ecls.indexOf('border') >= 0 || ecls.indexOf('fill') >= 0)
 							tdClass.push(ecls);
@@ -760,8 +776,12 @@ function json2table(htmls, styles, resultName) {
 					}
 				}
 				html += '<td';
-				if (tdClass.length > 0)
+				if (tdClass.length > 0){
+					tdClass = tdClass.filter((element, index, self) => {
+						return self.indexOf(element) === index
+					});//需要修改
 					html += ' class="' + tdClass.join(" ") + '"';
+				}
 				html += ' name="' + item.realLocation + '" location="' + item.location + '"';
 				if (spanobj.span)
 					html += ' ' + spanobj.span;
@@ -774,8 +794,12 @@ function json2table(htmls, styles, resultName) {
 				if (item.rotation)
 					html += ' rotation="' + item.rotation + '"';
 				html += '><div class="td_item_all';
-				if (eleClass.length >= 0)
-					html += ' ' + eleClass.join(" ");
+				if (eleClass.length >= 0){
+					tdClass = eleClass.filter((element, index, self) => {
+						return self.indexOf(element) === index
+					});//需要修改
+					html += ' ' + eleClass.join(" ");	
+				}
 				html += '" style="height:' + defaultdivhgt + ';"><div class="item_contain">';
 				if (item.content.length > 1) {
 					for (let con of item.content) {

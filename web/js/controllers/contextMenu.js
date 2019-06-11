@@ -196,6 +196,13 @@ function ContextMenu() {
         for (var i = 0; i < num; i++) {
             clone = $target.clone();
             if ($parent.length <= 0) {
+                if ($target.parent().hasClass("ui-draggable-handle")) {
+                    $(clone).css({
+                        width: $target.parent().width(),
+                        height: $target.parent().height(),
+                        top:parseInt($target.parent().css("top")) + ($target.height() + 10) *(i + 1)
+                    })
+                }
                 var type = $el.get(0).tagName === 'INPUT' ? 'text' : $(dom).get(0).tagName.toLowerCase(),
                     prefix = type == 'div' ? 'DIV_' : "";
                 maxId = maxId ? NumberHelper.idToName(NumberHelper.nameToId(maxId) + 1, 4) : control.createNumber(type);
@@ -204,7 +211,7 @@ function ContextMenu() {
                 $(clone).attr({
                     id: prefix + maxId,
                     name: prefix + maxId,
-                }).css('top', parseFloat($el.css('top')) + (($el.height() + 10) * (i + 1)));
+                })
                 // $target.after(clone[0]);
                 arr.push(clone[0]);
             } else {

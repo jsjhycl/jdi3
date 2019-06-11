@@ -79,7 +79,10 @@ function ContextMenu() {
 
             var $prev = $(this).parents("td").prev(),
                 text = $prev.text().trim();
-            arrs.push({id: id, cname: text});
+            arrs.push({
+                id: id,
+                cname: text
+            });
         });
         var property = new Property();
         arrs.forEach(function (item) {
@@ -153,6 +156,8 @@ function ContextMenu() {
                 if (result) {
                     $(this).attr("id", strId);
                     columnIndex++;
+                } else {
+                    return false;
                 }
                 $(this).removeClass("focus");
             });
@@ -167,16 +172,28 @@ function ContextMenu() {
     }
 
     // 复制当前行
-    this.copyLine = function($el, num) {
+    this.copyLine = function ($el, num) {
         var $parent = $el.parents('tr'),
             clone,
             $target = $parent.length <= 0 ? $el : $parent.eq(0),
             control = new Control(),
             contextMenu = new ContextMenu(),
             maxId,
-            arr = [];
+            arr = [],
+            rowspan = 1;
+        if ($parent.length > 0) {
+            var rowspans = [];
+            $target.find("td").each(function () {
+                var $td = $(this);
+                if (typeof $td.attr("rowspan") !== 'undefined') {
+                    rowspans.push(parseInt($td.attr("rowspan")));
+                }
+            })
+            if (rowspans.length > 0)
+                rowspan = Math.max.apply(null, rowspans);
+        }
         // while(num > 0) {
-        for (var i = 0; i < num; i ++) {
+        for (var i = 0; i < num; i++) {
             clone = $target.clone();
             if ($parent.length <= 0) {
                 var type = $el.get(0).tagName === 'INPUT' ? 'text' : $(dom).get(0).tagName.toLowerCase(),
@@ -188,27 +205,60 @@ function ContextMenu() {
                     id: prefix + maxId,
                     name: prefix + maxId,
                 }).css('top', parseFloat($el.css('top')) + (($el.height() + 10) * (i + 1)));
+                // $target.after(clone[0]);
+                arr.push(clone[0]);
             } else {
-                $(clone).find('div, input, button, checkbox').each(function(idx, dom) {
-                    var type = $(dom).get(0).tagName === 'INPUT' ? 'text' : $(dom).get(0).tagName.toLowerCase(),
-                        prefix = type == 'div' ? 'DIV_' : "";
-                    maxId = maxId ? NumberHelper.idToName(NumberHelper.nameToId(maxId) + 1, 4) : control.createNumber(type);
-                    type == 'text' && addNewProp($(dom).attr('id'), maxId);
-                    type == 'div' ? contextMenu.done(2, $(dom)) : contextMenu.done(3, $(dom));
-                    $(dom).attr({
-                        id: prefix + maxId,
-                        name: prefix + maxId,
+                var trIndex = $target.index();
+                var trs = [];
+                $target.parent().find("tr").each(function (ind, ele) {
+                    console.log(ind, (trIndex + rowspan) > ind && trIndex >= ind)
+                    if ((trIndex + rowspan) > ind && trIndex <= ind) {
+                        trs.push($(ele).clone());
+                    }
+                })
+                var inputMaxId;
+                trs.forEach(function (ele, ind) {
+                    $(ele).find('div, input, button, checkbox').each(function (idx, dom) {
+                        var type = $(dom).get(0).tagName === 'INPUT' ? 'text' : $(dom).get(0).tagName.toLowerCase(),
+                            prefix = type == 'div' ? 'DIV_' : "";
+                        if (type == 'text') {
+                            inputMaxId = inputMaxId ? NumberHelper.idToName(NumberHelper.nameToId(inputMaxId) + 1, 4) : control.createNumber(type);
+                            addNewProp($(dom).attr('id'), inputMaxId);
+                            contextMenu.done(3, $(dom));
+                            $(dom).attr({
+                                id: prefix + inputMaxId,
+                                name: prefix + inputMaxId,
+                            });
+                        } else {
+                            if (maxId && maxId.indexOf("_") >= 0)
+                                maxId = maxId.split("_")[1];
+                            maxId = maxId ? NumberHelper.idToName(NumberHelper.nameToId(maxId) + 1, 4) : control.createNumber(type);
+                            // type == 'text' && addNewProp($(dom).attr('id'), maxId);
+                            type == 'div' ? contextMenu.done(2, $(dom)) : contextMenu.done(3, $(dom));
+                            $(dom).attr({
+                                id: prefix + maxId,
+                                name: prefix + maxId,
+                            });
+                        }
                     });
-                });
+                    arr.push(ele[0]);
+                })
             }
-            arr.push(clone[0]);
+            // arr.push(clone[0]);
         }
-        arr.reverse().map(function(i) {
+        if (arr.length > 0) {
+            arr.reverse().map(function (i) {
+                $parent.length <= 0 ? $target.after(i) : $target.parent().find("tr").eq(trIndex + rowspan - 1).after(i);
+            })
+        }
+        /* arr.reverse().map(function (i) {
             $target.after(i);
-        })
+        }) */
+
+        $target.parents('.workspace-node').height('auto');
+
         function addNewProp(oldId, newId) {
-            var newObj = JSON.parse(JSON.stringify(GLOBAL_PROPERTY[oldId]));
-            GLOBAL_PROPERTY[newId] = newObj;
+            GLOBAL_PROPERTY[newId] = GLOBAL_PROPERTY[oldId];
         }
     }
 }
@@ -220,15 +270,16 @@ ContextMenu.prototype = {
             case 1:
                 //空白区域右键菜单
                 elem.jcontextmenu({
-                    menus: [
-                        {
+                    menus: [{
                             type: "menuitem",
                             text: "批量设置属性",
                             handler: function () {
                                 that.batchSetAttrs();
                             }
                         },
-                        {type: "separator"},
+                        {
+                            type: "separator"
+                        },
                         {
                             type: "menuitem",
                             text: "添加图片",
@@ -236,7 +287,9 @@ ContextMenu.prototype = {
                                 $('#controlbar .control-item[data-type="img"]').click();
                             }
                         },
-                        {type: "separator"},
+                        {
+                            type: "separator"
+                        },
                         {
                             type: "menuitem",
                             text: "添加复选框",
@@ -251,7 +304,9 @@ ContextMenu.prototype = {
                                 that.addControl("text");
                             }
                         },
-                        {type: "separator"},
+                        {
+                            type: "separator"
+                        },
                         {
                             type: "menuitem",
                             text: "添加子模块设计器",
@@ -259,7 +314,9 @@ ContextMenu.prototype = {
                                 $('#controlbar .control-item[data-type="div"]').click();
                             }
                         },
-                        {type: "separator"},
+                        {
+                            type: "separator"
+                        },
                         {
                             type: "menuitem",
                             text: "选择页面",
@@ -273,15 +330,16 @@ ContextMenu.prototype = {
             case 2:
                 //子模块设计器右键菜单
                 elem.jcontextmenu({
-                    menus: [
-                        {
+                    menus: [{
                             type: "menuitem",
                             text: "批量设置中文名",
                             handler: function () {
                                 that.batchSetNames($(this));
                             }
                         },
-                        {type: "separator"},
+                        {
+                            type: "separator"
+                        },
                         {
                             type: "menuitem",
                             text: "引入属性",
@@ -296,7 +354,9 @@ ContextMenu.prototype = {
                                 that.batchSetVals($(this));
                             }
                         },
-                        {type: "separator"},
+                        {
+                            type: "separator"
+                        },
                         {
                             type: "menuitem",
                             text: "选择页面",
@@ -310,8 +370,7 @@ ContextMenu.prototype = {
             case 3:
                 //控件元素右键菜单
                 elem.jcontextmenu({
-                    menus: [
-                        {
+                    menus: [{
                             type: "menuitem",
                             text: "清除属性",
                             handler: function () {
@@ -322,12 +381,13 @@ ContextMenu.prototype = {
                                 //还得修改相应的DOM数据
                             }
                         },
-                        {type: "separator"},
+                        {
+                            type: "separator"
+                        },
                         {
                             type: "menuitem",
                             text: "复制属性",
-                            submenus: [
-                                {
+                            submenus: [{
                                     type: "menuitem",
                                     text: "按行",
                                     handler: function () {
@@ -343,7 +403,9 @@ ContextMenu.prototype = {
                                 }
                             ]
                         },
-                        {type: "separator"},
+                        {
+                            type: "separator"
+                        },
                         {
                             type: "menuitem",
                             text: "行编号设置",
@@ -351,7 +413,9 @@ ContextMenu.prototype = {
                                 that.setLineId($(this));
                             }
                         },
-                        {type: "separator"},
+                        {
+                            type: "separator"
+                        },
                         {
                             type: "menuitem",
                             text: "选择页面",
@@ -359,14 +423,16 @@ ContextMenu.prototype = {
                                 that.selectPage();
                             }
                         },
-                        {type: "separator"},
+                        {
+                            type: "separator"
+                        },
                         {
                             type: "menuitem",
                             text: "新增当前行",
                             handler: function () {
                                 var $el = $(this);
-                                    
-                                new PromptModal('新增行数', function(val) {
+
+                                new PromptModal('新增行数', function (val) {
                                     var num = Number(val);
                                     if (Number.isNaN(num) || num <= 0) {
                                         alert('无效的参数')

@@ -250,30 +250,34 @@ function singleXf(cell, index, borders, fonts, numFmts, fills, dxfs, tintColor, 
 	//对齐方式
 	if (cell.alignment) {
 		let alignBoolean = true;
-		if (cell.alignment.$.hasOwnProperty("textRotation"))
+		if (cell.alignment.$.hasOwnProperty("textRotation") && cell.alignment.$["textRotation"] == '255')
 			alignBoolean = false;
 		for (let align in cell.alignment.$) {
 			if (align == "textRotation") {
 				rotation[index] = cell.alignment.$[align];
 			}
-			if(align == 'textRotation' || alignBoolean){
-			if (!paramConfig[align]) {
-				paramConfig[align] = '';
-				style[align] = cell.alignment.$[align];
+			if (align == 'textRotation' || alignBoolean) {
+				if (!paramConfig[align]) {
+					paramConfig[align] = '';
+					style[align] = cell.alignment.$[align];
+				} else {
+					// style[paramConfig[align].name] = eval(paramConfig[align].format.replace(/~/g, cell.alignment.$[align]));
+					Object.assign(style, paramConfigSplit(paramConfig[align], cell.alignment.$[align]));
+				}
 			} else {
-				// style[paramConfig[align].name] = eval(paramConfig[align].format.replace(/~/g, cell.alignment.$[align]));
-				Object.assign(style, paramConfigSplit(paramConfig[align], cell.alignment.$[align]));
-			}
-		}else{
-			if (!paramConfig[align + '-rotation']) {
-				paramConfig[align + '-rotation'] = '';
-				style[align + '-rotation'] = cell.alignment.$[align];
-			} else {
-				// style[paramConfig[align].name] = eval(paramConfig[align].format.replace(/~/g, cell.alignment.$[align]));
-				Object.assign(style, paramConfigSplit(paramConfig[align + '-rotation'], cell.alignment.$[align]));
+				if (!paramConfig[align + '-rotation']) {
+					paramConfig[align + '-rotation'] = '';
+					style[align + '-rotation'] = cell.alignment.$[align];
+				} else {
+					// style[paramConfig[align].name] = eval(paramConfig[align].format.replace(/~/g, cell.alignment.$[align]));
+					Object.assign(style, paramConfigSplit(paramConfig[align + '-rotation'], cell.alignment.$[align]));
+				}
 			}
 		}
-		}
+		if (!alignBoolean && cell.alignment.$["textRotation"] == '255' && !cell.alignment.$.hasOwnProperty("vertical"))
+			style["justify-content"] = 'flex-end';
+		if (!alignBoolean && cell.alignment.$["textRotation"] == '255' && !cell.alignment.$.hasOwnProperty("horizontal"))
+			style["align-items"] = 'center';
 	}
 	style.className = "." + config.radomStr + "_style" + index;
 	if (Object.keys(style).length >= 2)

@@ -4,7 +4,7 @@ function StructureService() {
 }
 
 StructureService.prototype = {
-    getTables: function (callback) {
+    getTables: function (callback) {//获取tables
         var that = this;
         $.cajax({
             url: that.tablesUrl,
@@ -16,7 +16,7 @@ StructureService.prototype = {
             }
         });
     },
-    getFields: function (table, callback) {
+    getFields: function (table, callback) {//获取字段
         if (!table) return;
         var that = this;
         $.cajax({

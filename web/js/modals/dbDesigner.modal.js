@@ -4,16 +4,16 @@
  * @constructor
  */
 function DbDesignerModal($modal) {
-    BaseModal.call(this, $modal, null);
+    BaseModal.call(this, $modal, null);//绑定基础弹窗
 
-    this.$dbDesigner = this.$modalBody.find("#dbDesigner");
+    this.$dbDesigner = this.$modalBody.find("#dbDesigner");//获取数据库设计器
 }
 
 DbDesignerModal.prototype = {
     initData: function () {
         var that = this;
-        new Db().getTables(false, function (tables) {
-            that.$dbDesigner.dbDesigner({
+        new Db().getTables(false, function (tables) {//实例化Db.调用getTables
+            that.$dbDesigner.dbDesigner({//调用jquery的扩展方法
                 disabled: false,
                 $elems: $("#workspace").find(":input"),
                 thead: [
@@ -79,20 +79,20 @@ DbDesignerModal.prototype = {
                         }
                     }
                 ],
-                getProperty: new Property().getProperty
+                getProperty: new Property().getProperty//吧property的getproperty方法赋值给getProperty
             });
         });
     },
     saveData: function () {
         var that = this,
-            data = that.$dbDesigner.dbDesigner("getData");
-        if (!Array.isArray(data)) return alert("无效的数据类型！");
+            data = that.$dbDesigner.dbDesigner("getData");//调用getData方法
+        if (!Array.isArray(data)) return alert("无效的数据类型！");//如果data不是数组退出函数提示
 
-        var property = new Property();
-        data.forEach(function (item) {
-            if (!item.isSave) return true;
+        var property = new Property();//实例化property
+        data.forEach(function (item) {//遍历data
+            if (!item.isSave) return true;//如果issave为false退出函数
             
-            property.setValue(item.id, "db", {
+            property.setValue(item.id, "db", {//调用property的setValue方法
                 isSave: item.isSave,
                 table: item.table,
                 field: item.field,
@@ -103,6 +103,6 @@ DbDesignerModal.prototype = {
     },
     execute: function () {
         var that = this;
-        that.basicEvents(null, that.initData, that.saveData, null);
+        that.basicEvents(null, that.initData, that.saveData, null);//绑定基础事件
     }
 };

@@ -7,21 +7,21 @@
  * @constructor
  */
 function ConditionsModal($modal, $element, mode, table) {
-    BaseModal.call(this, $modal, $element);
+    BaseModal.call(this, $modal, $element);//调用基础模块弹窗
 
     this.mode = mode;
     this.table = table;
-    this.$conditions = this.$modalBody.find(".conditions");
+    this.$conditions = this.$modalBody.find(".conditions");//获取当前条件配置下面的conditions的元素
 
     this._resetData = function () {
-        this.$conditions.conditions("clearData");
-    };
+        this.$conditions.conditions("clearData");//获取元素下面的conditions设置为cleardata
+    }
 }
 
 ConditionsModal.prototype = {
     initData: function (data) {
         var that = this;
-        that.$conditions.conditions({
+        that.$conditions.conditions({//给元素的conditions设置值
             mode: that.mode,
             table: that.table,
             data: data
@@ -30,23 +30,23 @@ ConditionsModal.prototype = {
     saveData: function () {
         var that = this,
             result = "",
-            conditions = that.$conditions.conditions("getData");
-        if (Array.isArray(conditions) && conditions.length > 0) {
-            result = JSON.stringify(conditions);
+            conditions = that.$conditions.conditions("getData");//获取元素下面的conditions下面的getData
+        if (Array.isArray(conditions) && conditions.length > 0) {//如果conditions是数组且长度大于零
+            result = JSON.stringify(conditions);//转换为jSON字符串
         }
-        that.$element.val(result);
+        that.$element.val(result);//给元素设置值
     },
     clearData: function () {
-        var result = confirm("确定要清除条件配置数据吗？");
-        if (!result) return;
+        var result = confirm("确定要清除条件配置数据吗？");//提示是否清除
+        if (!result) return;//如果为都退出函数
 
         var that = this;
-        that._resetData();
-        that.$element.val("");
-        that.$modal.modal("hide");
+        that._resetData();//调用_resetData
+        that.$element.val("");//给元素的值设置为空
+        that.$modal.modal("hide");//模态框为空
     },
     execute: function () {
         var that = this;
-        that.basicEvents(true, that.initData, that.saveData, that.clearData);
+        that.basicEvents(true, that.initData, that.saveData, that.clearData);//调用basicEvents
     }
 };

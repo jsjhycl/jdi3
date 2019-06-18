@@ -9,7 +9,7 @@ function ProductService() {
 }
 
 ProductService.prototype = {
-    detail: function (id, callback) {
+    detail: function (id, callback) {//获取产品详情
         if (!id) return;
         var that = this;
         $.cajax({
@@ -22,7 +22,7 @@ ProductService.prototype = {
             }
         });
     },
-    list: function (type, state, callback) {
+    list: function (type, state, callback) {//获取产品列表
         if (!type || isNaN(state)) return;
         var that = this;
         $.cajax({
@@ -35,7 +35,7 @@ ProductService.prototype = {
             }
         });
     },
-    receive: function (id, callback) {
+    receive: function (id, callback) {//接收模板
         if (!id) return;
         var that = this;
         $.cajax({
@@ -48,7 +48,7 @@ ProductService.prototype = {
             }
         });
     },
-    remove: function (id, callback) {
+    remove: function (id, callback) {//移除资源
         if (!id) return;
         var that = this;
         $.cajax({
@@ -61,7 +61,7 @@ ProductService.prototype = {
             }
         });
     },
-    removePromise: function (id) {
+    removePromise: function (id) {//promise版删除
         if (!id) return Promise.reject("无效的编号！");
         var that = this;
         return new Promise(function (resolve, reject) {
@@ -79,7 +79,7 @@ ProductService.prototype = {
             });
         });
     },
-    submit: function (id, callback) {
+    submit: function (id, callback) {//提交
         if (!id) return;
         var that = this;
         $.cajax({
@@ -92,7 +92,7 @@ ProductService.prototype = {
             }
         });
     },
-    submitDB: function (id, callback) {
+    submitDB: function (id, callback) {//数据库提交
         if (!id) return;
         var that = this;
         $.cajax({
@@ -105,7 +105,7 @@ ProductService.prototype = {
             }
         });
     },
-    publish: function (id, callback) {
+    publish: function (id, callback) {//发布
         if (!id) return;
         var that = this;
         $.cajax({

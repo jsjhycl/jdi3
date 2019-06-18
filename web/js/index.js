@@ -5,7 +5,7 @@ function init() {
 	//初始化属性栏
 	new Propertybar($("#propertybar")).init(false, null);
 	//初始化工作区
-	var $workspace = $("#workspace");
+	var $workspace = $("#workspace");//获取工作区
 	$workspace.css({
 		"width": $("#width").val(),
 		"height": $("#height").val(),
@@ -13,23 +13,23 @@ function init() {
 	});
 	//初始化下拉列表
 	new CommonService().getFile("/profile/category.json", function (result) {
-		if (DataType.isObject(result)) {
-			var data = result["子分类"].map(function (item) {
+		if (DataType.isObject(result)) {//判断result是否为对象
+			var data = result["子分类"].map(function (item) {//遍历result的子分类
 				return {name: item, value: item};
 			});
-			Common.fillRadio($("#model_resource_subCategory"), "model_resource_subCategory", data);
+			Common.fillRadio($("#model_resource_subCategory"), "model_resource_subCategory", data);//调用Common的fillRadio的资源分类
 			//模板资源提交表单
-			Common.fillSelect($('[name="template_category"]'), null, result["模板分类"], null, true);
-			Common.fillRadio($("#template_subCategory"), "template_subCategory", data);
+			Common.fillSelect($('[name="template_category"]'), null, result["模板分类"], null, true);//填充模板分类下拉框
+			Common.fillRadio($("#template_subCategory"), "template_subCategory", data);//填充模板分类的单选框
 			//模型资源提交表单
-			Common.fillSelect($('[name="model_category"]'), null, result["模型分类"], null, true);
-			Common.fillSelect($('[name="model_userGrade"]'), null, result["模型用户级别"], null, true);
-			Common.fillSelect($('[name="model_feature"]'), null, result["模型特性"], null, true);
+			Common.fillSelect($('[name="model_category"]'), null, result["模型分类"], null, true);//填充模型分类的下拉框
+			Common.fillSelect($('[name="model_userGrade"]'), null, result["模型用户级别"], null, true);//填充用户级别的下拉框
+			Common.fillSelect($('[name="model_feature"]'), null, result["模型特性"], null, true);//填充模型特性的下拉框
 		}
 	});
 	//右键菜单
 	new ContextMenu().done(1, $workspace);
-	// add at 2017/12/27
+	// add at 2017/12/27绑定draggable
 	$(".modal .modal-dialog .modal-content").draggable({handle: ".modal-header"});
 }
 
@@ -37,12 +37,12 @@ function init() {
 function navbar() {
 	//资源
 	var resourceModal = new ResourceModal();
-	resourceModal.create();
-	resourceModal.open();
+	resourceModal.create();//给资源模态框绑定事件
+	resourceModal.open();//绑定事件
 	
 	//产品
 	var productModal = new ProductModal();
-	productModal.receive();
+	productModal.receive();//绑定模态框事件
 	productModal.open();
 	
 	//数据库定义
@@ -93,21 +93,21 @@ function navbar() {
 	//重新调用模板
 	(function recall() {
 		$("#recall").click(function () {
-			var $workspace = $("#workspace"),
-				id = $workspace.attr("data-id"),
-				name = $workspace.attr("data-name"),
-				type = $workspace.attr("data-type"),
-				subtype = $workspace.attr("data-subtype");
-			if (id && type === "资源" && subtype === "模型") {
-				var result = confirm("确定要重新调用模板吗？");
+			var $workspace = $("#workspace"),//获取工作区
+				id = $workspace.attr("data-id"),//获取工作区的data-id
+				name = $workspace.attr("data-name"),//获取工作区data-name
+				type = $workspace.attr("data-type"),//获取data-type
+				subtype = $workspace.attr("data-subtype");//获取data-subtype
+			if (id && type === "资源" && subtype === "模型") {//判断是否type等于资源subtype等于模型id存在
+				var result = confirm("确定要重新调用模板吗？");//确认是否
 				if (!result) return;
 				
-				new ResourceService().recall(id, function (result) {
+				new ResourceService().recall(id, function (result) {//调用重新调用模板
 					Common.handleResult(result, function (data) {
-						if (data !== id) return alert("调用失败！");
+						if (data !== id) return alert("调用失败！");//入伙id不存在退出程序
 						
 						//此处的relTemplate参数不需要的原因，data-relTemplate已经绑定
-						new Workspace().load(id, name, "资源", "模型", null, null, null);
+						new Workspace().load(id, name, "资源", "模型", null, null, null);//加载工作区
 						new Main().open();
 					});
 				});
@@ -117,14 +117,14 @@ function navbar() {
 	
 	//预览
 	(function preview() {
-		$("#preview").click(function () {
-			var id = $("#workspace").attr("data-id");
+		$("#preview").click(function () {//绑定事件
+			var id = $("#workspace").attr("data-id");//获取工作区id
 			if (!id) return;
 			
 			// var href = "http://36.33.216.13:3001/home/model?id=" + id + "&type=preview";
-			var href = jdi.fileApi.getConfigUrl().resolverUrl+"/home/model?id=" + id + "&type=preview";
+			var href = jdi.fileApi.getConfigUrl().resolverUrl+"/home/model?id=" + id + "&type=preview";//拼接路径
 			// $(this).attr("href", href);
-			require('electron').shell.openExternal(href);
+			require('electron').shell.openExternal(href);//使用electron打开默认浏览器
 		});
 	})();
 	
@@ -134,14 +134,14 @@ function navbar() {
 	// 	selector: ".workspace-node"
     // });
     $("#viewer").click(function() {
-        WorkspaceUtil.numViewer();
+        WorkspaceUtil.numViewer();//调用编号查看器
     });
 
 	//标尺查看器
 	(function controlRuler(){
 		var flag = false;
 		$("#controlRuler").click(function(){
-			new Ruler().controlCoordinates(flag)
+			new Ruler().controlCoordinates(flag)//调用标尺查看器
 			flag = !flag;
 		})
 	})()	
@@ -151,7 +151,7 @@ function navbar() {
 function controlbar() {
 	//draggable
 	(function dragControl() {
-		$("#controlbar .control-item:not([data-type='img'],[data-type='div'])").draggable({
+		$("#controlbar .control-item:not([data-type='img'],[data-type='div'])").draggable({//给draggable传递参数可拖动的控件
 			helper: function () {
 				var type = $(this).data("type");
 				return new Control().getControl(type);
@@ -172,19 +172,19 @@ function controlbar() {
 	
 	//添加图片
 	(function addImage() {
-		$("#controlbar .control-item[data-type='img']").click(function () {
+		$("#controlbar .control-item[data-type='img']").click(function () {//半丁事件
 			$("#imgFile").click();
 		});
 		$("#imgFile").change(function () {
-			var formData = new FormData($("#imgForm")[0]),
-				id = $("#workspace").attr("data-id"),
-				img = new Control().createNumber("img") + ".jpg";
+			var formData = new FormData($("#imgForm")[0]),//获取表单数据
+				id = $("#workspace").attr("data-id"),//获取id
+				img = new Control().createNumber("img") + ".jpg";//生成img类型的id编号
 			if (!id) return alert("无法上传没有编号的图片！");
 			
-			new CommonService().upload(id, img, formData, function (result) {
+			new CommonService().upload(id, img, formData, function (result) {//上传图片到服务器
 				Common.handleResult(result, function () {
-					var control = new Control();
-					control.setControl("img", function ($node) {
+					var control = new Control();//实例化控件对象
+					control.setControl("img", function ($node) {//建立新的图片控件
 						var number = control.createNumber("img");
 						$node.attr({
 							"id": number,
@@ -194,9 +194,9 @@ function controlbar() {
 							"left": "5px",
 							"top": "5px"
 						});
-						new ContextMenu().done(1, $node);
-						$("#workspace").append($node);
-						new Property().setDefault(number);
+						new ContextMenu().done(1, $node);//生成控件的右键菜单浪
+						$("#workspace").append($node);//添加到工作区
+						new Property().setDefault(number);//初始化属性栏设置默认的属性
 					});
 				});
 			});
@@ -205,7 +205,7 @@ function controlbar() {
 	
 	//添加子模块
 	(function addChild() {
-		$('#controlbar .control-item[data-type="div"]').click(function () {
+		$('#controlbar .control-item[data-type="div"]').click(function () {//子模块设计器按钮点击
 			var arrs = [
 				"channelmode=no",
 				"directories=no",
@@ -221,7 +221,7 @@ function controlbar() {
 				"top=100px",
 				"left=200px"
 			];
-			let editor = window.open("./editor.html", "_blank", arrs.join(", "));
+			let editor = window.open("./editor.html", "_blank", arrs.join(", "));//打开新的界面
 			// timer = null,
 			// html = null;
 			// timer = setInterval(function(){
@@ -240,27 +240,27 @@ function controlbar() {
 function propertybar() {
 	//保存属性
 	(function () {
-		var eventList = [
+		var eventList = [//定义事件列表
 			{type: "input focusout blur", selector: "#propertybar :text"},
 			{type: "change", selector: "#propertybar select"},
 			{type: "click", selector: "#propertybar :checkbox"}
 		];
-		for (var i = 0; i < eventList.length; i++) {
+		for (var i = 0; i < eventList.length; i++) {//遍历eventList
 			var item = eventList[i];
 			(function (item) {
-				$(document).on(item.type, item.selector, function (event) {
-					var id = $("#property_id").val();
+				$(document).on(item.type, item.selector, function (event) {//绑定事件
+					var id = $("#property_id").val();//获取id
 					if (id) {
 						var $workspace = $("#workspace");
-						new Property().save(id === "BODY" ? $workspace : $workspace.find("#" + id), $(event.target));
+						new Property().save(id === "BODY" ? $workspace : $workspace.find("#" + id), $(event.target));//执行保存
 					}
 					//2017/09/08优化
-					if (this.id === "property_controlType" && event.type === "change") {
-						AccessControl.executeControlType($(this).val());
+					if (this.id === "property_controlType" && event.type === "change") {//如果是控件类型
+						AccessControl.executeControlType($(this).val());//静态数据源进行控制
 					}
 					//2017/09/27优化
-					if (this.id === "property_db_isSave" && event.type === "click") {
-						AccessControl.executeIsSave($(this).is(":checked"));
+					if (this.id === "property_db_isSave" && event.type === "click") {//如果是数据库的是否入库属性
+						AccessControl.executeIsSave($(this).is(":checked"));//对数据库其他的属性控制
 					}
 				});
 			})(item);
@@ -271,7 +271,7 @@ function propertybar() {
 	(function () {
 		function buildArgs($expr, staticGlobal, dynamicGlobal, localFunction, remoteFunction, insertFunction) {
 			var global = {};
-			if (DataType.isObject(staticGlobal)) {
+			if (DataType.isObject(staticGlobal)) {//如果
 				for (var key in staticGlobal) {
 					var value = staticGlobal[key];
 					global[value + "(静态)"] = "GLOBAL." + key;

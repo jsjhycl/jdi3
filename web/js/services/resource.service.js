@@ -7,7 +7,7 @@ function ResourceService() {
 }
 
 ResourceService.prototype = {
-    add: function (data, callback) {
+    add: function (data, callback) {//新建资源
         if (!data) return;
         var that = this;
         $.cajax({
@@ -21,7 +21,7 @@ ResourceService.prototype = {
             }
         });
     },
-    list: function (type, callback) {
+    list: function (type, callback) {//资源列表
         if (!type) return;
         var that = this;
         $.cajax({
@@ -34,7 +34,7 @@ ResourceService.prototype = {
             }
         });
     },
-    remove: function remove(id, callback) {
+    remove: function remove(id, callback) {//移除资源
         if (!id) return;
         var that = this;
         $.cajax({
@@ -47,7 +47,7 @@ ResourceService.prototype = {
             }
         });
     },
-    removePromise: function (id) {
+    removePromise: function (id) {//promis版移除资源
         if (!id) return Promise.reject("无效的编号！");
         var that = this;
         return new Promise(function (resolve, reject) {
@@ -65,7 +65,7 @@ ResourceService.prototype = {
             });
         });
     },
-    submit: function submit(id, name, data, callback) {
+    submit: function submit(id, name, data, callback) {//提交资源
         if (!id || !name || !data) return;
         var that = this;
         $.cajax({
@@ -78,7 +78,7 @@ ResourceService.prototype = {
             }
         });
     },
-    recall: function recall(id, callback) {
+    recall: function recall(id, callback) {//资源重加载
         if (!id) return;
         var that = this;
         $.cajax({

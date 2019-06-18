@@ -5,52 +5,52 @@
  * @constructor
  */
 function StaticDataSourceModal($modal, $element) {
-    BaseModal.call(this, $modal, $element);
+    BaseModal.call(this, $modal, $element);//调用基础模块
 
-    this.$static = this.$modalBody.find("textarea");
+    this.$static = this.$modalBody.find("textarea");//获取弹窗的数据项
 
     this._resetData = function () {
-        this.$static.val("");
+        this.$static.val("");//给数据项设置为空
     };
 }
 
 StaticDataSourceModal.prototype = {
     initData: function (data) {
         var that = this;
-        that._resetData();
-        if (DataType.isString(data)) {
-            that.$static.val(data);
+        that._resetData();//调用_resetData
+        if (DataType.isString(data)) {//如果data是字符串
+            that.$static.val(data);//给数据项设置值
         }
     },
     saveData: function () {
-        var id = $("#property_id").val();
-        if (!id) return;
+        var id = $("#property_id").val();//获取编号id
+        if (!id) return;//如果编号id不存在退出函数
 
         var that = this,
-            data = that.$static.val(),
-            $workspace = $("#workspace"),
-            $control = $workspace.find("#" + id);
-        that.$element.val(data);
-        new Property().save(id === "BODY" ? $workspace : $control, that.$element);
+            data = that.$static.val(),//获取数据的值
+            $workspace = $("#workspace"),//获取工作区元素
+            $control = $workspace.find("#" + id);//在工作区中查找指定的元素
+        that.$element.val(data);//给$element设置data
+        new Property().save(id === "BODY" ? $workspace : $control, that.$element);//调用property的save方法
     },
     clearData: function () {
         var that = this,
-            id = $("#property_id").val();
-        if (!id) {
-            that.$modal.modal("hide");
+            id = $("#property_id").val();//获取编号id
+        if (!id) {//如果id不存在
+            that.$modal.modal("hide");//弹窗隐藏
         } else {
-            var result = confirm("确定要清除静态数据源配置数据吗？");
-            if (!result) return;
+            var result = confirm("确定要清除静态数据源配置数据吗？");//提示是否清除
+            if (!result) return;//取消退出函数
 
-            that._resetData();
-            that.$element.val("");
-            new Property().remove(id, "dataSource.static");
-            that.$modal.modal("hide");
+            that._resetData();//调用_resetData
+            that.$element.val("");//$element设置为空
+            new Property().remove(id, "dataSource.static");//调用property的remove方法
+            that.$modal.modal("hide");//弹窗隐藏
         }
     },
     execute: function () {
         var that = this;
-        that.basicEvents(false, that.initData, that.saveData, that.clearData);
+        that.basicEvents(false, that.initData, that.saveData, that.clearData);//绑定基础事件
     }
 };
 

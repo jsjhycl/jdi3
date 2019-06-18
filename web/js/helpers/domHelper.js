@@ -4,8 +4,12 @@ var DomHelper = (function () {
     //重绘
     function repaint(id) {
     }
-
-    //获取等值元素
+    
+    /**
+     * 获取等值元素
+     * @param {*} $srcDiv 原来的子模块 
+     * @param {*} $dstDiv 现在的子模块
+     */
     function getEqualElements($srcDiv, $dstDiv) {
         var result = [],
             getInputs = function ($div) {

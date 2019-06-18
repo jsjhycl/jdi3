@@ -3,7 +3,7 @@ function CommonService() {
 }
 
 CommonService.prototype = {
-    getFile: function (url, callback) {
+    getFile: function (url, callback) {//获取文件
         $.cajax({
             url: url,
             type: "GET",
@@ -13,7 +13,7 @@ CommonService.prototype = {
             }
         });
     },
-    getFileSync: function (url) {
+    getFileSync: function (url) {//同步获取文件
         var data = null;
         $.cajax({
             url: url,
@@ -26,7 +26,7 @@ CommonService.prototype = {
         });
         return data;
     },
-    getAjax: function (url) {
+    getAjax: function (url) {//返回ajax对象
         if (!url) return;
         return $.cajax({
             url: url,
@@ -34,7 +34,7 @@ CommonService.prototype = {
             dataType: "json"
         });
     },
-    upload: function (id, img, formData, callback) {
+    upload: function (id, img, formData, callback) {//上传文件
         if (!id || !img || !formData) return;
         var that = this;
         $.cajax({

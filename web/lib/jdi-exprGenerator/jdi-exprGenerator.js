@@ -558,7 +558,7 @@
                 var $asyncSelect = $(".eg:visible .eg-function .function-async"),
                     $modeSelect = $(".eg:visible .eg-function .function-mode"),
                     $insertSelect = $(".eg:visible .eg-insertFn .eg-insert-select"),
-                    profile = $(this).attr("data-insertFn") || null,
+                    profile = isRemote ? $(this).attr("data-profile") || null : $(this).attr("data-insertFn") || null,
                     value = $(this).attr("data-value") || null;
                 profile = Common.parseData(profile);
                 value = Common.parseData(value);

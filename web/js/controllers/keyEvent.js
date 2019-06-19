@@ -5,24 +5,26 @@ function KeyEvent() {
     var that = this;
     this.ruler = true;
     $(document).keydown(function (event) {//给整个文档绑定键盘事件
-        var code = event.keyCode;//获取点击键盘的keyCode
-        switch (code) {
-            case 27://如果按下的是esc
-                that.escEvent()//执行取消事件
-                break;
-            case 38://按下键盘上键
-                that.moveUpEvent(event)//执行向上移动事件
-                break;
-            case 40://按下键盘的下键
-                that.moveDownEvent(event)//执行向下移动事件
-                break;
-            case 37://按下键盘的左键
-                that.moveLeftEvent(event)//执行向左移动事件
-                break;
-            case 39://按下键盘的右键
-                that.moveRightEvent(event)//执行向右移动事件
-            default:
-                break;
+        if($('input:focus').length <= 0) {
+            var code = event.keyCode;//获取点击键盘的keyCode
+            switch (code) {
+                case 27://如果按下的是esc
+                    that.escEvent()//执行取消事件
+                    break;
+                case 38://按下键盘上键
+                    that.moveUpEvent(event)//执行向上移动事件
+                    break;
+                case 40://按下键盘的下键
+                    that.moveDownEvent(event)//执行向下移动事件
+                    break;
+                case 37://按下键盘的左键
+                    that.moveLeftEvent(event)//执行向左移动事件
+                    break;
+                case 39://按下键盘的右键
+                    that.moveRightEvent(event)//执行向右移动事件
+                default:
+                    break;
+            }
         }
     })
 }

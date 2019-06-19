@@ -204,15 +204,18 @@ function toolbar() {
                 break;
             
             case "functionInsert"://插入函数
-                
-                if ($target.hasClass('is_using')) {//判断是否有类名is_using
-                        WorkspaceUtil.resetView(true);//调用workspace方法
+                if ($('input.focus').length <= 0) { // 判断有没有选中元素
+                    alert('无选中元素！')
+                } else {
+                    if ($target.hasClass('is_using')) {//判断是否有类名is_using
+                            WorkspaceUtil.resetView(true);//调用workspace方法
                     } else {
                         WorkspaceUtil.resetView(true);//调用workspace方法
                         $target.addClass('is_using');//添加类名
                         WorkspaceUtil.insertFns($(this), true);//调用workspace方法
                         new InsertFnModal($("#insertFunctionModal")).open($(this));//调用workspace方法
                     }
+                }
 
                 break;
             case "functionView"://查看函数配置

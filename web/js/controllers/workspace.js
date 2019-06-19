@@ -86,13 +86,14 @@ var WorkspaceUtil = {
                 id = $dom.attr('id'),//获取对应dom的id
                 $origin = $originContainer.find('#' + id);//获取工作区中对应的元素
                 isSelected = $dom.parent().hasClass('ui-draggable'),    // 当前元素是否被选中;
+                isNode = $dom.hasClass('workspace-node'),   // 判断是否是表格中的input
                 isFocus = $dom.hasClass('focus');    // 输入框有红色背景
             var $span = $('<span data-domId="' + id + '" ></span>'),
                 // $temp = isSelected ? $dom.parent() : $dom;
                 $temp = $dom;
                 $span.css({//设置样式
                     width: $origin.get(0).offsetWidth,
-                    height: $origin.get(0).offsetHeight - 6,
+                    height: $origin.get(0).offsetHeight - (isNode ? 0 : 6),
                     position: $origin.css('position'),
                     top: $origin.css('top'),
                     left: $origin.css('left'),

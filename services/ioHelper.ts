@@ -1,7 +1,10 @@
+/**
+ * 文件操作的一些方法
+ */
 import {nativeImage, remote} from "electron";
 
-let {clipboard} = remote;
-import mkdirp from 'mkdirp';
+let {clipboard} = remote;// 剪切板
+import mkdirp from 'mkdirp';// 地柜创建目录及子目录
 import path from 'path';
 
 import fs from 'fs';
@@ -10,8 +13,14 @@ import fs from 'fs';
  * 资源路径
  */
 let resourcePath = path.join(__dirname, '../_template');
-if (!fs.existsSync(resourcePath)) mkdirp.sync(resourcePath);
+if (!fs.existsSync(resourcePath)) mkdirp.sync(resourcePath);// 生成缓存文件夹路径
 
+/**
+ * 创建资源文件夹里的指定文件
+ * @param resourceId 资源Id
+ * @param name 文件名称
+ * @returns 文件路径
+ */
 function getFileName(resourceId: string, name: string): string {
     let fullPath = path.join(resourcePath, resourceId);
     let fileName = path.join(fullPath, name);
@@ -50,13 +59,13 @@ interface sourceFile {
 function saveImage(source: sourceImage): string;
 function saveImage(source: sourceImage): string {
     try {
-        let targetFileName = getFileName(source.resourceId, source.name);
-        if (source.sourceName) {
-            fs.copyFileSync(source.sourceName, targetFileName);
-        } else {
-            let sourceClipboard = clipboard.readImage();
-            let buffers = source.name.endsWith('png') ? sourceClipboard.toPNG() : sourceClipboard.toJPEG(40);
-            fs.writeFileSync(targetFileName, buffers);
+        let targetFileName = getFileName(source.resourceId, source.name);// 没有创建，返回路径
+        if (source.sourceName) {// 通过上传
+            fs.copyFileSync(source.sourceName, targetFileName);// 拷贝文件
+        } else {// 通过剪切板
+            let sourceClipboard = clipboard.readImage();// 固定方法
+            let buffers = source.name.endsWith('png') ? sourceClipboard.toPNG() : sourceClipboard.toJPEG(40);// 文件后缀
+            fs.writeFileSync(targetFileName, buffers);// 写入
         }
         return targetFileName;
     } catch (e) {

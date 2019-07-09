@@ -303,8 +303,10 @@ Property.prototype = {
         GLOBAL_PROPERTY[dstId] = GLOBAL_PROPERTY[srcId];//赋值
         GLOBAL_PROPERTY[dstId] = {};
         for(var key in GLOBAL_PROPERTY[srcId]){
-            if(key != "cname")
+            if(key != "name")
                 GLOBAL_PROPERTY[dstId][key] = GLOBAL_PROPERTY[srcId][key];
+            else
+            GLOBAL_PROPERTY[dstId][key] = dstId;
         }
     },
     /**

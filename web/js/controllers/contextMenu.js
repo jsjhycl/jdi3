@@ -129,15 +129,16 @@ function ContextMenu() {
         if (!id) return alert("没有可复制的属性数据！");//如果获取不到控件的编号则退出函数并提示
 
         if (type === 1) {//按行复制
-            $elem.parents("td").nextAll().each(function () {//遍历但钱控件的的父集中的所有td
+            $elem.parents("tr").find("td").each(function () {//遍历当前控件的的父集中的所有td
                 var cid = $(this).find(":input").attr("id");//获取遍历的当前控件的编号(id)
-                if (cid) {//如果当前的控件的编号存在
+                if (cid && cid !== id) {//如果当前的控件的编号存在并不等于选中
+                    
                     new Property().copy(id, cid);//实例化属性并调用copy方法
                 }
             });
         } else if (type === 2) {//按列复制
             var index = TableHelper.getTdIndex($elem);//调用tableHelper下面的getTdindex(获取行的index)
-            $elem.parents("tr").nextAll().each(function () {//获取所有的列并遍历
+            $elem.parents("table").find("tr").each(function () {//获取所有的列并遍历
                 var cid = $(this).find("td").eq(index).find(":input").attr("id");//获取遍历的当前列对应的的对应行的输入框的id
                 if (cid) {//如果当前控件的编号存在
                     new Property().copy(id, cid);//实例化属性并调用copy方法
@@ -220,7 +221,7 @@ function ContextMenu() {
                 var type = $el.get(0).tagName === 'INPUT' ? 'text' : $(dom).get(0).tagName.toLowerCase(),
                     prefix = type == 'div' ? 'DIV_' : "";
                 maxId = maxId ? NumberHelper.idToName(NumberHelper.nameToId(maxId) + 1, 4) : control.createNumber(type);
-                type == 'text' && addNewProp($el.attr('id'), maxId);
+                type == 'text' && new Property().copy($el.attr('id'), maxId);
                 type == 'div' ? contextMenu.done(2, $(clone)) : contextMenu.done(3, $(clone));
                 $(clone).attr({
                     id: prefix + maxId,
@@ -244,7 +245,8 @@ function ContextMenu() {
                             prefix = type == 'div' ? 'DIV_' : "";
                         if (type == 'text') {
                             inputMaxId = inputMaxId ? NumberHelper.idToName(NumberHelper.nameToId(inputMaxId) + 1, 4) : control.createNumber(type);
-                            addNewProp($(dom).attr('id'), inputMaxId);
+                            new Property().copy($(dom).attr('id'), inputMaxId);
+                            // addNewProp($(dom).attr('id'), inputMaxId);
                             contextMenu.done(3, $(dom));
                             $(dom).attr({
                                 id: prefix + inputMaxId,
@@ -277,10 +279,6 @@ function ContextMenu() {
         }) */
 
         $target.parents('.workspace-node').height('auto');
-
-        function addNewProp(oldId, newId) {
-            GLOBAL_PROPERTY[newId] = GLOBAL_PROPERTY[oldId];
-        }
     }
 }
 

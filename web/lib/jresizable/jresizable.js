@@ -74,8 +74,7 @@
                 } else {
                     that.renderDOM(element);
                 }
-            } else {
-            }
+            } else {}
         },
         renderDOM: function (element) {
             var that = this,
@@ -90,7 +89,7 @@
                 "z-index": $(element).css("z-index"),
                 "width": $(element).outerWidth() + 2 * edge,
                 "height": $(element).outerHeight() + 2 * edge,
-                "border": edge + "px dotted " + color
+                "border": edge + "px solid " + color
             });
             $(element).wrap($resizable);
             $(element).addClass("resizable-node").css({
@@ -105,7 +104,10 @@
         bindEvents: function ($resizable, element) {
             var that = this;
 
-            $resizable.bind("mousemove" + EVENT_NAMESPACE, {target: $resizable, element: element}, function (event) {
+            $resizable.bind("mousemove" + EVENT_NAMESPACE, {
+                target: $resizable,
+                element: element
+            }, function (event) {
                 if ($.fn.jresizable.isResizing) return;
 
                 var target = event.data.target,
@@ -117,11 +119,16 @@
                 }
             });
 
-            $resizable.bind("mouseleave" + EVENT_NAMESPACE, {target: $resizable}, function (event) {
+            $resizable.bind("mouseleave" + EVENT_NAMESPACE, {
+                target: $resizable
+            }, function (event) {
                 event.data.target.css("cursor", "");
             });
 
-            $resizable.bind("mousedown" + EVENT_NAMESPACE, {target: $resizable, element: element}, function (event) {
+            $resizable.bind("mousedown" + EVENT_NAMESPACE, {
+                target: $resizable,
+                element: element
+            }, function (event) {
                 var target = event.data.target,
                     direction = that.getDirection(event, event.data.element);
                 if (!direction) {
@@ -239,10 +246,18 @@
             if (resizeData.direction.indexOf("w") !== -1) {
                 resizeData.width = resizeData.startWidth - event.pageX + resizeData.startX;
                 resizeData.left = resizeData.startLeft + resizeData.startWidth - resizeData.width;
+                this.$elements.children(":first").css({
+                    position: 'absolute',
+                    left: resizeData.startX - event.pageX
+                });
             }
             if (resizeData.direction.indexOf("n") !== -1) {
                 resizeData.height = resizeData.startHeight - event.pageY + resizeData.startY;
                 resizeData.top = resizeData.startTop + resizeData.startHeight - resizeData.height;
+                this.$elements.children(":first").css({
+                    position: 'absolute',
+                    top: resizeData.startY - event.pageY
+                });
             }
         },
         applyResize: function (event) {
@@ -266,18 +281,15 @@
 
     $.fn.jresizable.defaults = {
         disabled: false,
-        mode: "region",//"region"表示框选模式，"single"表示单击模式
+        mode: "region", //"region"表示框选模式，"single"表示单击模式
         multi: false,
         $container: $("#workspace"),
         handles: "n,e,s,w,ne,se,sw,nw,all",
         color: "gray",
-        edge: 5,
-        onStart: function (e) {
-        },
-        onResize: function (e) {
-        },
-        onStop: function (e) {
-        }
+        edge: 2,
+        onStart: function (e) {},
+        onResize: function (e) {},
+        onStop: function (e) {}
     };
 
     $.fn.jresizable.methods = {
@@ -286,12 +298,16 @@
         },
         enable: function (elements) {
             return $(elements).each(function () {
-                $(this).jresizable({disabled: false});
+                $(this).jresizable({
+                    disabled: false
+                });
             });
         },
         disable: function (elements) {
             return $(elements).each(function () {
-                $(this).jresizable({disabled: true});
+                $(this).jresizable({
+                    disabled: true
+                });
             });
         },
         destroy: function (elements) {

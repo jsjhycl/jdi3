@@ -299,7 +299,7 @@ Property.prototype = {
      * @param {*} srcId 被复制的属性编号id
      * @param {*} dstId 将要复制的属性编号id
      */
-    copy: function (srcId, dstId) {
+    copy: function (srcId, dstId) {// czp修改了属性复制
         GLOBAL_PROPERTY[dstId] = GLOBAL_PROPERTY[srcId];//赋值
         GLOBAL_PROPERTY[dstId] = {};
         for(var key in GLOBAL_PROPERTY[srcId]){

@@ -158,6 +158,7 @@
                     if (cache.onStart) {
                         cache.onStart.call(event.data.target, event);
                     }
+                    that.childSetData();// 设置初始元素的偏移量
                 });
 
                 $(document).bind("mousemove" + EVENT_NAMESPACE, attachData, function (event) {
@@ -178,6 +179,7 @@
                         cache.onStop.call(event.data.target, event);
                     }
                     $(document).off(EVENT_NAMESPACE);
+                    that.removeChildData();// 取消初始元素的偏移量
                 });
             });
 
@@ -246,17 +248,21 @@
             if (resizeData.direction.indexOf("w") !== -1) {
                 resizeData.width = resizeData.startWidth - event.pageX + resizeData.startX;
                 resizeData.left = resizeData.startLeft + resizeData.startWidth - resizeData.width;
-                this.$elements.children(":first").css({
+                var $child = this.getChild(),
+                    lastLeft = Number($child.data('left') || 0);
+                $child.css({
                     position: 'absolute',
-                    left: resizeData.startX - event.pageX
+                    left: resizeData.startX - event.pageX + lastLeft
                 });
             }
             if (resizeData.direction.indexOf("n") !== -1) {
                 resizeData.height = resizeData.startHeight - event.pageY + resizeData.startY;
                 resizeData.top = resizeData.startTop + resizeData.startHeight - resizeData.height;
-                this.$elements.children(":first").css({
+                var $child = this.getChild(),
+                    lastTop = Number($child.data("top") || 0);
+                $child.css({
                     position: 'absolute',
-                    top: resizeData.startY - event.pageY
+                    top: resizeData.startY - event.pageY + lastTop
                 });
             }
         },
@@ -268,6 +274,22 @@
                 "width": resizeData.width,
                 "height": resizeData.height
             });
+        },
+        getChild: function () {
+            var $child = this.$elements.children("div");
+            if ($child.length <= 0)
+                $child = this.$elements.children("table");
+            return $child.eq(0)
+        },
+        childSetData: function () {
+            var $child = this.getChild();
+            $child.data("left", $child.position().left || 0);
+            $child.data("top", $child.position().top || 0);
+        },
+        removeChildData: function () {
+            var $child = this.getChild();
+            $child.removeData("left");
+            $child.removeData("top");
         }
     };
 

@@ -37,6 +37,9 @@
         renderDOM: function (element) {
             var that = this,
                 tableHtml = '<div class="form-group">' +
+                    '<label class="col-lg-2 control-label">查询数据库：</label>' +
+                    '<div class="col-lg-9"><select class="form-control querier-dbName"></select></div>' +
+                    '</div>'+'<div class="form-group">' +
                     '<label class="col-lg-2 control-label">查询表格：</label>' +
                     '<div class="col-lg-9"><select class="form-control querier-table"></select></div>' +
                     '</div>',
@@ -69,6 +72,7 @@
         setData: function (element) {
             var that = this,
                 cache = $.data(element, CACHE_KEY),
+                $querierDbName = $(element).find(".querier-dbName"),
                 $querierTable = $(element).find(".querier-table"),
                 $querierFields = $(element).find(".querier-fields"),
                 $querierConditions = $(element).find(".querier-conditions"),
@@ -78,26 +82,58 @@
                 $querierFields = $(element).find(".querier-fields-show,.querier-fields-real");
             }
 
-            var table, fields, conditions;
+            var dbName, table, fields, conditions;
             if (DataType.isObject(data)) {
+                dbName = data.dbName;
                 table = data.table;
                 fields = data.fields;
                 conditions = data.conditions;
             }
 
-            var db = new Db();
-            db.getTables(false, function (tables) {
-                ModalHelper.setSelectData($querierTable, {name: "请选择查询表", value: ""}, tables, table, true);
-
-                db.getFields(table, function (arrs) {
-                    that.setFields($querierFields, fieldMode, arrs, fields);
-                    $querierConditions.conditions({
-                        mode: 1,
-                        table: table,
-                        data: conditions
-                    });
+            // var db = new Db();
+            // db.getTables(false, function (tables,dbNames) {
+            //     // ModalHelper.setSelectData($querierDbName, {name: "请选择数据库", value: ""}, dbNames, dbName, true)
+            //     // ModalHelper.setSelectData($querierTable, {name: "请选择查询表", value: ""}, tables, table, true);
+            //     db.getFields(table, function (arrs) {
+            //         console.log(fieldMode, arrs, fields)
+            //         // that.setFields($querierFields, fieldMode, arrs, fields);
+            //         $querierConditions.conditions({
+            //             mode: 1,
+            //             table: table,
+            //             data: conditions
+            //         });
+            //     });
+            // });
+            console.log(dbName,table,fields,conditions)
+            var AllDbName = new CommonService().getFileSync("/lib/ZZZZZZZ/table.json")||{},
+                dbOptions = [],
+                tableOptions = [];
+                fieldsoptions = []
+                Object.keys(AllDbName).forEach(function(item){
+                    dbOptions.push({name:item,value:item})
+                })
+                Common.fillSelect($querierDbName,{name:"请选择数据库",value:""},dbOptions,dbName,true)
+                if(dbName){
+                    Object.keys(AllDbName[dbName]).forEach(function(item){
+                        tableOptions.push({name:item,value:item})
+                    })
+                    if(table){
+                        AllDbName[dbName][table].tableDetail.forEach(function(item){
+                            console.log(item)
+                            fieldsoptions.push({name:item.cname,value:item.id})
+                        })
+                    }
+                }
+                Common.fillSelect($querierTable,{name:"请选择表",value:""},tableOptions,table,true)
+                that.setFields($querierFields, fieldMode, fieldsoptions, fields);
+                $querierConditions.conditions({
+                    mode: 1,
+                    dbName:dbName,
+                    table: table,
+                    data: conditions
                 });
-            });
+
+                
         },
         setFields: function ($fieldsDiv, fieldMode, fields, data) {
             if (!$fieldsDiv || $fieldsDiv.length <= 0) return;
@@ -147,36 +183,87 @@
         //绑定事件
         bindEvents: function (element) {
             var that = this;
+            $(element).on("change"+ EVENT_NAMESPACE, ".querier-dbName",{element:element},function(event){
+                event.stopPropagation();
+                var dbName = $(this).val(),
+                AllDbName = new CommonService().getFileSync("/lib/ZZZZZZZ/table.json")||{},
+                tableOptions = [],
+                $querierTable = $(element).find(".querier-table");
+                if(dbName){
+                   Object.keys(AllDbName[dbName]).forEach(function(item){
+                       tableOptions.push({name:item,value:item})
+                   }) 
+                }
+                Common.fillSelect($querierTable,{name:"请选择表",value:""},tableOptions,null,true)
+            })
             $(element).on("change" + EVENT_NAMESPACE, ".querier-table", {element: element}, function (event) {
                 event.stopPropagation();
 
-                var table = $(this).val();
-                new Db().getFields(table, function (fields) {
-                    var celement = event.data.element,
-                        cache = $.data(celement, CACHE_KEY),
-                        $querierFields = $(celement).find(".querier-fields"),
-                        $querierConditions = $(celement).find(".querier-conditions"),
-                        fieldMode = cache.fieldMode,
-                        data = cache.data;
-                    if (fieldMode === "single") {
-                        $querierFields = $(celement).find(".querier-fields-show,.querier-fields-real");
+                var table = $(this).val(),
+                    celement = event.data.element,
+                    cache = $.data(celement, CACHE_KEY),
+                    $querierFields = $(celement).find(".querier-fields"),
+                    $querierConditions = $(celement).find(".querier-conditions"),
+                    AllDbName = new CommonService().getFileSync("/lib/ZZZZZZZ/table.json")||{},
+                    fieldMode = cache.fieldMode,
+                    data = cache.data,
+                    fieldsoptions = [],
+                    dbName = $(celement).find(".querier-dbName").val();
+                    if(dbName&&table){
+                        AllDbName[dbName][table].tableDetail.forEach(function(item){
+                            fieldsoptions.push({name:item.cname,value:item.id})
+                        })
                     }
-                    if (DataType.isObject(data) && data.table === table) {
-                        that.setFields($querierFields, fieldMode, fields, data.fields);
-                        $querierConditions.conditions({
-                            mode: 1,
-                            table: table,
-                            data: data.conditions
-                        });
-                    } else {
-                        that.setFields($querierFields, fieldMode, fields, null);
-                        $querierConditions.conditions({
-                            mode: 1,
-                            table: table,
-                            data: null
-                        });
-                    }
-                });
+                if (fieldMode === "single") {
+                    $querierFields = $(celement).find(".querier-fields-show,.querier-fields-real");
+                }
+                if (DataType.isObject(data) && data.table === table) {
+                    that.setFields($querierFields, fieldMode, fieldsoptions, data.fields);
+                    $querierConditions.conditions({
+                        mode: 1,
+                        dbName:dbName,
+                        table: table,
+                        data: data.conditions
+                    });
+                } else {
+                    that.setFields($querierFields, fieldMode, fieldsoptions, null);
+                    $querierConditions.conditions({
+                        mode: 1,
+                        dbName:dbName,
+                        table: table,
+                        data: null
+                    });
+                }
+
+
+
+                // new Db().getFields(table, function (fields) {
+                //     var celement = event.data.element,
+                //         cache = $.data(celement, CACHE_KEY),
+                //         $querierFields = $(celement).find(".querier-fields"),
+                //         $querierConditions = $(celement).find(".querier-conditions"),
+                //         fieldMode = cache.fieldMode,
+                //         data = cache.data;
+                //         console.log(celement,cache,$querierFields,$querierConditions,fieldMode,data)
+                //     if (fieldMode === "single") {
+                //         $querierFields = $(celement).find(".querier-fields-show,.querier-fields-real");
+                //     }
+                //     if (DataType.isObject(data) && data.table === table) {
+                //         that.setFields($querierFields, fieldMode, fields, data.fields);
+                //         $querierConditions.conditions({
+                //             mode: 1,
+                //             table: table,
+                //             data: data.conditions
+                //         });
+                //     } else {
+                //         that.setFields($querierFields, fieldMode, fields, null);
+                //         $querierConditions.conditions({
+                //             mode: 1,
+                //             table: table,
+                //             data: null
+                //         });
+                //     }
+                // });
             });
         }
     };
@@ -243,6 +330,7 @@
                 });
             }
             return {
+                dbName:$querier.find(".querier-dbName").val(),
                 table: $querier.find(".querier-table").val(),
                 fields: fields,
                 conditions: $querier.find(".querier-conditions").conditions("getData")

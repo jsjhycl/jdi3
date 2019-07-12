@@ -1,6 +1,6 @@
 (function ($, window, document, undefined) {
-    var EVENT_NAMESPACE = ".dbDesigner_event",//事件命名空间
-        CACHE_KEY = "dbDesigner_cache";//缓存关键字
+    var EVENT_NAMESPACE = ".dbDesigner_event", //事件命名空间
+        CACHE_KEY = "dbDesigner_cache"; //缓存关键字
 
     function DbDesigner(elements, options) {
         this.$elements = elements;
@@ -69,13 +69,16 @@
                 if (!id) return true;
 
                 tbody += "<tr>";
-                var property = $.extend(getProperty(id), {id: id});
+                var property = $.extend(getProperty(id), {
+                    id: id
+                });
+                console.log(property)
                 cache.thead.forEach(function (item) {
                     var template = item.template || function (value) {
-                                return value;
-                            },
+                            return value;
+                        },
                         value = that.recurseObject(property, item.key);
-                    tbody += '<td>' + template(value) + '</td>';
+                    tbody += '<td>' + template(value[0],value[1]) + '</td>';
                 });
                 tbody += "</tr>";
             });
@@ -86,14 +89,18 @@
 
             var that = this;
             //PS：此处存在依赖问题，待优化……
-            $(element).on("click" + EVENT_NAMESPACE, '[data-key="isSave"]', {element: element}, function (event) {
+            $(element).on("click" + EVENT_NAMESPACE, '[data-key="isSave"]', {
+                element: element
+            }, function (event) {
                 var current = event.data.element,
                     key = $(this).attr("data-key"),
                     $tr = $(this).parents("tr"),
                     isChecked = $(this).is(":checked");
                 that.setDefaultData(current, key, $tr, isChecked);
             });
-            $(element).on("click" + EVENT_NAMESPACE, "thead th .check-all", {element: element}, function (event) {
+            $(element).on("click" + EVENT_NAMESPACE, "thead th .check-all", {
+                element: element
+            }, function (event) {
                 var current = event.data.element,
                     index = $(this).parent("th").index(),
                     isChecked = $(this).is(":checked");
@@ -121,7 +128,8 @@
                 $tr.find(selectors).prop("disabled", false);
                 var id = $tr.find('[data-key="id"]').val(),
                     cname = $tr.find('[data-key="cname"]').val();
-                $tr.find('[data-key="table"]').val(customId);
+                $tr.find('[data-key="table"]').val();
+                $tr.find('[data-key="dbName"]').val()
                 $tr.find('[data-key="field"]').val(id);
                 $tr.find('[data-key="desc"]').val(cname);
             } else {
@@ -132,22 +140,108 @@
         recurseObject: function (data, key) {
             if (!data) return;
             if (!key) return;
-
             if (key.indexOf(".") > -1) {
                 var temp = $.extend(true, {}, data),
                     keys = key.split(".");
-                for (var i = 0; i < keys.length; i++) {
-                    var ckey = keys[i],
-                        cvalue = temp[ckey];
-                    if (!cvalue) {
-                        temp = "";
-                        break;
-                    } else {
-                        temp = cvalue;
+                // for (var i = 0; i < keys.length; i++) {
+                //     var ckey = keys[i],
+                //         cvalue = temp[ckey];
+                //         // if(data.db){
+                //         //     if (ckey =="dbName" ||ckey == "table" || ckey == "field" || ckey == "fieldSplit") {
+                //         //        console.log(ckey,data.db[ckey],this.getOptions(data,ckey))
+                //         //         temp = [data.db[ckey], this.getOptions(data, ckey)]
+                //         //     }
+                //         //     if(ckey == "isSave"){
+                //         //         temp = [!!data.db,""]
+                //         //     }
+                //         //     if(ckey=="desc"){
+                //         //         temp = [data.db[ckey],""]
+                //         //     }
+                //         // }else{
+                //         //     temp = ["",""]
+                //         // }
+                //     if(!cvalue){
+                //         console.log(ckey,cvalue,temp)
+                //         // temp = ""
+                //         // break
+                //     }else{
+                        
+                //         temp = cvalue;
+                //     }
+
+                    
+                // }
+                var db = keys[0], ckey = keys[1];
+                if(!temp.db){
+                    temp = ["",this.getOptions(data,ckey)]
+                }else{
+                    if(ckey=="dbName"||ckey == "table" || ckey == "field" || ckey == "fieldSplit"){
+                        if(data[db][ckey]){
+                            temp = [data[db][ckey], this.getOptions(data, ckey)]
+                        }
+                    }else{
+                        temp = [data[db][ckey],""]
                     }
                 }
+
                 return temp;
-            } else return data[key];
+            } else return [data[key],""];
+        },
+        getOptions: function (data, ckey) {
+            var dbName = (data.db && data.db.dbName) ||"",
+                table = (data.db && data.db.table) || "",
+                field = (data.db && data.db.field)|| "",
+                dbList = JSON.parse(localStorage.getItem("AllDbName")) || {},
+                options = [];
+
+            if (ckey == "dbName") {
+                Object.keys(dbList).forEach(function (item) {
+                    options.push({
+                        name: item,
+                        value: item
+                    })
+                })
+            }
+            if (ckey == "table") {
+                if(dbName){
+                    Object.keys(dbList[dbName]).forEach(function (item) {
+                        options.push({
+                            name: item,
+                            value: item
+                        })
+                    })
+                }
+            }
+            if (ckey == "field") {
+                if(dbName && table){
+                    var fields = dbList[dbName][table].tableDetail;
+                    fields.forEach(function (item) {
+                        options.push({
+                            name: item.cname,
+                            value: item.id
+                        })
+                    })
+                }
+            }
+            if (ckey == "fieldSplit") {
+                if(dbName&&table){
+                    var fields = dbList[dbName][table].tableDetail,
+                        fieldSplits = '';
+                    fields.forEach(function (item) {
+                        if (data.id == item.id) {
+                            fieldSplits = Number(item.fieldSplit)
+                        }
+                    })
+                    for (i = 1; i <= fieldSplits; i++) {
+                        options.push({
+                            name: "插入",
+                            value: String(i)
+                        })
+                    }
+                }
+            }
+
+            return options;
         }
     };
 
@@ -164,8 +258,7 @@
     $.fn.dbDesigner.defaults = {
         disabled: false,
         $elems: null,
-        thead: [
-            {
+        thead: [{
                 name: "id",
                 text: "编号",
                 key: "id",
@@ -225,12 +318,16 @@
         },
         enable: function (elements) {
             return elements.each(function () {
-                $(this).dbDesigner({disabled: false});
+                $(this).dbDesigner({
+                    disabled: false
+                });
             });
         },
         disable: function (elements) {
             return elements.each(function () {
-                $(this).dbDesigner({disabled: true});
+                $(this).dbDesigner({
+                    disabled: true
+                });
             });
         },
         getData: function (elements) {

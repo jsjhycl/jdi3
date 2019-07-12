@@ -1,5 +1,6 @@
 function Propertybar($container) {
     this.$container = $container;
+    this.NAME_SPACE = ".propertybar";
 }
 
 Propertybar.prototype = {
@@ -7,8 +8,18 @@ Propertybar.prototype = {
         isPM = !!isPM;//对isPM转换为正则
         suffix = suffix || "";//如果suffix存在则用suffix否则为空
         var that = this,
+            AllDbName = new CommonService().getFileSync("/lib/ZZZZZZZ/table.json"),
             result = new CommonService().getFileSync("/profile/propertybar.json");//实例化CommonService调用getFileSync方法
         if (!result) return;//如果没有退出函数
+
+        //添加总数据库属性
+            var dbArr = result[6]['items'][1]["items"];
+            if(AllDbName){
+                AllDbName = Object.keys(AllDbName)
+                AllDbName.forEach(function(item){
+                    dbArr.push({name:item,value:item})
+                })            
+            }
 
         var data = result;
         if (isPM) {//如果是PM为true
@@ -16,6 +27,7 @@ Propertybar.prototype = {
         }
         html = that.render(data, suffix);//调用render函数
         that.$container.empty().append(html);//把html插入到$container
+        this.bindEvents()
     },
     render: function (data, suffix) {
         if (!Array.isArray(data)) return;//如过data不是数组退出函数
@@ -95,5 +107,52 @@ Propertybar.prototype = {
                 return true;//退出函数
             } else return false;//退出函数
         });
+    },
+    bindEvents:function(){
+        var that = this;
+        that.$container.on("change"+that.NAME_SPACE,"#property_db_dbName",function(event){
+            var $select = $("#property_db_table"),
+                key= $(this).val()||_11,
+                options = [],
+                tableNames = [],
+                AllDbName = JSON.parse(localStorage.getItem('AllDbName'));
+                console.log(AllDbName,$(this))
+                tableNames = Object.keys(AllDbName[key]);
+                tableNames.forEach(function(item){
+                    options.push({name:item,value:item})
+                })
+                Common.fillSelect($select,{name:"请选择表",value:""},options,null,true)  
+        })
+        that.$container.on("change"+that.NAME_SPACE,"#property_db_table",function(event){
+            var $select = $("#property_db_field"),
+                tableName = $(this).val(),
+                options = [],
+                dbName = $("#property_db_dbName").val(),
+                AllDbName = JSON.parse(localStorage.getItem('AllDbName')),
+                fieldsArr = AllDbName[dbName][tableName].tableDetail;
+                fieldsArr.forEach(function(item){
+                    options.push({name:item.cname,value:item.id})
+                })
+                Common.fillSelect($select,{name:"请选择字段",value:""},options,null,true)
+        })
+        that.$container.on("change"+that.NAME_SPACE,"#property_db_field",function(event){
+            var $select = $("#property_db_fieldSplit"),
+                dbName = $("#property_db_dbName").val(),
+                tableName = $("#property_db_table").val(),
+                fieldName =$(this).val(),
+                options = [],
+                fieldSplit = "",
+                AllDbName = JSON.parse(localStorage.getItem("AllDbName")),
+                fieldsArr = AllDbName[dbName][tableName].tableDetail;
+                fieldsArr.forEach(function(item){
+                    if(item.id == fieldName){
+                        fieldSplit = Number(item.fieldSplit)
+                    }
+                })
+                for(var i = 1; i < fieldSplit; i++){
+                    options.push({name:"插入",value:i})
+                }
+                Common.fillSelect($select,{name:"请选择第几段",value:""},options,null,true)
+        })
     }
 };

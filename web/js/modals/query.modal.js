@@ -23,6 +23,7 @@ DbQueryModal.prototype = {
         var queryData = null;
         if (DataType.isObject(data)) {
             queryData = {
+                dbName:data.dbName,
                 table: data.table,
                 fields: data.fields,
                 conditions: data.conditions
@@ -32,6 +33,7 @@ DbQueryModal.prototype = {
                 that.$typeSelect.val(type);
             }
         }
+        console.log(queryData,111)
         that.$querier.dbQuerier({
             fieldMode: "multi",
             data: queryData
@@ -45,12 +47,14 @@ DbQueryModal.prototype = {
             result = that.$querier.dbQuerier("getData"),
             data = {
                 type: that.$typeSelect.val(),
+                dbName: result.dbName,
                 table: result.table,
                 fields: result.fields,
                 conditions: result.conditions
             },
             $workspace = $("#workspace"),
             $control = $workspace.find("#" + id);
+            console.log(result)
         that.$element.val(JSON.stringify(data));
         new Property().save(id === "BODY" ? $workspace : $control, that.$element);
     },

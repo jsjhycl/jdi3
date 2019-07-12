@@ -5,6 +5,14 @@
  */
 function DbDefineModal($modal) {
     BaseModal.call(this, $modal, null);//绑定基弹窗
+
+    this._getAjax = function () {
+        return $.cajax({ //返回一个ajax
+            url: "/lib/ZZZZZZZ/table.json",
+            type: "GET",
+            dataType: "json"
+        });
+    };
 }
 
 DbDefineModal.prototype = {
@@ -30,6 +38,7 @@ DbDefineModal.prototype = {
         that.basicEvents(null, that.initData, null, null);//绑定基础事件
     },
     bindEvents: function () {
+        
         var that = this;
         that.$modal.on("click", ".modal-body .table a", function () {//半丁事件
             var $tr = $(this).parents("tr"),//获取tr元素
@@ -38,6 +47,11 @@ DbDefineModal.prototype = {
                 customId = $tr.attr("data-customId");//获取customId
             that.$modal.modal("hide");//弹窗隐藏
             new Workspace().load(id, name, "数据库定义", "模型", "定义", customId, null);//实例化工作区定义调用load方法
+
+            $.when(that._getAjax()).done(function(ret){
+                localStorage.setItem('AllDbName',JSON.stringify(ret||{}))
+            })
+
             new Main().open();//实例化main调用open方法
         });
     }

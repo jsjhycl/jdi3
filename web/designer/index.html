@@ -37,7 +37,8 @@
         <li class="dropdown">
             <a class="item dropdown-toggle" data-toggle="dropdown">工具<b class="caret"></b></a>
             <ul class="dropdown-menu">
-                <li><a data-toggle="modal" href="#dbDesignerModal" data-first-filter="db">数据库设计器</a></li>
+                <li><a data-toggle="modal" href="#setDbDesignerModal" data-first-filter="db">数据库设计器</a></li>
+                <li><a data-toggle="modal" href="#dbDesignerModal" data-first-filter="db">数据入库</a></li>
                 <li><a data-toggle="modal" href="#recordModal">产品记录查看器</a></li>
                 <li><a id="viewer">元素编号查看器</a></li>
                 <li><a id="controlRuler">标尺查看器</a></li>
@@ -525,6 +526,10 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label class="control-label">存档数据库：</label>
+                    <select class="form-control" data-key="dbName" data-type="String"></select>
+                </div>
+                <div class="form-group">
                     <label class="control-label">存档表格：</label>
                     <select class="form-control" data-key="table" data-type="String"></select>
                 </div>
@@ -605,16 +610,70 @@
     </div>
 </section>
 
-<!--数据库设计器模态框-->
+<!--数据入库模态框-->
 <section class="modal fade" id="dbDesignerModal">
-    <div class="modal-dialog w1000px">
+    <div class="modal-dialog w1200px">
+        <div class="modal-content">
+            <header class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">数据入库</h4>
+            </header>
+            <section class="modal-body">
+                <div id="dbDesigner"></div>
+            </section>
+            <footer class="modal-footer">
+                <button class="btn btn-primary save">保存</button>
+            </footer>
+        </div>
+    </div>
+</section>
+<!--数据库设计模态框-->
+<section class="modal fade" id="setDbDesignerModal">
+    <div class="modal-dialog w1200px">
         <div class="modal-content">
             <header class="modal-header">
                 <button class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">数据库设计器</h4>
             </header>
+            <section>
+                
+            </section>
             <section class="modal-body">
-                <div id="dbDesigner"></div>
+                <form class="form-inline">
+                    <div class="form-group col-lg-3" style="margin-bottom: 5px">
+                        <label class="control-label col-lg-3" >数据库名</label>
+                        <input  class="form-control col-lg-3" type="text" data-type="dbName">
+                    </div>
+                    <div class="form-group col-lg-3" style="margin-bottom: 5px">
+                        <label class="control-label col-lg-3" >表名</label>
+                        <input  class="form-control col-lg-3" type="text" data-type="tableName">
+                    </div>
+                    <div class="form-groupb col-lg-3" style="margin-bottom: 5px">
+                        <label class="control-label col-lg-3" >表注解</label>
+                        <input  class="form-control col-lg-3" type="text" data-type="tableDesc">
+                    </div>
+                    <div class="form-group col-lg-3" style="margin-bottom: 5px">
+                        <label class="control-label col-lg-3" >备用1</label>
+                        <input  class="form-control col-lg-3" type="text" data-type="reserveOne">
+                    </div>
+                    <div class="form-group col-lg-3" style="margin-bottom: 5px">
+                            <label class="control-label col-lg-3" >备用2</label>
+                            <input  class="form-control  col-lg-3" type="text" data-type="reserveTwo">
+                    </div>
+                    <div class="form-group col-lg-3" style="margin-bottom: 5px">
+                            <label class="control-label col-lg-3" >备用3</label>
+                            <input  class="form-control  col-lg-3" type="text" data-type="reserveThere">
+                    </div>
+                    <div class="form-group col-lg-3" style="margin-bottom: 5px">
+                            <label class="control-label col-lg-3" >备用4</label>
+                            <input  class="form-control  col-lg-3" type="text" data-type="reserveFour">
+                    </div>
+                    <div class="form-group col-lg-3"  style="margin-bottom: 5px">
+                            <label class="control-label col-lg-3" >备用5</label>
+                            <input  class="form-control  col-lg-3" type="text" data-type=reserveFive>
+                    </div>
+                </form>
+                <div id="setDbDesigner"></div>
             </section>
             <footer class="modal-footer">
                 <button class="btn btn-primary save">保存</button>
@@ -715,7 +774,7 @@
 
 <!--抄送模态框-->
 <section class="modal fade" id="copySendModal">
-    <div class="modal-dialog w1200px">
+    <div class="modal-dialog w1300px">
         <div class="modal-content">
             <header class="modal-header">
                 <button class="close" data-dismiss="modal">&times;</button>
@@ -727,6 +786,7 @@
                     <tr>
                         <th>抄送元素</th>
                         <th>抄送状态</th>
+                        <th>抄送数据库</th>
                         <th>抄送表</th>
                         <th>抄送列</th>
                         <th>抄送字段</th>

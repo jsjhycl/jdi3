@@ -4,6 +4,7 @@ function init() {
 	new Filter('初始化', '加载').set();
 	//初始化属性栏
 	new Propertybar($("#propertybar")).init(false, null);
+
 	//初始化工作区
 	var $workspace = $("#workspace");//获取工作区
 	$workspace.css({
@@ -30,7 +31,8 @@ function init() {
 	//右键菜单
 	new ContextMenu().done(1, $workspace);
 	// add at 2017/12/27绑定draggable
-	$(".modal .modal-dialog .modal-content").draggable({handle: ".modal-header"});
+	// $(".modal .modal-dialog .modal-content").draggable({handle: ".modal-header"});
+	$(".modal .modal-dialog ").draggable({handle: ".modal-header"});//优化弹窗的拖拽
 }
 
 //导航栏
@@ -59,9 +61,15 @@ function navbar() {
 	var workspaceModal = new WorkspaceModal($("#workspaceModal"));
 	workspaceModal.execute();
 	
-	//数据库设计器
+	//数据入库配置
 	var dbDesignerModal = new DbDesignerModal($("#dbDesignerModal"));
 	dbDesignerModal.execute();
+	dbDesignerModal.bindEvents();
+
+	//数据库设计器
+	var setDbDesignerModal = new SetDbDesignerModal($("#setDbDesignerModal"))
+	setDbDesignerModal.execute();
+	setDbDesignerModal.bindEvents()
 	
 	//产品记录查看器
 	var recordModal = new RecordModal($("#recordModal"));

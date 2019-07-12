@@ -22,7 +22,7 @@ function EventsModal($modal, $element) {
     var QUERY_METHODS = [];//来源于数据查询配置
 
     this._initCustomMethods = function () {
-        var result = new CommonService().getFileSync("/profile/custom_methods.json");//调用commonService肥肉getFileSync方法
+        var result = new CommonService().getFileSync("/profile/custom_methods.json");//调用commonService中的getFileSync方法
         CUSTOM_METHODS = result || [];//如果result有值就赋值否则赋值为空
     };
 

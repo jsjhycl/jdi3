@@ -37,6 +37,11 @@ function Property() {
                     for (var ckey in value) {//遍历对象
                         var cvalue = value[ckey];//获取对象对象的对应key的值
                         $property = $("#property_" + key + "_" + ckey);//获取页面上对应的元素
+                        if((key+ckey)=="dbdbName"||(key+ckey)=="dbtable"||(key+ckey)=="dbfield"||(key+ckey)=="dbfieldSplit"){
+                            this.setOptions($property,ckey,value)
+                        }
+
+
                         if ($property.length > 0) {//如果能获取到元素
                             if ($property.is(":text") || $property.is("textarea") || $property.is("select")) {//属性配置元素为文本框或则下拉框
                                 $property.val((DataType.isObject(cvalue) || Array.isArray(cvalue)) ? JSON.stringify(cvalue) : cvalue);//判断这个值是不是是不是对象或则数组如果是转换成字符串存到输入框中否则直接存进去
@@ -51,6 +56,69 @@ function Property() {
         }
         $elem.addClass("focus");//给这个元素添加类名focus
     };
+    //生成下拉列表
+    this.setOptions=function($select,ckey,data){
+       var  dbName = data.dbName,
+            table = data.table,
+            field = data.field,
+            dbList = JSON.parse(localStorage.getItem("AllDbName"))||{},
+            options = [],
+            selectValue = "";
+            if (ckey == "dbName") {
+                selectValue = data.dbName
+                Object.keys(dbList).forEach(function (item) {
+                    options.push({
+                        name: item,
+                        value: item
+                    })
+                })
+            }
+            if (ckey == "table") {
+                selectValue = data.table
+                if(dbName){
+                    Object.keys(dbList[dbName]).forEach(function (item) {
+                        options.push({
+                            name: item,
+                            value: item
+                        })
+                    })
+                }
+            }
+            if (ckey == "field") {
+                selectValue = data.field
+                if(dbName && table){
+                    var fields = dbList[dbName][table].tableDetail;
+                    fields.forEach(function (item) {
+                        options.push({
+                            name: item.cname,
+                            value: item.id
+                        })
+                    })
+                }
+            }
+            if (ckey == "fieldSplit") {
+
+                if(dbName&&table){
+                    var fields = dbList[dbName][table].tableDetail,
+                        fieldSplits = '';
+                    fields.forEach(function (item) {
+                        if (data.field == item.id) {
+                            fieldSplits = Number(item.fieldSplit)
+                        }
+                    })
+                    selectValue = fieldSplits;
+                    for (i = 1; i <= fieldSplits; i++) {
+                        options.push({
+                            name: "插入",
+                            value: String(i)
+                        })
+                    }
+                }
+                console.log(options)
+            }
+
+        Common.fillSelect($select,{name:"请选择",value:""},options,selectValue,true)
+    }
 }
 
 Property.prototype = {
@@ -153,20 +221,22 @@ Property.prototype = {
                     var field = db.field,//字段名称
                         fieldSplit = db.fieldSplit,//字段分段
                         desc = db.desc;//字段描述
+                        dbName = db.dbName
                     if (result.hasOwnProperty(table)) {//result对象中是存在table这个属性
                         var fields = result[table]["fields"];
                         if (!Array.isArray(fields)) {//如果fields不是一个数组
                             fields = [];//给字段名称设置一个空数组
                         }
-                        fields.push({name: field, desc: desc, type: "String", fieldSplit: fieldSplit});//向fields中添加一条对象
+                        fields.push({dbName:dbName, name: field, desc: desc, type: "String", fieldSplit: fieldSplit});//向fields中添加一条对象
                     } else {//reslut中不存在这个table
                         result[table] = {//新增加一个table属性
                             desc: defaultName === table ? defaultDesc : table,//如果defalutname等于table则使用defaultDesc否则table
                             fields: []
                         };
-                        result[table].fields.push({name: field, desc: desc, type: "String", fieldSplit: fieldSplit});//向fields中添加一条对象
+                        result[table].fields.push({dbName:dbName, name: field, desc: desc, type: "String", fieldSplit: fieldSplit});//向fields中添加一条对象
                     }
                 }
+                
             }
         }
         return result;//返回对象

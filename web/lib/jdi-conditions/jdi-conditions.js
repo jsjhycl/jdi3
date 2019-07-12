@@ -53,9 +53,8 @@
 
             var $tbody = $(element).find(".table tbody");
             $tbody.empty();
-
             data.forEach(function (item) {
-                that.setTr(cache.mode, $tbody, item, cache.table);
+                that.setTr(cache.mode, $tbody, item, cache.table, cache.dbName);
             });
         },
         bindEvents: function (element) {
@@ -69,7 +68,7 @@
                 if (!DataType.isObject(cache)) return;
 
                 var $tbody = $(celement).find(".table tbody");
-                that.setTr(cache.mode, $tbody, null, cache.table);
+                that.setTr(cache.mode, $tbody, null, cache.table,cache.dbName);
             });
 
             $(element).on("click" + EVENT_NAMESPACE, ".remove", function (event) {
@@ -160,7 +159,7 @@
                 });
             });
         },
-        setTr: function (mode, $tbody, data, table) {
+        setTr: function (mode, $tbody, data, table,dbName) {
             var that = this,
                 $tr, $operatorSelect, operator;
             if (mode === 1) {
@@ -172,17 +171,21 @@
                 $tbody.append($tr);
 
                 $operatorSelect = $tr.find('[data-key="operator"]');
-                var field, type, value;
+                var field, type, value,fieldOptions = [];
                 if (DataType.isObject(data)) {
                     field = data.field;
                     operator = data.operator;
                     type = data.type;
                     value = data.value;
                 }
-                ModalHelper.setFieldSelect($tr.find('[data-key="field"]'), {
-                    name: "请选择字段",
-                    value: ""
-                }, table, field, true);
+                console.log(table,dbName)
+                if(dbName&&table){
+                    var AllDbName = JSON.parse(localStorage.getItem("AllDbName"))||{};
+                    AllDbName[dbName][table].tableDetail.forEach(function(item){
+                        fieldOptions.push({name:item.cname,value:item.id})
+                    })
+                }
+                Common.fillSelect($tr.find('[data-key ="field"]'),{name:"请选择字段",value:""},fieldOptions,field,true)
                 ModalHelper.setSelectData($operatorSelect, {
                     name: "请选择操作符",
                     value: ""
@@ -241,6 +244,7 @@
     $.fn.conditions.defaults = {
         disabled: false,
         mode: 1,//mode：1或者2，模式1表示适用于数据库查询条件、抄送行条件等配置；模式2适用于触发条件配置。
+        dbName:null,
         table: null,//模式1形态下的表名称
         data: null,
         onStart: function () {

@@ -139,6 +139,7 @@ var WorkspaceUtil = {
         // 选择参数事件
         $('#workspace_copy').on('click.workspace', '.workspace-node-switch', function(event) {
             event.stopPropagation();//阻止默认事件
+            console.log("qiehuang")
             var that = this,
                 $el = $(this),//获取点击的元素
                 val = '{'+ $el.text() + '}',//获取点击元素的内容
@@ -215,6 +216,7 @@ function Workspace() {
 
     this._postAjax = function (id, item) {
         if (!id || !DataType.isObject(item)) return;//如果id或则item不是对象退出函数
+        console.log(id,item.name)
 
         return $.cajax({//返回一个ajax对象
             url: "/api/save/" + id + "/" + item.name,

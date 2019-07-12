@@ -11,7 +11,7 @@ function ConditionsModal($modal, $element, mode, table) {
 
     this.mode = mode;
     this.table = table;
-    this.$conditions = this.$modalBody.find(".conditions");//获取当前条件配置下面的conditions的元素
+    this.$conditions = this.$modalBody.find(".conditions");//调用jdiCondition
 
     this._resetData = function () {
         this.$conditions.conditions("clearData");//获取元素下面的conditions设置为cleardata
@@ -21,7 +21,7 @@ function ConditionsModal($modal, $element, mode, table) {
 ConditionsModal.prototype = {
     initData: function (data) {
         var that = this;
-        that.$conditions.conditions({//给元素的conditions设置值
+        that.$conditions.conditions({//调用JDI的condition
             mode: that.mode,
             table: that.table,
             data: data
@@ -30,7 +30,7 @@ ConditionsModal.prototype = {
     saveData: function () {
         var that = this,
             result = "",
-            conditions = that.$conditions.conditions("getData");//获取元素下面的conditions下面的getData
+            conditions = that.$conditions.conditions("getData");//获取条件配置信息
         if (Array.isArray(conditions) && conditions.length > 0) {//如果conditions是数组且长度大于零
             result = JSON.stringify(conditions);//转换为jSON字符串
         }

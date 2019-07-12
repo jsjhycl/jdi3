@@ -46,7 +46,12 @@ Db.prototype = {
                     result.unshift({name: "触发表", value: "sys_TRIGGER"});//向result中添加一条对象
                 }
             }
-            callback(result);
+            var dbNames =[
+                {name:"数据库1",value:"数据库1"},
+                {name:"数据库2",value:"数据库2"},
+                {name:"数据库3",value:"数据库3"}
+            ]
+            callback(result,dbNames);
         });
     },
     //获取字段

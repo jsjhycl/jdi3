@@ -93,12 +93,12 @@ var WorkspaceUtil = {
                 $temp = $dom;
                 $span.css({//设置样式
                     width: $origin.get(0).offsetWidth,
-                    height: $origin.get(0).offsetHeight - (isNode ? 0 : 6),
+                    height: isNode?$origin.get(0).offsetHeight:"100%",
                     position: $origin.css('position'),
                     top: $origin.css('top'),
                     left: $origin.css('left'),
                     zIndex: 10001,
-                    display: "inline-block",
+                    display: "block",
                     boxSizing: "border-box"
                 });
             switch(view) {//判断view的状态

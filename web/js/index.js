@@ -437,14 +437,15 @@ function workspace() {
 				onStop: function () {
 					$workspace.selectable("enable");
 				}
-			});
-			new Property().clearDOM();
-		}
+            });
+            ableToolBarBtn();
+            new Property().clearDOM();
+        }
 	});
 	
 	//jresizable
 	$workspace.on("click", ".workspace-node", function (event) {
-		$("#delete").css('color','red')
+        $("#delete").css('color','red');
 		event.stopPropagation();
 		$(this).jresizable({
 			mode: "single",
@@ -456,7 +457,8 @@ function workspace() {
 			onStop: function () {
 				$workspace.selectable("enable");
 			}
-		});
+        });
+        ableToolBarBtn();
 		$workspace.find(".ui-selected").removeClass("ui-selected");
 		if (event.ctrlKey) {
 			new Property().clearDOM();
@@ -467,13 +469,15 @@ function workspace() {
 	$workspace.on("click", '.workspace-node[data-type!="div"],.workspace-node[data-type="div"] :input', function (event) {
 		if (!event.ctrlKey) {
 			event.stopPropagation();
-			new Property().load($(event.target));
+            new Property().load($(event.target));
+            ableToolBarBtn();
 		}
 	});
 	
 	//清除样式
 	$workspace.on("click", function (event) {
-		$("#delete").css('color','white')
+        $("#delete").css('color','white');
+        disableToolbarBtn();
 		var $target = $(event.target);
 		if (!$target.is(".workspace-node")) {
 			$workspace.find(".ui-selected").removeClass("ui-selected");
@@ -529,5 +533,6 @@ $(document).ready(function () {
 	toolbar();
 	propertybar();
 	workspace();
-	shortcut();
+    shortcut();
+    disableToolbarBtn();
 });

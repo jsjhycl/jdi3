@@ -593,7 +593,7 @@
     position: absolute;
     z-index: 511;
     background-color: #fff;
-    border: 3px dashed #6a1;
+    border: 1px solid #6a1;
     text-align: left;
     white-space: nowrap;
     overflow: hidden;

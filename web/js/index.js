@@ -430,7 +430,7 @@ function workspace() {
 			$workspace.find(".ui-selected").jresizable({
 				mode: "region",
 				$container: $("#workspace"),
-				color: "#739fef",
+				color: "red",// czp修改了颜色
 				onStart: function () {
 					$workspace.selectable("disable");
 				},
@@ -449,7 +449,7 @@ function workspace() {
 		$(this).jresizable({
 			mode: "single",
 			multi: event.ctrlKey,
-            color: "#739fef",
+            color: "red",// czp修改了颜色
 			onStart: function () {
 				$workspace.selectable("disable");
 			},

@@ -12,6 +12,7 @@ function toolbar() {
             $selected = $workspace.find(".resizable"), //获取工作区中选中的元素
             type = $(this).data("type"), //获取点击的类型
             $target = $(event.currentTarget); //获取当前点击元素
+            distance = 4;
         switch (type) {
             case "align-left": //左对齐
                 var $first = $selected.first(); //获取选中的第一个元素
@@ -93,26 +94,25 @@ function toolbar() {
                 if ($selected.length <= 1) { //如果没有选择到元素退出程序
                     return;
                 }
-                $selected.css({
-                    "width": "100px"
-                }); //统一设置样式为100px
+                var $last_selected = $("#" + LAST_SELECTED_ID).parents('.resizable');
+                $selected.css({"width": $last_selected.length > 0 ? $last_selected.width() + distance : "100px"});
+                // $selected.css({"width": "100px"});//统一设置样式为100px
                 break;
             case "equal-height": //相同高度
                 if ($selected.length <= 1) { //如果没有选择到元素退出程序
                     return;
                 }
-                $selected.css({
-                    "height": "100px"
-                }); //设置统一高度100px
+                var $last_selected = $("#" + LAST_SELECTED_ID).parents('.resizable');
+                $selected.css({"height": $last_selected.length > 0 ? $last_selected.height()  + distance : "100px"});
+                // $selected.css({"height": "100px"});//设置统一高度100px
                 break;
             case "equal-all": //相同宽高
                 if ($selected.length <= 1) { //如果没有选择到元素退出函数
                     return;
                 }
-                $selected.css({
-                    "width": "100px",
-                    "height": "100px"
-                }); //设置高度100px宽度100px
+                var $last_selected = $("#" + LAST_SELECTED_ID).parents('.resizable');
+                $selected.css({"width": $last_selected.length > 0 ? $last_selected.width() + distance : "100px", "height": $last_selected.length > 0 ? $last_selected.height() + distance : "100px"});
+                // $selected.css({"width": "100px", "height": "100px"});//设置高度100px宽度100px
                 break;
             case "horizon-space": //水平间距
                 if ($selected.length < 3) { //如果选择到的元素小于3个退出程序

@@ -202,6 +202,8 @@
                             html1 += '<li><a class="jpage-down">&raquo;</a></li>';
                             $jpage.find(".jpage-pagination").empty().append(html1);
                             $jpage.find('.jpage-number[data-number="' + postData.pageIndex + '"]').parent().addClass("active");
+                        } else {
+                            $jpage.find(".jpage-pagination").empty().append('<li><a class="jpage-up">&laquo;</a></li><li><a class="jpage-down">&raquo;</a></li>');
                         }
                         //填充table
                         var data = result.data;

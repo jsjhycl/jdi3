@@ -90,6 +90,7 @@ var Numeration = (function () {
     return {
         nameToId: nameToId,
         idToName: idToName,
+        getMaxId: getMaxId,
         getNewId: getNewId,
         getId: getId
     };

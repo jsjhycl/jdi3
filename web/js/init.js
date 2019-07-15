@@ -47,6 +47,7 @@ Loader.prototype = {
                 that.LIB_PATH + "/jpagination/jpagination.js",
                 that.LIB_PATH + "/jdi-exprGenerator/jdi-exprGenerator.js",
                 that.LIB_PATH + "/jdi-propModifier/jdi-propModifier.js",
+                that.LIB_PATH + "/jdi-propModifier/jdi-propModifier2.js",
                 that.LIB_PATH + "/jdi-conditions/jdi-conditions.js",
                 that.LIB_PATH + "/jdi-dbQuerier/jdi-dbQuerier.js",
                 that.LIB_PATH + "/jdi-dbDesigner/jdi-dbDesigner.js",

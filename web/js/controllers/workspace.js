@@ -402,7 +402,7 @@ Workspace.prototype = {
         $("#toolbar").css('right',"260px")//设置样式
         $("#toolbar").css('left',"140px")//设置样式
         GLOBAL_PROPERTY = {};//全局属性值空
-
+        LAST_SELECTED_ID = null;  // 最后一次被选中的元素id
     },
     load: function (id, name, type, subtype, flow, customId, relTemplate) {
         if (!id || !name || !type || !subtype) return;//如果id或则name或type或subtype都为空退出函数

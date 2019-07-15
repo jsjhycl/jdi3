@@ -106,3 +106,69 @@ DbDataSourceModal.prototype = {
         that.basicEvents(true, that.initData, that.saveData, that.clearData);
     }
 };
+
+function DataSourceTabModal($modal, $staticElement, $dbElement) {
+    BaseModal.call(this, $modal);
+    this.$static = this.$modalBody.find("textarea");
+    this.$querier = this.$modalBody.find(".querier_tab");
+    this.$staticElement = $staticElement;
+    this.$dbElement = $dbElement;
+}
+
+DataSourceTabModal.prototype = {
+    initData: function () {
+        var staticData = this.$staticElement.val(),
+            dbData = null;
+        if (DataType.isString(staticData)) {
+            this.$static.val(staticData);
+        };
+        
+        try {
+            dbData = this.$dbElement.val() && JSON.parse(this.$dbElement.val());
+        } catch(err) {
+            dbData = null
+        }
+
+        this.$querier.dbQuerier({
+            fieldMode: "single",
+            data: dbData
+        });
+        
+    },
+    saveData: function () {
+        var that = this,
+            id = $("#property_id").val();
+        if (!id) return;
+
+        var staticData = that.$static.val(),
+            dbData = that.$querier.dbQuerier("getData"),
+            $workspace = $("#workspace"),
+            $control = $workspace.find("#" + id);
+        staticData && this.$staticElement.val(staticData);
+        dbData && this.$dbElement.val(JSON.stringify(dbData));
+        new Property().save(id === "BODY" ? $workspace : $control, that.$staticElement);
+        new Property().save(id === "BODY" ? $workspace : $control, that.$dbElement);
+    },
+    clearData: function () {
+        var that = this,
+            id = $("#property_id").val();
+        if (!id) {
+            that.$modal.modal("hide");
+        } else {
+            var result = confirm("确定要清除下拉列表的数据源配置数据吗？");
+            if (!result) return;
+
+            this.$staticElement.val("")
+            this.$dbElement.val("");
+            this.$querier.dbQuerier("clearData");
+            new Property().remove(id, "dataSource.static");
+            new Property().remove(id, "dataSource.db");
+            this.$modal.modal("hide");
+        }
+    },
+
+    execute: function () {
+        var that = this;
+        that.basicEvents(false, that.initData, that.saveData, that.clearData);//绑定基础事件
+    }
+}

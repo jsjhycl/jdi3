@@ -56,10 +56,11 @@ function EventsModal($modal, $element) {
                 '<td><select class="form-control" data-key="query" multiple="multiple"></select></td>' +
                 TableHelper.buildBtnInputTd("btn-config btn-property", null, "property") +
                 TableHelper.buildBtnInputTd("btn-config btn-copySend", null, "copySend") +
+                TableHelper.buildBtnInputTd("btn-config btn-notify", null, "notify") +
                 '<td><button class="btn btn-danger btn-sm remove">删除</button></td></tr>');//生成tr的html代码
         that.$tbody.append($tr);//将html添加到$tbody
 
-        var type, conditions, custom, query, property, copySend;//声明变量
+        var type, conditions, custom, query, property, copySend, notify;//声明变量
         if (DataType.isObject(data)) {//判断data是不是对象
             var publish = data.publish;//将data.publish赋值给 publish
             if (DataType.isObject(publish)) {//判断publish是不是对象
@@ -72,6 +73,7 @@ function EventsModal($modal, $element) {
                 query = subscribe.query;//赋值
                 property = subscribe.property;//赋值
                 copySend = subscribe.copySend;//赋值
+                notify = subscribe.notify;
             }
         }
         ModalHelper.setSelectData($tr.find('[data-key="type"]'), {//调用ModalHelper的setSelectData
@@ -83,6 +85,7 @@ function EventsModal($modal, $element) {
         ModalHelper.setSelectData($tr.find('[data-key="query"]'), null, QUERY_METHODS, query, false);//调用ModalHelper的setSelectData
         ModalHelper.setInputData($tr.find('[data-key="property"]'), property, true);//调用ModalHelper的setSelectData
         ModalHelper.setInputData($tr.find('[data-key="copySend"]'), copySend, true);//调用ModalHelper的setSelectData
+        ModalHelper.setInputData($tr.find('[data-key="notify"]'), notify, true);
     };
 
     this._removeItem = function ($tr) {
@@ -126,19 +129,19 @@ EventsModal.prototype = {
             data = [],
             $workspace = $("#workspace"),//获取工作区
             $control = $workspace.find("#" + id);//获取对应id的元素
-        that.$tbody.find("tr").each(function () {//遍历tr
+        that.$tbody.find("tr").each(function (index) {//遍历tr
             var type = $(this).find('[data-key="type"]').val(),//获取触发类型
                 conditions = $(this).find('[data-key="conditions"]').val() || null,//获取触发条件
                 custom = $(this).find('[data-key="custom"]').val(),//获取固定方法
                 query = $(this).find('[data-key="query"]').val(),//获取数据查询
                 property = $(this).find('[data-key="property"]').val() || null,//获取属性改变
                 copySend = $(this).find('[data-key="copySend"]').val() || null;//获取数据抄送
-
+                notify = $(this).find('[data-key="notify"]').val() || null;
             if (type) {//如果type存在
                 data.push({//向data中添加数据
                     publish: {
                         type: type,
-                        key: [id, type, "SPP"].join("_"),
+                        key: [id, type, "SPP" + index].join("_"),
                         data: null
                     },
                     subscribe: {
@@ -146,7 +149,8 @@ EventsModal.prototype = {
                         custom: custom,
                         query: query,
                         property: Common.parseData(property),
-                        copySend: Common.parseData(copySend)
+                        copySend: Common.parseData(copySend),
+                        notify: Common.parseData(notify)
                     }
                 });
             }
@@ -205,6 +209,15 @@ EventsModal.prototype = {
             copySendModal.execute();//执行copySendModal.execute
             copySendModal.bindEvents();//执行copySendModal.bindEvents
             $copySendModal.modal("show");//模态框显示
+        });
+        that.$modal.on("click", ".btn-notify", function () {
+            var $result = $(this).next(),
+                data = Common.parseData($result.val() || null);
+            $(this).propModifier2({
+                $source: $("#workspace"),
+                $result: $result,
+                data: data
+            });
         });
     }
 };

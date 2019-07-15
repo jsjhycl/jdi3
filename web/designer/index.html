@@ -37,7 +37,7 @@
         <li class="dropdown">
             <a class="item dropdown-toggle" data-toggle="dropdown">工具<b class="caret"></b></a>
             <ul class="dropdown-menu">
-                <li><a data-toggle="modal" href="#setDbDesignerModal" data-first-filter="db">数据库设计器</a></li>
+                <li><a data-toggle="modal" href="#dbDesignerModal" data-first-filter="db">数据库设计器</a></li>
                 <li><a data-toggle="modal" href="#dbDesignerModal" data-first-filter="db">数据入库</a></li>
                 <li><a data-toggle="modal" href="#recordModal">产品记录查看器</a></li>
                 <li><a id="viewer">元素编号查看器</a></li>
@@ -305,7 +305,7 @@
             <section class="modal-body">
                 <ul class="nav nav-tabs">
                     <li class="active"><a data-toggle="tab" href="#receive_template_product_tab">模板产品</a></li>
-                    <li><a data-toggle="tab" href="#receive_model_product_tab">模型产品</a></li>
+                    <!-- <li><a data-toggle="tab" href="#receive_model_product_tab">模型产品</a></li> -->
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane fade in active" id="receive_template_product_tab">
@@ -460,6 +460,7 @@
                         <th class="text-center">数据查询</th>
                         <th class="text-center">属性改变</th>
                         <th class="text-center">数据抄送</th>
+                        <th class="text-center">通知</th>
                         <th>
                             <button class="btn btn-primary btn-sm add">添加</button>
                         </th>
@@ -474,6 +475,44 @@
             </footer>
         </section>
     </section>
+</section>
+
+<!-- 数据源tab选项卡 -->
+<section class="modal fade" id="dataSource_db_tab_modal">
+    <div class="modal-dialog w800px">
+        <div class="modal-content">
+            <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">下拉列表数据源</h4>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#dataSource_static_tab" data-toggle="tab">静态数据源</a>
+                    </li>
+                    <li>
+                        <a href="#dataSource_db_tab" data-toggle="tab">数据库数据源</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade in active" id="dataSource_static_tab">
+                        <div class="form-group">
+                            <label class="control-label">数据项</label>
+                            <textarea class="form-control" cols="30" rows="10"
+                                        placeholder="item以换行符[\r\n]、分号[;；]隔开，name、value以逗号[,，]隔开"></textarea>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="dataSource_db_tab">
+                        <div class="querier_tab"></div>
+                    </div>
+                </div>
+            </div>
+            <footer class="modal-footer">
+                <button class="btn btn-primary save">保存</button>
+                <button class="btn btn-danger clear">清除</button>
+            </footer>
+        </div>
+    </div>
 </section>
 
 <!--数据库查询模态框-->

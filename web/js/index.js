@@ -269,7 +269,13 @@ function propertybar() {
 					//2017/09/27优化
 					if (this.id === "property_db_isSave" && event.type === "click") {//如果是数据库的是否入库属性
 						AccessControl.executeIsSave($(this).is(":checked"));//对数据库其他的属性控制
-					}
+                    }                    
+                    
+                    if(this.id === "property_controlType") {
+                        var controlType = event.currentTarget.value;
+                        id && controlType === "上传控件" && AccessControl.setUploadEvent();
+                        id && controlType === "下拉列表" && AccessControl.showDataSourceTab();
+                    }
 				});
 			})(item);
 		}
@@ -372,8 +378,12 @@ function propertybar() {
 	
 	//数据库数据源配置
 	var dbDSModal = new DbDataSourceModal($("#dataSource_db_modal"), $("#property_dataSource_db"));
-	dbDSModal.execute();
-	
+    dbDSModal.execute();
+    
+    // 下拉列表数据源配置
+    var sourceTabModal = new DataSourceTabModal($("#dataSource_db_tab_modal"), $("#property_dataSource_static"), $("#property_dataSource_db"))
+    sourceTabModal.execute();
+        
 	//触发配置
 	var eventsModal = new EventsModal($("#events_modal"), $("#property_events"));
 	eventsModal.execute();
@@ -422,7 +432,12 @@ function workspace() {
 	$workspace.selectable({
 		filter: ".workspace-node",
 		delay: 50,
-		// selected: function () {},//巨坑注意：此事件会被调用多次
+        // selected: function () {},//巨坑注意：此事件会被调用多次
+        start: function(event, ui) {
+            var $last = $workspace.find('.resizable').last(),
+                id = $last.find('.workspace-node').first().attr('id');
+            LAST_SELECTED_ID = id ? id : null;
+        },
 		stop: function (event, ui) {
 			if (!event.ctrlKey) {
 				$workspace.find(".workspace-node").jresizable("destroy");
@@ -430,15 +445,15 @@ function workspace() {
 			$workspace.find(".ui-selected").jresizable({
 				mode: "region",
 				$container: $("#workspace"),
-				color: "red",// czp修改了颜色
+				color: "#739fef",
 				onStart: function () {
-					$workspace.selectable("disable");
+                    $workspace.selectable("disable");
 				},
 				onStop: function () {
-					$workspace.selectable("enable");
+                    $workspace.selectable("enable");
 				}
-			});
-			new Property().clearDOM();
+            });
+            new Property().clearDOM();
 		}
 	});
 	
@@ -456,7 +471,8 @@ function workspace() {
 			onStop: function () {
 				$workspace.selectable("enable");
 			}
-		});
+        });
+        $workspace.find(".resizable").length == 1 && (LAST_SELECTED_ID = $(this).attr('id'))
 		$workspace.find(".ui-selected").removeClass("ui-selected");
 		if (event.ctrlKey) {
 			new Property().clearDOM();

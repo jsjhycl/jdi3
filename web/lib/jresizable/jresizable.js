@@ -89,7 +89,7 @@
                 "z-index": $(element).css("z-index"),
                 "width": $(element).outerWidth() + 2 * edge,
                 "height": $(element).outerHeight() + 2 * edge,
-                "border": edge + "px solid " + color
+                "border": edge + "px dotted " + color
             });
             $(element).wrap($resizable);
             $(element).addClass("resizable-node").css({

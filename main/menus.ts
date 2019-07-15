@@ -38,7 +38,7 @@ const appMenuTemplate: MenuItemConstructorOptions[] = [
                 type: "separator"
             },
             {
-                label: '版本-1.0.1'
+                label: '1.0.0.2(开发版本)'
             },
             {
                 label: '关闭',

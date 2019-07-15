@@ -64,7 +64,7 @@
     background-color: #f8f8f8;
     outline: 1px dashed gainsboro;
 }
-
+.pm .pm-dialog .pm-content .pm-page .pm-elem2,
 .pm .pm-dialog .pm-content .pm-page .pm-elem {
     color: #dafffe;
     text-align: center;
@@ -88,11 +88,11 @@
     0 5px 0 0 #355655,
     0 8px 0 0 rgba(0, 0, 0, .15);
 }
-
+.pm .pm-dialog .pm-content .pm-page .pm-elem2:hover,
 .pm .pm-dialog .pm-content .pm-page .pm-elem:hover {
     background-color: #73c2c0;
 }
-
+.pm .pm-dialog .pm-content .pm-page .pm-elem2.selected,
 .pm .pm-dialog .pm-content .pm-page .pm-elem.selected {
     color: #ffdada;
     background-color: #ed748e;
@@ -112,11 +112,11 @@
     0 5px 0 0 #b12d40,
     0 8px 0 0 rgba(0, 0, 0, .15);
 }
-
+.pm .pm-dialog .pm-content .pm-page .pm-elem2.selected:hover,
 .pm .pm-dialog .pm-content .pm-page .pm-elem.selected:hover {
     background-color: #df5570;
 }
-
+.pm .pm-dialog .pm-content .pm-page .pm-elem2.applied,
 .pm .pm-dialog .pm-content .pm-page .pm-elem.applied {
     color: #ffdada;
     background-color: #cc3747;
@@ -136,7 +136,7 @@
     0 5px 0 0 #65141c,
     0 8px 0 0 rgba(0, 0, 0, .15);
 }
-
+.pm .pm-dialog .pm-content .pm-page .pm-elem2.applied:hover,
 .pm .pm-dialog .pm-content .pm-page .pm-elem.applied:hover {
     background-color: #dd3c4d;
 }
@@ -155,6 +155,15 @@
 
 .pm .pm-dialog .pm-sidebar .pm-propertybar .property-group .property-body .property-table tr td:last-child {
     width: 140px;
+}
+.pm .pm-dialog .pm-sidebar .pm-propertybar .pm-textarea-wrap {
+    margin: 15px;
+}
+.pm .pm-dialog .pm-sidebar .pm-propertybar .pm-textarea {
+    width: 100%;
+    min-height: 150px;
+    box-sizing: border-box;
+    resize: vertical;
 }
 
 .pm .pm-dialog .pm-sidebar .pm-propertybar .property-group .property-body .property-table tr td [type=text],

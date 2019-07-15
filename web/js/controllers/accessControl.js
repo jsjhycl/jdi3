@@ -33,9 +33,9 @@ var AccessControl = (function () {
             let $control = $workspace.find("#" + id),//获取对应的控件
                 $elem = id === "BODY" ? $workspace : $control, //如果id=="body"就把工作区赋值给$elem否则把对应的控件赋值给$elm
                 property = new Property();//实例化property类
-            $propDbTable.val(isSave ? customId : "");//如果isSave为true则给表名称赋值
+            $propDbTable.val(isSave ? "" : "");//如果isSave为true则给表名称赋值
             property.save($elem, $propDbTable);//触发属性属性保存保存表名称
-            $propDbField.val(isSave ? id : "");//如果isSave为true则给字段名称赋值
+            $propDbField.val(isSave ? "" : "");//如果isSave为true则给字段名称赋值
             property.save($elem, $propDbField);//触发属性保存保存字段名称
             $propDbDesc.val(isSave ? cname : "");//如果isSave为true则给字段描述赋值
             property.save($elem, $propDbDesc);//触发属性保存保存字段描述

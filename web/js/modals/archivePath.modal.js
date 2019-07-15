@@ -58,50 +58,49 @@ ArchivePathModal.prototype = {
     initData: function (data) {
         var that = this,
             dbs = [],
-            AllDbName = JSON.parse(localStorage.getItem("AllDbName"))||{};
+            AllDbName = JSON.parse(localStorage.getItem("AllDbName"))||{};//获取数据库配置信息
             
-            Object.keys(AllDbName).forEach(function(item){
+            Object.keys(AllDbName).forEach(function(item){//生成数据库数组
                 dbs.push({name:item,value:item})
             })
 
         that._resetData();//调用_resetData方法
         if (data) {//如果data存在
             //填充数据库下拉框
-            var dbName = data.dbName,
-                table = data.table,
-                tableOptions = [],
-                fieldsoptions = [];
+            var dbName = data.dbName,//数据库名
+                table = data.table,//数据表名
+                tableOptions = [],//表格下拉选项
+                fieldsoptions = [];//字段下拉选项
                 
             that._setTypeSelect(that.$archiveType, data.type);//调用_setTypeSelect
-            Common.fillSelect(that.$archiveDbName,{name:"请选择存档数据库",value:""},dbs,data.dbName,true)
-            if(dbName){
-                Object.keys(AllDbName[dbName]).forEach(function(item){
+            Common.fillSelect(that.$archiveDbName,{name:"请选择存档数据库",value:""},dbs,data.dbName,true)//生成数据库下拉框填充默认选项
+            if(dbName){//如果数据库是选中的
+                Object.keys(AllDbName[dbName]).forEach(function(item){//遍历数据库下面所有的表生成，表的下拉选项
                     tableOptions.push({name:item,value:item})
                 })
-                if(table){
-                    AllDbName[dbName][table].tableDetail.forEach(function(item){
+                if(table){//如果表存在
+                    AllDbName[dbName][table].tableDetail.forEach(function(item){//数据库下面对应的表的字段  生成字段下拉选项
                         fieldsoptions.push({name:item.cname,value:item.id})
                     })
                 }
             }
-            Common.fillSelect(that.$archiveTable, {name: "请选择存档表格", value: ""}, tableOptions,data.table, true)
-            Common.fillSelect(that.$archiveField, {name:"请选择存档字段",value:""},fieldsoptions,data.field,true)
+            Common.fillSelect(that.$archiveTable, {name: "请选择存档表格", value: ""}, tableOptions,data.table, true)//填充存档表格下拉选项
+            Common.fillSelect(that.$archiveField, {name:"请选择存档字段",value:""},fieldsoptions,data.field,true)//填充存档字段下拉选项
             // ModalHelper.setTableSelect(false, that.$archiveTable, {name: "请选择存档表格", value: ""}, data.table, true);//调用_setTypeSelect
             // ModalHelper.setFieldSelect(that.$archiveField, {name: "请选择存档字段", value: ""}, data.table, data.field, true);//调用_setTypeSelect
             // that._setModelIdSelect(that.$archiveModelId, data.modelId);//调用_setTypeSelect
         } else {
             //填充数据库下拉框
             that._setTypeSelect(that.$archiveType, null);//调用_setTypeSelect
-            Common.fillSelect(that.$archiveDbName,{name:"请选择存档数据库",value:""},dbs,null,true)
-            Common.fillSelect(that.$archiveTable,{name:"请选择存档表",value:""},null,null,true)
-            Common.fillSelect(that.$archiveField,{name:"请选择存档字段",value:""},null,null,true)
+            Common.fillSelect(that.$archiveDbName,{name:"请选择存档数据库",value:""},dbs,null,true)//填充存档数据库下拉选项
+            Common.fillSelect(that.$archiveTable,{name:"请选择存档表",value:""},null,null,true)//填充存档表格下拉选项
+            Common.fillSelect(that.$archiveField,{name:"请选择存档字段",value:""},null,null,true)//填充存档字段下拉选项
             // ModalHelper.setTableSelect(false, that.$archiveTable, {name: "请选择存档表格", value: ""}, null, true);//调用_setTypeSelect
             // ModalHelper.setFieldSelect(that.$archiveField, {name: "请选择存档字段", value: ""}, null, null, true);//调用_setTypeSelect
             // that._setModelIdSelect(that.$archiveModelId, null);//调用_setTypeSelect
         }
     },
     saveData: function () {
-        console.log(12)
         var id = $("#property_id").val();//获取$("#property_id")的值
         if (!id) return;//如果没有退出函数
 
@@ -116,7 +115,6 @@ ArchivePathModal.prototype = {
                 value = $(this).val();//获取当前元素的值
             data[key] = DataType.convert(type, value);//调用DataType的convert方法
         });
-        console.log(data)
         that.$element.val(JSON.stringify(data));//给元素设置值
         new Property().save($control, that.$element);//调用property的save方法
     },
@@ -147,15 +145,13 @@ ArchivePathModal.prototype = {
             if (type === 2) $formGroup.show();//如果type等于2 存单编号显示
             else $formGroup.hide();//否则隐藏
         });
-        that.$archiveDbName.change(function(){
+        that.$archiveDbName.change(function(){//当存档数据库发生变化时
            
-            var dbName = $(this).val(),
-                tableOptions = [],
-                AllDbName = JSON.parse(localStorage.getItem("AllDbName"))||{},
-                $select = $("#archivePath_modal").find('[data-key="table"]');
-                console.log($select)
+            var dbName = $(this).val(),//获取存档数据库名
+                tableOptions = [],//声明变量下拉表格选项
+                AllDbName = JSON.parse(localStorage.getItem("AllDbName"))||{},//获取现在的数据库
+                $select = $("#archivePath_modal").find('[data-key="table"]');//获取table下拉框
             if(dbName){
-                console.log(AllDbName,AllDbName[dbName],dbName)
                 Object.keys(AllDbName[dbName]).forEach(function(item){
                     tableOptions.push({name:item,value:item})
                 })

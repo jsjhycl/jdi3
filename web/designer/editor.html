@@ -73,7 +73,7 @@
 		$("#apply").click(function () {
 			var editor = textboxio.getActiveEditor(),
 				content = editor.content.get().replace(/\s*<br\s*\/>/g, '<br />'),
-				$temp = $('<div>' + content + '</div>'),
+				$temp = $('<div><div>' + content + '</div></div>'),
 				style = '',
 				script = '';
 			if (content.indexOf('<style>') >= 0) {

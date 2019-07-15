@@ -2,6 +2,10 @@
     margin: 86px 260px 0 140px;
 }
 
+hr{
+    border:1px inset #eee;
+}
+
 /* 标尺的css */
 #ruler{
     position: relative;

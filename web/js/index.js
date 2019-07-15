@@ -445,7 +445,7 @@ function workspace() {
 			$workspace.find(".ui-selected").jresizable({
 				mode: "region",
 				$container: $("#workspace"),
-				color: "#739fef",
+				color: "red",
 				onStart: function () {
                     $workspace.selectable("disable");
 				},

@@ -308,7 +308,7 @@
         $container: $("#workspace"),
         handles: "n,e,s,w,ne,se,sw,nw,all",
         color: "gray",
-        edge: 2,
+        edge: 5,
         onStart: function (e) {},
         onResize: function (e) {},
         onStop: function (e) {}

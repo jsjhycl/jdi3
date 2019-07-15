@@ -26,6 +26,7 @@ var AccessControl = (function () {
                 $propDbTable = $("#property_db_table"),//数据库属性的表名称
                 $propDbField = $("#property_db_field"),//数据库属性的字段名称
                 $propDbDesc = $("#property_db_desc"),//数据库属性的字段描述
+                $propDbFieldSplit = $("#property_db_fieldSplit"),
                 customId = $workspace.attr("data-customId"),//模型，或则模板的表名称
                 id = $("#property_id").val(),//获取基本属性的编号值
                 cname = $("#property_cname").val();//获取基本属性的中文名
@@ -40,10 +41,14 @@ var AccessControl = (function () {
             let $control = $workspace.find("#" + id),//获取对应的控件
                 $elem = id === "BODY" ? $workspace : $control, //如果id=="body"就把工作区赋值给$elem否则把对应的控件赋值给$elm
                 property = new Property();//实例化property类
+                $propDbName.val(isSave ? "" : "")
+                property.save($elem, $propDbName )
             $propDbTable.val(isSave ? "" : "");//如果isSave为true则给表名称赋值
             property.save($elem, $propDbTable);//触发属性属性保存保存表名称
             $propDbField.val(isSave ? "" : "");//如果isSave为true则给字段名称赋值
             property.save($elem, $propDbField);//触发属性保存保存字段名称
+            $propDbFieldSplit.val(isSave? "":"")
+            property.save($elem, $propDbFieldSplit)
             $propDbDesc.val(isSave ? cname : "");//如果isSave为true则给字段描述赋值
             property.save($elem, $propDbDesc);//触发属性保存保存字段描述
         },

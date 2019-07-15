@@ -112,7 +112,7 @@ Propertybar.prototype = {
         var that = this;
         that.$container.on("change"+that.NAME_SPACE,"#property_db_dbName",function(event){
             var $select = $("#property_db_table"),
-                key= $(this).val()||_11,
+                key= $(this).val()||"",
                 options = [],
                 tableNames = [],
                 AllDbName = JSON.parse(localStorage.getItem('AllDbName'));

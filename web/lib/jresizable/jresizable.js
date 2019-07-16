@@ -22,8 +22,7 @@
                 "left": position.left + edge,
                 "top": position.top + edge,
                 "width": width,
-                "height": height,
-                "overflow": "inherit"
+                "height": height
             });
             $node.unwrap();
         });

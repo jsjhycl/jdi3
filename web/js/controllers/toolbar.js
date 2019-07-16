@@ -12,7 +12,7 @@ function toolbar() {
             $selected = $workspace.find(".resizable"), //获取工作区中选中的元素
             type = $(this).data("type"), //获取点击的类型
             $target = $(event.currentTarget); //获取当前点击元素
-            distance = 4;
+            distance = parseInt($selected.css('border-left-width')) + parseInt($selected.css('border-right-width'));
         switch (type) {
             case "align-left": //左对齐
                 var $first = $selected.first(); //获取选中的第一个元素

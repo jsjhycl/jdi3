@@ -114,7 +114,6 @@ function Property() {
                         })
                     }
                 }
-                console.log(options)
             }
 
         Common.fillSelect($select,{name:"请选择",value:""},options,selectValue,true)

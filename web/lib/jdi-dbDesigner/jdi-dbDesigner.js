@@ -2,9 +2,10 @@
     var EVENT_NAMESPACE = ".dbDesigner_event", //事件命名空间
         CACHE_KEY = "dbDesigner_cache"; //缓存关键字
 
-    function DbDesigner(elements, options) {
+    function DbDesigner(elements, options, type) {
         this.$elements = elements;
         this.options = options;
+        this.type = type
     }
 
     DbDesigner.prototype.constructor = DbDesigner;
@@ -52,7 +53,7 @@
         },
         setData: function (element) {
             if (!element) return;
-
+            
             var that = this,
                 cache = $.data(element, CACHE_KEY);
             if (!cache) return;
@@ -72,13 +73,12 @@
                 var property = $.extend(getProperty(id), {
                     id: id
                 });
-                console.log(property)
                 cache.thead.forEach(function (item) {
                     var template = item.template || function (value) {
                             return value;
                         },
-                        value = that.recurseObject(property, item.key);
-                    tbody += '<td>' + template(value[0],value[1]) + '</td>';
+                        value = that.recurseObject(property, item.key, cache.type);
+                    tbody += '<td>' + template(value[0] || "",value[1] || "") + '</td>';
                 });
                 tbody += "</tr>";
             });
@@ -137,7 +137,7 @@
                 $tr.find(selectors).val("");
             }
         },
-        recurseObject: function (data, key) {
+        recurseObject: function (data, key, type) {
             if (!data) return;
             if (!key) return;
             if (key.indexOf(".") > -1) {
@@ -171,6 +171,7 @@
 
                     
                 // }
+                if(type=="setDbDesigner") return [];
                 var db = keys[0], ckey = keys[1];
                 if(!temp.db){
                     temp = ["",this.getOptions(data,ckey)]

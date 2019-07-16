@@ -88,7 +88,8 @@ SetDbDesignerModal.prototype = {
                     }
                 }
             ],
-            getProperty: new Property().getProperty
+            getProperty: new Property().getProperty,
+            type: "setDbDesigner"
         })
     },
     saveData: function () {

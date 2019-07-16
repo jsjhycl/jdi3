@@ -45,10 +45,16 @@ var AccessControl = (function () {
                 property.save($elem, $propDbName )
             $propDbTable.val(isSave ? "" : "");//如果isSave为true则给表名称赋值
             property.save($elem, $propDbTable);//触发属性属性保存保存表名称
+            isSave || Common.fillSelect($propDbTable,{name:"请选择数据表",value:""},null,null,true);
+
             $propDbField.val(isSave ? "" : "");//如果isSave为true则给字段名称赋值
             property.save($elem, $propDbField);//触发属性保存保存字段名称
+            isSave || Common.fillSelect($propDbField,{name:"请选择字段",value:""},null,null,true);
+
             $propDbFieldSplit.val(isSave? "":"")
             property.save($elem, $propDbFieldSplit)
+            isSave || Common.fillSelect($propDbFieldSplit,{name:"请选择字段分段",value:""},null,null,true);
+
             $propDbDesc.val(isSave ? cname : "");//如果isSave为true则给字段描述赋值
             property.save($elem, $propDbDesc);//触发属性保存保存字段描述
         },

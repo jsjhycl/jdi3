@@ -264,7 +264,7 @@ function toolbar() {
 
 /* 状态栏的按钮禁用 */
 function disableToolbarBtn() {
-    $("#buttonbar button[data-state]").css({
+    $("#buttonbar [data-state]").css({
         "background-color": "#ccc",
         "cursor": "not-allowed"
     }).data("disable", "true");
@@ -272,19 +272,19 @@ function disableToolbarBtn() {
 
 /* 状态栏的按钮取消禁用 */
 function ableToolBarBtn() {
-    //移动至
-    $("#buttonbar button[data-state='3']").css({
+    //移动至，置顶置底
+    $("#buttonbar [data-state='3']").css({
         "background-color": "white",
         "cursor": "pointer"
     }).removeData("disable");
     if ($("#workspace").find(".resizable").length >= 2) {
-        $("#buttonbar button[data-state='2']").css({
+        $("#buttonbar [data-state='2']").css({
             "background-color": "white",
             "cursor": "pointer"
         }).removeData("disable");
     }
     if ($("#workspace").find(".focus").length > 0) {
-        $("#buttonbar button[data-state='1']").css({
+        $("#buttonbar [data-state='1']").css({
             "background-color": "white",
             "cursor": "pointer"
         }).removeData("disable");

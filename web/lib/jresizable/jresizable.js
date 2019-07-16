@@ -22,7 +22,8 @@
                 "left": position.left + edge,
                 "top": position.top + edge,
                 "width": width,
-                "height": height
+                "height": height,
+                "overflow": "inherit"
             });
             $node.unwrap();
         });
@@ -89,7 +90,7 @@
                 "z-index": $(element).css("z-index"),
                 "width": $(element).outerWidth() + 2 * edge,
                 "height": $(element).outerHeight() + 2 * edge,
-                "border": edge + "px dotted " + color
+                "border": edge + "px solid " + color
             });
             $(element).wrap($resizable);
             $(element).addClass("resizable-node").css({
@@ -97,7 +98,8 @@
                 "left": 0,
                 "top": 0,
                 "width": "100%",
-                "height": "100%"
+                "height": "100%",
+                "overflow": "hidden"
             });
             that.bindEvents($(element).parent(), element);
         },
@@ -158,7 +160,7 @@
                     if (cache.onStart) {
                         cache.onStart.call(event.data.target, event);
                     }
-                    that.childSetData();// 设置初始元素的偏移量
+                    that.childSetData(); // 设置初始元素的偏移量
                 });
 
                 $(document).bind("mousemove" + EVENT_NAMESPACE, attachData, function (event) {
@@ -179,7 +181,7 @@
                         cache.onStop.call(event.data.target, event);
                     }
                     $(document).off(EVENT_NAMESPACE);
-                    that.removeChildData();// 取消初始元素的偏移量
+                    that.removeChildData(); // 取消初始元素的偏移量
                 });
             });
 
@@ -213,14 +215,18 @@
                 width = target.outerWidth(),
                 height = target.outerHeight(),
                 edge = $.data(element, CACHE_KEY).edge;
-            if (event.pageY > offset.top && event.pageY < offset.top + edge) {
+            // n event.pageY > offset.top && event.pageY < offset.top + edge
+            // s event.pageY < offset.top + height && event.pageY > offset.top + height - edge
+            // w event.pageX > offset.left && event.pageX < offset.left + edge
+            // e event.pageX < offset.left + width && event.pageX > offset.left + width - edge
+            if (Math.abs(event.pageY - offset.top) <= edge ) {
                 direction += "n";
-            } else if (event.pageY < offset.top + height && event.pageY > offset.top + height - edge) {
+            } else if (Math.abs(event.pageY - (offset.top + height)) <= edge ) {
                 direction += "s";
             }
-            if (event.pageX > offset.left && event.pageX < offset.left + edge) {
+            if (Math.abs(event.pageX - offset.left) <= edge ) {
                 direction += "w";
-            } else if (event.pageX < offset.left + width && event.pageX > offset.left + width - edge) {
+            } else if (Math.abs(event.pageX - (offset.left + width)) <= edge ) {
                 direction += "e";
             }
             var handles = $.fn.jresizable.defaults.handles.split(",");
@@ -308,7 +314,7 @@
         $container: $("#workspace"),
         handles: "n,e,s,w,ne,se,sw,nw,all",
         color: "gray",
-        edge: 5,
+        edge: 2,
         onStart: function (e) {},
         onResize: function (e) {},
         onStop: function (e) {}

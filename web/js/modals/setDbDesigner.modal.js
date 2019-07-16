@@ -67,6 +67,17 @@ SetDbDesignerModal.prototype = {
                         return '<input class="form-control" data-key="cname" type="text" value="' + value + '" readonly>';
                     }
                 },
+                {
+                    name: "isSave",
+                    text: "是否入库",
+                    key: "db.isSave",
+                    group: true,
+                    hasCheckbox: true,
+                    template: function (value) {
+                        var isChecked = !!value ? " checked" : "";
+                        return '<input data-key="isSave" type="checkbox"' + isChecked + '>';
+                    }
+                },
                 { //新增加
                     name: "fieldSplit",
                     text: "字段分段",
@@ -82,7 +93,7 @@ SetDbDesignerModal.prototype = {
     },
     saveData: function () {
         var that = this,
-            tabledetail = that.$setDbDesigner.dbDesigner("getData"),
+            data = that.$setDbDesigner.dbDesigner("getData"),
             dbName = that.$dbName.val(),
             tableName = that.$tableName.val(),
             tableDesc = that.$tabeleDesc.val(),
@@ -92,8 +103,12 @@ SetDbDesignerModal.prototype = {
             reserveFour = that.$reserveFour.val(),
             reserveFive = that.$reserveFive.val(),
             uploderTime = new Date(),
-            localData = JSON.parse(localStorage.getItem("AllDbName")) || {};
-
+            localData = JSON.parse(localStorage.getItem("AllDbName")) || {},
+            tabledetail=[];
+            data.forEach(function(item){
+                if(!item.isSave) return true;
+                tabledetail.push(item)
+            })
         if (!dbName || !tableName) return alert("数据库名和表名为必填选项")
         if (localData[dbName]) {
             localData[dbName][tableName] = {

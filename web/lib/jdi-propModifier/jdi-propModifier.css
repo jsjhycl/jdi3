@@ -1,4 +1,5 @@
-.pm {
+.pm,
+.pm2 {
     position: fixed;
     top: 0;
     right: 0;
@@ -7,7 +8,7 @@
     display: none;
     background-color: rgba(0, 0, 0, .3);
 }
-
+.pm2 .pm-dialog,
 .pm .pm-dialog {
     position: relative;
     display: block;
@@ -18,6 +19,7 @@
 }
 
 /*关闭按钮样式*/
+.pm2 .pm-dialog .pm-close,
 .pm .pm-dialog .pm-close {
     position: absolute;
     top: 6px;
@@ -36,13 +38,14 @@
     -moz-box-sizing: content-box;
     box-sizing: content-box;
 }
-
+.pm2 .pm-dialog .pm-close:hover,
 .pm .pm-dialog .pm-close:hover {
     color: white;
     border: 2px solid white;
     cursor: pointer;
 }
-
+.pm2 .pm-dialog .pm-content,
+.pm2 .pm-dialog .pm-sidebar,
 .pm .pm-dialog .pm-content,
 .pm .pm-dialog .pm-sidebar {
     float: left;
@@ -53,18 +56,19 @@
 }
 
 /*内容区域样式*/
+.pm2 .pm-dialog .pm-content,
 .pm .pm-dialog .pm-content {
     overflow: auto;
     background-color: white;
 }
-
+.pm2 .pm-dialog .pm-content .pm-page,
 .pm .pm-dialog .pm-content .pm-page {
     position: relative;
     margin: auto;
     background-color: #f8f8f8;
     outline: 1px dashed gainsboro;
 }
-.pm .pm-dialog .pm-content .pm-page .pm-elem2,
+.pm2 .pm-dialog .pm-content .pm-page .pm-elem2,
 .pm .pm-dialog .pm-content .pm-page .pm-elem {
     color: #dafffe;
     text-align: center;
@@ -88,11 +92,11 @@
     0 5px 0 0 #355655,
     0 8px 0 0 rgba(0, 0, 0, .15);
 }
-.pm .pm-dialog .pm-content .pm-page .pm-elem2:hover,
+.pm2 .pm-dialog .pm-content .pm-page .pm-elem2:hover,
 .pm .pm-dialog .pm-content .pm-page .pm-elem:hover {
     background-color: #73c2c0;
 }
-.pm .pm-dialog .pm-content .pm-page .pm-elem2.selected,
+.pm2 .pm-dialog .pm-content .pm-page .pm-elem2.selected,
 .pm .pm-dialog .pm-content .pm-page .pm-elem.selected {
     color: #ffdada;
     background-color: #ed748e;
@@ -112,11 +116,11 @@
     0 5px 0 0 #b12d40,
     0 8px 0 0 rgba(0, 0, 0, .15);
 }
-.pm .pm-dialog .pm-content .pm-page .pm-elem2.selected:hover,
+.pm2 .pm-dialog .pm-content .pm-page .pm-elem2.selected:hover,
 .pm .pm-dialog .pm-content .pm-page .pm-elem.selected:hover {
     background-color: #df5570;
 }
-.pm .pm-dialog .pm-content .pm-page .pm-elem2.applied,
+.pm2 .pm-dialog .pm-content .pm-page .pm-elem2.applied,
 .pm .pm-dialog .pm-content .pm-page .pm-elem.applied {
     color: #ffdada;
     background-color: #cc3747;
@@ -136,12 +140,13 @@
     0 5px 0 0 #65141c,
     0 8px 0 0 rgba(0, 0, 0, .15);
 }
-.pm .pm-dialog .pm-content .pm-page .pm-elem2.applied:hover,
+.pm2 .pm-dialog .pm-content .pm-page .pm-elem2.applied:hover,
 .pm .pm-dialog .pm-content .pm-page .pm-elem.applied:hover {
     background-color: #dd3c4d;
 }
 
 /*侧边栏样式*/
+.pm2 .pm-dialog .pm-sidebar,
 .pm .pm-dialog .pm-sidebar {
     position: relative;
     width: 200px;
@@ -156,10 +161,10 @@
 .pm .pm-dialog .pm-sidebar .pm-propertybar .property-group .property-body .property-table tr td:last-child {
     width: 140px;
 }
-.pm .pm-dialog .pm-sidebar .pm-propertybar .pm-textarea-wrap {
+.pm2 .pm-dialog .pm-sidebar .pm-propertybar .pm-textarea-wrap {
     margin: 15px;
 }
-.pm .pm-dialog .pm-sidebar .pm-propertybar .pm-textarea {
+.pm2 .pm-dialog .pm-sidebar .pm-propertybar .pm-textarea {
     width: 100%;
     min-height: 150px;
     box-sizing: border-box;
@@ -170,25 +175,27 @@
 .pm .pm-dialog .pm-sidebar .pm-propertybar .property-group .property-body .property-table tr td select {
     /*width: 92%;*/
 }
-
+.pm2 .pm-dialog .pm-sidebar .pm-button,
+.pm2 .pm-dialog .pm-sidebar .pm-result,
 .pm .pm-dialog .pm-sidebar .pm-button,
 .pm .pm-dialog .pm-sidebar .pm-result {
     padding: 10px 0;
     text-align: center;
     background-color: #22262e;
 }
-
+.pm2 .pm-dialog .pm-sidebar .pm-button,
 .pm .pm-dialog .pm-sidebar .pm-button {
     border-top: 1px solid #383e4c;
     border-bottom: 1px solid #383e4c;
 }
-
+.pm2 .pm-dialog .pm-sidebar .pm-button .pm-apply,
+.pm2 .pm-dialog .pm-sidebar .pm-button .pm-remove,
 .pm .pm-dialog .pm-sidebar .pm-button .pm-apply,
 .pm .pm-dialog .pm-sidebar .pm-button .pm-remove {
     font-size: 12px;
     padding: 2px 4px;
 }
-
+.pm2 .pm-dialog .pm-sidebar .pm-result,
 .pm .pm-dialog .pm-sidebar .pm-result {
     position: absolute;
     right: 0;
@@ -197,7 +204,8 @@
     border-top: 1px solid #383e4c;
     border-bottom-right-radius: 10px;
 }
-
+.pm2 .pm-dialog .pm-sidebar .pm-apply,
+.pm2 .pm-dialog .pm-sidebar .pm-save,
 .pm .pm-dialog .pm-sidebar .pm-apply,
 .pm .pm-dialog .pm-sidebar .pm-save {
     margin-right: 15px;

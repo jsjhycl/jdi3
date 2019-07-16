@@ -45,9 +45,9 @@
             return cache;
         },
         renderDOM: function () {
-            var $pm = $(".pm");
+            var $pm = $(".pm2");
             if ($pm.length <= 0) {
-                $pm = $('<section class="pm"><div class="pm-dialog">' +
+                $pm = $('<section class="pm2"><div class="pm-dialog">' +
                     '<i class="pm-close">&times;</i>' +
                     '<section class="pm-content"><div class="pm-page"></div></section>' +
                     '<aside class="pm-sidebar">' +
@@ -61,13 +61,13 @@
             }
         },
         clearData: function () {
-            $(".pm .pm-dialog .pm-content .pm-page .pm-elem2.selected")
+            $(".pm2 .pm-dialog .pm-content .pm-page .pm-elem2.selected")
                 .removeAttr("data-value")
                 .removeClass("selected");
-            $(".pm .pm-dialog .pm-sidebar .pm-propertybar").empty();
+            $(".pm2 .pm-dialog .pm-sidebar .pm-propertybar").empty();
         },
         setData: function (element) {
-            var $pm = $(".pm");
+            var $pm = $(".pm2");
             // new Propertybar($pm.find(".pm-propertybar")).init(true, "_copy");
             $pm.find(".pm-propertybar").html('<div class="pm-textarea-wrap"><textarea readonly class="pm-textarea"></textarea></div>')
             //填充页面元素
@@ -117,7 +117,7 @@
             var data = cache.data;
             if (data && Array.isArray(data)) {
                 data.forEach(function(i) {
-                    $('.pm .pm-elem2[data-id="' + i + '"]').addClass("applied");
+                    $('.pm2 .pm-elem2[data-id="' + i + '"]').addClass("applied");
                 });
                 $pm.find('.pm-textarea').val(data.join(','));
             }
@@ -127,7 +127,7 @@
             }
         },
         setStyle: function (element) {
-            var $pm = $(".pm"),
+            var $pm = $(".pm2"),
                 $pmDialog = $pm.find(".pm-dialog"),
                 $pmContent = $pm.find(".pm-content"),
                 $pmClose = $pm.find(".pm-close"),
@@ -153,7 +153,7 @@
         bindEvents: function (element) {
             var that = this;
             //加载
-            $(document).on("click" + EVENT_NAMESPACE, ".pm .pm-elem2", {element: element}, function (event) {
+            $(document).on("click" + EVENT_NAMESPACE, ".pm2 .pm-elem2", {element: element}, function (event) {
                 var $this = $(this);
 
                 if($this.hasClass('selected')) return;
@@ -171,23 +171,23 @@
                 }
             });
             //清除
-            $(document).on("click" + EVENT_NAMESPACE, ".pm .pm2-clear", {element: element}, function (event) {
+            $(document).on("click" + EVENT_NAMESPACE, ".pm2 .pm2-clear", {element: element}, function (event) {
                 var result = confirm("确定要清除元素通知配置数据吗？");
                 if (result) {
                     var cache = $.data(event.data.element, CACHE_KEY),
-                        $pm = $(".pm:visible");
+                        $pm = $(".pm2:visible");
                     cache.$result.val("");
                     $pm.fadeOut();
                     that.clearData($pm);
                 }
-            var $pm = $(".pm").find(".pm-elem.selected");
+            var $pm = $(".pm2").find(".pm-elem.selected");
                 var cache = $.data(event.data.element, CACHE_KEY);
                 console.log(cache)
             });
             //保存
-            $(document).on("click" + EVENT_NAMESPACE, ".pm .pm2-save", {element: element}, function (event) {
+            $(document).on("click" + EVENT_NAMESPACE, ".pm2 .pm2-save", {element: element}, function (event) {
                 var cache = $.data(event.data.element, CACHE_KEY),
-                    $pm = $(".pm:visible"),
+                    $pm = $(".pm2:visible"),
                     textarea = $pm.find('.pm-textarea').val();
                 $pm.fadeOut();
                 if (textarea) {
@@ -196,12 +196,12 @@
                 }
             });
             //关闭
-            $(document).on("click" + EVENT_NAMESPACE, ".pm .pm-close", {element: element}, function (event) {
-                $(".pm:visible").fadeOut();
+            $(document).on("click" + EVENT_NAMESPACE, ".pm2 .pm-close", {element: element}, function (event) {
+                $(".pm2:visible").fadeOut();
             });
         },
         clearPropertybar: function () {
-            var $pm = $(".pm:visible");
+            var $pm = $(".pm2:visible");
             $pm.find(":text").val("");
         }
     };

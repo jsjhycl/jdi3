@@ -524,18 +524,20 @@
                 var result = confirm("确定要清除表达式配置数据吗？");
                 if (!result) return;
 
-                var $eg = $(".eg");
-                that.clearData($eg);
-                that.clearStyle($eg);
-                $eg.fadeOut();
+                // czp修改清除只改变值
+                $(".eg .eg-dialog .eg-sidebar .eg-result .eg-expr").val("");
+                // var $eg = $(".eg");
+                // that.clearData($eg);
+                // that.clearStyle($eg);
+                // $eg.fadeOut();
 
-                var cache = $.data(event.data.element, CACHE_KEY),
-                    $result = cache.$result;
-                $result.removeAttr("data-expr");
-                $result.is(":input") ? $result.val("") : $result.text("");
-                if (cache.onClearProperty) {
-                    cache.onClearProperty();
-                }
+                // var cache = $.data(event.data.element, CACHE_KEY),
+                //     $result = cache.$result;
+                // $result.removeAttr("data-expr");
+                // $result.is(":input") ? $result.val("") : $result.text("");
+                // if (cache.onClearProperty) {
+                //     cache.onClearProperty();
+                // }
             });
             //关闭
             $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-close", {element: element}, function (event) {

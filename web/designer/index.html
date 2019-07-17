@@ -24,12 +24,14 @@
             <ul class="dropdown-menu">
                 <li><a data-toggle="modal" href="#create_resource_modal">新建资源</a></li>
                 <li><a data-toggle="modal" href="#open_resource_modal">打开资源</a></li>
-                <li class="divider"></li>
+                <!-- <li class="divider"></li>
                 <li><a data-toggle="modal" href="#receive_product_modal">接收产品</a></li>
-                <li><a data-toggle="modal" href="#open_product_modal">打开产品</a></li>
+                <li><a data-toggle="modal" href="#open_product_modal">打开产品</a></li> -->
                 <li class="divider"></li>
                 <li><a data-toggle="modal" href="#dbDefineModal">数据库定义</a></li>
-                <li><a data-toggle="modal" href="#publishModal">发布模型</a></li>
+                <li class="divider"></li>
+                <li><a>另建为...</a></a></li>
+                <!-- <li><a data-toggle="modal" href="#publishModal">发布模型</a></li> -->
                 <!-- <li class="divider"></li> -->
                 
             </ul>
@@ -38,7 +40,7 @@
             <a class="item dropdown-toggle" data-toggle="dropdown">工具<b class="caret"></b></a>
             <ul class="dropdown-menu">
                 <li><a data-toggle="modal" href="#setDbDesignerModal" data-first-filter="db">数据库设计器</a></li>
-                <li><a data-toggle="modal" href="#dbDesignerModal" data-first-filter="db">数据入库</a></li>
+                <li><a data-toggle="modal" href="#dbDesignerModal" data-first-filter="db">配置本表数据</a></li>
                 <li><a data-toggle="modal" href="#recordModal">产品记录查看器</a></li>
                 <li><a id="viewer">元素编号查看器</a></li>
                 <li><a id="controlRuler">标尺查看器</a></li>
@@ -46,6 +48,7 @@
         </li>
         <li><a class="item" id="save" data-first-filter="save">保存</a></li>
         <li><a class="item" id="submit" data-first-filter="submit">提交</a></li>
+        <li><a  class="item" data-toggle="modal" href="#publishModal" data-first-filter="db">发布模型</a></li>
         <li><a class="item" id="delete" data-zero-filter="delete" style="display: none">删除</a></li>
         <li><a class="item" id="recall" data-first-filter="recall" style="display: none">重新调用模板</a></li>
         <li><a class="item" id="preview" data-zero-filter="preview" style="display: none" target="_blank">预览</a></li>

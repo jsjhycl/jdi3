@@ -258,6 +258,9 @@ function toolbar() {
                     $target.addClass('is_using'); //添加类名
                 }
                 break;
+            case "show-phone":
+                $("#phone_warp").toggle();
+                break;
         }
     });
 }

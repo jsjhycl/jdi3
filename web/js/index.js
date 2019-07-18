@@ -41,9 +41,9 @@ function navbar() {
 	//资源
 	// var resourceModal = new ResourceModal();
 	// resourceModal.create();//给资源模态框绑定事件
-	// resourceModal.open();//绑定事件
-
-	//新建模板资源
+    // resourceModal.open();//绑定事件
+    
+		//新建模板资源
 	var createTemplate = new CreateTemplate();
 	createTemplate.bindEvents();
 
@@ -101,9 +101,9 @@ function navbar() {
 	
 	//插入函数
 	var insertFnModal = new InsertFnModal($("#insertFunctionModal"));
-	insertFnModal.execute();
+    insertFnModal.execute();
 
-	(function saveAs(){
+    (function saveAs(){
 		$("#saveAs").click(function(){
 			new Workspace().save(true,true)
 		})
@@ -126,7 +126,7 @@ function navbar() {
 		$("#delete").click(function () {
 			new Control().remove();
 		});
-	})();
+    })();
 	
 	//重新调用模板
 	(function recall() {
@@ -289,8 +289,9 @@ function propertybar() {
 				$(document).on(item.type, item.selector, function (event) {//绑定事件
 					var id = $("#property_id").val();//获取id
 					if (id) {
-						var $workspace = $("#workspace");
-						new Property().save(id === "BODY" ? $workspace : $workspace.find("#" + id), $(event.target));//执行保存
+                        var $workspace = $("#workspace");
+                            $container = id.startsWith('phone_') ? $("#phone_content") : $workspace;
+						new Property().save(id === "BODY" ? $workspace : $container.find("#" + id), $(event.target));//执行保存
 					}
 					//2017/09/08优化
 					if (this.id === "property_controlType" && event.type === "change") {//如果是控件类型
@@ -440,6 +441,18 @@ function workspace() {
 	$workspace.droppable({
 		accept: ".control-item",
 		drop: function (event, ui) {
+            var $phone = $("#phone_warp"),
+                p_top = $phone.offset().top,
+                p_bottom = $phone.offset().top + $phone.height(),
+                p_left = $phone.offset().left,
+                p_right = $phone.offset().left + $phone.width(),
+                ui_width = $(ui.helper[0]).width(),
+                ui_height = $(ui.helper[0]).height();
+            
+            if (ui.offset.top >= p_top && (ui.offset.top + ui_height) <= p_bottom && ui.offset.left >= p_left && (ui.offset.left + ui_width) <= p_right) {
+                return false;
+            }
+            
 			var type = ui.helper.data("type"),
 				control = new Control();
 			control.setControl(type, function ($node) {
@@ -453,7 +466,9 @@ function workspace() {
 					"top": event.pageY - offset.top
 				});
 				$workspace.append($node);
-				new Property().setDefault(number);
+                new Property().setDefault(number);
+                console.log('workspace', number)
+                return false;
 			});
 		}
 	});
@@ -471,7 +486,8 @@ function workspace() {
 		stop: function (event, ui) {
 			if (!event.ctrlKey) {
 				$workspace.find(".workspace-node").jresizable("destroy");
-			}
+            }
+            $("#phone_content").find(".workspace-node").jresizable("destroy");
 			$workspace.find(".ui-selected").jresizable({
 				mode: "region",
 				$container: $("#workspace"),
@@ -491,6 +507,7 @@ function workspace() {
 	//jresizable
 	$workspace.on("click", ".workspace-node", function (event) {
         $("#delete").css('color','red');
+        $("#phone_content").find(".workspace-node").jresizable("destroy");
 		event.stopPropagation();
 		$(this).jresizable({
 			mode: "single",
@@ -539,6 +556,105 @@ function workspace() {
     });
 }
 
+// 手机页面配置
+function phone() {
+    var $phone_wrap = $("#phone_warp"), 
+        $phone_content = $("#phone #phone_content");
+
+    $phone_wrap.draggable();
+    
+    $phone_content.selectable({
+        filter: ".workspace-node",
+        delay: 50,
+        // selected: function () {},//巨坑注意：此事件会被调用多次
+        stop: function (event, ui) {
+            $("#delete").css('color','red');
+            if (!event.ctrlKey) {
+                $("#workspace").find(".workspace-node").jresizable("destroy");
+                $phone_content.find(".workspace-node").jresizable("destroy");
+            }
+            $phone_content.find(".ui-selected").jresizable({
+                mode: "region",
+                $container: $("#phone_content"),
+                color: "red",
+                onStart: function () {
+                    $phone_content.selectable("disable");
+                },
+                onStop: function () {
+                    $phone_content.selectable("enable");
+                }
+            });
+            new Property().clearDOM();
+        }
+    });
+
+    $phone_content.on("click", ".workspace-node", function (event) {
+        $("#delete").css('color','red');
+        
+        // 页面上存在一个选中元素的时候，可以 关联手机页面元素
+        // 多个时，需要销毁
+        // $("#workspace").find(".resizable").length > 1 && $("#workspace").find(".workspace-node").jresizable("destroy");
+        $("#workspace").find(".workspace-node").jresizable("destroy");
+        event.stopPropagation();
+        $(this).jresizable({
+            mode: "single",
+            color: "red",
+            $container: $("#phone_content"),
+            scroll: true,
+            containment: "#phone #phone_content",
+            onStart: function () {
+                $phone_content.selectable("disable");
+            },
+            onStop: function () {
+                $phone_content.selectable("enable");
+            }
+        });
+        $phone_content.find(".ui-selected").removeClass("ui-selected");
+    });
+
+
+    $phone_content.droppable({
+        accept: ".control-item",
+        greedy: true,
+		drop: function (event, ui) {
+			var type = ui.helper.data("type"),
+				control = new Control();
+			control.setControl(type, function ($node) {
+                var id = 'phone_' + NumberHelper.getNewId(type, $phone_content),
+                    offset = $phone_content.offset();
+				$node.attr({
+					"id": id,
+					"name": id
+				}).css({
+					"left": event.pageX - offset.left + $phone_content.scrollLeft(),
+					"top": event.pageY - offset.top + $phone_content.scrollTop()
+				});
+				$phone_content.append($node);
+                new Property().setDefault(id);
+                return false
+			}, true);
+		}
+    });
+    
+    $phone_content.on("click", function (event) {
+        $("#delete").css('color','white');
+		var $target = $(event.target);
+		if (!$target.is(".workspace-node")) {
+			$phone_content.find(".ui-selected").removeClass("ui-selected");
+			new Property().clearDOM();
+			$phone_content.find(".workspace-node").jresizable("destroy");
+		}
+    });
+    
+    $phone_content.on("click", '.workspace-node[data-type!="div"],.workspace-node[data-type="div"] :input', function (event) {
+		if (!event.ctrlKey) {
+			event.stopPropagation();
+            new Property().load($(event.target));
+            ableToolBarBtn();
+		}
+	});
+}
+
 //回调函数
 function back(html) {
 	var control = new Control(),
@@ -578,7 +694,8 @@ $(document).ready(function () {
 	controlbar();
 	toolbar();
 	propertybar();
-	workspace();
+    workspace();
+    phone();
     shortcut();
     disableToolbarBtn();
 });

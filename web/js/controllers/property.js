@@ -7,6 +7,7 @@ function Property() {
         $("#workspace").find(".focus").removeClass("focus");//获取工作区所有类名为focus的元素并移除focus类名
         that.$propertybar.find(":text,select").val("");//找到属性栏中所有的输入框下拉框清空它们的值
         that.$propertybar.find(":checkbox:checked").prop("checked", false);//所有的复选框变成没有勾选的
+        that.$propertybar.find("#property_relatedId").parents('tr').remove();
     };
     this._traverseProperty = function ($elem) {
         if (!$elem || $elem.length <= 0) return;//如果没有选中元素退出函数
@@ -117,6 +118,13 @@ function Property() {
             }
 
         Common.fillSelect($select,{name:"请选择",value:""},options,selectValue,true)
+    },
+
+    this.setRelatedId = function($control) {
+        if (!$control || !$control.attr('id').startsWith('phone_')) return;
+        
+        $("#property_relatedId").length <= 0 && $("#property_id").parents('tr').after('<tr data-second-filter="relatedId"><td><label for="property_relatedId">关联元素编号</label></td><td><input id="property_relatedId" type="text" data-datatype="String" data-attrorstyle="attribute"></td></tr>');
+        
     }
 }
 
@@ -130,6 +138,9 @@ Property.prototype = {
 
         var that = this;
         that._clearStyles();//调用_clearStyles
+
+        that.setRelatedId($control);
+
         var isBody = $control.attr("id") === "workspace";//获取当前控件的id如果是worksapce则给isbody赋值为true
         if (isBody ||//isBod为true时
             (!isBody &&//或则不止整个工作区时

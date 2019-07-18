@@ -55,23 +55,24 @@ Control.prototype = {
         var that = this;
         return $(that.CONTROL_TYPES[type]);
     },
-    setControl: function (type, callback) {
+    setControl: function (type, callback, is_phone) {
         var that = this,
             $node = $(that.CONTROL_TYPES[type]),
             contextMenu = new ContextMenu();
+        is_phone = !!is_phone;
         $node.addClass("workspace-node").css({
             "position": "absolute",
             "z-index": 500
         });
         switch (type) {
             case "img":
-                contextMenu.done(1, $node);
+                !is_phone && contextMenu.done(1, $node);
                 break;
             case "div":
-                contextMenu.done(2, $node);
+                !is_phone && contextMenu.done(2, $node);
                 break;
             default:
-                contextMenu.done(3, $node);
+                !is_phone ? contextMenu.done(3, $node) : contextMenu.done(4, $node);
                 break;
         }
         if (callback) {
@@ -108,7 +109,7 @@ Control.prototype = {
         return $node.get(0).outerHTML;
     },
     remove: function () {
-        var $selected = $("#workspace").find(".resizable");
+        var $selected = $("#workspace").find(".resizable").length > 0 ? $("#workspace").find(".resizable") : $("#phone_content").find(".resizable");
         if ($selected.length <= 0) return alert("请选择需要删除的元素");
 
         var result = confirm("确定删除选中的元素吗？");
@@ -168,5 +169,26 @@ Control.prototype = {
             $("#workspace").append($node);
             new Property().setDefault(number);
         });
+    },
+    getPhoneControlHtml: function($el, id) {
+        if (!$el || !id) return;
+        
+        var top = parseFloat($el.css('top')),
+            left = parseFloat($el.css('left')),
+            height = $el.outerHeight(),
+            property = new Property(),
+            cname = property.getValue(id, "cname"),
+            relatedId = property.getValue(id, "relatedId"),
+            newCname = !cname || cname != id ? property.getValue(id, "cname") : relatedId ? property.getValue(relatedId, "cname") : "";
+            controlHtml = $($el.get(0).outerHTML).attr('id', GLOBAL_PROPERTY[id] && relatedId ? relatedId : id).get(0).outerHTML,
+            spanHtml = "",
+            $span = newCname ? $("<span style='position: absolute; visibility: hidden;'>" + newCname + "</span>") : "";
+            if ($span) {
+                var span_width = $span.appendTo($("body")).width(),
+                    span_height = $span.height();
+                $span.remove();
+                spanHtml += "<span style='position: absolute; top: "+ (height > span_height ? (height - span_height)/2 + top : top ) +"px; left: "+ (left - span_width - 8) +"px'>"+ newCname +"</span>";
+            }
+            return controlHtml + spanHtml;
     }
 };

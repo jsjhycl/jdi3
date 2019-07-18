@@ -216,8 +216,6 @@ function Workspace() {
 
     this._postAjax = function (id, item) {
         if (!id || !DataType.isObject(item)) return;//如果id或则item不是对象退出函数
-        console.log(id,item.name)
-
         return $.cajax({//返回一个ajax对象
             url: "/api/save/" + id + "/" + item.name,
             type: "POST",
@@ -226,6 +224,16 @@ function Workspace() {
             dataType: "json"
         });
     };
+    this._historyListPost = function(data){
+        if(!DataType.isObject(data)) return;
+        $.cajax({
+            url:"/api/save/ZZZZZZZ/historyList.json",
+            type:"POST",
+            contentType:"text/plain;charset=utf-8",
+            data:JSON.stringify(data),
+            dataType:"json"
+        })
+    }
 
     this._getData = function (id, name, type, subtype, customId) {
         if (!id || !name) return alert("无法保存没有编号、名称的数据！");//如果id或者name不存在的退出函数并提示
@@ -270,18 +278,19 @@ function Workspace() {
             settingData.items.push(item);//向settingData中添加item
             html += new Control().renderHtml(id, item);//实例化control调用renderHtml函数累加起来
         });
+        console.log(html)
         //获取model数据
-        var $temp = $('<div></div>');//生成元素
-        $temp.css({//给元素添加样式
-            "position": "absolute",
-            "width": settingData.width,
-            "height": settingData.height,
-            "background-color": settingData.bgColor,
-            "overflow": "hidden"
-        }).append(html);//插入到html中
-        var modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
-            '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
-            $temp.get(0).outerHTML;
+        // var $temp = $('<div></div>');//生成元素
+        // $temp.css({//给元素添加样式
+        //     "position": "absolute",
+        //     "width": settingData.width,
+        //     "height": settingData.height,
+        //     "background-color": settingData.bgColor,
+        //     "overflow": "hidden"
+        // }).append(html);//插入到html中
+        // var modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
+        //     '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
+        //     $temp.get(0).outerHTML;
         //获取table数据
         var tableData = null;
         if ((type === "产品" || type === "数据库定义") && subtype === "模型" && customId) {//如果type是产品或则是数据库定义subtype是模型且customid存在
@@ -289,7 +298,8 @@ function Workspace() {
         }
         return {//返回setingData  modeldData tableData
             settingData: settingData,
-            modelData: modelData,
+            modelData: html,//修改
+            // html:html,
             tableData: tableData
         };
     };
@@ -472,7 +482,7 @@ Workspace.prototype = {
      * 
      * @param {} isPrompt 是否保存后提示信息true为提示false为不提示 
      */
-    save: function (isPrompt) {
+    save: function (isPrompt,saveAs) {
         var that = this,
             isValidate = that._sameNameValidate();//调用_sameNameValidate
         if (!isValidate) return;//如果isValidate退出函数
@@ -484,7 +494,36 @@ Workspace.prototype = {
             flow = that.$workspace.attr("data-flow"),//获取工作区data-flow
             customId = that.$workspace.attr("data-customId");//获取工作区data-customid
         //获取数据
+
         var data = that._getData(id, name, type, subtype, customId);//调用_getdata
+        if(saveAs){//如果是另存为
+            var historyList =new CommonService().getFileSync("/lib/ZZZZZZZ/historyList.json")||{};//获取编辑历史
+            if(historyList[id]){ 
+                historyList[id] = Number(historyList[id])+1;
+                id = id+"_"+historyList[id];
+            }else{
+                historyList[id] = 1
+                id = id+"_"+1
+
+            }
+            that._historyListPost(historyList)  
+        }
+
+        //修改modal的生成位置  2017/7/18
+         var $temp = $('<div></div>');
+        $temp.css({
+            "position": "absolute",
+            "width": data.settingData.width,
+            "height": data.settingData.height,
+            "background-color": data.settingData.bgColor,
+            "overflow": "hidden"
+        }).append(data.modelData);//插入到html中
+        var modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
+            '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
+            $temp.get(0).outerHTML;
+        data.modelData = modelData;
+
+
         if (data) {//如果data为true
             //保存数据
             that._setData(isPrompt, id, type, subtype, flow, data.settingData, data.modelData, data.tableData);//调用_setdata

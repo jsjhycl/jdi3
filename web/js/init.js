@@ -71,6 +71,7 @@ Loader.prototype = {
                 that.JS_PATH + "/controllers/keyEvent.js",//标尺
                 that.JS_PATH + "/modals/base.modal.js",
                 that.JS_PATH + "/modals/resource.modal.js",
+                that.JS_PATH + "/modals/saveAs.modal.js",//
                 that.JS_PATH + "/modals/product.modal.js",
                 that.JS_PATH + "/modals/dbDefine.modal.js",
                 that.JS_PATH + "/modals/publish.modal.js",
@@ -90,6 +91,10 @@ Loader.prototype = {
                 that.JS_PATH + "/modals/copySend.modal.js",
                 that.JS_PATH + "/modals/insertFunction.modal.js",
                 that.JS_PATH + "/modals/insertFunctionArgs.modal.js",
+                that.JS_PATH + "/modals/createResource.modal.js",
+                that.JS_PATH + "/modals/createTemplate.modal.js",
+                that.JS_PATH + "/modals/openTemplate.modal.js",
+                that.JS_PATH + "/modals/openResurce.modal.js",
                 that.JS_PATH + "/index.js"
             ];
         that.recurseLoadScript(scripts);

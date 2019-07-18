@@ -118,10 +118,14 @@ function ResourceModal() {
 }
 
 ResourceModal.prototype = {
+    initdata:function(){
+        console.log(12)
+    },
     create: function () {
         var that = this;
         //选项卡shown事件
         that.$createModal.find('.nav-tabs [data-toggle="tab"]').on("shown.bs.tab", function () {
+            console.log(this)
             if (that.$createModelTab.is(":visible")) {
                 new ProductService().list("模板", 20, function (result) {
                     Common.handleResult(result, function (data) {

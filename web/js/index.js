@@ -37,11 +37,35 @@ function init() {
 
 //导航栏
 function navbar() {
+
 	//资源
-	var resourceModal = new ResourceModal();
-	resourceModal.create();//给资源模态框绑定事件
-	resourceModal.open();//绑定事件
+	// var resourceModal = new ResourceModal();
+	// resourceModal.create();//给资源模态框绑定事件
+	// resourceModal.open();//绑定事件
+
+	//新建模板资源
+	var createTemplate = new CreateTemplate();
+	createTemplate.bindEvents();
+
+	//新建模板资源
+	var createResource = new CreateResource();
+	createResource.initData();//初始化新建模型模板
+	createResource.bindEvents();//绑定新建模型模板资源
 	
+	//打开模板资源
+	var openTemplate = new OpenTemplate();
+	openTemplate.initData();
+
+	//打开资源模型
+	var openResource = new OpenResource();
+	openResource.initData();
+
+	
+	//另存为
+	var saveAsModal = new SaveAsModal($("#saveAsModal"));
+	saveAsModal.execute();
+	saveAsModal.bindEvents();
+
 	//产品
 	var productModal = new ProductModal();
 	productModal.receive();//绑定模态框事件
@@ -78,6 +102,12 @@ function navbar() {
 	//插入函数
 	var insertFnModal = new InsertFnModal($("#insertFunctionModal"));
 	insertFnModal.execute();
+
+	(function saveAs(){
+		$("#saveAs").click(function(){
+			new Workspace().save(true,true)
+		})
+	})();
 	
 	//保存
 	(function save() {

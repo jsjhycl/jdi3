@@ -2,49 +2,58 @@
     margin: 86px 260px 0 140px;
 }
 
-hr{
-    border:1px inset #eee;
+hr {
+    border: 1px inset #eee;
 }
-li{
+
+li {
     list-style: none;
 }
 
 /* 标尺的css */
-#ruler{
+#ruler {
     position: relative;
     margin: auto;
 }
-.ruler_horizontal,.ruler_vertical{
+
+.ruler_horizontal,
+.ruler_vertical {
     position: absolute;
     left: -18px;
     top: 0px;
     overflow: hidden;
 }
-.ruler_horizontal{
+
+.ruler_horizontal {
     margin-left: 18px;
     width: 100%;
     height: 18px;
     background: url('../images/ruler_h.png') repeat-x;
 }
-.ruler_vertical{
+
+.ruler_vertical {
     margin-top: 18px;
     width: 18px;
     height: 100%;
     background: url('../images/ruler_v.png') repeat-y;
 }
-.ruler_horizontal .n,.ruler_vertical .n{
+
+.ruler_horizontal .n,
+.ruler_vertical .n {
     position: absolute;
-    color:#333;
+    color: #333;
     cursor: default;
-    font:10px/1 Arial, sans-serif;
+    font: 10px/1 Arial, sans-serif;
     z-index: 33;
 }
-.ruler_vertical .n{
+
+.ruler_vertical .n {
     width: 8px;
     left: 3px;
     word-wrap: break-word;
 }
-.ruler_horizontal .n{
+
+.ruler_horizontal .n {
     top: 1px;
 }
 
@@ -235,6 +244,7 @@ li{
     background-color: white;
     border-bottom: 1px solid lightgray;
 }
+
 /* #toolbar .btn-group .selected {
     border-top: 1px solid rgb(242,149,54);
     border-bottom: 1px solid rgb(242,149,54);
@@ -266,8 +276,9 @@ li{
 #buttonbar .btn {
     height: 30px;
 }
+
 #buttonbar .btn.is_using {
-    background: linear-gradient(rgb(254,220,178), rgb(253,228,147));
+    background: linear-gradient(rgb(254, 220, 178), rgb(253, 228, 147));
 }
 
 .icon {
@@ -339,6 +350,7 @@ li{
 .icon.icon-fx {
     background-position: -213px 0;
 }
+
 .icon.icon-fx-view {
     background-position: -228px 0;
 }
@@ -346,6 +358,7 @@ li{
 .icon.icon-phone {
     background-position: -245px 0;
 }
+
 /*模态框样式*/
 .modal .modal-header {
     cursor: move;
@@ -391,24 +404,29 @@ li{
     background: #FFF;
     box-shadow: 12px 12px 20px #999, 0 0 20px #999;
 }
+
 #prompt {
-    display: inline-block!important;
+    display: inline-block !important;
 }
+
 #insertFunctionModal .insert-fns {
     border: 1px solid #ccc;
     height: 130px;
     overflow-y: scroll;
     font-size: 12px;
 }
+
 #insertFunctionModal .custom-insertFn {
     float: right;
     color: #999;
     text-decoration: underline;
     cursor: pointer;
 }
+
 #insertFunctionModal .insert-fn-desc p {
     margin-bottom: 2px;
 }
+
 #insertFunctionModal .insert-fn-desc p:last-child {
     margin-bottom: 0;
 }
@@ -420,14 +438,17 @@ li{
     padding: 0px !important;
     text-indent: 8px;
 }
+
 .insert-fns .insert-fn-item {
     padding-left: 5px;
     box-sizing: border-box;
 }
+
 .insert-fns .insert-fn-item.selected {
     color: #fff;
     background-color: rgb(51, 153, 255);
 }
+
 #prompt .modal-header,
 #prompt .modal-footer,
 #insertFunctionArgsModal .modal-header,
@@ -437,33 +458,40 @@ li{
     padding: 8px 15px;
     background: #fff;
 }
+
 #insertFunctionArgsModal .modal-body {
     min-height: 50px;
     background: #fff;
 }
+
 #prompt .modal-footer .btn,
 #insertFunctionArgsModal .modal-footer .btn,
 #insertFunctionModal .modal-footer .btn {
     padding: 2px 8px;
     font-size: 12px;
 }
+
 #insertFunctionArgsModal .function-args {
     overflow: hidden;
 }
-#insertFunctionArgsModal .function-args .form-group > div {
+
+#insertFunctionArgsModal .function-args .form-group>div {
     position: relative;
 }
+
 #insertFunctionArgsModal .function-args label {
     padding-top: 3px;
     padding-right: 0;
     text-align: right;
 }
+
 #insertFunctionArgsModal .custom-insertFn.selected,
 #insertFunctionArgsModal .function-args input.selected {
     outline: none;
     border: 1px solid #F00;
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(255,0,0,.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(255, 0, 0, .6);
 }
+
 #insertFunctionArgsModal textarea.custom-insertFn {
     width: 100%;
     resize: vertical;
@@ -505,7 +533,7 @@ li{
     height: auto;
 }
 
-.ctable tbody tr td .btn-config + input {
+.ctable tbody tr td .btn-config+input {
     margin-left: 5px;
     width: 80%;
 }
@@ -530,7 +558,8 @@ li{
     color: #F00;
 }
 
-#workspace_copy .workspace-node-switch,    /* 12/14 添加 */
+#workspace_copy .workspace-node-switch,
+/* 12/14 添加 */
 #workspace .workspace-node-switch {
     color: #dafffe;
     text-align: center;
@@ -539,45 +568,48 @@ li{
     cursor: pointer;
     opacity: 1;
     -webkit-box-shadow: 0 0 0 1px #4e8381 inset,
-    0 0 0 2px #74b6b4 inset,
-    0 4px 0 0 #4a7c7b,
-    0 5px 0 0 #355655,
-    0 8px 0 0 rgba(0, 0, 0, .15);
+        0 0 0 2px #74b6b4 inset,
+        0 4px 0 0 #4a7c7b,
+        0 5px 0 0 #355655,
+        0 8px 0 0 rgba(0, 0, 0, .15);
     -moz-box-shadow: 0 0 0 1px #4e8381 inset,
-    0 0 0 2px #74b6b4 inset,
-    0 4px 0 0 #4a7c7b,
-    0 5px 0 0 #355655,
-    0 8px 0 0 rgba(0, 0, 0, .15);
+        0 0 0 2px #74b6b4 inset,
+        0 4px 0 0 #4a7c7b,
+        0 5px 0 0 #355655,
+        0 8px 0 0 rgba(0, 0, 0, .15);
     box-shadow: 0 0 0 1px #4e8381 inset,
-    0 0 0 2px #74b6b4 inset,
-    0 4px 0 0 #4a7c7b,
-    0 5px 0 0 #355655,
-    0 8px 0 0 rgba(0, 0, 0, .15);
+        0 0 0 2px #74b6b4 inset,
+        0 4px 0 0 #4a7c7b,
+        0 5px 0 0 #355655,
+        0 8px 0 0 rgba(0, 0, 0, .15);
 }
-#workspace_copy .workspace-node-switch:hover,  /* 12/14 添加 */
+
+#workspace_copy .workspace-node-switch:hover,
+/* 12/14 添加 */
 #workspace .workspace-node-switch:hover {
     background-color: #73c2c0;
 }
 
-#workspace_copy .workspace-node-switch.selected,   /* 12/14 添加 */
+#workspace_copy .workspace-node-switch.selected,
+/* 12/14 添加 */
 #workspace .workspace-node-switch.selected {
     color: #ffdada;
     background-color: #cc3747;
     -webkit-box-shadow: 0 0 0 1px #8d1b27 inset,
-    0 0 0 2px #dd4356 inset,
-    0 4px 0 0 #8d1b27,
-    0 5px 0 0 #65141c,
-    0 8px 0 0 rgba(0, 0, 0, .15);
+        0 0 0 2px #dd4356 inset,
+        0 4px 0 0 #8d1b27,
+        0 5px 0 0 #65141c,
+        0 8px 0 0 rgba(0, 0, 0, .15);
     -moz-box-shadow: 0 0 0 1px #8d1b27 inset,
-    0 0 0 2px #dd4356 inset,
-    0 4px 0 0 #8d1b27,
-    0 5px 0 0 #65141c,
-    0 8px 0 0 rgba(0, 0, 0, .15);
+        0 0 0 2px #dd4356 inset,
+        0 4px 0 0 #8d1b27,
+        0 5px 0 0 #65141c,
+        0 8px 0 0 rgba(0, 0, 0, .15);
     box-shadow: 0 0 0 1px #8d1b27 inset,
-    0 0 0 2px #dd4356 inset,
-    0 4px 0 0 #8d1b27,
-    0 5px 0 0 #65141c,
-    0 8px 0 0 rgba(0, 0, 0, .15);
+        0 0 0 2px #dd4356 inset,
+        0 4px 0 0 #8d1b27,
+        0 5px 0 0 #65141c,
+        0 8px 0 0 rgba(0, 0, 0, .15);
 }
 
 
@@ -595,12 +627,15 @@ li{
     display: block;
     background-color: transparent;
 }
+
 #mask .copy-dom.selected {
-    background: linear-gradient(rgb(254,220,178), rgb(253,228,147));
+    background: linear-gradient(rgb(254, 220, 178), rgb(253, 228, 147));
 }
+
 #wsCopy {
     background: #fff;
 }
+
 #workspace_copy .check-fn-node {
     position: absolute;
     z-index: 511;
@@ -610,24 +645,25 @@ li{
     white-space: nowrap;
     overflow: hidden;
 }
+
 #workspace_copy .workspace-node-switch.originSelected {
     color: white;
     background-color: red;
     -webkit-box-shadow: 0 0 0 1px #f00 inset,
-    0 0 0 2px pink inset,
-    0 4px 0 0 #700,
-    0 5px 0 0 #f00,
-    0 8px 0 0 rgba(0, 0, 0, .15);
+        0 0 0 2px pink inset,
+        0 4px 0 0 #700,
+        0 5px 0 0 #f00,
+        0 8px 0 0 rgba(0, 0, 0, .15);
     -moz-box-shadow: 0 0 0 1px #4e8381 inset,
-    0 0 0 2px #74b6b4 inset,
-    0 4px 0 0 #4a7c7b,
-    0 5px 0 0 #355655,
-    0 8px 0 0 rgba(0, 0, 0, .15);
+        0 0 0 2px #74b6b4 inset,
+        0 4px 0 0 #4a7c7b,
+        0 5px 0 0 #355655,
+        0 8px 0 0 rgba(0, 0, 0, .15);
     box-shadow: 0 0 0 1px #4e8381 inset,
-    0 0 0 2px #74b6b4 inset,
-    0 4px 0 0 #4a7c7b,
-    0 5px 0 0 #355655,
-    0 8px 0 0 rgba(0, 0, 0, .15);
+        0 0 0 2px #74b6b4 inset,
+        0 4px 0 0 #4a7c7b,
+        0 5px 0 0 #355655,
+        0 8px 0 0 rgba(0, 0, 0, .15);
 }
 
 #phone_warp {
@@ -637,6 +673,7 @@ li{
     z-index: 500;
     display: none;
 }
+
 #phone {
     position: relative;
     padding: 95px 25px;
@@ -647,6 +684,7 @@ li{
     box-shadow: 0 0 0 2px #aaa;
     box-sizing: content-box;
 }
+
 #phone::before {
     content: "";
     position: absolute;
@@ -658,6 +696,7 @@ li{
     border-radius: 10px;
     background: #333;
 }
+
 #phone::after {
     content: '';
     position: absolute;
@@ -670,6 +709,7 @@ li{
     box-sizing: border-box;
     border: 5px solid #333;
 }
+
 #phone .statusbar {
     position: absolute;
     top: 95px;
@@ -688,4 +728,73 @@ li{
     margin-top: 20px;
     background: #eee;
     overflow: scroll;
+}
+
+/* 抄送 */
+#copySendModal .modal-body {
+    padding: 0;
+}
+
+.copySendTop {
+    border-bottom: 2px solid #ccc;
+}
+
+.copySendTop .panel-heading {
+    background-color: rgb(217, 237, 247);
+}
+
+.copySendTop .panel-heading a:hover {
+    text-decoration: none;
+}
+
+.copySendTop .panel-heading .btn-collapse {
+    float: right;
+    margin-top: -3px;
+    padding: 3px 5px 1px 6px;
+    border-radius: 100%;
+    outline: none;
+}
+
+#copySendPanel {
+    padding: 15px;
+    padding-top: 5px;
+}
+
+#copySendPanel .form-inline {
+    margin: 5px;
+}
+
+#copySendPanel .form-inline .form-group {
+    margin-right: 10px;
+}
+
+#copySendPanel .form-inline .form-group label {
+    margin-bottom: 0;
+    margin-right: 3px;
+}
+
+#copySendPanel .form-inline .form-group .form-control {
+    padding: 2px 4px;
+    height: 26px;
+    font-size: 12px;
+}
+
+#copySendPanel .form-inline .form-group button {
+    float: right;
+    margin-left: 5px;
+    padding: 2px 6px;
+    height: 26px;
+    font-size: 12px;
+}
+
+#copySendPanel .form-inline .btn-search {
+    margin-left: 10px;
+}
+
+#copySendPanel .form-inline .btn-add {
+    float: right;
+}
+
+.copySendBottom {
+    padding: 15px;
 }

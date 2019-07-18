@@ -48,37 +48,6 @@ li{
     top: 1px;
 }
 
-.navbar .template{
-    padding-left: 30px;
-    width: 127px;
-    position: absolute;
-    left: 159px;
-    top: 1px;
-    background: #fff;
-    border: 1px solid #00000026;
-    display: none;
-    cursor: pointer;
-}
-.navbar .template li{
-    height: 30px;
-    padding: 5px;  
-}
-.navbar .resource{
-    top:40px;
-    display: none;
-}
-.navbar .template_li:hover .template{
-    display: block
-}
-.navbar .resource_li:hover .resource{
-    display: block
-}
-
-.navbar .resource_li,.navbar .template_li{
-    cursor: pointer;
-}
-
-
 #controlbar,
 #toolbar,
 #propertybar {

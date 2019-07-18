@@ -57,7 +57,13 @@ function RecordModal($modal) {
             "审核": "property_history_audit.json",
             "定义": "property_history_define.json",
         };
-        return $.ajax("/lib/" + id + "/" + FLOW_CONFIG[flow]);
+        return $.ajax("/lib/" + id + "/" + FLOW_CONFIG[flow]);//这个功能暂时不能使用
+        // var url = "/lib/" + id + "/" + FLOW_CONFIG[flow];
+        // return $.cajax({//返回一个ajax
+        //     url: url,
+        //     type: "GET",
+        //     dataType: "json"
+        // });
     };
 }
 
@@ -98,6 +104,8 @@ RecordModal.prototype = {
                 });
             });
         }// end if
+        else{
+        }
     },
     execute: function () {
         var that = this;

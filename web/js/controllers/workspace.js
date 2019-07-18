@@ -278,7 +278,6 @@ function Workspace() {
             settingData.items.push(item);//向settingData中添加item
             html += new Control().renderHtml(id, item);//实例化control调用renderHtml函数累加起来
         });
-        console.log(html)
         //获取model数据
         // var $temp = $('<div></div>');//生成元素
         // $temp.css({//给元素添加样式

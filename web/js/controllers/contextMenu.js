@@ -302,6 +302,20 @@ function ContextMenu() {
 
         $target.parents('.workspace-node').height('auto');
     }
+
+    // 手机元素关联工作区元素
+    this.relateWorkspace = function($el) {
+        var $origin = $("#workspace").find("input.focus"),
+            $target = $("#phone_content").find(".resizable input");
+        
+        if ($origin.length === 1 && $target.attr('id') === $el.attr('id')) {
+            var origin_id = $origin.attr('id');
+            $("#property_relatedId").val(origin_id);
+            var property = new Property();
+            property.setValue($el.attr('id'), "relatedId", origin_id);
+            property.getValue($el.attr('id'), "relatedId") === origin_id && alert('关联元素'+ origin_id +'成功')
+        }
+    }
 }
 
 ContextMenu.prototype = {
@@ -517,6 +531,19 @@ ContextMenu.prototype = {
                     ]
                 });
                 break;
+            case 4:
+                // 手机元素右键菜单
+                elem.jcontextmenu({ //通过jcontextmenu设置属性栏
+                    menus: [{
+                            type: "menuitem",
+                            text: "关联工作区元素",
+                            handler: function () {
+                                that.relateWorkspace(elem);
+                            }
+                        }
+                        
+                    ]
+                });
         }
     }
 };

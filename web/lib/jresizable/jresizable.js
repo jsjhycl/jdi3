@@ -189,6 +189,8 @@
                 position = $resizable.position();
             $resizable.draggable({
                 cancel: ".title",
+                scroll: !!cache.scroll,
+                containment: cache.containment ? cache.containment : '',
                 start: function (event, ui) {
                     position = ui.position;
                 },

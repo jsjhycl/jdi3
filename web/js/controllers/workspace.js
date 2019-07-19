@@ -204,6 +204,7 @@ var WorkspaceUtil = {
 
 function Workspace() {
     this.$workspace = $("#workspace");//获取工作区的元素
+    this.$phone = $("#phone_content");
     this.NAMESPACE = ".workspace"
 
     this._getAjax = function (url) {
@@ -250,6 +251,8 @@ function Workspace() {
             },
             html = "";
         that.$workspace.find(".workspace-node").each(function () {//获取工作区中类名workspace-node的元素遍历函数
+            if ($(this).attr("id").startsWith('phone_')) return;
+
             var cid = $(this).attr("id"),//获取当前元素的id
                 type = $(this).attr("data-type"),//获取当前元素的data-type
                 position = $(this).position(),//获取当前元素的定位信息
@@ -278,6 +281,44 @@ function Workspace() {
             settingData.items.push(item);//向settingData中添加item
             html += new Control().renderHtml(id, item);//实例化control调用renderHtml函数累加起来
         });
+
+        // 获取 phone 中的元素
+        var phoneSettingData = {
+                items: []
+            },
+            phoneHtml = "";
+        that.$phone.click();
+        that.$phone.find(".workspace-node").each(function() {
+            var cid = $(this).attr("id"),
+                type = $(this).attr("data-type"),
+                left = parseFloat($(this).css("left")),
+                top = parseFloat($(this).css("top")),
+                item = {//对item对象进行一些赋值
+                    id: cid,
+                    name: $(this).attr("name"),
+                    value: $(this).val(),
+                    type: type,
+                    rect: {
+                        width: parseFloat($(this).css("width")),
+                        height: parseFloat($(this).css("height")),
+                        left: left,
+                        top: top,
+                        zIndex: $(this).css("z-index")
+                    }
+                };
+            switch (type) {//对类型进行判断
+                case "img"://如果是img类型
+                    item.attach = {src: cid + ".jpg"};//item下面的属性进行赋值
+                    break;
+                case "div"://如果为div类型
+                    item.attach = {html: $(this).html()};//对item下面的attach属性进行赋值
+                    break;
+            }
+            phoneHtml += new Control().getPhoneControlHtml($(this), cid);
+            // phoneHtml += $($(this).get(0).outerHTML).attr('id', GLOBAL_PROPERTY[cid] && GLOBAL_PROPERTY[cid].relatedId ? GLOBAL_PROPERTY[cid].relatedId : cid).get(0).outerHTML;
+            phoneSettingData.items.push(item);
+        })
+
         //获取model数据
         // var $temp = $('<div></div>');//生成元素
         // $temp.css({//给元素添加样式
@@ -287,19 +328,27 @@ function Workspace() {
         //     "background-color": settingData.bgColor,
         //     "overflow": "hidden"
         // }).append(html);//插入到html中
-        // var modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
-        //     '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
-        //     $temp.get(0).outerHTML;
+        var hiddenInput =  '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
+                    '<input id="modelName" type="hidden" name="modelName" value="' + name + '">';
+            // modelData = hiddenInput + $temp.get(0).outerHTML;
         //获取table数据
         var tableData = null;
         if ((type === "产品" || type === "数据库定义") && subtype === "模型" && customId) {//如果type是产品或则是数据库定义subtype是模型且customid存在
             tableData = new Property().getDbProperty(customId, name);//实例化property调用getDbproperty
         }
-        return {//返回setingData  modeldData tableData
+
+        var phoneData = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="ie=edge"><title>手机页面</title></head><body>' +
+                        hiddenInput +
+                        '<input id="modelType" type="hidden" name="modelType" value="' + id + '">' +
+                        '<div style="position: relative">' +
+                        phoneHtml +
+                        '</div></body></html>'
+        return {
             settingData: settingData,
-            modelData: html,//修改
-            // html:html,
-            tableData: tableData
+            modelData: html,
+            tableData: tableData,
+            phoneData: phoneData,
+            phoneSettingData: phoneSettingData
         };
     };
 
@@ -316,10 +365,18 @@ function Workspace() {
      * @param modelData
      * @private
      */
-    this._setData = function (isPrompt, id, type, subtype, flow, settingData, modelData, tableData) {
+    this._setData = function (isPrompt, id, type, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData) {
         if (!id || !type || !subtype) return;//如果id或则type或则subtype都不存在则退出函数
 
         isPrompt = !!isPrompt;//对isPrompt进行取布尔值
+
+        var property = {}
+            phone_property = {};
+
+        for (var i in GLOBAL_PROPERTY) {
+            i.startsWith('phone_') ? phone_property[i] = GLOBAL_PROPERTY[i] : property[i] = GLOBAL_PROPERTY[i];
+        }
+
         var that = this,
             arrs = [{//定义arrs
                 name: "setting.json",
@@ -328,11 +385,23 @@ function Workspace() {
             }, {
                 name: "property.json",
                 contentType: "text/plain;charset=utf-8",
-                data: JSON.stringify(GLOBAL_PROPERTY)
+                data: JSON.stringify(property)
             }, {
                 name: "model.html",
                 contentType: "text/html;charset=utf-8",
                 data: modelData
+            }, {
+                name: "phone.html",
+                contentType: "text/html;charset=utf-8",
+                data: phoneData
+            }, {
+                name: "phone_setting.json",
+                contentType: "text/html;charset=utf-8",
+                data: JSON.stringify(phoneSettingData)
+            }, {
+                name: "phone_property.json",
+                contentType: "text/html;charset=utf-8",
+                data: JSON.stringify(phone_property)
             }];
         if (flow) {//如果flow有值时
             var FLOW_SETTING = {//定义FLOW_SETTING
@@ -361,6 +430,12 @@ function Workspace() {
             $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2]), $y(id, arrs[3]));//调用ajax
         } else if (arrs.length === 5) {//如果数组长度为5
             $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2]), $y(id, arrs[3]), $y(id, arrs[4]));//调用数组长度
+        } else if (arrs.length === 6) {//如果数组长度为5
+            $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2]), $y(id, arrs[3]), $y(id, arrs[4]), $y(id, arrs[5]));//调用数组长度
+        } else if (arrs.length === 7) {//如果数组长度为5
+            $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2]), $y(id, arrs[3]), $y(id, arrs[4]), $y(id, arrs[5]), $y(id, arrs[6]));//调用数组长度
+        } else if (arrs.length === 8) {//如果数组长度为5
+            $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2]), $y(id, arrs[3]), $y(id, arrs[4]), $y(id, arrs[5]), $y(id, arrs[6]), $y(id, arrs[7]));//调用数组长度
         }
         if ($ajax) {//如果$ajax存在的话
             $ajax.done(function () {//执行ajax函数的 done方法
@@ -407,6 +482,7 @@ Workspace.prototype = {
         }
         $("#name").empty().append(text);//获取元素置空并添加html
         that.$workspace.empty().attr(attrs);//将工作区置空并添加属性
+        that.$phone.empty().parents("#phone_warp").hide();
         new Filter(type, subtype).set();//实例化Filter并调用set方法
         $("#toolbar").css('right',"260px")//设置样式
         $("#toolbar").css('left',"140px")//设置样式
@@ -415,16 +491,16 @@ Workspace.prototype = {
     },
     load: function (id, name, type, subtype, flow, customId, relTemplate) {
         if (!id || !name || !type || !subtype) return;//如果id或则name或type或subtype都为空退出函数
-
+        
         var that = this;
         $.when(that._getAjax("/lib/" + id + "/setting.json"), that._getAjax("/lib/" + id + "/property.json")).done(function (ret1, ret2) {//调用函数_getAjax获取json
             that.init(id, name, type, subtype, flow, customId, relTemplate);//调用init方法
-            var settingData = ret1[0],//辅值
-                propertyData = ret2[0];
-            var control = new Control(),//实例化Control
+            var settingData = ret1[0],
+                propertyData = ret2[0],
+                control = new Control(),//实例化Control
                 contextMenu = new ContextMenu();//实例化contextMenu
             for (var i = 0; i < settingData.items.length; i++) {//遍历小于settingData.items.length的数
-                var item = settingData.items[i];//赋值
+                var item = settingData.items[i]
                 control.setControl(item.type, function ($node) {//调用control中的setControl方法
                     $node.attr({//添加属性
                         "id": item.id,
@@ -454,10 +530,13 @@ Workspace.prototype = {
                             contextMenu.done(3, $node);//调用contextMenu中的done方法
                             break;
                     }
-                    that.$workspace.append($node);//向工作区中添加元素
+                    that.$workspace.append($node);
                 });
             }
+
             GLOBAL_PROPERTY = propertyData;//赋值
+
+            that.loadPhone(id);
 
             // 调整工作区大小
             var max_h = 0, max_w = 0;
@@ -471,12 +550,50 @@ Workspace.prototype = {
                 "background-color": settingData.bgColor
             });
             new Ruler().drawCoordinates()//调用Ruler的drawCoordinates
-
         }).fail(function () {//如果失败
             that.init(id, name, type, subtype, flow, customId, relTemplate);//调用init方法
             alert("数据加载出错！");
         });
     },
+
+    loadPhone: function(id) {
+        if (!id) return;
+        
+        var that = this;
+        $.when(that._getAjax("/lib/" + id + "/phone_setting.json"), that._getAjax("/lib/" + id + "/phone_property.json")).done(function (ret1, ret2) {//调用函数_getAjax获取json
+            var phoneSettingData = ret1[0] || {},
+                phonePropertyData = ret2[0] || {};
+            var control = new Control(),//实例化Control
+                contextMenu = new ContextMenu();//实例化contextMenu
+
+            for (var j = 0; j < phoneSettingData.items.length; j++) {//遍历小于settingData.items.length的数
+                var item = phoneSettingData.items[j];
+                control.setControl(item.type, function ($node) {//调用control中的setControl方法
+                    $node.attr({//添加属性
+                        "id": item.id,
+                        "name": item.name,
+                        "value": item.value,
+                        "data-type": item.type
+                    });
+                    $node.css({//添加样式
+                        "left": item.rect.left,
+                        "top": item.rect.top,
+                        "z-index": item.rect.zIndex,
+                        "width": item.rect.width,
+                        "height": item.rect.height
+                    });
+                    contextMenu.done(4, $node);
+                    that.$phone.append($node);
+                }, true);
+            }
+            console.log(phonePropertyData)
+            GLOBAL_PROPERTY = $.extend({}, GLOBAL_PROPERTY, phonePropertyData);//赋值
+
+        }).fail(function (err) {//如果失败
+            console.log(err)
+        });
+    },
+
     /**
      * 
      * @param {} isPrompt 是否保存后提示信息true为提示false为不提示 
@@ -521,11 +638,10 @@ Workspace.prototype = {
             '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
             $temp.get(0).outerHTML;
         data.modelData = modelData;
-
-
+        
         if (data) {//如果data为true
             //保存数据
-            that._setData(isPrompt, id, type, subtype, flow, data.settingData, data.modelData, data.tableData);//调用_setdata
+            that._setData(isPrompt, id, type, subtype, flow, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData);//调用_setdata
         }
     },
     clear: function () {

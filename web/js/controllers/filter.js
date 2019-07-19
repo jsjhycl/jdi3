@@ -23,15 +23,15 @@ function Filter(type, subtype) {
         },
         "资源/模型": {
             zero:[],
-            first: ["save", "submit", "recall", "basic", "validate", "expression"],
+            first: ["save", "submit", "recall", "basic", "validate", "expression","dataSource", "events", "query"],
             second: []
         },
-        "产品/模板": {
+        "产品/模板": {//目前没有这块的流程
             zero:[],
             first: ["save", "submit", "basic", "validate", "expression"],
             second: []
         },
-        "产品/模型": {
+        "产品/模型": {//目前没有这块流程
             zero:[],
             first: ["save", "submit", "recall", "basic", "validate", "expression", "dataSource", "events", "query"],
             second: []

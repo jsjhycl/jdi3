@@ -314,7 +314,7 @@ function propertybar() {
 	
 	//表达式配置
 	(function () {
-		function buildArgs($expr, staticGlobal, dynamicGlobal, localFunction, remoteFunction, insertFunction) {
+		function buildArgs($expr, staticGlobal, dynamicGlobal, localFunction, remoteFunction) {
 			var global = {};
 			if (DataType.isObject(staticGlobal)) {//如果
 				for (var key in staticGlobal) {
@@ -336,18 +336,27 @@ function propertybar() {
 				$result: $("#property_expression"),
 				hasBrace: true,
 				toolbar: [
-					{title: "类型转换", type: "cast", data: {"数字": "数字", "字符": "字符"}, style: "cpanel-type"},
-					{
-						title: "算术运算符",
-						type: "normal",
-						data: {"+": "+", "-": "-", "*": "*", "/": "/"},
-						style: "cpanel-operator"
-					},
-					{title: "全局变量", type: "normal", data: global, style: "cpanel-global"},
-					{title: "本地函数", type: "local", data: localFunction, style: "cpanel-local"},
-					{title: "远程函数", type: "remote", data: remoteFunction, style: "cpanel-remote"},
-					{title: "插入函数", type: "insert", data: insertFunction, style: "cpanel-insert"},
-				],
+					// {title: "类型转换", type: "cast", data: {"数字": "数字", "字符": "字符"}, style: "cpanel-type"},
+					// {
+					// 	title: "算术运算符",
+					// 	type: "normal",
+					// 	data: {"+": "+", "-": "-", "*": "*", "/": "/"},
+					// 	style: "cpanel-operator"
+					// },
+					// {title: "全局变量", type: "normal", data: global, style: "cpanel-global"},
+					// {title: "本地函数", type: "local", data: localFunction, style: "cpanel-local"},
+					// {title: "远程函数", type: "remote", data: remoteFunction, style: "cpanel-remote"}
+                ],
+                functions: [
+                    {
+                        data: localFunction,
+                        title: "本地函数"
+                    },
+                    {
+                        data: remoteFunction,
+                        title: "远程函数"
+                    }
+                ],
 				onSetProperty: function (expr) {
 					var id = $("#property_id").val();
 					if (id) {
@@ -368,38 +377,35 @@ function propertybar() {
 				commonService = new CommonService();
 			$.when(commonService.getAjax("/newapi/getprozz"),
 				commonService.getAjax("/profile/global.json"),
-				commonService.getAjax("/profile/local_function.json"),
-				commonService.getAjax("/profile/remote_function.json"),
-				commonService.getAjax("/profile/insert_function.json")).done(function (result1, result2, result3, result4, result5) {
-				if (!result1 || !result2 || !result3 || !result4 || !result5) return;
+				commonService.getAjax("/profile/local_functions.json"),
+				commonService.getAjax("/profile/remote_functions.json")).done(function (result1, result2, result3, result4) {
+				if (!result1 || !result2 || !result3 || !result4) return;
 				
 				var data1 = result1[0],
 					data2 = result2[0],
 					data3 = result3[0],
-					data4 = result4[0],
-					data5 = result5[0];
-				if (!data1 || !data2 || !data3 || !data4 || !data5) return;
+					data4 = result4[0];
+				if (!data1 || !data2 || !data3 || !data4) return;
 				
 				var globalId = data1.status === 0 ? (data1.result ? data1.result.id : null) : null,
 					staticGlobal = data2,
 					localFunction = data3,
 					remoteFunction = data4,
-					insertFunction = data5;
 				
-				// 关闭插入函数弹窗
+				关闭插入函数弹窗
 				$("#insertFunctionArgsModal .close").trigger('click')
 				
 				if (globalId) {
 					commonService.getFile("/publish/" + globalId + "/property.json", function (dynamicGlobal) {
-						buildArgs($expr, staticGlobal, dynamicGlobal, localFunction, remoteFunction, insertFunction);
+						buildArgs($expr, staticGlobal, dynamicGlobal, localFunction, remoteFunction);
 					});
 				} else {
-					buildArgs($expr, staticGlobal, null, localFunction, remoteFunction, insertFunction);
+					buildArgs($expr, staticGlobal, null, localFunction, remoteFunction);
 				}
 			}).fail(function (err) {
 				console.log(err);
 				alert("表达式生成器参数数据生成失败！");
-			});
+            });
 		});
 	})();
 	

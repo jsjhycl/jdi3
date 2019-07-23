@@ -586,11 +586,9 @@ Workspace.prototype = {
                     that.$phone.append($node);
                 }, true);
             }
-            console.log(phonePropertyData)
             GLOBAL_PROPERTY = $.extend({}, GLOBAL_PROPERTY, phonePropertyData);//赋值
 
         }).fail(function (err) {//如果失败
-            console.log(err)
         });
     },
 

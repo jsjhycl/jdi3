@@ -5,7 +5,6 @@ function KeyEvent() {
     var that = this;
     this.ruler = true;
     $(document).keydown(function (event) {//给整个文档绑定键盘事件
-        console.log($('input:focus, textarea:focus'))
         if($('input:focus, textarea:focus').length <= 0) {
             var code = event.keyCode;//获取点击键盘的keyCode
             switch (code) {

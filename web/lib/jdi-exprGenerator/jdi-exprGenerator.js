@@ -5,60 +5,49 @@
      */
     var FunctionUtil = (function () {
         return {
-            clear: function (isInsert) {
-              if (isInsert) {
-                $(".eg-insert-select").val("");
-                $args = $(".insert-args-table input");
-                $.each($args, function(index, el) {
-                  $(el).val("").removeClass("active");
-                });
-              } else {
-                var $asyncSelect = $(".eg:visible .eg-function .function-async"),
-                    $modeSelect = $(".eg:visible .eg-function .function-mode"),
-                    $argsTbody = $(".eg:visible .eg-function .function-args tbody");
-                $asyncSelect.val(0);
-                $modeSelect.val(0);
-                $argsTbody.empty();
-              }
-            },
-            setArgsTbody: function (data, args, isRemote) {
-                var $argsTbody;
-                if (isRemote) {
-                  $argsTbody = $(".eg:visible .eg-function .function-args tbody");
-                  // $('.eg-insertFn').width(0).hide().next().show();
-                } else {
-                  $argsTbody = $(".eg-insert-select");
-                  // $('.eg-function').width(0).hide().prev().show();
-                }
-                $argsTbody.empty();
-                if (DataType.isObject(data)) {
-                    var html = "";
-                    if (isRemote) {
-                      data.args.forEach(function (item) {
-                          var arg = Array.isArray(args) ? args.filter(function (fitem) {
-                                  return fitem.name === item.name;
-                              })[0] : null,
-                              readonly = item.readonly ? ' value="' + item.value + '" readonly' : ' value="' + (arg ? arg.value : "") + '"',
-                              str = '<tr>' +
-                                  '<td data-name="' + item.name + '">' + item.name + '</td>' +
-                                  '<td data-type="' + item.type + '">' + DataType.toText(item.type) + '</td>' +
-                                  '<td><input class="form-control" type="text" name="value"' + readonly + '></td>' +
-                                  '</tr>';
-                      html += str;
+            setArgsTbody: function (fnData, fnType) {
+                if(!Object.prototype.toString.call(fnData) === '[object Object]') return
+                var $argsTbody = $(".eg .function-table tbody"),
+                    $argExample = $(".eg .eg-function .function-example"),
+                    argsHtml = "",
+                    target = $(".eg .eg-elem.current").data('id'),
+                    args = this.getExprArgs(fnData.name, fnType, fnData.async, fnData.voluation, target);
+                
+                $argExample.text(fnData.example || "");
+
+                if (Array.isArray(fnData.args) && fnData.args.length > 0) {
+                    fnData.args.forEach(function(arg, idx) {
+                        argsHtml += '<tr>' +
+                                        '<td data-name="' + arg.cname + '">' + arg.cname + '</td>' +
+                                        '<td data-type="' + arg.ctype + '">' + arg.ctype + '</td>' +
+                                        '<td>' +
+                                            '<input '+ (arg.default == undefined ? "" : 'disabled') +' class="form-control" data-type="arg" type="text" name="value" value="'+ ((args && args[idx]) ? args[idx] : (arg.default == undefined ? "" : arg.default)) +'">' +
+                                        '</td>' +
+                                    '</tr>';
                     });
-                  } else {
-                    html += '<option value="">请选择</option>'
-                    data.fns.forEach(function (item) {
-                      str = '<option value="' + item.name + '" data-args=' + JSON.stringify(item.args) + ' class="insertFn-' + item.name + '">' + item.name + '</option>';
-                      html += str;
-                    })
-                  }
-                    $argsTbody.append(html);
+                    fnData.args[fnData.args.length - 1].auto ? $argsTbody.parent().addClass("manyArgs-table") : $argsTbody.parent().removeClass("manyArgs-table");
                 }
+                argsHtml += '<tr>' +
+                                '<td>是否异步</td>' +
+                                '<td>默认</td>' +
+                                '<td>' +
+                                    '<input type="hidden" class="form-control" disabled data-type="async" value="'+ fnData.async + '">' +
+                                    (fnData.async === 1 ? '是' : '否') +
+                                '</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                                '<td>赋值方式</td>' +
+                                '<td>默认</td>' +
+                                '<td>' +
+                                    '<input type="hidden" class="form-control" disabled data-type="voluation" value="'+ fnData.voluation +'">' +
+                                    (fnData.voluation === 1 ? '填充下拉列表' : '赋值文本框') +
+                                '</td>' +
+                            '</tr>'
+                $argsTbody.empty().append(argsHtml);
             },
             getArgsTbody: function () {
                 var result = [],
-                    $argsTbody = $(".eg:visible .eg-function .function-args tbody");
+                    $argsTbody = $(".eg .eg-function .function-args tbody");
                 $argsTbody.find("tr").each(function (index, item) {
                     var name = $(item).find("td:nth-child(1)").attr("data-name"),
                         type = $(item).find("td:nth-child(2)").attr("data-type"),
@@ -73,48 +62,41 @@
             },
             effect: function (action, $trigger, isRemote) {
                 var $eg = $(".eg:visible"),
-                    $egDialog = $eg.find(".eg-dialog"),
-                    $egContent = $eg.find(".eg-content"),
-                    $egSidebar = $eg.find(".eg-sidebar"),
                     $egFunction = $eg.find(".eg-function"),
-                    $egInsertFn = $eg.find(".eg-insertFn"),
-                    dWidth = $egDialog.width(),
-                    cWidth = $egContent.width(),
-                    sWidth = $egSidebar.width(),
-                    fWidth = $egFunction.width(),
-                    iWidth = $egInsertFn.width();
+                    fWidth = $egFunction.width();
                 if (action === "open") {
-                    if (fWidth <= 0 && isRemote) {
-                        iWidth <= 0 ? $egContent.animate({width: cWidth - sWidth}) : '';
-                        $egInsertFn.find('.insert-args').empty();
-                        $egInsertFn.css("display", "none").width(0);
-                        $egFunction.css("display", "block").animate({width: sWidth});
-                        $('.eg .cpanel-body[data-type="remote"] .btn.active, .eg .cpanel-body[data-type="insert"] .btn.active').removeClass("active");
-                        $trigger.addClass("active");
-                    } else if (iWidth <= 0 && !isRemote) {
-                      fWidth <= 0 ? $egContent.animate({width: cWidth - sWidth}) : '';
-                      $egInsertFn.find('.insert-args').empty();
-                      $egFunction.css("display", "none").width(0);
-                      $egInsertFn.css("display", "block").animate({width: sWidth});
-                      $('.eg .cpanel-body[data-type="remote"] .btn.active,.eg .cpanel-body[data-type="insert"] .btn.active').removeClass("active");
-                      $trigger.addClass("active");
-                    } else {
-                      if ($trigger.hasClass("active")) {
-                        $egContent.animate({width: dWidth - sWidth});
-                          isRemote ? $egFunction.css("display", "none").animate({width: 0})
-                                   : $egInsertFn.css("display", "none").animate({width: 0});
-                          $trigger.removeClass("active");
-                        } else {
-                            $egInsertFn.find('.insert-args').empty();
-                            $('.eg .cpanel-body[data-type="remote"] .btn.active,.eg .cpanel-body[data-type="insert"] .btn.active').removeClass("active")
-                            $trigger.addClass("active");
-                        }
-                    }
+                    $egInsertFn.css("display", "block").animate({width: fWidth});
+                    // if (fWidth <= 0 && isRemote) {
+                    //     iWidth <= 0 ? $egContent.animate({width: cWidth - sWidth}) : '';
+                    //     $egInsertFn.find('.insert-args').empty();
+                    //     $egInsertFn.css("display", "none").width(0);
+                    //     $egFunction.css("display", "block").animate({width: sWidth});
+                    //     $('.eg .cpanel-body[data-type="remote"] .btn.active, .eg .cpanel-body[data-type="insert"] .btn.active').removeClass("active");
+                    //     $trigger.addClass("active");
+                    // } else if (iWidth <= 0 && !isRemote) {
+                    //   fWidth <= 0 ? $egContent.animate({width: cWidth - sWidth}) : '';
+                    //   $egInsertFn.find('.insert-args').empty();
+                    //   $egFunction.css("display", "none").width(0);
+                    //   $egInsertFn.css("display", "block").animate({width: sWidth});
+                    //   $('.eg .cpanel-body[data-type="remote"] .btn.active,.eg .cpanel-body[data-type="insert"] .btn.active').removeClass("active");
+                    //   $trigger.addClass("active");
+                    // } else {
+                    //   if ($trigger.hasClass("active")) {
+                    //     $egContent.animate({width: dWidth - sWidth});
+                    //       isRemote ? $egFunction.css("display", "none").animate({width: 0})
+                    //                : $egInsertFn.css("display", "none").animate({width: 0});
+                    //       $trigger.removeClass("active");
+                    //     } else {
+                    //         $egInsertFn.find('.insert-args').empty();
+                    //         $('.eg .cpanel-body[data-type="remote"] .btn.active,.eg .cpanel-body[data-type="insert"] .btn.active').removeClass("active")
+                    //         $trigger.addClass("active");
+                    //     }
+                    // }
                 } else {
-                    $egContent.animate({width: dWidth - sWidth});
-                    $egFunction.css("display", "none").animate({width: 0});
-                    $egInsertFn.css("display", "none").animate({width: 0});
-                    $trigger.removeClass("active");
+                    // $egContent.animate({width: dWidth - sWidth});
+                    // $egFunction.css("display", "none").animate({width: 0});
+                    // $egInsertFn.css("display", "none").animate({width: 0});
+                    // $trigger.removeClass("active");
                 }
             },
             convert: function (data, isInsert) {
@@ -147,6 +129,40 @@
                 if (maps.length > 0) return "," + maps.join(",");
                 else return "";
             },
+            setElemSelected: function(expr, args) {
+                var $eg = $('.eg:visible'),
+                    expr = expr || $eg.find(".eg-expr").val(),
+                    args = args || $eg.find('[data-type="arg"]').map(function() {
+                        return $(this).val()
+                    }).get().join(','),
+                    matches = (expr + ',' + args).match(/[^{]+(?=})/img);
+                $eg.find(".eg-elem.selected").removeClass("selected");
+                if (matches) {
+                    var selector = matches.map(function (item) {
+                        return '[data-id="' + item + '"]';
+                    }).join(",");
+                    $eg.find(selector).addClass("selected");
+                }
+            },
+            getExprArgs(fnName, fnType, async, voluation, target) {
+                if (!fnName || !fnType || !target) return false;
+    
+                var str = '';
+                if (fnType === '本地函数') {
+                    str = fnName + '\\("'+ target +'"(.+?)\\)'
+                } else if (fnType === '远程函数') {
+                    str = "functions\\("+ '"'+ target + '"' + "," + '"'+ fnName + '"' + "," + async + "," + voluation + ",(.+?)\\)";
+                }
+                var expr = $(".eg .eg-expr").val(),
+                    argReg = new RegExp(str, 'g'),
+                    args = expr.match(argReg);
+                console.log(argReg)
+                if (args) {
+                    return args[0].match(/(\{[A-Z]+\})/g)
+                    // return args[0].replace(/\s/g, "").split(",").filter(function(el) { return !!el })
+                }
+                return false;
+            }
         };
     })();
 
@@ -217,39 +233,15 @@
                     '</footer>' +
                     '</section>' +
                     '</aside>' +
-                    '<section class="eg-insertFn">' +
-                    '<div class="form-group">' +
-                    '<label class="control-label">选择函数：</label>' +
-                    '<select class="form-control eg-insert-select" placeholder="请选择">' +
-                    '<option>' +
-                    '</option>' +
-                    '</select>' +
-                    '<div class="insert-args">' +
-                    '</div>' +
-                    '<footer class="cfooter">' +
-                    '<button class="btn btn-primary insertFn-save">保存</button>' +
-                    '<button class="btn btn-danger insertFn-clear">清除</button>' +
-                    '</footer>' +
-                    '</div>' +
-                    '</section>' +
                     '<section class="eg-function">' +
                     '<div class="form-group">' +
-                    '<label class="control-label">调用方式：</label>' +
-                    '<select class="form-control function-async">' +
-                    '<option value="0">同步</option>' +
-                    '<option value="1">异步</option>' +
-                    '</select>' +
-                    '</div>' +
-                    '<div class="form-group">' +
-                    '<label class="control-label">赋值方式</label>' +
-                    '<select class="form-control function-mode">' +
-                    '<option value="0">赋值</option>' +
-                    '<option value="1">填充</option>' +
-                    '</select>' +
+                    '<label class="control-label">使用案例：</label>' +
+                    '<p class="function-example">' +
+                    '</p>' +
                     '</div>' +
                     '<div class="form-group">' +
                     '<label class="control-label">参数列表：</label>' +
-                    '<table class="table table-bordered table-hover table-responsive ctable function-args">' +
+                    '<table class="table table-bordered table-hover table-responsive ctable function-table">' +
                     '<thead><tr><th>名称</th><th>类型</th><th>值</th></tr></thead>' +
                     '<tbody></tbody>' +
                     '</table>' +
@@ -258,6 +250,7 @@
                     '<button class="btn btn-primary function-save">保存</button>' +
                     '<button class="btn btn-danger function-clear">清除</button>' +
                     '</footer>' +
+                    '</div>' +
                     '</section>' +
                     '</div>' +
                     '</section>'
@@ -280,6 +273,7 @@
                 $source = cache.$source,
                 $result = cache.$result,
                 toolbar = cache.toolbar,
+                functions = cache.functions,
                 $eg = $(".eg");
             //填充$source来源DOM数据
             if ($source && $source.length > 0) {
@@ -338,38 +332,102 @@
                 }
             }
             //填充工具栏数据
-            if (toolbar && toolbar.length > 0) {
-                var html = "";
-                for (var i = 0; i < toolbar.length; i++) {
-                    var item = toolbar[i],
-                        title = item.title,
-                        type = item.type,
-                        data = item.data,
-                        style = item.style ? " " + item.style : "",
-                        cpanel = '<div class="cpanel' + style + '" data-title="' + title + '">' +
-                            '<header class="cpanel-header">' +
-                            '<h4 class="cpanel-title">' + title + '</h4>' +
-                            '</header>' +
-                            '<div class="cpanel-body" data-type="' + type + '">';
-                    if (type === "remote") {
-                        data.forEach(function (ditem) {
-                            cpanel += '<button class="btn btn-default" data-profile=\'' + JSON.stringify(ditem) + '\'>' + ditem.desc + '</button>';
-                        });
-                    } else if (type === "insert") {
-                      data.forEach(function (iitem) {
-                        cpanel += '<button class="btn btn-default" data-insertFn=\'' + JSON.stringify(iitem) + '\'>' + iitem.desc + '</button>';
-                    });
-                    } else {
-                        for (var key in data) {
-                            var value = data[key];
-                            cpanel += '<button class="btn btn-default" value="' + value + '">' + key + '</button>';
-                        }
-                    }
-                    cpanel += "</div></div>";
-                    html += cpanel;
-                }
-                $eg.find(".eg-toolbar").append(html);
+            this.renderToolBar(functions);
+            this.setToolBarData(functions[0]);
+            // FunctionUtil.effect("open")
+            // if (toolbar && toolbar.length > 0) {
+                // var html = "";
+                // for (var i = 0; i < toolbar.length; i++) {
+                //     var item = toolbar[i],
+                //         title = item.title,
+                //         type = item.type,
+                //         data = item.data,
+                //         style = item.style ? " " + item.style : "",
+                //         cpanel = '<div class="cpanel' + style + '" data-title="' + title + '">' +
+                //             '<header class="cpanel-header">' +
+                //             '<h4 class="cpanel-title">' + title + '</h4>' +
+                //             '</header>' +
+                //             '<div class="cpanel-body" data-type="' + type + '">';
+                //     if (type === "remote") {
+                //         data.forEach(function (ditem) {
+                //             cpanel += '<button class="btn btn-default" data-profile=\'' + JSON.stringify(ditem) + '\'>' + ditem.desc + '</button>';
+                    //         });
+                //     } else if (type === "insert") {
+                //       data.forEach(function (iitem) {
+                //         cpanel += '<button class="btn btn-default" data-insertFn=\'' + JSON.stringify(iitem) + '\'>' + iitem.desc + '</button>';
+                //     });
+                //     } else {
+                //         for (var key in data) {
+                //             var value = data[key];
+                //             cpanel += '<button class="btn btn-default" value="' + value + '">' + key + '</button>';
+                //         }
+                //     }
+                //     cpanel += "</div></div>";
+                //     html += cpanel;
+                // }
+                // $eg.find(".eg-toolbar").append(html);
+            // }
+        },
+        renderToolBar: function(functions) {
+            // if (Object.prototype.toString.call(null, localFnsData) !== "[object Object]" || Object.prototype.toString.call(null, remoteFnsData) !== "[object Object]") return false;
+            var titles = ""
+            if (Array.isArray(functions)) {
+                functions.forEach(function(el, idx) {
+                    titles += '<div class="fn-types-item btn btn-default '+ (idx === 0 ? "selected" : "") +'" data-type="'+ el.title +'">'+ el.title +'</div>'
+                })
             }
+
+            var html = '<div class="cpanel" data-title="配置函数">'+
+                            '<header class="cpanel-header">' +
+                                '<h4 class="cpanel-title">配置函数</h4>' +
+                            '</header>' +
+                            '<div class="cpanel-body" data-type="normal">' +
+                                '<section class="fn-search">' +
+                                    '<input type="text">' +
+                                    '<i class="icon icon-search"></i>' +
+                                '</section>'+
+                                '<section class="fn-types">' +
+                                titles +
+                                '</section>' +
+                                '<section class="fn-category">' +
+                                    '<select class="fn-category-select"></select>' +
+                                '</section>' +
+                                '<section class="fn-wrap">' +
+                                '</section>' +
+                                '<section>' +
+                                    '<div class="fn-desc"></div>' +
+                                '</section></div></div>';
+            $(".eg").find(".eg-toolbar").empty().append(html);
+        },
+        setToolBarData: function(fnsData) {
+            if (Object.prototype.toString.call(fnsData) !== '[object Object]') return;
+
+            var options = '',
+                fnsHtml = '',
+                firstFn;
+            
+                fnsData.title
+                ? ($(".eg").find('[data-type="'+ fnsData.title +'"].fn-types-item').addClass("selected").siblings().removeClass("selected"))
+                : ($(".eg").find('.fn-types-item').removeClass("selected"));
+            
+            if (Array.isArray(fnsData.data.categorys)) {
+                    fnsData.data.categorys.forEach(function(el) {
+                        options += '<option value=' + el + '>' + el + '</option>'
+                    });
+            }
+            if (Array.isArray(fnsData.data.items)) {
+                fnsData.data.items.forEach(function(el, index) {
+                    if (el.category == fnsData.data.categorys[0]) {
+                        !firstFn && (firstFn = el);
+                        fnsHtml += '<div class="fn-item" data-name="'+ el.name +'" data-index="'+ index +'" data-type="'+ fnsData.title +'"  data-desc="'+ el.desc +'">'+ (el.cname || el.name) + '（' + el.name + '）</div>'
+                    }
+                })
+            }
+            $(".eg").find(".fn-category-select").data('type', fnsData.title).empty().append(options)
+                .end().find(".fn-wrap").empty().append(fnsHtml).find(".fn-item:first").addClass("selected")
+                .end().end().find(".fn-desc").text(firstFn.desc);
+            FunctionUtil.setArgsTbody(firstFn, fnsData.title);
+            FunctionUtil.setElemSelected();
         },
         setStyle: function (element) {
             var $eg = $(".eg"),
@@ -387,11 +445,11 @@
                 "width": width,
                 "height": height
             });
-            $eg.find(".eg-content").width(width - sWidth);
+            $eg.find(".eg-content").width(width - sWidth * 2);
             $eg.find(".eg-content,.eg-sidebar,.eg-toolbar,.eg-result,.eg-function,.eg-insertFn").css("z-index", zIndex + 1);
             $eg.find(".eg-close").css("z-index", zIndex + 2);
             $eg.find(".eg-toolbar").css("bottom", rHeight);
-            $eg.find(".eg-function,.eg-insertFn").width(0).hide();
+            $eg.find(".eg-function,.eg-insertFn").width(sWidth);
             $eg.fadeIn();
             if (cache.onOpen) {
                 cache.onOpen();
@@ -404,45 +462,56 @@
                 event.stopPropagation();
                 //判断是不是多选模式
                 var cache = $.data(event.data.element, CACHE_KEY);
-                if (cache.multi) {
-                    $(this).addClass("selected");
-                } else {
-                    $(this).toggleClass("selected");
-                }
+                // if (cache.multi) {
+                //     $(this).addClass("selected");
+                // } else {
+                //     $(this).toggleClass("selected");
+                // }
+                
                 var $eg = $(".eg:visible"),
-                    $active = $eg.find(".eg-function .function-args :text.active"),
-                    $active_insert = $eg.find(".eg-insertFn :text.active"),
+                    $arg = $eg.find("[data-type='arg'].active"),
                     $egExpr = $eg.find(".eg-expr"),
                     expr = $egExpr.val(),
-                    value = "{" + $(this).attr("data-id") + "}";
-                if ($active.length > 0) {
-                    that.setExpr($active, $active.get(0), $active.val(), value);
-                } else if ($active_insert.length > 0) {
-                  let val = $active_insert.val(),
-                      id = value;
-                  if ($(this).hasClass("selected")) {
-                    // 选中样式问题
-                    that.setExpr($active_insert, $active_insert.get(0), "", "");
-                    that.setExpr($active_insert, $active_insert.get(0), $active_insert.val(), value);
-                  } else {
-                    $active_insert.val(val.replace(new RegExp(id, "g"), ""));
-                  }
+                    value = "{" + $(this).attr("data-id") + "}",
+                    isActive = $(this).hasClass('selected');
+                
+                if ($arg.length > 0) {
+                    $arg.val($arg.val() === value ? "" : value)
                 } else {
-                    if ($(this).hasClass("selected")) {
-                        var type = $eg.find('.cpanel-body[data-type="cast"] .btn.active').text(),
-                            cast = function (type, value) {
-                                if (type === "数字") {
-                                    value = "Number(" + value + ")";
-                                } else if (type === "字符") {
-                                    value = "String(" + value + ")";
-                                }
-                                return value;
-                            };
-                        that.setExpr($egExpr, $egExpr.get(0), expr, cast(type, value));
-                    } else {
+                    if(expr.indexOf(value) > -1) {
                         $egExpr.val(expr.replace(new RegExp(value, "g"), ""));
+                    } else {
+                        that.setExpr($egExpr, $egExpr.get(0), expr, value);
                     }
                 }
+                // else if ($active_insert.length > 0) {
+                //   let val = $active_insert.val(),
+                //       id = value;
+                //   if ($(this).hasClass("selected")) {
+                //     // 选中样式问题
+                //     that.setExpr($active_insert, $active_insert.get(0), "", "");
+                //     that.setExpr($active_insert, $active_insert.get(0), $active_insert.val(), value);
+                //   } else {
+                //     $active_insert.val(val.replace(new RegExp(id, "g"), ""));
+                //   }
+                // }
+                //  else {
+                    // if ($(this).hasClass("selected")) {
+                    //     var type = $eg.find('.cpanel-body[data-type="cast"] .btn.active').text(),
+                    //         cast = function (type, value) {
+                    //             if (type === "数字") {
+                    //                 value = "Number(" + value + ")";
+                    //             } else if (type === "字符") {
+                    //                 value = "String(" + value + ")";
+                    //             }
+                    //             return value;
+                    //         };
+                    //     that.setExpr($egExpr, $egExpr.get(0), expr, cast(type, value));
+                    // } else {
+                    //     $egExpr.val(expr.replace(new RegExp(value, "g"), ""));
+                    // }
+                // }
+                FunctionUtil.setElemSelected();
             });
             //类型转换click事件
             $(document).on("click" + EVENT_NAMESPACE, ".eg .cpanel-type .cpanel-body .btn", function (event) {
@@ -464,39 +533,12 @@
                     $operatorCpanel.find(".btn").show();
                 }
             });
-            //运算符、全局变量、本地函数click事件
-            $(document).on("click" + EVENT_NAMESPACE, '.eg .cpanel-body[data-type="normal"] .btn,.cpanel-body[data-type="local"] .btn', function (event) {
-                event.stopPropagation();
-                var $eg = $(".eg:visible"),
-                    $egExpr = $eg.find(".eg-expr"),
-                    value = $(this).val();
-                //2017/9/16演示前添加的特殊处理
-                var text = $(this).text();
-                if (text.indexOf("时间控件") > -1) {
-                    var id = $("#property_id").val();
-                    value = value.replace("{ID}", id);
-                }
-                that.setExpr($egExpr, $egExpr.get(0), $egExpr.val(), value);
-            });
+           
             //表达式元素input事件
-            $(document).on("input" + EVENT_NAMESPACE, ".eg .eg-expr", {element: element}, function (event) {
+            $(document).on("input" + EVENT_NAMESPACE, ".eg .eg-expr, .eg [data-type='arg']", {element: element}, function (event) {
                 event.stopPropagation();               
-                var $eg = $(".eg"),
-                    expr = $(this).val(),
-                    matches = expr.match(/[^{]+(?=})/g);
-                $eg.find(".eg-elem.selected").removeClass("selected");
-                if (matches) {
-                    var selector = matches.map(function (item) {
-                        return '[data-id="' + item + '"]';
-                    }).join(",");
-                    $eg.find(selector).addClass("selected");
-                }
+                FunctionUtil.setElemSelected();
             });
-
-            $(document).on("focusin" + EVENT_NAMESPACE, ".eg .eg-expr", {element: element}, function (event) {
-                $(".eg .eg-function .function-args :text.active,.eg .eg-insertFn :text.active").removeClass("active");
-            });
-
 
             //保存
             $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-save", {element: element}, function (event) {
@@ -548,161 +590,160 @@
                     cache.onClose();
                 }
             });
-            //面板切换
-            $(document).on("click" + EVENT_NAMESPACE, ".eg .cpanel .cpanel-header", function (event) {
+
+            // 选择一级函数分类
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .cpanel .fn-types-item", {element: element}, function (event) {
                 event.stopPropagation();
-                $(this).next().slideToggle();
-            });
-            //打开函数配置面板
-            $(document).on("click" + EVENT_NAMESPACE, '.eg .cpanel-body[data-type="remote"] .btn, .eg .cpanel-body[data-type="insert"] .btn', function (event) {
-              let isRemote = !!$(event.currentTarget).data('profile');
-                event.stopPropagation();
-                var $asyncSelect = $(".eg:visible .eg-function .function-async"),
-                    $modeSelect = $(".eg:visible .eg-function .function-mode"),
-                    $insertSelect = $(".eg:visible .eg-insertFn .eg-insert-select"),
-                    profile = isRemote ? $(this).attr("data-profile") || null : $(this).attr("data-insertFn") || null,
-                    value = $(this).attr("data-value") || null;
-                profile = Common.parseData(profile);
-                value = Common.parseData(value);
-                if (DataType.isObject(value)) {
-                    $asyncSelect.val(value.async || 0);
-                    $modeSelect.val(value.mode || 0);
-                    // $insertSelect.val();
-                    FunctionUtil.setArgsTbody(profile, value.args, isRemote);
-                } else {
-                    $asyncSelect.val(0);
-                    $modeSelect.val(0);
-                    $insertSelect.val("");
-                    FunctionUtil.setArgsTbody(profile, null, isRemote);
-                }
-                FunctionUtil.effect("open", $(this), isRemote);
+                var type = $(this).data('type'),
+                    cache = $.data(element, CACHE_KEY);
+                    fnsData = cache.functions.filter(function(el) { return el.title == type });
+                that.setToolBarData(fnsData[0]);
             });
 
-            //函数选择框change事件
-            $(".eg .eg-insertFn .eg-insert-select").on("change" + EVENT_NAMESPACE, function(event) {
-                let $args = $(".eg .eg-insertFn .insert-args");
-                    $args.empty();
-                let $curOption = $('.insertFn-' + $(event.currentTarget).val()),
-                    args = $curOption.data('args'),
-                    str = '',
-                    temp = '',
-                    // str = '<table class="table insert-args-table"><tr><th>参数</th><th>值</th></tr>',
-                    flag = false;
-                if ($curOption.length === 0) return;
-                args = Array.isArray(args) ? args : Array.prototype.concat([], args);
-                args.forEach(function (item, index) {
-                  if (item === '...') {
-                    let {$1, $2} = Common.cutString(args[index - 1]);
-                    item = $1 + ($2 + 1);
-                    flag = true;
-                  }
-                  str += '<tr><td>' + item + '</td><td><input type="text" class="form-control" /></td></tr>'
-                })
-                str += '</table>';
-                if (flag) {
-                  temp = '<table class="table insert-args-table manyArgs-table"><tr><th>参数</th><th>值</th></tr>';
-                } else {
-                  temp = '<table class="table insert-args-table"><tr><th>参数</th><th>值</th></tr>';
-                }
-                $args.empty().append(temp + str);
+            // 选择二级函数分类
+            $(document).on("change" + EVENT_NAMESPACE, ".eg .cpanel .fn-category-select", {element: element}, function (event) {
+                event.stopPropagation();
+                var type = $(this).data('type'),
+                    val = $(this).val(),
+                    cache = $.data(element, CACHE_KEY),
+                    fnsData = cache.functions.filter(function(el) { return el.title == type }),
+                    fnsHtml = '';
+                fnsData[0].data.items.filter(function(el, index) {
+                    if(el.category === val) {
+                        fnsHtml += '<div class="fn-item" data-name="'+ el.name +'" data-index="'+ index +'" data-type="'+ type +'"  data-desc="'+ el.desc +'">'+ (el.cname || el.name) + '（' + el.name + '）</div>'
+                    }
+                });
+                $(".eg").find(".fn-wrap").empty().append(fnsHtml).find(".fn-item").first().click();
             });
             
+            // 选择三级函数分类
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .cpanel .fn-item", {element: element}, function (event) {
+                event.stopPropagation();
+                if ($(this).hasClass('selected')) return;
+
+                var cache = $.data(element, CACHE_KEY),
+                    functions = cache.functions,
+                    type = $(this).data('type'),
+                    idx = $(this).data('index'),
+                    fnsData = functions.filter(function(el) { return el.title === type })[0];
+                $(".eg .cpanel .fn-item").removeClass('selected');
+                $(this).addClass('selected');
+                $(".eg .fn-desc").text($(this).data('desc'));
+                FunctionUtil.setArgsTbody(fnsData.data.items[idx], type);
+                FunctionUtil.setElemSelected();
+            });
+            
+            // 函数搜索
+            $(document).on("keydown" + EVENT_NAMESPACE, ".eg .cpanel .fn-search input", {element: element},function (event) {
+                event.stopPropagation();
+                if (event.keyCode === 13) {
+                    var val = $(this).val().trim();
+                    if (val) {
+                        var functions = $.data(element, CACHE_KEY).functions,
+                            html = '';
+                        functions.forEach(function(el) {
+                            var title = el.title;
+                            el.data.items.forEach(function(fn, idx) {
+                                if (fn.name.indexOf(val) > -1 || fn.name.indexOf(val) > -1) {
+                                    html += '<div class="fn-item" data-type="'+ title +'" data-name="'+ fn.name +'" data-index="'+ idx +'" data-desc="'+ fn.desc +'">'+ '（'+ el.title +'）' + (fn.cname || fn.name) + '（' + fn.name + '）</div>'
+                                }
+                            })
+                        });
+                        
+                        $(".eg").find(".fn-wrap").empty().append(html)
+                            .end().find(".fn-types-item").removeClass("selected")
+                            .end().find(".fn-category-select").empty()
+                            .end().find(".fn-item:first").click();
+                        FunctionUtil.setElemSelected();
+                    }
+                }
+            });
+
             // 插入函数的参数中有...，表示有多个相同参数
-            $(document).on("input" + EVENT_NAMESPACE, ".manyArgs-table tr:last-child input", function(event) {
-              
-              let $ev = $(event.currentTarget),
-                  val = $ev.val();
-              if (!$ev) return;
-              if (val.trim() != '') {
-                let {$1, $2} = Common.cutString($ev.parent().prev().text());
-                $(".eg .eg-insertFn .insert-args .insert-args-table").append(
-                  '<tr><td>' + $1 + ($2 + 1) + '</td><td><input class="form-control" /></td></tr>'
-                )
-              }
-            })
+            $(document).on("input" + EVENT_NAMESPACE, ".manyArgs-table tbody tr input[data-type='arg']:last", function(event) {
+                var $ev = $(event.currentTarget),
+                    val = $ev.val();
+                if (!$ev) return;
+                if (val.trim() != '') {
+                    var $clone = $(this).parents('tr').clone(true);
+                    $clone.insertAfter($(this).parents('tr')).find("input").val("");
+                }
+            });
 
             //文本框focusin、focusout事件
-            $(document).on("focusin" + EVENT_NAMESPACE, ".eg .eg-function .function-args :text,.eg .eg-insertFn :text", function (event) {
+            $(document).on("focusin" + EVENT_NAMESPACE, ".eg .eg-expr, .eg .eg-function [data-type='arg']", function (event) {
                 event.stopPropagation();
-                $(".eg .eg-function .function-args :text.active,.eg .eg-insertFn :text.active").removeClass("active");
+                $(".eg .eg-expr, .eg .eg-function [data-type='arg']").removeClass("active");
                 $(this).addClass("active");
             });
 
             //保存函数配置
-            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-function .function-save", function (event) {
-                event.stopPropagation();
-                var $trigger = $('.eg:visible .cpanel-body[data-type="remote"] .btn.active');
-                if ($trigger.length > 0) {
-                    var $asyncSelect = $(".eg:visible .eg-function .function-async"),
-                        $modeSelect = $(".eg:visible .eg-function .function-mode"),
-                        profile = Common.parseData($trigger.attr("data-profile") || null);
-                    var data = {
-                        id: profile.id,
-                        fname: profile.fname,
-                        async: parseInt($asyncSelect.val()),
-                        mode: parseInt($modeSelect.val()),
-                        args: FunctionUtil.getArgsTbody()
-                    };
-                    $trigger.attr("data-value", JSON.stringify(data));
-                    var $eg = $(".eg:visible"),
-                        $egExpr = $eg.find(".eg-expr"),
-                        value = FunctionUtil.convert(data);
-                    that.setExpr($egExpr, $egExpr.get(0), $egExpr.val(), value);
-                }
-            });
+            // $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-function .function-save", function (event) {
+            //     event.stopPropagation();
+            //     var $trigger = $('.eg:visible .cpanel-body[data-type="remote"] .btn.active');
+            //     if ($trigger.length > 0) {
+            //         var $asyncSelect = $(".eg:visible .eg-function .function-async"),
+            //             $modeSelect = $(".eg:visible .eg-function .function-mode"),
+            //             profile = Common.parseData($trigger.attr("data-profile") || null);
+            //         var data = {
+            //             id: profile.id,
+            //             fname: profile.fname,
+            //             async: parseInt($asyncSelect.val()),
+            //             mode: parseInt($modeSelect.val()),
+            //             args: FunctionUtil.getArgsTbody()
+            //         };
+            //         $trigger.attr("data-value", JSON.stringify(data));
+            //         var $eg = $(".eg:visible"),
+            //             $egExpr = $eg.find(".eg-expr"),
+            //             value = FunctionUtil.convert(data);
+            //         that.setExpr($egExpr, $egExpr.get(0), $egExpr.val(), value);
+            //     }
+            // });
 
             //清除函数配置
-            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-function .function-clear", function (event) {
+            // $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-function .function-clear", function (event) {
+            //     event.stopPropagation();
+            //     var result = confirm("确定要清除远程函数的配置数据吗？");
+            //     if (!result) return;
+
+            //     FunctionUtil.clear();
+            //     var $trigger = $('.eg:visible .cpanel-body[data-type="remote"] .btn.active');
+            //     if ($trigger.length > 0) {
+            //         $trigger.attr("data-value", "");
+            //         FunctionUtil.effect("close", $trigger);
+            //     }
+            // });
+
+            // //保存函数配置
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-function .function-save", function (event) {
                 event.stopPropagation();
-                var result = confirm("确定要清除远程函数的配置数据吗？");
-                if (!result) return;
-
-                FunctionUtil.clear();
-                var $trigger = $('.eg:visible .cpanel-body[data-type="remote"] .btn.active');
-                if ($trigger.length > 0) {
-                    $trigger.attr("data-value", "");
-                    FunctionUtil.effect("close", $trigger);
+                var $eg = $(".eg:visible"),
+                    $egExpr = $eg.find(".eg-expr")
+                    target = $eg.find('.eg-elem.current').data('id'),
+                    fnType = $eg.find(".fn-types-item.selected").data('type'),
+                    fnName = $eg.find(".fn-item.selected").data('name'),
+                    result = "";
+                if (!target) return;
+                if(!fnName) return alert('无选中函数！');
+                var args = $eg.find('[data-type="arg"]').map(function() {
+                    return $(this).val();
+                }).get().join(',')
+                if (fnType === "本地函数") {
+                    result = fnName + "("+ '"'+ target + '"' + "," + args +")";
+                } else if (fnType === "远程函数"){
+                    var async = $eg.find('[data-type="async"]').val(),
+                        voluation = $eg.find('[data-type="voluation"]').val();
+                    result = "functions("+ '"'+ target + '"' + "," + '"'+ fnName + '"' + "," + async + "," + voluation + "," + args +")";
                 }
-            });
-
-            //保存插入函数配置
-            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-insertFn .insertFn-save", function (event) {
-              event.stopPropagation();
-              var $trigger = $('.eg:visible .cpanel-body[data-type="insert"] .btn.active');
-              if ($trigger.length > 0) {
-                  let $select = $(".eg-insert-select"),
-                      $args = $(".insert-args-table input"),
-                      args = [];
-                  $.each($args, function(i, el) {
-                      let val = $(el).val().trim()
-                      if (val != '') {
-                        args.push(val)
-                      }
-                  });
-                  let data = {
-                    name: $select.val(),
-                    args: args
-                  };
-                  $trigger.attr("data-value", JSON.stringify(data));
-                  var $eg = $(".eg:visible"),
-                  $egExpr = $eg.find(".eg-expr"),
-                  value = FunctionUtil.convert(data, true);
-                  that.setExpr($egExpr, $egExpr.get(0), $egExpr.val(), value);
-                  $(".eg .eg-function .function-args :text.active,.eg .eg-insertFn :text.active").removeClass("active");
-              }
+                that.setExpr($egExpr, $egExpr.get(0), $egExpr.val(), result);
+                $(".eg .eg-function [data-type='arg'].active").removeClass("active");
             });
 
             //清除插入函数配置
-            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-insertFn .insertFn-clear", function (event) {
-                event.stopPropagation();
-                var result = confirm("确定要清除插入函数的配置数据吗？");
-                if (!result) return;
-                FunctionUtil.clear(true);
-                var $trigger = $('.eg:visible .cpanel-body[data-type="insert"] .btn.active');
-                if ($trigger.length > 0) {
-                    $trigger.attr("data-value", "");
-                    FunctionUtil.effect("close", $trigger);
-                }
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-function .function-clear", function (event) {
+                $(".eg:visible .eg-function [data-type='arg']").each(function() {
+                    $(this).val("").removeClass('active');
+                });
             });
         },
         setExpr: function ($elem, elem, expr, value) {

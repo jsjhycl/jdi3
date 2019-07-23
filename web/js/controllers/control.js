@@ -60,6 +60,7 @@ Control.prototype = {
             $node = $(that.CONTROL_TYPES[type]),
             contextMenu = new ContextMenu();
         is_phone = !!is_phone;
+        console.log($node)
         $node.addClass("workspace-node").css({
             "position": "absolute",
             "z-index": 500
@@ -189,6 +190,7 @@ Control.prototype = {
                 $span.remove();
                 spanHtml += "<span style='position: absolute; top: "+ (height > span_height ? (height - span_height)/2 + top : top ) +"px; left: "+ (left - span_width - 8) +"px'>"+ newCname +"</span>";
             }
+            console.log(controlHtml)
             return controlHtml + spanHtml;
     }
 };

@@ -317,20 +317,11 @@ function Workspace() {
             phoneHtml += new Control().getPhoneControlHtml($(this), cid);
             // phoneHtml += $($(this).get(0).outerHTML).attr('id', GLOBAL_PROPERTY[cid] && GLOBAL_PROPERTY[cid].relatedId ? GLOBAL_PROPERTY[cid].relatedId : cid).get(0).outerHTML;
             phoneSettingData.items.push(item);
-        })
+        });
 
-        //获取model数据
-        // var $temp = $('<div></div>');//生成元素
-        // $temp.css({//给元素添加样式
-        //     "position": "absolute",
-        //     "width": settingData.width,
-        //     "height": settingData.height,
-        //     "background-color": settingData.bgColor,
-        //     "overflow": "hidden"
-        // }).append(html);//插入到html中
         var hiddenInput =  '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
                     '<input id="modelName" type="hidden" name="modelName" value="' + name + '">';
-            // modelData = hiddenInput + $temp.get(0).outerHTML;
+        
         //获取table数据
         var tableData = null;
         if ((type === "产品" || type === "数据库定义") && subtype === "模型" && customId) {//如果type是产品或则是数据库定义subtype是模型且customid存在
@@ -342,7 +333,7 @@ function Workspace() {
                         '<input id="modelType" type="hidden" name="modelType" value="' + id + '">' +
                         '<div style="position: relative">' +
                         phoneHtml +
-                        '</div></body></html>'
+                        '</div></body></html>';
         return {
             settingData: settingData,
             modelData: html,
@@ -555,7 +546,6 @@ Workspace.prototype = {
             alert("数据加载出错！");
         });
     },
-
     loadPhone: function(id) {
         if (!id) return;
         
@@ -582,6 +572,15 @@ Workspace.prototype = {
                         "width": item.rect.width,
                         "height": item.rect.height
                     });
+                    switch (item.type) {
+                        case "img"://如果类型为img
+                            var src = "/lib/" + id + "/res/" + item.attach.src;//生成src
+                            $node.attr("src", !item.attach ? "../public/images/demo.jpg" : (!item.attach.src ? "../public/images/demo.jpg" : src));//如果item.attach不存在
+                            break;
+                        case "div"://如果类型为div
+                            $node.append(item.attach ? item.attach.html : "");//向当前元素中添加元素
+                            break;
+                    }
                     contextMenu.done(4, $node);
                     that.$phone.append($node);
                 }, true);
@@ -591,7 +590,6 @@ Workspace.prototype = {
         }).fail(function (err) {//如果失败
         });
     },
-
     /**
      * 
      * @param {} isPrompt 是否保存后提示信息true为提示false为不提示 

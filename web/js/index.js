@@ -447,18 +447,8 @@ function workspace() {
 	$workspace.droppable({
 		accept: ".control-item",
 		drop: function (event, ui) {
-            var $phone = $("#phone_warp"),
-                p_top = $phone.offset().top,
-                p_bottom = $phone.offset().top + $phone.height(),
-                p_left = $phone.offset().left,
-                p_right = $phone.offset().left + $phone.width(),
-                ui_width = $(ui.helper[0]).width(),
-                ui_height = $(ui.helper[0]).height();
-            
-            if (ui.offset.top >= p_top && (ui.offset.top + ui_height) <= p_bottom && ui.offset.left >= p_left && (ui.offset.left + ui_width) <= p_right) {
-                return false;
-            }
-            
+            var isPhone = DomHelper.isInPhone($("#phone_warp"), $(ui.helper[0]), ui.helper.top, ui.helper.left);
+            if (isPhone) return false;
 			var type = ui.helper.data("type"),
 				control = new Control();
 			control.setControl(type, function ($node) {
@@ -473,7 +463,6 @@ function workspace() {
 				});
 				$workspace.append($node);
                 new Property().setDefault(number);
-                console.log('workspace', number)
                 return false;
 			});
 		}
@@ -618,27 +607,61 @@ function phone() {
         $phone_content.find(".ui-selected").removeClass("ui-selected");
     });
 
-
     $phone_content.droppable({
-        accept: ".control-item",
-        greedy: true,
+        accept: ".control-item, #workspace .resizable",
 		drop: function (event, ui) {
 			var type = ui.helper.data("type"),
-				control = new Control();
-			control.setControl(type, function ($node) {
-                var id = 'phone_' + NumberHelper.getNewId(type, $phone_content),
-                    offset = $phone_content.offset();
-				$node.attr({
-					"id": id,
-					"name": id
-				}).css({
-					"left": event.pageX - offset.left + $phone_content.scrollLeft(),
-					"top": event.pageY - offset.top + $phone_content.scrollTop()
-				});
-				$phone_content.append($node);
-                new Property().setDefault(id);
-                return false
-			}, true);
+                control = new Control(),
+                property = new Property();
+            if (type) {
+                control.setControl(type, function ($node) {
+                    var id = 'phone_' + NumberHelper.getNewId(type, $phone_content),
+                        offset = $phone_content.offset();
+                    $node.attr({
+                        "id": id,
+                        "name": id
+                    }).css({
+                        "left": event.pageX - offset.left + $phone_content.scrollLeft(),
+                        "top": event.pageY - offset.top + $phone_content.scrollTop()
+                    });
+                    $phone_content.append($node);
+                    property.setDefault(id);
+                    return false
+                }, true);
+            } else {
+                // 从工作区拖拽
+                $("#workspace .resizable").each(function() {
+                    var $this = $(this),
+                        offset = $this.offset(),
+                        p_offset = $phone_content.offset();
+                    if (DomHelper.isInPhone($("#phone_warp"), $this, offset.top, offset.left)) {
+                        var $ori = $this.find(".workspace-node"),
+                            type = $ori.data('type'),
+                            oriId = $ori.attr('id'),
+                            oriProperty = property.getValue(oriId),
+                            newId = 'phone_' + NumberHelper.getNewId(type, $phone_content),
+                            $newDom = $($ori.removeAttr('class').attr('class', 'workspace-node').get(0).outerHTML)
+                                .attr({
+                                    id: newId,
+                                    name: newId
+                                }).css({
+                                "width": $ori.width(),
+                                "height": $ori.height(),
+                                "left": $ori.offset().left - p_offset.left + $phone_content.scrollLeft(),
+                                "top": $ori.offset().top - p_offset.top + $phone_content.scrollTop()
+                            });;
+
+                        if (oriProperty) {
+                            property.setValue(newId, null, oriProperty);
+                            property.remove(oriId);
+                        }
+                        $this.remove();
+                        $phone_content.append($newDom);
+                    }
+                })
+
+
+            }
 		}
     });
     

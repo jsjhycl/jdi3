@@ -19,9 +19,9 @@
                     fnData.args.forEach(function(arg, idx) {
                         argsHtml += '<tr>' +
                                         '<td data-name="' + arg.cname + '">' + arg.cname + '</td>' +
-                                        '<td data-type="' + arg.ctype + '">' + arg.ctype + '</td>' +
+                                        '<td data-convert="' + arg.type + '">' + arg.ctype + '</td>' +
                                         '<td>' +
-                                            '<input '+ (arg.default == undefined ? "" : 'disabled') +' class="form-control" data-type="arg" type="text" name="value" value="'+ ((args && args[idx]) ? args[idx] : (arg.default == undefined ? "" : arg.default)) +'">' +
+                                            '<input '+ (!!arg.readonly ? "disabled" : "") +' class="form-control" data-type="arg" type="text" name="value" value="'+ ((args && args[idx]) ? args[idx] : (arg.default == undefined ? "" : arg.default)) +'">' +
                                         '</td>' +
                                     '</tr>';
                     });
@@ -334,42 +334,8 @@
             //填充工具栏数据
             this.renderToolBar(functions);
             this.setToolBarData(functions[0]);
-            // FunctionUtil.effect("open")
-            // if (toolbar && toolbar.length > 0) {
-                // var html = "";
-                // for (var i = 0; i < toolbar.length; i++) {
-                //     var item = toolbar[i],
-                //         title = item.title,
-                //         type = item.type,
-                //         data = item.data,
-                //         style = item.style ? " " + item.style : "",
-                //         cpanel = '<div class="cpanel' + style + '" data-title="' + title + '">' +
-                //             '<header class="cpanel-header">' +
-                //             '<h4 class="cpanel-title">' + title + '</h4>' +
-                //             '</header>' +
-                //             '<div class="cpanel-body" data-type="' + type + '">';
-                //     if (type === "remote") {
-                //         data.forEach(function (ditem) {
-                //             cpanel += '<button class="btn btn-default" data-profile=\'' + JSON.stringify(ditem) + '\'>' + ditem.desc + '</button>';
-                    //         });
-                //     } else if (type === "insert") {
-                //       data.forEach(function (iitem) {
-                //         cpanel += '<button class="btn btn-default" data-insertFn=\'' + JSON.stringify(iitem) + '\'>' + iitem.desc + '</button>';
-                //     });
-                //     } else {
-                //         for (var key in data) {
-                //             var value = data[key];
-                //             cpanel += '<button class="btn btn-default" value="' + value + '">' + key + '</button>';
-                //         }
-                //     }
-                //     cpanel += "</div></div>";
-                //     html += cpanel;
-                // }
-                // $eg.find(".eg-toolbar").append(html);
-            // }
         },
         renderToolBar: function(functions) {
-            // if (Object.prototype.toString.call(null, localFnsData) !== "[object Object]" || Object.prototype.toString.call(null, remoteFnsData) !== "[object Object]") return false;
             var titles = ""
             if (Array.isArray(functions)) {
                 functions.forEach(function(el, idx) {
@@ -484,33 +450,6 @@
                         that.setExpr($egExpr, $egExpr.get(0), expr, value);
                     }
                 }
-                // else if ($active_insert.length > 0) {
-                //   let val = $active_insert.val(),
-                //       id = value;
-                //   if ($(this).hasClass("selected")) {
-                //     // 选中样式问题
-                //     that.setExpr($active_insert, $active_insert.get(0), "", "");
-                //     that.setExpr($active_insert, $active_insert.get(0), $active_insert.val(), value);
-                //   } else {
-                //     $active_insert.val(val.replace(new RegExp(id, "g"), ""));
-                //   }
-                // }
-                //  else {
-                    // if ($(this).hasClass("selected")) {
-                    //     var type = $eg.find('.cpanel-body[data-type="cast"] .btn.active').text(),
-                    //         cast = function (type, value) {
-                    //             if (type === "数字") {
-                    //                 value = "Number(" + value + ")";
-                    //             } else if (type === "字符") {
-                    //                 value = "String(" + value + ")";
-                    //             }
-                    //             return value;
-                    //         };
-                    //     that.setExpr($egExpr, $egExpr.get(0), expr, cast(type, value));
-                    // } else {
-                    //     $egExpr.val(expr.replace(new RegExp(value, "g"), ""));
-                    // }
-                // }
                 FunctionUtil.setElemSelected();
             });
             //类型转换click事件
@@ -644,7 +583,7 @@
                         functions.forEach(function(el) {
                             var title = el.title;
                             el.data.items.forEach(function(fn, idx) {
-                                if (fn.name.indexOf(val) > -1 || fn.name.indexOf(val) > -1) {
+                                if (fn.name.indexOf(val) > -1 || fn.cname.indexOf(val) > -1) {
                                     html += '<div class="fn-item" data-type="'+ title +'" data-name="'+ fn.name +'" data-index="'+ idx +'" data-desc="'+ fn.desc +'">'+ '（'+ el.title +'）' + (fn.cname || fn.name) + '（' + fn.name + '）</div>'
                                 }
                             })
@@ -660,13 +599,13 @@
             });
 
             // 插入函数的参数中有...，表示有多个相同参数
-            $(document).on("input" + EVENT_NAMESPACE, ".manyArgs-table tbody tr input[data-type='arg']:last", function(event) {
+            $(document).on("input focusin" + EVENT_NAMESPACE, ".manyArgs-table tbody tr input[data-type='arg']:last", function(event) {
                 var $ev = $(event.currentTarget),
                     val = $ev.val();
                 if (!$ev) return;
                 if (val.trim() != '') {
                     var $clone = $(this).parents('tr').clone(true);
-                    $clone.insertAfter($(this).parents('tr')).find("input").val("");
+                    $clone.insertAfter($(this).parents('tr')).find("input").val("").removeClass("active");
                 }
             });
 
@@ -678,43 +617,6 @@
             });
 
             //保存函数配置
-            // $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-function .function-save", function (event) {
-            //     event.stopPropagation();
-            //     var $trigger = $('.eg:visible .cpanel-body[data-type="remote"] .btn.active');
-            //     if ($trigger.length > 0) {
-            //         var $asyncSelect = $(".eg:visible .eg-function .function-async"),
-            //             $modeSelect = $(".eg:visible .eg-function .function-mode"),
-            //             profile = Common.parseData($trigger.attr("data-profile") || null);
-            //         var data = {
-            //             id: profile.id,
-            //             fname: profile.fname,
-            //             async: parseInt($asyncSelect.val()),
-            //             mode: parseInt($modeSelect.val()),
-            //             args: FunctionUtil.getArgsTbody()
-            //         };
-            //         $trigger.attr("data-value", JSON.stringify(data));
-            //         var $eg = $(".eg:visible"),
-            //             $egExpr = $eg.find(".eg-expr"),
-            //             value = FunctionUtil.convert(data);
-            //         that.setExpr($egExpr, $egExpr.get(0), $egExpr.val(), value);
-            //     }
-            // });
-
-            //清除函数配置
-            // $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-function .function-clear", function (event) {
-            //     event.stopPropagation();
-            //     var result = confirm("确定要清除远程函数的配置数据吗？");
-            //     if (!result) return;
-
-            //     FunctionUtil.clear();
-            //     var $trigger = $('.eg:visible .cpanel-body[data-type="remote"] .btn.active');
-            //     if ($trigger.length > 0) {
-            //         $trigger.attr("data-value", "");
-            //         FunctionUtil.effect("close", $trigger);
-            //     }
-            // });
-
-            // //保存函数配置
             $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-function .function-save", function (event) {
                 event.stopPropagation();
                 var $eg = $(".eg:visible"),

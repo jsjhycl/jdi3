@@ -496,7 +496,6 @@ function workspace() {
             });
             ableToolBarBtn();
             new Property().clearDOM();
-            console.log(ui, 'selected')
         }
 	});
 	
@@ -504,7 +503,6 @@ function workspace() {
 	$workspace.on("click", ".workspace-node", function (event) {
         $("#delete").css('color','red');
         $("#phone_content").find(".workspace-node").jresizable("destroy");
-        console.log('click')
 		event.stopPropagation();
 		$(this).jresizable({
 			mode: "single",

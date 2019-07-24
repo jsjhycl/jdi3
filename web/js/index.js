@@ -496,6 +496,7 @@ function workspace() {
             });
             ableToolBarBtn();
             new Property().clearDOM();
+            console.log(ui, 'selected')
         }
 	});
 	
@@ -503,6 +504,7 @@ function workspace() {
 	$workspace.on("click", ".workspace-node", function (event) {
         $("#delete").css('color','red');
         $("#phone_content").find(".workspace-node").jresizable("destroy");
+        console.log('click')
 		event.stopPropagation();
 		$(this).jresizable({
 			mode: "single",
@@ -512,7 +514,8 @@ function workspace() {
 				$workspace.selectable("disable");
 			},
 			onStop: function () {
-				$workspace.selectable("enable");
+                $workspace.selectable("enable");
+                console.log(1)
 			}
         });
         ableToolBarBtn();
@@ -531,7 +534,7 @@ function workspace() {
             ableToolBarBtn();
 		}
 	});
-	
+    
 	//清除样式
 	$workspace.on("click", function (event) {
         $("#delete").css('color','white');
@@ -549,6 +552,20 @@ function workspace() {
 	$("#designer").on("click", function () {
 		$(".jcontextmenu:visible").hide();
     });
+
+    // 记录每次移动时，选中元素的位置
+    $workspace.on("mousedown", function() {
+        $workspace.find(".resizable").each(function() {
+            var $this = $(this);
+                id = $this.find('.workspace-node').attr('id');
+            if (id) {
+                LAST_POSITION[id] = {
+                    top: parseFloat($this.css('top')) + parseFloat($(this).css('border-top-width')) + 'px',
+                    left: parseFloat($this.css('left')) + parseFloat($(this).css('border-left-width')) + 'px',
+                };
+            }
+        })
+    })
 }
 
 // 手机页面配置
@@ -640,7 +657,7 @@ function phone() {
                             oriId = $ori.attr('id'),
                             oriProperty = property.getValue(oriId),
                             newId = 'phone_' + NumberHelper.getNewId(type, $phone_content),
-                            $newDom = $($ori.removeAttr('class').attr('class', 'workspace-node').get(0).outerHTML)
+                            $newDom = $($ori.get(0).outerHTML).removeAttr('class').attr('class', 'workspace-node')
                                 .attr({
                                     id: newId,
                                     name: newId
@@ -649,14 +666,12 @@ function phone() {
                                 "height": $ori.height(),
                                 "left": $ori.offset().left - p_offset.left + $phone_content.scrollLeft(),
                                 "top": $ori.offset().top - p_offset.top + $phone_content.scrollTop()
-                            });;
+                            });
 
-                        if (oriProperty) {
-                            property.setValue(newId, null, oriProperty);
-                            property.remove(oriId);
-                        }
-                        $this.remove();
-                        $phone_content.append($newDom);
+                        console.log(LAST_POSITION[oriId]);
+                        $this.css(LAST_POSITION[oriId]);
+                        oriProperty && property.setValue(newId, null, oriProperty);
+                        $newDom.appendTo($phone_content).click();
                     }
                 })
 

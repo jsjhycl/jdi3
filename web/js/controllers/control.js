@@ -60,7 +60,6 @@ Control.prototype = {
             $node = $(that.CONTROL_TYPES[type]),
             contextMenu = new ContextMenu();
         is_phone = !!is_phone;
-        console.log($node)
         $node.addClass("workspace-node").css({
             "position": "absolute",
             "z-index": 500

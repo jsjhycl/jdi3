@@ -447,7 +447,7 @@ function workspace() {
 	$workspace.droppable({
 		accept: ".control-item",
 		drop: function (event, ui) {
-            var isPhone = DomHelper.isInPhone($("#phone_warp"), $(ui.helper[0]), ui.helper.top, ui.helper.left);
+            var isPhone = DomHelper.isInPhone($("#phone_warp"), $(ui.helper[0]), ui.offset.top, ui.offset.left);
             if (isPhone) return false;
 			var type = ui.helper.data("type"),
 				control = new Control();

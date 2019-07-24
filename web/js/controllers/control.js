@@ -190,7 +190,6 @@ Control.prototype = {
                 $span.remove();
                 spanHtml += "<span style='position: absolute; top: "+ (height > span_height ? (height - span_height)/2 + top : top ) +"px; left: "+ (left - span_width - 8) +"px'>"+ newCname +"</span>";
             }
-            console.log(controlHtml)
             return controlHtml + spanHtml;
     }
 };

@@ -582,8 +582,9 @@
                             html = '';
                         functions.forEach(function(el) {
                             var title = el.title;
+                            console.log(el.data.items)
                             el.data.items.forEach(function(fn, idx) {
-                                if (fn.name.indexOf(val) > -1 || fn.cname.indexOf(val) > -1) {
+                                if ((fn.name && fn.name.indexOf(val) > -1) || (fn.cname && fn.cname.indexOf(val) > -1)) {
                                     html += '<div class="fn-item" data-type="'+ title +'" data-name="'+ fn.name +'" data-index="'+ idx +'" data-desc="'+ fn.desc +'">'+ '（'+ el.title +'）' + (fn.cname || fn.name) + '（' + fn.name + '）</div>'
                                 }
                             })
@@ -622,9 +623,10 @@
                 var $eg = $(".eg:visible"),
                     $egExpr = $eg.find(".eg-expr")
                     target = $eg.find('.eg-elem.current').data('id'),
-                    fnType = $eg.find(".fn-types-item.selected").data('type'),
+                    fnType = $eg.find(".fn-item.selected").data('type'),
                     fnName = $eg.find(".fn-item.selected").data('name'),
                     result = "";
+                console.log(fnType, fnName)
                 if (!target) return;
                 if(!fnName) return alert('无选中函数！');
                 var args = $eg.find('[data-type="arg"]').map(function() {

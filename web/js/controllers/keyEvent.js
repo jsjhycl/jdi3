@@ -4,15 +4,9 @@
 function KeyEvent() {
     var that = this;
     this.ruler = true;
-<<<<<<< HEAD
-    $(document).keydown(function (event) {//给整个文档绑定键盘事件
-        if($('input:focus, textarea:focus').length <= 0) {
-            var code = event.keyCode;//获取点击键盘的keyCode
-=======
     $(document).keydown(function (event) { //给整个文档绑定键盘事件
         if ($('input:focus, textarea:focus').length <= 0) {
             var code = event.keyCode; //获取点击键盘的keyCode
->>>>>>> 3db1632e7ee3c46385815964661f0edec3889027
             switch (code) {
                 case 27: //如果按下的是esc
                     that.escEvent() //执行取消事件

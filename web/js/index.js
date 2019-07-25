@@ -26,18 +26,11 @@ function init() {
 			Common.fillSelect($('[name="template_category"]'), null, result["模板分类"], null, true); //填充模板分类下拉框
 			Common.fillRadio($("#template_subCategory"), "template_subCategory", data); //填充模板分类的单选框
 			//模型资源提交表单
-<<<<<<< HEAD
-			Common.fillSelect($('[name="model_category"]'), null, result["模型分类"], null, true); //填充模型分类的下拉框
-			Common.fillSelect($('[name="model_userGrade"]'), null, result["模型用户级别"], null, true); //填充用户级别的下拉框
-			Common.fillSelect($('[name="model_feature"]'), null, result["模型特性"], null, true); //填充模型特性的下拉框
-		}
-=======
 			Common.fillSelect($('[name="model_category"]'), null, result["模型分类"], null, true);//填充模型分类的下拉框
 			Common.fillSelect($('[name="model_userGrade"]'), null, result["模型用户级别"], null, true);//填充用户级别的下拉框
 			Common.fillSelect($('[name="model_feature"]'), null, result["模型特性"], null, true);//填充模型特性的下拉框
             Common.fillSelect($('[name="model_area"]'), null, result["模型区域"], null, true);
         }
->>>>>>> eb3c775b47cd0cdbcbd797d24362cdc04654f477
 	});
 	//右键菜单
 	new ContextMenu().done(1, $workspace);
@@ -360,53 +353,6 @@ function propertybar() {
 				$source: $("#workspace"),
 				$result: $("#property_expression"),
 				hasBrace: true,
-<<<<<<< HEAD
-				toolbar: [{
-						title: "类型转换",
-						type: "cast",
-						data: {
-							"数字": "数字",
-							"字符": "字符"
-						},
-						style: "cpanel-type"
-					},
-					{
-						title: "算术运算符",
-						type: "normal",
-						data: {
-							"+": "+",
-							"-": "-",
-							"*": "*",
-							"/": "/"
-						},
-						style: "cpanel-operator"
-					},
-					{
-						title: "全局变量",
-						type: "normal",
-						data: global,
-						style: "cpanel-global"
-					},
-					{
-						title: "本地函数",
-						type: "local",
-						data: localFunction,
-						style: "cpanel-local"
-					},
-					{
-						title: "远程函数",
-						type: "remote",
-						data: remoteFunction,
-						style: "cpanel-remote"
-					},
-					{
-						title: "插入函数",
-						type: "insert",
-						data: insertFunction,
-						style: "cpanel-insert"
-					},
-				],
-=======
 				toolbar: [
 					// {title: "类型转换", type: "cast", data: {"数字": "数字", "字符": "字符"}, style: "cpanel-type"},
 					// {
@@ -429,7 +375,6 @@ function propertybar() {
                         title: "远程函数"
                     }
                 ],
->>>>>>> eb3c775b47cd0cdbcbd797d24362cdc04654f477
 				onSetProperty: function (expr) {
 					var id = $("#property_id").val();
 					if (id) {
@@ -450,20 +395,6 @@ function propertybar() {
 				commonService = new CommonService();
 			$.when(commonService.getAjax("/newapi/getprozz"),
 				commonService.getAjax("/profile/global.json"),
-<<<<<<< HEAD
-				commonService.getAjax("/profile/local_function.json"),
-				commonService.getAjax("/profile/remote_function.json"),
-				commonService.getAjax("/profile/insert_function.json")).done(function (result1, result2, result3, result4, result5) {
-				if (!result1 || !result2 || !result3 || !result4 || !result5) return;
-
-				var data1 = result1[0],
-					data2 = result2[0],
-					data3 = result3[0],
-					data4 = result4[0],
-					data5 = result5[0];
-				if (!data1 || !data2 || !data3 || !data4 || !data5) return;
-
-=======
 				commonService.getAjax("/profile/local_functions.json"),
 				commonService.getAjax("/profile/remote_functions.json")).done(function (result1, result2, result3, result4) {
 				if (!result1 || !result2 || !result3 || !result4) return;
@@ -474,19 +405,12 @@ function propertybar() {
 					data4 = result4[0];
 				if (!data1 || !data2 || !data3 || !data4) return;
 				
->>>>>>> eb3c775b47cd0cdbcbd797d24362cdc04654f477
 				var globalId = data1.status === 0 ? (data1.result ? data1.result.id : null) : null,
 					staticGlobal = data2,
 					localFunction = data3,
 					remoteFunction = data4,
-<<<<<<< HEAD
-					insertFunction = data5;
-
-				// 关闭插入函数弹窗
-=======
 				
 				关闭插入函数弹窗
->>>>>>> eb3c775b47cd0cdbcbd797d24362cdc04654f477
 				$("#insertFunctionArgsModal .close").trigger('click')
 
 				if (globalId) {
@@ -545,23 +469,8 @@ function workspace() {
 	$workspace.droppable({
 		accept: ".control-item",
 		drop: function (event, ui) {
-<<<<<<< HEAD
-			var $phone = $("#phone_warp"),
-				p_top = $phone.offset().top,
-				p_bottom = $phone.offset().top + $phone.height(),
-				p_left = $phone.offset().left,
-				p_right = $phone.offset().left + $phone.width(),
-				ui_width = $(ui.helper[0]).width(),
-				ui_height = $(ui.helper[0]).height();
-
-			if (ui.offset.top >= p_top && (ui.offset.top + ui_height) <= p_bottom && ui.offset.left >= p_left && (ui.offset.left + ui_width) <= p_right) {
-				return false;
-			}
-
-=======
             var isPhone = DomHelper.isInPhone($("#phone_warp"), $(ui.helper[0]), ui.offset.top, ui.offset.left);
             if (isPhone) return false;
->>>>>>> eb3c775b47cd0cdbcbd797d24362cdc04654f477
 			var type = ui.helper.data("type"),
 				control = new Control();
 			control.setControl(type, function ($node) {
@@ -575,14 +484,8 @@ function workspace() {
 					"top": event.pageY - offset.top
 				});
 				$workspace.append($node);
-<<<<<<< HEAD
-				new Property().setDefault(number);
-				console.log('workspace', number)
-				return false;
-=======
                 new Property().setDefault(number);
                 return false;
->>>>>>> eb3c775b47cd0cdbcbd797d24362cdc04654f477
 			});
 		}
 	});
@@ -651,11 +554,7 @@ function workspace() {
 			ableToolBarBtn();
 		}
 	});
-<<<<<<< HEAD
-
-=======
     
->>>>>>> eb3c775b47cd0cdbcbd797d24362cdc04654f477
 	//清除样式
 	$workspace.on("click", function (event) {
 		$("#delete").css('color', 'white');
@@ -672,9 +571,6 @@ function workspace() {
 	//清除右键菜单
 	$("#designer").on("click", function () {
 		$(".jcontextmenu:visible").hide();
-<<<<<<< HEAD
-	});
-=======
     });
 
     // 记录每次移动时，选中元素的位置
@@ -690,88 +586,10 @@ function workspace() {
             }
         })
     })
->>>>>>> eb3c775b47cd0cdbcbd797d24362cdc04654f477
 }
 
 // 手机页面配置
 function phone() {
-<<<<<<< HEAD
-	var $phone_wrap = $("#phone_warp"),
-		$phone_content = $("#phone #phone_content");
-
-	$phone_wrap.draggable();
-
-	$phone_content.selectable({
-		filter: ".workspace-node",
-		delay: 50,
-		// selected: function () {},//巨坑注意：此事件会被调用多次
-		stop: function (event, ui) {
-			$("#delete").css('color', 'red');
-			if (!event.ctrlKey) {
-				$("#workspace").find(".workspace-node").jresizable("destroy");
-				$phone_content.find(".workspace-node").jresizable("destroy");
-			}
-			$phone_content.find(".ui-selected").jresizable({
-				mode: "region",
-				$container: $("#phone_content"),
-				color: "red",
-				onStart: function () {
-					$phone_content.selectable("disable");
-				},
-				onStop: function () {
-					$phone_content.selectable("enable");
-				}
-			});
-			new Property().clearDOM();
-		}
-	});
-
-	$phone_content.on("click", ".workspace-node", function (event) {
-		$("#delete").css('color', 'red');
-
-		// 页面上存在一个选中元素的时候，可以 关联手机页面元素
-		// 多个时，需要销毁
-		// $("#workspace").find(".resizable").length > 1 && $("#workspace").find(".workspace-node").jresizable("destroy");
-		$("#workspace").find(".workspace-node").jresizable("destroy");
-		event.stopPropagation();
-		$(this).jresizable({
-			mode: "single",
-			color: "red",
-			$container: $("#phone_content"),
-			scroll: true,
-			containment: "#phone #phone_content",
-			onStart: function () {
-				$phone_content.selectable("disable");
-			},
-			onStop: function () {
-				$phone_content.selectable("enable");
-			}
-		});
-		$phone_content.find(".ui-selected").removeClass("ui-selected");
-	});
-
-
-	$phone_content.droppable({
-		accept: ".control-item",
-		greedy: true,
-		drop: function (event, ui) {
-			var type = ui.helper.data("type"),
-				control = new Control();
-			control.setControl(type, function ($node) {
-				var id = 'phone_' + NumberHelper.getNewId(type, $phone_content),
-					offset = $phone_content.offset();
-				$node.attr({
-					"id": id,
-					"name": id
-				}).css({
-					"left": event.pageX - offset.left + $phone_content.scrollLeft(),
-					"top": event.pageY - offset.top + $phone_content.scrollTop()
-				});
-				$phone_content.append($node);
-				new Property().setDefault(id);
-				return false
-			}, true);
-=======
     var $phone_wrap = $("#phone_warp"), 
         $phone_content = $("#phone #phone_content");
 
@@ -877,7 +695,6 @@ function phone() {
                     }
                 })
             }
->>>>>>> eb3c775b47cd0cdbcbd797d24362cdc04654f477
 		}
 	});
 

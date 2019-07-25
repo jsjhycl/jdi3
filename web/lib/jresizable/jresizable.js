@@ -86,7 +86,7 @@
                 "position": "absolute",
                 "left": $(element).position().left - edge,
                 "top": $(element).position().top - edge,
-                "z-index": $(element).css("z-index") + 1,
+                "z-index": $(element).css("z-index"),
                 "width": $(element).outerWidth() + 2 * edge,
                 "height": $(element).outerHeight() + 2 * edge,
                 "border": edge + "px solid " + color

@@ -684,7 +684,7 @@ li {
     position: absolute;
     top: 90px;
     right: 275px;
-    z-index: 500;
+    z-index: 499;
     display: none;
 }
 

@@ -660,20 +660,16 @@ function phone() {
                                     id: newId,
                                     name: newId
                                 }).css({
-                                "width": $ori.width(),
-                                "height": $ori.height(),
+                                "width": $ori.outerWidth(),
+                                "height": $ori.outerHeight(),
                                 "left": $ori.offset().left - p_offset.left + $phone_content.scrollLeft(),
                                 "top": $ori.offset().top - p_offset.top + $phone_content.scrollTop()
                             });
-
-                        console.log(LAST_POSITION[oriId]);
                         $this.css(LAST_POSITION[oriId]);
                         oriProperty && property.setValue(newId, null, oriProperty);
                         $newDom.appendTo($phone_content).click();
                     }
                 })
-
-
             }
 		}
     });

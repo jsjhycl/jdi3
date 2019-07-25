@@ -187,6 +187,7 @@ li {
 }
 
 .property-group .property-body .property-table tr td:last-child {
+    position: relative;
     width: 180px;
 }
 
@@ -358,7 +359,12 @@ li {
 .icon.icon-phone {
     background-position: -245px 0;
 }
-
+.icon.icon-color {
+    background-position: -255px 0;
+}
+.icon.icon-search {
+    background-position: -276px 0;
+}
 /*模态框样式*/
 .modal .modal-header {
     cursor: move;

@@ -74,11 +74,23 @@ var DomHelper = (function () {
         return $copy
     }
 
+    function isInPhone($phoneContainer, $node, nodeOffsetTop, nodeOffsetLeft) {
+        if (!$phoneContainer || !$node) return;
+            var p_top = $phoneContainer.offset().top,
+                p_bottom = $phoneContainer.offset().top + $phoneContainer.height(),
+                p_left = $phoneContainer.offset().left,
+                p_right = $phoneContainer.offset().left + $phoneContainer.width(),
+                ui_width = $node.width(),
+                ui_height = $node.height();
+            return (nodeOffsetTop >= p_top && (nodeOffsetTop + ui_height) <= p_bottom && nodeOffsetLeft >= p_left && (nodeOffsetLeft + ui_width) <= p_right)
+    }
+
     return {
         repaint: repaint,
         getEqualElements: getEqualElements,
         clearIds: clearIds,
         setIds: setIds,
-        copy: copy
+        copy: copy,
+        isInPhone: isInPhone
     };
 })();

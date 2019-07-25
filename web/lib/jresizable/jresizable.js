@@ -86,7 +86,7 @@
                 "position": "absolute",
                 "left": $(element).position().left - edge,
                 "top": $(element).position().top - edge,
-                "z-index": $(element).css("z-index"),
+                "z-index": $(element).css("z-index") + 1,
                 "width": $(element).outerWidth() + 2 * edge,
                 "height": $(element).outerHeight() + 2 * edge,
                 "border": edge + "px solid " + color
@@ -189,6 +189,10 @@
                 position = $resizable.position();
             $resizable.draggable({
                 cancel: ".title",
+                // helper: function() {
+                //     $resizable, cache.$container.find(".resizable");
+                //     return '<div class="vertual-node" style="position: relative; z-index=501"><div class="vertual-node" style="position: absolute; top: 10px; left: 10px; width: 200px; height: 30px; border: 1px #333 dashed; z-index=501"></div><div class="vertual-node" style="position: absolute; top: 100px; left: 50px; width: 200px; height: 30px; border: 1px #333 dashed; z-index=501"></div></div>'
+                // },
                 scroll: !!cache.scroll,
                 containment: cache.containment ? cache.containment : '',
                 start: function (event, ui) {
@@ -206,7 +210,13 @@
                         });
                     });
                     position = ui.position;
-                }
+                },
+                // stop: function(event, ui) {
+                //     // console.log('draggle stop: ', event);
+                //     // $(ui.helper[0]).children().each(function() {
+                //     //     console.log($(this).offset())
+                //     // });
+                // }
             });
         },
         getDirection: function (event, element) {

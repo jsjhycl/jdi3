@@ -170,7 +170,8 @@ CopySendModal.prototype = {
             var $conditionsModal = $("#conditionsModal"),//获取条件配置模态框
                 $element = $(this).next(),//获取输入框
                 table = $(this).parents("tr").find('[data-key="table"]').val();//获取抄送表的值
-            var conditionsModal = new ConditionsModal($conditionsModal, $element, 1, table);//实例化ConditionsModal
+                dbName = $(this).parents("tr").find('[data-key="dbName"]').val();
+            var conditionsModal = new ConditionsModal($conditionsModal, $element, 1, dbName,table);//实例化ConditionsModal
             conditionsModal.execute();//调用execute
             $conditionsModal.modal("show");//弹窗显示
         });

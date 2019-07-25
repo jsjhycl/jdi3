@@ -6,9 +6,9 @@
  * @param table
  * @constructor
  */
-function ConditionsModal($modal, $element, mode, table) {
+function ConditionsModal($modal, $element, mode, dbName,table) {
     BaseModal.call(this, $modal, $element);//调用基础模块弹窗
-
+    this.dbName = dbName;
     this.mode = mode;
     this.table = table;
     this.$conditions = this.$modalBody.find(".conditions");//调用jdiCondition
@@ -23,6 +23,7 @@ ConditionsModal.prototype = {
         var that = this;
         that.$conditions.conditions({//调用JDI的condition
             mode: that.mode,
+            dbName:that.dbName,
             table: that.table,
             data: data
         });

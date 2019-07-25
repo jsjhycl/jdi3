@@ -528,7 +528,6 @@ li {
     margin: auto;
     width: 95%;
 }
-
 .ctable tbody tr td select[multiple] {
     height: auto;
 }
@@ -538,6 +537,15 @@ li {
     width: 80%;
 }
 
+/*事件触发栏的单独配置*/
+#events_modal input[type=radio],#events_modal input[type=checkbox]{
+    vertical-align: middle;
+    display: inline-block;
+    width: 15px;
+}
+#events_modal table div{
+    font-size: 12px;
+}
 
 
 

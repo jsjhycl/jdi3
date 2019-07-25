@@ -68,6 +68,7 @@
     background-color: #f8f8f8;
     outline: 1px dashed gainsboro;
 }
+.pm3 .pm-elem3,
 .pm2 .pm-dialog .pm-content .pm-page .pm-elem2,
 .pm .pm-dialog .pm-content .pm-page .pm-elem {
     color: #dafffe;
@@ -96,6 +97,7 @@
 .pm .pm-dialog .pm-content .pm-page .pm-elem:hover {
     background-color: #73c2c0;
 }
+.pm3 .pm-elem3.selected,
 .pm2 .pm-dialog .pm-content .pm-page .pm-elem2.selected,
 .pm .pm-dialog .pm-content .pm-page .pm-elem.selected {
     color: #ffdada;
@@ -116,10 +118,12 @@
     0 5px 0 0 #b12d40,
     0 8px 0 0 rgba(0, 0, 0, .15);
 }
+.pm3 .pm-elem3.selected,
 .pm2 .pm-dialog .pm-content .pm-page .pm-elem2.selected:hover,
 .pm .pm-dialog .pm-content .pm-page .pm-elem.selected:hover {
     background-color: #df5570;
 }
+.pm3 .pm-elem3.applied,
 .pm2 .pm-dialog .pm-content .pm-page .pm-elem2.applied,
 .pm .pm-dialog .pm-content .pm-page .pm-elem.applied {
     color: #ffdada;
@@ -140,6 +144,7 @@
     0 5px 0 0 #65141c,
     0 8px 0 0 rgba(0, 0, 0, .15);
 }
+.pm3 .pm-elem3.applied:hover,
 .pm2 .pm-dialog .pm-content .pm-page .pm-elem2.applied:hover,
 .pm .pm-dialog .pm-content .pm-page .pm-elem.applied:hover {
     background-color: #dd3c4d;

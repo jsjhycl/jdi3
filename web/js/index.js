@@ -646,6 +646,7 @@ function phone() {
                 }, true);
             } else {
                 // 从工作区拖拽
+                var contextMenu = new ContextMenu();
                 $("#workspace .resizable").each(function() {
                     var $this = $(this),
                         offset = $this.offset(),
@@ -668,7 +669,8 @@ function phone() {
                             });
                         $this.css(LAST_POSITION[oriId]);
                         oriProperty && property.setValue(newId, null, oriProperty);
-                        $newDom.appendTo($phone_content).click();
+                        $newDom.appendTo($phone_content);
+                        contextMenu.done(4, $newDom);
                     }
                 })
             }

@@ -332,8 +332,10 @@
                 }
             }
             //填充工具栏数据
-            this.renderToolBar(functions);
-            this.setToolBarData(functions[0]);
+            if (Array.isArray(functions)) {
+                this.renderToolBar(functions);
+                this.setToolBarData(functions[0]);
+            }
         },
         renderToolBar: function(functions) {
             var titles = ""
@@ -422,6 +424,7 @@
             }
         },
         bindEvents: function (element) {
+            $(document).off("input focusin" + EVENT_NAMESPACE);
             var that = this;
             //控件元素click事件
             $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-elem:not(.current)", {element: element}, function (event) {
@@ -630,7 +633,15 @@
                 if (!target) return;
                 if(!fnName) return alert('无选中函数！');
                 var args = $eg.find('[data-type="arg"]').map(function() {
-                    return $(this).val();
+                    var convert = $(this).parent().prev().data('convert'),
+                        val = $(this).val();
+                    if (/\{(.+?)\}/.test(val)) {
+                        return val
+                    } else if (convert === 'String') {
+                        return '"' + val + '"'
+                    } else {
+                        return val;
+                    }
                 }).get().join(',')
                 if (fnType === "本地函数") {
                     result = fnName + "("+ '"'+ target + '"' + "," + args +")";

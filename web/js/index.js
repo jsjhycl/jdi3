@@ -26,7 +26,8 @@ function init() {
 			Common.fillSelect($('[name="model_category"]'), null, result["模型分类"], null, true);//填充模型分类的下拉框
 			Common.fillSelect($('[name="model_userGrade"]'), null, result["模型用户级别"], null, true);//填充用户级别的下拉框
 			Common.fillSelect($('[name="model_feature"]'), null, result["模型特性"], null, true);//填充模型特性的下拉框
-		}
+            Common.fillSelect($('[name="model_area"]'), null, result["模型区域"], null, true);
+        }
 	});
 	//右键菜单
 	new ContextMenu().done(1, $workspace);

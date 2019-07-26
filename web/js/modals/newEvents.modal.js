@@ -838,7 +838,7 @@ NewEventsModal.prototype = {
             var $tbody = $($(this).parents("table")[0]).find("tbody"),
                 str = `<tr  class="changePropertyTr">
                <td>
-                   <input type="text" class="form-control" data-type="id" data-name="id">
+                   <input type="text" data-category="property" class="form-control" data-type="id" data-name="id">
                </td>
                <td>
                    <select class="form-control" data-type="style" data-name="fontFamily">
@@ -917,7 +917,7 @@ NewEventsModal.prototype = {
             var $tbody = $($(this).parents("table")[0]).find("tbody").eq(0),
                 str = ` <tr class="copySendTr">
                 <td>
-                    <input type="text" class="form-control" data-type="copySendElement">
+                    <input type="text" data-category="copySend" class="form-control" data-type="copySendElement">
                 </td>
                 <td>
                     <select class="form-control" data-key="state" data-type="copySendState">
@@ -1081,7 +1081,7 @@ NewEventsModal.prototype = {
         })
         
         that.$modal.on('click', '.pm-elem3', function() {
-            // console.log('点击了');
+            console.log('点击了');
             // $(this).toggleClass('applied');
             var $target = that.$modal.find(":text.active"),
                 category = $target.data('category');
@@ -1103,6 +1103,7 @@ NewEventsModal.prototype = {
         });
 
         that.$modal.on('focusin input', ':text', function() {
+            console.log("123")
             // pm-elem3 添加类名 applied;
             that.$modal.find(":text.active").removeClass("active");
             $(this).addClass('active');

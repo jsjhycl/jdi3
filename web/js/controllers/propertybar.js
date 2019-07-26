@@ -1,6 +1,20 @@
 function Propertybar($container) {
     this.$container = $container;
     this.NAME_SPACE = ".propertybar";
+
+    this.renderIcon = function(icon, belong) {
+        if (!icon) return;
+        var html = '';
+        switch(icon) {
+            case 'color':
+                html += `<div class="property-icon-wrap">
+                            <input type="color" data-belong="${belong}" class="property-color-input">
+                            <i class="icon icon-color"></i>
+                        </div>`
+                break;
+        }
+        return html;
+    }
 }
 
 Propertybar.prototype = {
@@ -33,7 +47,8 @@ Propertybar.prototype = {
         if (!Array.isArray(data)) return;//如过data不是数组退出函数
 
         suffix = suffix || "";//suffix有值 就用suffix否则为空
-        var html = "";
+        var html = "",
+            that = this;
         data.forEach(function (item, index) {//遍历data
             var name = item.name,//把name赋值到name对应属性栏的title
                 value = item.value + suffix,//itemvalue+suffix赋值到value上
@@ -53,6 +68,7 @@ Propertybar.prototype = {
                     jvalue = jitem.value.replace(".", "_") + suffix,//把.变化成_添加suffix赋值给jvalue
                     jid = "property_" + jvalue,//property_+jvalue赋值给jid
                     wclass = !!jitem.isPM ? "w70" : "w75",//判断jitem中的isPM是否为真为真是wclass赋值为w70否则赋值为w75
+                    jIcon = jitem.icon,
                     dataType = ' data-dataType="' + (jitem.dataType || "String") + '"',//判断jitem中的dataType是否存在存在 存在就用dataType否则用string
                     attrOrStyle = jitem.attrOrStyle ? ' data-attrOrStyle="' + jitem.attrOrStyle + '"' : "",//jitem.attrOrStyle是否存在存在赋值data-attrOrStyle=jitem.attrOrStyle否则为空
                     readonly = !!jitem.readonly ? ' readonly="readonly"' : "",//判断jitem.readonly是否存在 存在赋值readonly="readonly" 否则为空
@@ -63,6 +79,8 @@ Propertybar.prototype = {
                 switch (jitem.controlType) {//判断controlType的类型
                     case "textbox"://为文本输入框时
                         control = '<input id="' + jid + '" type="text"' + attaches + '>';//赋值html
+                        // jIcon && control += '<input type="color" data-belongs />'
+                        jIcon && (control += that.renderIcon(jIcon, jid));
                         break;
                     case "select"://为下拉框时
                         var $select = $('<select id="' + jid + '"' + attaches + '></select>');
@@ -153,6 +171,12 @@ Propertybar.prototype = {
                     options.push({name:"插入",value:i})
                 }
                 Common.fillSelect($select,{name:"请选择第几段",value:""},options,null,true)
+        })
+        that.$container.on("change" + that.NAME_SPACE, ".property-color-input", function(event){
+            var $this = $(this),
+                target = $this.data('belong');
+            $("#" + target).val($this.val());
+            $this.val("#000000")
         })
     }
 };

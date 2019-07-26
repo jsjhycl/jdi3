@@ -232,6 +232,31 @@ li {
     cursor: pointer;
 }
 
+.property-group .property-icon-wrap {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.property-group .property-icon-wrap .property-color-input {
+    position: relative;
+    top: 0;
+    right: -11px;
+    z-index: 499;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    border: none;
+    opacity: 0;
+}
+.property-group .property-icon-wrap .icon-color {
+    position: relative;
+    top: 4px;
+    right: 8px;
+    z-index: 498;
+}
+
 #toolbar {
     position: fixed;
     top: 51px;
@@ -360,7 +385,7 @@ li {
     background-position: -245px 0;
 }
 .icon.icon-color {
-    background-position: -255px 0;
+    background-position: -260px 0;
 }
 .icon.icon-search {
     background-position: -276px 0;

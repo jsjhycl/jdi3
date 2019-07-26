@@ -7,14 +7,16 @@
         return {
             setArgsTbody: function (fnData, fnType) {
                 if(!Object.prototype.toString.call(fnData) === '[object Object]') return
-                var $argsTbody = $(".eg .function-table tbody"),
+                var $functionArgs = $(".eg .eg-function .eg-function-args"),
+                    $argsTbody = $(".eg .function-table tbody"),
                     $argExample = $(".eg .eg-function .function-example"),
                     argsHtml = "",
                     target = $(".eg .eg-elem.current").data('id'),
                     args = this.getExprArgs(fnData.name, fnType, fnData.async, fnData.voluation, target);
                 
+                $functionArgs.show().next().hide();
                 $argExample.text(fnData.example || "");
-
+                
                 if (Array.isArray(fnData.args) && fnData.args.length > 0) {
                     fnData.args.forEach(function(arg, idx) {
                         argsHtml += '<tr>' +
@@ -27,6 +29,7 @@
                     });
                     fnData.args[fnData.args.length - 1].auto ? $argsTbody.parent().addClass("manyArgs-table") : $argsTbody.parent().removeClass("manyArgs-table");
                 }
+                
                 argsHtml += '<tr>' +
                                 '<td>是否异步</td>' +
                                 '<td>默认</td>' +
@@ -156,12 +159,31 @@
                 var expr = $(".eg .eg-expr").val(),
                     argReg = new RegExp(str, 'g'),
                     args = expr.match(argReg);
-                console.log(argReg)
                 if (args) {
                     return args[0].match(/(\{[A-Z]+\})/g)
-                    // return args[0].replace(/\s/g, "").split(",").filter(function(el) { return !!el })
                 }
                 return false;
+            },
+            renderSystemFnList(fns) {
+                if (!Array.isArray(fns)) return;
+
+                var html = '';
+                fns.forEach(function(el) {
+                    html += `<div class="btn btn-default fn-system-item" data-name="${el.cname}">${el.cname}</div>`
+                });
+                $(".eg .eg-function .eg-system-list").empty().append(html);
+            },
+            setSystemStatus(clear) {
+                clear = !!clear;
+                if (clear) return $(".eg .fn-system-item").removeClass("canAdd canDel");
+
+                var $origin = $('.eg .eg-system-list'),
+                    $target = $('.eg .fn-system').find(".fn-system-item"),
+                    target = $target.map(function() { return $(this).data("name") }).get();
+                $origin.find('.fn-system-item').each(function() {
+                    var name = $(this).data("name");
+                    $(this).removeClass("canAdd").addClass(target.includes(name) ? "" : "canAdd");
+                });
             }
         };
     })();
@@ -234,23 +256,26 @@
                     '</section>' +
                     '</aside>' +
                     '<section class="eg-function">' +
-                    '<div class="form-group">' +
-                    '<label class="control-label">使用案例：</label>' +
-                    '<p class="function-example">' +
-                    '</p>' +
-                    '</div>' +
-                    '<div class="form-group">' +
-                    '<label class="control-label">参数列表：</label>' +
-                    '<table class="table table-bordered table-hover table-responsive ctable function-table">' +
-                    '<thead><tr><th>名称</th><th>类型</th><th>值</th></tr></thead>' +
-                    '<tbody></tbody>' +
-                    '</table>' +
-                    '</div>' +
-                    '<footer class="cfooter">' +
-                    '<button class="btn btn-primary function-save">保存</button>' +
-                    '<button class="btn btn-danger function-clear">清除</button>' +
-                    '</footer>' +
-                    '</div>' +
+                        '<div class="eg-function-args">' +
+                            '<div class="form-group">' +
+                            '<label class="control-label">使用案例：</label>' +
+                            '<p class="function-example">' +
+                            '</p>' +
+                            '</div>' +
+                            '<div class="form-group">' +
+                            '<label class="control-label">参数列表：</label>' +
+                            '<table class="table table-bordered table-hover table-responsive ctable function-table">' +
+                            '<thead><tr><th>名称</th><th>类型</th><th>值</th></tr></thead>' +
+                            '<tbody></tbody>' +
+                            '</table>' +
+                            '</div>' +
+                            '<footer class="cfooter">' +
+                            '<button class="btn btn-primary function-save">保存</button>' +
+                            '<button class="btn btn-danger function-clear">清除</button>' +
+                            '</footer>' +
+                        '</div>' +
+                        '<div class="eg-system-list">' +
+                        '</div>' +
                     '</section>' +
                     '</div>' +
                     '</section>'
@@ -267,6 +292,8 @@
             $(".eg .eg-dialog .eg-page .eg-elem.selected").removeClass("selected");
             $(".eg .eg-dialog .eg-sidebar .eg-toolbar .btn.active").removeClass("active");
             $(".eg .eg-dialog .eg-function .function-args :text.active").removeClass("active");
+
+            $(".fn-system-item.selected, .fn-types-item.selected").removeClass('selected');
         },
         setData: function (element) {
             var cache = $.data(element, CACHE_KEY),
@@ -274,6 +301,7 @@
                 $result = cache.$result,
                 toolbar = cache.toolbar,
                 functions = cache.functions,
+                systemFunction = cache.systemFunction,
                 $eg = $(".eg");
             //填充$source来源DOM数据
             if ($source && $source.length > 0) {
@@ -333,16 +361,24 @@
             }
             //填充工具栏数据
             if (Array.isArray(functions)) {
-                this.renderToolBar(functions);
+                this.renderToolBar(functions, systemFunction);
                 this.setToolBarData(functions[0]);
             }
         },
-        renderToolBar: function(functions) {
-            var titles = ""
+        renderToolBar: function(functions, systemFunction) {
+            var titles = "";
             if (Array.isArray(functions)) {
                 functions.forEach(function(el, idx) {
                     titles += '<div class="fn-types-item btn btn-default '+ (idx === 0 ? "selected" : "") +'" data-type="'+ el.title +'">'+ el.title +'</div>'
                 })
+            };
+    
+            var systemFn = "";
+            if (Array.isArray(systemFunction)) {
+                systemFunction.slice(0, 8).forEach(function(el) {
+                    systemFn += `<div class="btn btn-default fn-system-item" data-name="${el.cname}">${el.cname}</div>`
+                });
+                systemFn += `<div class="fn-system-more"><div></div><div></div><div></div></div>`
             }
 
             var html = '<div class="cpanel" data-title="配置函数">'+
@@ -350,21 +386,29 @@
                                 '<h4 class="cpanel-title">配置函数</h4>' +
                             '</header>' +
                             '<div class="cpanel-body" data-type="normal">' +
-                                '<section class="fn-search">' +
-                                    '<input type="text">' +
-                                    '<i class="icon icon-search"></i>' +
-                                '</section>'+
+
+                                '<section class="fn-system">' +
+                                    systemFn +
+                                '</section>' +
+                                
                                 '<section class="fn-types">' +
                                 titles +
                                 '</section>' +
-                                '<section class="fn-category">' +
-                                    '<select class="fn-category-select"></select>' +
-                                '</section>' +
-                                '<section class="fn-wrap">' +
-                                '</section>' +
-                                '<section>' +
-                                    '<div class="fn-desc"></div>' +
-                                '</section></div></div>';
+                                '<div class="fn-container">'+
+                                    '<section class="fn-search">' +
+                                        '<input type="text">' +
+                                        '<i class="icon icon-search"></i>' +
+                                    '</section>'+
+                                    '<section class="fn-category">' +
+                                        '<select class="fn-category-select"></select>' +
+                                    '</section>' +
+                                    '<section class="fn-wrap">' +
+                                    '</section>' +
+                                    '<section>' +
+                                        '<div class="fn-desc"></div>' +
+                                    '</section></div></div>' +
+                                '</div>'
+                                
             $(".eg").find(".eg-toolbar").empty().append(html);
         },
         setToolBarData: function(fnsData) {
@@ -539,6 +583,8 @@
                 var type = $(this).data('type'),
                     cache = $.data(element, CACHE_KEY);
                     fnsData = cache.functions.filter(function(el) { return el.title == type });
+                that.clearStyle();
+                $(".fn-container").slideDown('fast');
                 that.setToolBarData(fnsData[0]);
             });
 
@@ -629,7 +675,6 @@
                     fnType = $eg.find(".fn-item.selected").data('type'),
                     fnName = $eg.find(".fn-item.selected").data('name'),
                     result = "";
-                console.log(fnType, fnName)
                 if (!target) return;
                 if(!fnName) return alert('无选中函数！');
                 var args = $eg.find('[data-type="arg"]').map(function() {
@@ -659,6 +704,69 @@
                 $(".eg:visible .eg-function [data-type='arg']").each(function() {
                     $(this).val("").removeClass('active');
                 });
+            });
+
+            // 选择系统函数
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .fn-system .fn-system-item", {element: element}, function (event) {
+                if ($('.eg .eg-system-list').is(":visible")) return;
+
+                var cname = $(this).data('name'),
+                    cache = $.data(element, CACHE_KEY),
+                    fnData = cache.systemFunction.filter(function(el) { return el.cname === cname });
+                that.clearStyle();
+                $(".fn-container").slideUp('fast');
+                $(this).addClass("selected");
+                FunctionUtil.setArgsTbody(fnData[0]);
+            });
+
+            // 依赖 sortable.js 插件
+            // (function() {
+            //     $(".fn-system").sortable({
+            //         items: ".fn-system-item",
+            //         containment: "parent"
+            //     });
+            //     $(".fn-system").disableSelection();
+            //     $(".eg-system-list").sortable({
+            //     });
+            //     $(".eg-system-list").disableSelection();
+
+            // })();
+
+            // 切换配置函数
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .fn-system .fn-system-more", {element: element}, function (event) {
+                var $list = $('.eg .eg-function').find(".eg-system-list");
+                if ($list.is(":visible")) {
+                    FunctionUtil.setSystemStatus(true);
+                    $(this).find(".fn-system .fn-system-item").first().click();
+                    $list.hide().prev().show();
+                } else {
+                    var cache = $.data(element, CACHE_KEY);
+                    $(this).parents('.fn-system').find(".fn-system-item").addClass("canDel");
+                    $list.show().prev().hide();
+                    FunctionUtil.renderSystemFnList(cache.systemFunction);
+                    FunctionUtil.setSystemStatus();
+                    that.clearStyle();
+                }
+            });
+
+            // 移除系统函数
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .fn-system .canDel", {element: element}, function (event) {
+                var name = $(this).remove().data('name');
+                $(".eg .eg-system-list").find('[data-name="'+ name +'"]').addClass("canAdd");
+            });
+
+            // 添加系统函数
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-system-list .fn-system-item.canAdd", {element: element}, function (event) {
+                var $clone = $(this).clone(true),
+                    $target = $(".eg .fn-system"),
+                    remove;
+                if ($target.find(".fn-system-item").length >= 8) {
+                    remove = $target.find(".fn-system-item").first().remove().data("name");
+                }
+                $(this).removeClass("canAdd");
+                $clone.addClass("canDel").removeClass("canAdd").insertBefore($target.find(".fn-system-more"));
+                // FunctionUtil.setSystemStatus();
+                remove && $(".eg .eg-system-list").find('[data-name="'+ remove +'"]').addClass("canAdd");
             });
         },
         setExpr: function ($elem, elem, expr, value) {

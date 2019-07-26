@@ -332,7 +332,7 @@ function propertybar() {
 
 	//表达式配置
 	(function () {
-		function buildArgs($expr, staticGlobal, dynamicGlobal, localFunction, remoteFunction) {
+		function buildArgs($expr, staticGlobal, dynamicGlobal, localFunction, remoteFunction, systemFunction) {
 			var global = {};
 			if (DataType.isObject(staticGlobal)) { //如果
 				for (var key in staticGlobal) {
@@ -375,6 +375,7 @@ function propertybar() {
                         title: "远程函数"
                     }
                 ],
+                systemFunction: systemFunction,
 				onSetProperty: function (expr) {
 					var id = $("#property_id").val();
 					if (id) {
@@ -396,29 +397,32 @@ function propertybar() {
 			$.when(commonService.getAjax("/newapi/getprozz"),
 				commonService.getAjax("/profile/global.json"),
 				commonService.getAjax("/profile/local_functions.json"),
-				commonService.getAjax("/profile/remote_functions.json")).done(function (result1, result2, result3, result4) {
-				if (!result1 || !result2 || !result3 || !result4) return;
+				commonService.getAjax("/profile/remote_functions.json"),
+				commonService.getAjax("/profile/system_functions.json")).done(function (result1, result2, result3, result4, result5) {
+				if (!result1 || !result2 || !result3 || !result4 || !result5) return;
 				
 				var data1 = result1[0],
 					data2 = result2[0],
 					data3 = result3[0],
-					data4 = result4[0];
-				if (!data1 || !data2 || !data3 || !data4) return;
+					data4 = result4[0],
+					data5 = result5[0];
+				if (!data1 || !data2 || !data3 || !data4 || !data5) return;
 				
 				var globalId = data1.status === 0 ? (data1.result ? data1.result.id : null) : null,
 					staticGlobal = data2,
 					localFunction = data3,
 					remoteFunction = data4,
-				
-				关闭插入函数弹窗
+                    systemFunction = data5;
+                    
+				// 关闭插入函数弹窗
 				$("#insertFunctionArgsModal .close").trigger('click')
 
 				if (globalId) {
 					commonService.getFile("/publish/" + globalId + "/property.json", function (dynamicGlobal) {
-						buildArgs($expr, staticGlobal, dynamicGlobal, localFunction, remoteFunction);
+						buildArgs($expr, staticGlobal, dynamicGlobal, localFunction, remoteFunction, systemFunction);
 					});
 				} else {
-					buildArgs($expr, staticGlobal, null, localFunction, remoteFunction);
+					buildArgs($expr, staticGlobal, null, localFunction, remoteFunction, systemFunction);
 				}
 			}).fail(function (err) {
 				console.log(err);

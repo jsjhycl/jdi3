@@ -837,3 +837,20 @@ li {
 .copySendBottom {
     padding: 15px;
 }
+#events_modal .box{
+    width:380px;
+    height:354px;
+    margin: 5px;
+    margin-right: 10px;
+    float: right;
+    border: 1px solid #CCC;
+    border-radius: 3px;
+    padding: 5px;
+}
+#events_modal .clickbox{
+    width: 1400px;
+    height: 360px;
+    overflow-x: scroll;
+    position: relative; 
+    display: inline-block
+}

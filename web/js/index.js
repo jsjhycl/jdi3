@@ -39,6 +39,10 @@ function init() {
 	$(".modal .modal-dialog ").draggable({
 		handle: ".modal-header"
 	}); //优化弹窗的拖拽
+	$("#events_modal .modal-dialog").resizable({
+		handles:"all",
+		also
+	});
 }
 
 //导航栏

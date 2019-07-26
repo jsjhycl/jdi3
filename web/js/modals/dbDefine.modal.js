@@ -18,7 +18,7 @@ function DbDefineModal($modal) {
 DbDefineModal.prototype = {
     initData: function () {
         var that = this;
-        new ProductService().list("模型", 20, function (result) {//调用ProductService的list方法
+        new ProductService().list("布局", 20, function (result) {//调用ProductService的list方法
             Common.handleResult(result, function (data) {//调用Common的HandleResult方法
                 if (!Array.isArray(data)) return;//如果结果不是数组退出函数
 
@@ -46,7 +46,7 @@ DbDefineModal.prototype = {
                 name = $(this).text(),//获取name值
                 customId = $tr.attr("data-customId");//获取customId
             that.$modal.modal("hide");//弹窗隐藏
-            new Workspace().load(id, name, "数据库定义", "模型", "定义", customId, null);//实例化工作区定义调用load方法
+            new Workspace().load(id, name, "数据库定义", "布局", "定义", customId, null);//实例化工作区定义调用load方法
 
             $.when(that._getAjax()).done(function(ret){
                 localStorage.setItem('AllDbName',JSON.stringify(ret||{}))

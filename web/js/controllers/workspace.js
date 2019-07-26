@@ -324,7 +324,7 @@ function Workspace() {
         
         //获取table数据
         var tableData = null;
-        if ((type === "产品" || type === "数据库定义") && subtype === "模型" && customId) {//如果type是产品或则是数据库定义subtype是模型且customid存在
+        if ((type === "产品" || type === "数据库定义") && subtype === "布局" && customId) {//如果type是产品或则是数据库定义subtype是布局且customid存在
             tableData = new Property().getDbProperty(customId, name);//实例化property调用getDbproperty
         }
 
@@ -406,7 +406,7 @@ function Workspace() {
                 data: JSON.stringify(GLOBAL_PROPERTY)
             });
         }
-        if ((type === "产品" || type === "数据库定义") && subtype === "模型" && tableData) {//如果type为产品或则type为数据库定义且type为模型且tabledata存在
+        if ((type === "产品" || type === "数据库定义") && subtype === "布局" && tableData) {//如果type为产品或则type为数据库定义且type为布局且tabledata存在
             arrs.push({//向数组中添加
                 name: "table.json",
                 contentType: "text/plain;charset=utf-8",
@@ -468,7 +468,7 @@ Workspace.prototype = {
             text += '<span class="text-danger">(' + customId + ')</span>';//赋值
             attrs["data-customId"] = customId;//向attrs中添加属性
         }
-        if (type === "资源" && subtype === "模型" && DataType.isObject(relTemplate)) {//如果type为资源subtype为模型relTemplate为对象
+        if (type === "资源" && subtype === "布局" && DataType.isObject(relTemplate)) {//如果type为资源subtype为布局relTemplate为对象
             attrs["data-relTemplate"] = JSON.stringify(relTemplate);//向attrs中添加属性
         }
         $("#name").empty().append(text);//获取元素置空并添加html

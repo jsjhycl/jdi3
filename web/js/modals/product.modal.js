@@ -7,11 +7,11 @@ function ProductModal() {
 
     this._showReceiveProducts = function () {
         var that = this,
-            type = "模板",
+            type = "表单",
             $firstTable = $("#first_template_accordion").find(".table"),
             $secondTable = $("#second_template_accordion").find(".table");
         if (!that.$receiveTemplateTab.is(":visible")) {
-            type = "模型";
+            type = "布局";
             $firstTable = $("#first_model_accordion").find(".table");
             $secondTable = $("#second_model_accordion").find(".table");
         }
@@ -40,10 +40,10 @@ function ProductModal() {
     this._pageList = function () {
         var that = this,
             $elem = $("#template_product_page"),
-            type = "模板";
+            type = "表单";
         if (that.$openModelTab.is(":visible")) {
             $elem = $("#model_product_page");
-            type = "模型";
+            type = "布局";
         }
         $elem.jpagination({
             url: "/newapi/pagelist",
@@ -156,7 +156,7 @@ ProductModal.prototype = {
         that.$receiveModal.on("click", ".modal-body .table a", function () {
             var id = $(this).parents("tr").attr("data-id"),
                 name = $(this).text(),
-                type = that.$receiveTemplateTab.is(":visible") ? "模板" : "模型",
+                type = that.$receiveTemplateTab.is(":visible") ? "表单" : "布局",
                 productService = new ProductService();
             productService.receive(id, function (result) {
                 Common.handleResult(result, function (data) {

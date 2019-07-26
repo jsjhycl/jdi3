@@ -16,7 +16,7 @@ function ResourceModal() {
     this._fillRelId = function () {
         var that = this,
             value = that.$createModal.find('[name="model_resource_subCategory"]:checked').val(),
-            defaultOption = {name: "请选择关联模板", value: ""},
+            defaultOption = {name: "请选择关联表单", value: ""},
             options = that.data.filter(function (fitem) {
                 return value === fitem.basicInfo.subCategory;
             }).map(function (mitem) {
@@ -28,11 +28,11 @@ function ResourceModal() {
     this._pageList = function () {
         var that = this,
             $elem = $("#template_resource_page"),
-            type = "模板",
+            type = "表单",
             attrs = [{key: "id", alias: "guid"}];
         if (that.$openModelTab.is(":visible")) {
             $elem = $("#model_resource_page");
-            type = "模型";
+            type = "布局";
             attrs = [
                 {key: "id", alias: "guid"},
                 {key: "relId", alias: "relid"}
@@ -92,12 +92,12 @@ function ResourceModal() {
                 var $tr = $(this).parents("tr"),
                     id = $tr.attr("data-id"),
                     name = $(this).text();
-                if (type === "模型") {
+                if (type === "布局") {
                     var relId = $tr.attr("data-relId");
                     new ProductService().detail(relId, function (result) {
                         Common.handleResult(result, function (data) {
                             if (data) {
-                                new Workspace().load(id, name, "资源", "模型", null, null, data);
+                                new Workspace().load(id, name, "资源", "布局", null, null, data);
                                 that.$openModal.modal("hide");
                                 new Main().open();
                             }
@@ -127,7 +127,7 @@ ResourceModal.prototype = {
         that.$createModal.find('.nav-tabs [data-toggle="tab"]').on("shown.bs.tab", function () {
             console.log(this)
             if (that.$createModelTab.is(":visible")) {
-                new ProductService().list("模板", 20, function (result) {
+                new ProductService().list("表单", 20, function (result) {
                     Common.handleResult(result, function (data) {
                         if (!Array.isArray(data)) return;
                         that.data = data.slice(0);
@@ -136,23 +136,23 @@ ResourceModal.prototype = {
                 });
             }
         });
-        //模板资源名称focusout事件
+        //表单资源名称focusout事件
         that.$createModal.on("focusout", "#template_resource_name", function () {
             var value = $(this).val();
             if (value && value.indexOf("_") < 0) {
-                $(this).val(value + "_模板资源");
+                $(this).val(value + "_表单资源");
             }
         });
-        //模型分类click事件
+        //布局分类click事件
         that.$createModal.on("click", '[name="model_resource_subCategory"]', function () {
             that._fillRelId();
         });
-        //关联模板change事件
+        //关联表单change事件
         that.$createModal.on("change", '[name="model_resource_relId"]', function () {
             var value = $(this).val();
             if (value) {
                 var text = $(this).find("option:selected").text();
-                that.$modelName.val(text.replace("模板产品", "模型资源"));
+                that.$modelName.val(text.replace("表单产品", "布局资源"));
             } else {
                 that.$modelName.val("");
             }
@@ -162,38 +162,38 @@ ResourceModal.prototype = {
             var data;
             if (that.$createTemplateTab.is(":visible")) {
                 var name = that.$templateName.val();
-                if (!name) return alert("模板资源名称不可以为空！");
+                if (!name) return alert("表单资源名称不可以为空！");
 
                 data = {
                     name: name,
-                    type: "模板"
+                    type: "表单"
                 };
             } else {
                 var name = that.$modelName.val();
-                if (!name) return alert("模型资源名称不可以为空！");
+                if (!name) return alert("布局资源名称不可以为空！");
 
                 var relid = that.$modelRelId.val();
-                if (!relid) return alert("关联模板不可以为空！");
+                if (!relid) return alert("关联表单不可以为空！");
 
                 data = {
                     relid: relid,
                     name: name,
-                    type: "模型"
+                    type: "布局"
                 };
             }
             new ResourceService().add(data, function (result) {
                 var resId = result.result;
                 Common.handleResult(result, function () {
-                    if (data.type === "模型") {
+                    if (data.type === "布局") {
                         new ProductService().detail(data.relid, function (presult) {
                             Common.handleResult(presult, function (pdata) {
                                 if (pdata) {
-                                    new Workspace().load(resId, data.name, "资源", "模型", null, null, pdata);
+                                    new Workspace().load(resId, data.name, "资源", "布局", null, null, pdata);
                                 }
                             });
                         });
                     } else {
-                        new Workspace().init(resId, data.name, "资源", "模板", null, null, null);
+                        new Workspace().init(resId, data.name, "资源", "表单", null, null, null);
                     }
                     that.$createModal.modal("hide");
                 });

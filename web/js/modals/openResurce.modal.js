@@ -7,7 +7,7 @@ function OpenResource() {
     this._pageList = function () {
         var that = this,
         $elem = $("#model_resource_page"),
-        type = "模型",
+        type = "布局",
         attrs = [{
                 key: "id",
                 alias: "guid"
@@ -81,12 +81,12 @@ function OpenResource() {
                 var $tr = $(this).parents("tr"),
                     id = $tr.attr("data-id"),
                     name = $(this).text();
-                if (type === "模型") {
+                if (type === "布局") {
                     var relId = $tr.attr("data-relId");
                     new ProductService().detail(relId, function (result) {
                         Common.handleResult(result, function (data) {
                             if (data) {
-                                new Workspace().load(id, name, "资源", "模型", null, null, data);
+                                new Workspace().load(id, name, "资源", "布局", null, null, data);
                                 that.$openModal.modal("hide");
                                 new Main().open();
                             }

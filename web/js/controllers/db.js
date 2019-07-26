@@ -12,7 +12,7 @@ function Db() {
             type = $workspace.attr("data-type"),//获取工作区的data-type属性
             subtype = $workspace.attr("data-subtype"),//获取工作区的data-subtype属性
             customId = $workspace.attr("data-customId");//获取工作区的data-customId属性
-        if ((type === "产品" || type === "数据库定义") && subtype === "模型" && customId) return {name: name, value: customId};//如果type是产品或者是数据库定义且subtime为模型并且customid存在 返回当前工作区的name和customid
+        if ((type === "产品" || type === "数据库定义") && subtype === "布局" && customId) return {name: name, value: customId};//如果type是产品或者是数据库定义且subtime为布局并且customid存在 返回当前工作区的name和customid
         else return null;//否则返回空
     };
     /**
@@ -35,7 +35,7 @@ Db.prototype = {
         var that = this;
         new StructureService().getTables(function (result) {//实例化StructureService并调用getTables方法
             if (Array.isArray(result)) {//如果result是数组的
-                //获取当前模型的表数据
+                //获取当前布局的表数据
                 var customId = $("#workspace").attr("data-customId"),//获取工作区的data-customId
                     isExist = result.isExist("value", customId),//判断value属性是否是result的自有属性并且值为customid
                     ctable = that._getCurrentTable();//获取到一个对象

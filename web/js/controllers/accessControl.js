@@ -27,7 +27,7 @@ var AccessControl = (function () {
                 $propDbField = $("#property_db_field"),//数据库属性的字段名称
                 $propDbDesc = $("#property_db_desc"),//数据库属性的字段描述
                 $propDbFieldSplit = $("#property_db_fieldSplit"),
-                customId = $workspace.attr("data-customId"),//模型，或则模板的表名称
+                customId = $workspace.attr("data-customId"),//布局，或则表单的表名称
                 id = $("#property_id").val(),//获取基本属性的编号值
                 cname = $("#property_cname").val();//获取基本属性的中文名
             if (!id) return;//如果获取的基本属性的编号值为空直接退出函数
@@ -62,7 +62,7 @@ var AccessControl = (function () {
         // ，在基本属性中 选择 控件类型是上传控件时，设置其触发属性的值
         setUploadEvent: function() {
             var type = $("#workspace").data("subtype");
-            if (type === "模型") {
+            if (type === "布局") {
                 var id = $("#property_id").val(),
                     property = new Property();
                 if (id) {
@@ -98,7 +98,7 @@ var AccessControl = (function () {
         // 下拉列表，直接弹出数据源配置弹窗
         showDataSourceTab: function() {
             var type = $("#workspace").data("subtype");
-            if (type === "模型") {
+            if (type === "布局") {
                 $('#dataSource_db_tab_modal').modal('show');
             }
         }

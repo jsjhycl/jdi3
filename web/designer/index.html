@@ -29,15 +29,15 @@
                     <!-- <li class="divider"></li> -->
                     <li><a data-toggle="modal" href="#dbDefineModal">数据库定义</a></li>
                     <li class="divider" data-first-filter="save"></li>
-                    <!-- <li><a data-toggle="modal" href="#saveAsModal" data-first-filter="save">另存为...</a></a></li>  后面关联模板-->
+                    <!-- <li><a data-toggle="modal" href="#saveAsModal" data-first-filter="save">另存为...</a></a></li>  后面关联表单-->
                     <!-- <li><a id="saveAs" data-first-filter="save">另存为...</a></a></li> -->
-                    <!-- <li><a data-toggle="modal" href="#publishModal">发布模型</a></li> -->
+                    <!-- <li><a data-toggle="modal" href="#publishModal">发布布局</a></li> -->
                     <!-- <li class="divider"></li> -->
                 </ul>
 
             </li>
             <li class="dropdown">
-                <a class="item dropdowm-toggle" data-toggle="dropdown">模版<b class="caret"></b></a>
+                <a class="item dropdowm-toggle" data-toggle="dropdown">表单<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li><a data-toggle="modal" href="#create_template_modal">新建</a></li>
                     <li class="divider"></li>
@@ -45,7 +45,7 @@
                 </ul>
             </li>
             <li class="dropdown">
-                <a class="item dropdowm-toggle" data-toggle="dropdown">模型<b class="caret"></b></a>
+                <a class="item dropdowm-toggle" data-toggle="dropdown">布局<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li><a data-toggle="modal" href="#create_resource_modal">新建</a></li>
                     <li class="divider"></li>
@@ -66,12 +66,12 @@
             <li><a class="item" id="saveAs" data-first-filter="save">另存为...</a></a></li>
             <li><a class="item" id="submit" data-first-filter="submit">提交</a></li>
             <li><a class="item" id="delete" data-zero-filter="delete" style="display: none">删除</a></li>
-            <li><a class="item" id="recall" data-first-filter="recall" style="display: none">重新调用模板</a></li>
+            <li><a class="item" id="recall" data-first-filter="recall" style="display: none">重新调用表单</a></li>
             <li><a class="item" id="preview" data-zero-filter="preview" style="display: none" target="_blank">预览</a>
             </li>
             <li><a class="item" id="test" data-zero-filter="test" style="display: none">测试</a></li>
             <li><a class="item" data-toggle="modal" href="#workspaceModal">工作区设置</a></li>
-            <li><a class="item" data-toggle="modal" href="#publishModal" data-first-filter="db">发布模型</a></li>
+            <li><a class="item" data-toggle="modal" href="#publishModal" data-first-filter="db">发布布局</a></li>
         </ul>
 
         <!-- <ul class="nav navbar-nav navbar-right">
@@ -255,8 +255,8 @@
                 </header>
                 <section class="modal-body">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#create_template_resource_tab">模板资源</a></li>
-                        <li><a data-toggle="tab" href="#create_model_resource_tab">模型资源</a></li>
+                        <li class="active"><a data-toggle="tab" href="#create_template_resource_tab">表单资源</a></li>
+                        <li><a data-toggle="tab" href="#create_model_resource_tab">布局资源</a></li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="create_template_resource_tab">
@@ -279,7 +279,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-3 control-label" for="model_resource_relId">关联模板：</label>
+                                    <label class="col-lg-3 control-label" for="model_resource_relId">关联表单：</label>
                                     <div class="col-lg-7">
                                         <select class="form-control" id="model_resource_relId"
                                             name="model_resource_relId"></select>
@@ -302,13 +302,13 @@
             </div>
         </div>
     </section> -->
-    <!-- 新建模板资源 -->
+    <!-- 新建表单资源 -->
     <section class="modal fade" id="create_template_modal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <header class="modal-header">
                     <button class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">新建模板资源</h4>
+                    <h4 class="modal-title">新建表单资源</h4>
                 </header>
                 <section class="modal-body">
                     <div class="tab-content">
@@ -332,13 +332,13 @@
         </div>
     </section>
 
-    <!-- 新建模型资源 -->
+    <!-- 新建布局资源 -->
     <section class="modal fade" id="create_resource_modal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <header class="modal-header">
                     <button class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">新建模型资源</h4>
+                    <h4 class="modal-title">新建布局资源</h4>
                 </header>
                 <section class="modal-body">
 
@@ -352,7 +352,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-3 control-label" for="model_resource_relId">关联模板：</label>
+                                    <label class="col-lg-3 control-label" for="model_resource_relId">关联表单：</label>
                                     <div class="col-lg-7">
                                         <select class="form-control" id="model_resource_relId"
                                             name="model_resource_relId"></select>
@@ -387,8 +387,8 @@
                 </header>
                 <section class="modal-body">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#open_template_resource_tab">模板资源</a></li>
-                        <li><a data-toggle="tab" href="#open_model_resource_tab">模型资源</a></li>
+                        <li class="active"><a data-toggle="tab" href="#open_template_resource_tab">表单资源</a></li>
+                        <li><a data-toggle="tab" href="#open_model_resource_tab">布局资源</a></li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="open_template_resource_tab">
@@ -402,13 +402,13 @@
             </div>
         </div>
     </section> -->
-    <!-- 打开模板资源 -->
+    <!-- 打开表单资源 -->
     <section class="modal fade" id="open_template_modal">
         <div class="modal-dialog w800px">
             <div class="modal-content">
                 <header class="modal-header">
                     <button class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">打开模板资源</h4>
+                    <h4 class="modal-title">打开表单资源</h4>
                 </header>
                 <section class="modal-body">
 
@@ -422,13 +422,13 @@
             </div>
         </div>
     </section>
-    <!-- 打开模型资源 -->
+    <!-- 打开布局资源 -->
     <section class="modal fade" id="open_resource_modal">
         <div class="modal-dialog w800px">
             <div class="modal-content">
                 <header class="modal-header">
                     <button class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">打开模型资源</h4>
+                    <h4 class="modal-title">打开布局资源</h4>
                 </header>
                 <section class="modal-body">
                     <div class="content">
@@ -451,8 +451,8 @@
                 </header>
                 <section class="modal-body">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#receive_template_product_tab">模板产品</a></li>
-                        <!-- <li><a data-toggle="tab" href="#receive_model_product_tab">模型产品</a></li> -->
+                        <li class="active"><a data-toggle="tab" href="#receive_template_product_tab">表单产品</a></li>
+                        <!-- <li><a data-toggle="tab" href="#receive_model_product_tab">布局产品</a></li> -->
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="receive_template_product_tab">
@@ -535,8 +535,8 @@
                 </header>
                 <section class="modal-body">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#open_template_product_tab">模板产品</a></li>
-                        <li><a data-toggle="tab" href="#open_model_product_tab">模型产品</a></li>
+                        <li class="active"><a data-toggle="tab" href="#open_template_product_tab">表单产品</a></li>
+                        <li><a data-toggle="tab" href="#open_model_product_tab">布局产品</a></li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="open_template_product_tab">
@@ -1091,7 +1091,7 @@
                         <select class="form-control" data-key="field" data-type="String"></select>
                     </div>
                     <div class="form-group">
-                        <label class="control-label">模板编号：</label>
+                        <label class="control-label">表单编号：</label>
                         <select class="form-control" data-key="modelId" data-type="String"></select>
                     </div>
                 </section>
@@ -1119,13 +1119,13 @@
         </div>
     </section>
 
-    <!--发布模型模态框-->
+    <!--发布布局模态框-->
     <section class="modal fade" id="publishModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <header class="modal-header">
                     <button class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">发布模型</h4>
+                    <h4 class="modal-title">发布布局</h4>
                 </header>
                 <section class="modal-body">
                     <table class="table table-striped table-hover table-responsive ltable"></table>
@@ -1249,9 +1249,9 @@
                             <tr>
                                 <th>元素编号</th>
                                 <th>中文名</th>
-                                <th>模板产品</th>
-                                <th>模型产品审核</th>
-                                <th>模型产品定义</th>
+                                <th>表单产品</th>
+                                <th>布局产品审核</th>
+                                <th>布局产品定义</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -1271,8 +1271,8 @@
                 </header>
                 <section class="modal-body">
                     <ul class="nav nav-tabs">
-                        <li><a data-toggle="tab" href="#submit_template_tab">模板资源</a></li>
-                        <li><a data-toggle="tab" href="#submit_model_tab">模型资源</a></li>
+                        <li><a data-toggle="tab" href="#submit_template_tab">表单</a></li>
+                        <li><a data-toggle="tab" href="#submit_model_tab">布局</a></li>
                     </ul>
                     <ul class="list-group">
                         <li class="list-group-item">名称：<span id="resource_name"></span></li>
@@ -1281,42 +1281,42 @@
                     <div class="tab-content">
                         <div class="tab-pane fade" id="submit_template_tab">
                             <div class="form-group">
-                                <label class="control-label" for="template_name">模板名称</label>
+                                <label class="control-label" for="template_name">表单名称</label>
                                 <input class="form-control" id="template_name" type="text" name="template_name">
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="template_category">模板分类</label>
+                                <label class="control-label" for="template_category">表单分类</label>
                                 <select class="form-control" id="template_category" name="template_category"></select>
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="template_subCategory">模板子分类</label>
+                                <label class="control-label" for="template_subCategory">表单子分类</label>
                                 <div class="checkbox" id="template_subCategory"></div>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="submit_model_tab">
                             <div class="form-group">
-                                <label class="control-label" for="model_name">模型名称</label>
+                                <label class="control-label" for="model_name">布局名称</label>
                                 <input class="form-control" id="model_name" type="text" name="model_name">
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="model_feature">模型特性</label>
+                                <label class="control-label" for="model_feature">布局特性</label>
                                 <select class="form-control" id="model_feature" name="model_feature"></select>
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="model_category">模型分类</label>
+                                <label class="control-label" for="model_category">布局分类</label>
                                 <select class="form-control" id="model_category" name="model_category"></select>
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="model_area">模型区域</label>
+                                <label class="control-label" for="model_area">布局区域</label>
                                 <select class="form-control" id="model_area" name="model_area"></select>
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="model_subCategory">模型子分类</label>
+                                <label class="control-label" for="model_subCategory">布局子分类</label>
                                 <input class="form-control" id="model_subCategory" type="text" name="model_subCategory"
                                     readonly="readonly">
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="model_userGrade">模型用户级别</label>
+                                <label class="control-label" for="model_userGrade">布局用户级别</label>
                                 <select class="form-control" id="model_userGrade" name="model_userGrade"></select>
                             </div>
                         </div>

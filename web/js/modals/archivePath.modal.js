@@ -5,12 +5,12 @@
  * @constructor
  */
 function ArchivePathModal($modal, $element) {
-    BaseModal.call(this, $modal, $element);//调用基础弹窗模型
+    BaseModal.call(this, $modal, $element);//调用基础弹窗布局
     this.$archiveDbName= this.$modalBody.find('[data-key="dbName"]')
     this.$archiveType = this.$modalBody.find('[data-key="type"]');//获取存档类型
     this.$archiveTable = this.$modalBody.find('[data-key="table"]');//获取存档表格
     this.$archiveField = this.$modalBody.find('[data-key="field"]');//获取存单字段
-    this.$archiveModelId = this.$modalBody.find('[data-key="modelId"]');//获取模板编号
+    this.$archiveModelId = this.$modalBody.find('[data-key="modelId"]');//获取表单编号
 
     const TYPE_CONFIG = [//定义type类型
         {name: "通用查询", value: 0},
@@ -22,17 +22,17 @@ function ArchivePathModal($modal, $element) {
     this._setTypeSelect = function ($typeSelect, type) {
         ModalHelper.setSelectData($typeSelect, {name: "请选择存档类型", value: ""}, TYPE_CONFIG, type, false);//调用ModalHelper中的setSelectData方法设置下拉抗
         var that = this,
-            $formGroup = that.$archiveModelId.parent();//获取模板编号的父集元素
-        if (type === 2) $formGroup.show();//如果type等于2给模板编号显示
-        else $formGroup.hide();//否则隐藏模板编号
+            $formGroup = that.$archiveModelId.parent();//获取表单编号的父集元素
+        if (type === 2) $formGroup.show();//如果type等于2给表单编号显示
+        else $formGroup.hide();//否则隐藏表单编号
     };
 
-    //设置模板编号
+    //设置表单编号
     this._setModelIdSelect = function ($modelIdSelect, modelId) {
-        if (!$modelIdSelect || $modelIdSelect.length <= 0) return;//如果模板编号或则模板id的长度小于零退出函数
-        new ProductService().list("模型", 40, function (result) {//实例化productServer中的list方法
+        if (!$modelIdSelect || $modelIdSelect.length <= 0) return;//如果表单编号或则表单id的长度小于零退出函数
+        new ProductService().list("布局", 40, function (result) {//实例化productServer中的list方法
             Common.handleResult(result, function (data) {//调用Common中的HandleResult方法
-                var defaultOption = {name: "请选择模板编号", value: ""},//设置defaultOption
+                var defaultOption = {name: "请选择表单编号", value: ""},//设置defaultOption
                     options = Array.isArray(data) ? data.map(function (item) {//查看data是不是数组如果是遍历数组否则返回一个空数组
                         return {name: item.name, value: item.id};
                     }) : [];
@@ -49,7 +49,7 @@ function ArchivePathModal($modal, $element) {
         that.$archiveType.val(0);//获取$archiveType
         Common.fillSelect(that.$archiveTable, {name: "请选择存档表格", value: ""}, null, null, true);//调用Common中的fillSelect
         Common.fillSelect(that.$archiveField, {name: "请选择存档字段", value: ""}, null, null, true);//调用Common中的fillSelect
-        Common.fillSelect(that.$archiveModelId, {name: "请选择模板编号", value: ""}, null, null, true);//调用Common中的fillSelect
+        Common.fillSelect(that.$archiveModelId, {name: "请选择表单编号", value: ""}, null, null, true);//调用Common中的fillSelect
         Common.fillSelect(that.$archiveDbName,{name:"请选择数据库",value:""},null,null,null,true)//清空存档的数据库为空
     };
 }
@@ -140,7 +140,7 @@ ArchivePathModal.prototype = {
     bindEvents: function () {
         var that = this;
         that.$archiveType.change(function () {//存档类型发生变化时
-            var $formGroup = that.$archiveModelId.parent(),//获取模板编号的父集元素
+            var $formGroup = that.$archiveModelId.parent(),//获取表单编号的父集元素
                 type = DataType.convert($(this).attr("data-type"), $(this).val());//把data-type属性和现在的值 传给datatype的convert方法
             if (type === 2) $formGroup.show();//如果type等于2 存单编号显示
             else $formGroup.hide();//否则隐藏

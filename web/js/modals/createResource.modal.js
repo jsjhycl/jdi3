@@ -1,4 +1,4 @@
-//新建模型资源模态框
+//新建布局资源模态框
 function CreateResource() {
     this.$createResource = $("#create_resource_modal")
     this.$resoureRelId = this.$createResource.find('[name="model_resource_relId"]')
@@ -8,7 +8,7 @@ function CreateResource() {
         var that = this,
             value = that.$createResource.find('[name="model_resource_subCategory"]:checked').val(),
             defaultOption = {
-                name: "请选择关联模板",
+                name: "请选择关联表单",
                 value: ""
             },
             options = that.data.filter(function (fitem) {
@@ -25,7 +25,7 @@ function CreateResource() {
 CreateResource.prototype = {
     initData: function () {
         var that = this;
-        new ProductService().list("模板", 20, function (result) {
+        new ProductService().list("表单", 20, function (result) {
             Common.handleResult(result, function (data) {
                 if (!Array.isArray(data)) return;
                 that.data = data.slice(0);
@@ -39,12 +39,12 @@ CreateResource.prototype = {
         that.$createResource.on("click", '[name="model_resource_subCategory"]', function () {
             that._fillRelId();
         })
-        //选择关联模板事件
+        //选择关联表单事件
         that.$createResource.on("change", '[name="model_resource_relId"]', function () {
             var value = $(this).val();
             if (value) {
                 var text = $(this).find("option:selected").text();
-                that.$resoureName.val(text.replace("模板产品", "模型资源"));
+                that.$resoureName.val(text);
             } else {
                 that.$resoureName.val("");
             }
@@ -52,13 +52,13 @@ CreateResource.prototype = {
         //保存资源
         that.$createResource.find(".modal-footer .save").click(function () {
             var name = that.$resoureName.val();
-            if (!name) return alert("模型资源名称不能为空！");
+            if (!name) return alert("布局资源名称不能为空！");
             var relid = that.$resoureRelId.val();
-            if (!relid) return alert("关联模板不可以为空！");
+            if (!relid) return alert("关联表单不可以为空！");
             var data = {
                 relid: relid,
                 name: name,
-                type: "模型"
+                type: "布局"
             };
             new ResourceService().add(data, function (result) {
                 var resId = result.result;
@@ -66,7 +66,7 @@ CreateResource.prototype = {
                     new ProductService().detail(data.relid, function (presult) {
                         Common.handleResult(presult, function (pdata) {
                             if (pdata) {
-                                new Workspace().load(resId, data.name, "资源", "模型", null, null, pdata)
+                                new Workspace().load(resId, data.name, "资源", "布局", null, null, pdata)
                             }
                         })
                     })

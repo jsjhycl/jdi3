@@ -10,7 +10,7 @@ function PublishModal($modal) {
 PublishModal.prototype = {
     initData: function () {
         var that = this;
-        new ProductService().list("模型", 40, function (result) {
+        new ProductService().list("布局", 40, function (result) {
             Common.handleResult(result, function (data) {
                 if (!Array.isArray(data)) return;
 

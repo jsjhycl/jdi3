@@ -1,7 +1,7 @@
 /**
  * 过滤函数模块
  * @param {*} type 初始化 资源 产品 数据库定义 发布
- * @param {*} subtype 加载 模板 模型
+ * @param {*} subtype 加载 表单 布局
  */
 function Filter(type, subtype) {
     this.type = type || null;//如果传入type就用type否则type为空
@@ -16,27 +16,27 @@ function Filter(type, subtype) {
             first:[],//一级过滤
             second:[]//二级过滤
         },
-        "资源/模板": {
+        "资源/表单": {
             zero:[],
             first: ["save", "submit", "basic", "validate", "expression"],
             second: []
         },
-        "资源/模型": {
+        "资源/布局": {
             zero:[],
             first: ["save", "submit", "recall", "basic", "validate", "expression","dataSource", "events", "query"],
             second: []
         },
-        "产品/模板": {//目前没有这块的流程
+        "产品/表单": {//目前没有这块的流程
             zero:[],
             first: ["save", "submit", "basic", "validate", "expression"],
             second: []
         },
-        "产品/模型": {//目前没有这块流程
+        "产品/布局": {//目前没有这块流程
             zero:[],
             first: ["save", "submit", "recall", "basic", "validate", "expression", "dataSource", "events", "query"],
             second: []
         },
-        "数据库定义/模型": {
+        "数据库定义/布局": {
             zero:[],
             first: ["save", "submit", "basic", "validate", "expression", "dataSource", "events", "query", "db"],
             second: []

@@ -22,14 +22,14 @@ function init() {
 				};
 			});
 			Common.fillRadio($("#model_resource_subCategory"), "model_resource_subCategory", data); //调用Common的fillRadio的资源分类
-			//模板资源提交表单
-			Common.fillSelect($('[name="template_category"]'), null, result["模板分类"], null, true); //填充模板分类下拉框
-			Common.fillRadio($("#template_subCategory"), "template_subCategory", data); //填充模板分类的单选框
-			//模型资源提交表单
-			Common.fillSelect($('[name="model_category"]'), null, result["模型分类"], null, true);//填充模型分类的下拉框
-			Common.fillSelect($('[name="model_userGrade"]'), null, result["模型用户级别"], null, true);//填充用户级别的下拉框
-			Common.fillSelect($('[name="model_feature"]'), null, result["模型特性"], null, true);//填充模型特性的下拉框
-            Common.fillSelect($('[name="model_area"]'), null, result["模型区域"], null, true);
+			//表单资源提交表单
+			Common.fillSelect($('[name="template_category"]'), null, result["表单分类"], null, true); //填充表单分类下拉框
+			Common.fillRadio($("#template_subCategory"), "template_subCategory", data); //填充表单分类的单选框
+			//布局资源提交表单
+			Common.fillSelect($('[name="model_category"]'), null, result["布局分类"], null, true);//填充布局分类的下拉框
+			Common.fillSelect($('[name="model_userGrade"]'), null, result["布局用户级别"], null, true);//填充用户级别的下拉框
+			Common.fillSelect($('[name="model_feature"]'), null, result["布局特性"], null, true);//填充布局特性的下拉框
+            Common.fillSelect($('[name="model_area"]'), null, result["布局区域"], null, true);
         }
 	});
 	//右键菜单
@@ -49,20 +49,20 @@ function navbar() {
 	// resourceModal.create();//给资源模态框绑定事件
 	// resourceModal.open();//绑定事件
 
-	//新建模板资源
+	//新建表单资源
 	var createTemplate = new CreateTemplate();
 	createTemplate.bindEvents();
 
-	//新建模板资源
+	//新建表单资源
 	var createResource = new CreateResource();
-	createResource.initData(); //初始化新建模型模板
-	createResource.bindEvents(); //绑定新建模型模板资源
+	createResource.initData(); //初始化新建布局表单
+	createResource.bindEvents(); //绑定新建布局表单资源
 
-	//打开模板资源
+	//打开表单资源
 	var openTemplate = new OpenTemplate();
 	openTemplate.initData();
 
-	//打开资源模型
+	//打开资源布局
 	var openResource = new OpenResource();
 	openResource.initData();
 
@@ -82,7 +82,7 @@ function navbar() {
 	dbDefineModal.execute();
 	dbDefineModal.bindEvents();
 
-	//发布模型
+	//发布布局
 	var publishModal = new PublishModal($("#publishModal"));
 	publishModal.execute();
 	publishModal.bindEvents();
@@ -134,7 +134,7 @@ function navbar() {
 		});
 	})();
 
-	//重新调用模板
+	//重新调用表单
 	(function recall() {
 		$("#recall").click(function () {
 			var $workspace = $("#workspace"), //获取工作区
@@ -142,16 +142,16 @@ function navbar() {
 				name = $workspace.attr("data-name"), //获取工作区data-name
 				type = $workspace.attr("data-type"), //获取data-type
 				subtype = $workspace.attr("data-subtype"); //获取data-subtype
-			if (id && type === "资源" && subtype === "模型") { //判断是否type等于资源subtype等于模型id存在
-				var result = confirm("确定要重新调用模板吗？"); //确认是否
+			if (id && type === "资源" && subtype === "布局") { //判断是否type等于资源subtype等于布局id存在
+				var result = confirm("确定要重新调用表单吗？"); //确认是否
 				if (!result) return;
 
-				new ResourceService().recall(id, function (result) { //调用重新调用模板
+				new ResourceService().recall(id, function (result) { //调用重新调用表单
 					Common.handleResult(result, function (data) {
 						if (data !== id) return alert("调用失败！"); //入伙id不存在退出程序
 
 						//此处的relTemplate参数不需要的原因，data-relTemplate已经绑定
-						new Workspace().load(id, name, "资源", "模型", null, null, null); //加载工作区
+						new Workspace().load(id, name, "资源", "布局", null, null, null); //加载工作区
 						new Main().open();
 					});
 				});

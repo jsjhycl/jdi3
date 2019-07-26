@@ -58,11 +58,11 @@ SubmitModal.prototype = {
                 case "资源":
                     that.$modal.modal("show");
                     that.$modal.find("#resource_name").text(name);
-                    if (subtype === "模板") {
-                        $('[name="template_name"]').val(name.replace("_模板资源", "_模板产品"));
+                    if (subtype === "表单") {
+                        $('[name="template_name"]').val(name.replace("_表单资源", "_表单产品"));
                         that.$modal.find('.nav-tabs li:eq(0) a[data-toggle="tab"]').click();
-                    } else if (subtype === "模型") {
-                        $('[name="model_name"]').val(name.replace("_模型资源", ""));
+                    } else if (subtype === "布局") {
+                        $('[name="model_name"]').val(name.replace("_布局资源", ""));
                         var relTemplate = Common.parseData($workspace.attr("data-relTemplate") || null);
                         if (relTemplate) {
                             $('[name="model_subCategory"]').val(relTemplate.basicInfo.subCategory);

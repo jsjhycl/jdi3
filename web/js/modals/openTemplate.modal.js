@@ -1,12 +1,12 @@
 /**
- * 打开模板资源
+ * 打开表单资源
  */
 function OpenTemplate() {
     this.$openModal = $("#open_template_modal")
     this._pageList = function(){
         var that =this,
         $elem = $("#template_resource_page"),
-        type = "模板",
+        type = "表单",
         attrs = [{key: "id", alias: "guid"}]; 
         $elem.jpagination({
             url: "/newapi/pagelist",
@@ -62,12 +62,12 @@ function OpenTemplate() {
                 var $tr = $(this).parents("tr"),
                     id = $tr.attr("data-id"),
                     name = $(this).text();
-                if (type === "模型") {
+                if (type === "布局") {
                     var relId = $tr.attr("data-relId");
                     new ProductService().detail(relId, function (result) {
                         Common.handleResult(result, function (data) {
                             if (data) {
-                                new Workspace().load(id, name, "资源", "模型", null, null, data);
+                                new Workspace().load(id, name, "资源", "布局", null, null, data);
                                 that.$openModal.modal("hide");
                                 new Main().open();
                             }

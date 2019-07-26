@@ -1,8 +1,8 @@
 /**
  * 历史记录配置
  * 一、需求分析
- * 1、操作的数据对象：模板产品、模型产品、数据库定义；
- * 2、根据产品编号获取关联模板产品、模型产品、数据库定义、数据库发布的属性数据集合；
+ * 1、操作的数据对象：表单产品、布局产品、数据库定义；
+ * 2、根据产品编号获取关联表单产品、布局产品、数据库定义、数据库发布的属性数据集合；
  * 3、集合数据进行对比并按照表格显示；
  * 二、待补充的接口
  * 1、数据库定义保存时，保存一份新的数据至服务端；
@@ -52,7 +52,7 @@ function RecordModal($modal) {
 
     this._ajax = function (id, flow) {
         var FLOW_CONFIG = {
-            "模板": "property.json",
+            "表单": "property.json",
             "编辑": "property_history_edit.json",
             "审核": "property_history_audit.json",
             "定义": "property_history_define.json",
@@ -74,12 +74,12 @@ RecordModal.prototype = {
             id = $workspace.attr("data-id"),
             type = $workspace.attr("data-type"),
             subtype = $workspace.attr("data-subtype");
-        if ((type === "产品" && subtype === "模型") || type === "数据库定义") {
+        if ((type === "产品" && subtype === "布局") || type === "数据库定义") {
             new ProductService().detail(id, function (result) {
                 Common.handleResult(result, function (data) {
                     var relId = data.basicInfo.relid,
                         $table = that.$modalBody.find(".table tbody");
-                    $.when(that._ajax(relId, "模板"), that._ajax(id, "审核"), that._ajax(id, "定义")).done(function (ret1, ret2, ret3) {
+                    $.when(that._ajax(relId, "表单"), that._ajax(id, "审核"), that._ajax(id, "定义")).done(function (ret1, ret2, ret3) {
                         var templateProperty = ret1[0],
                             auditProperty = ret2[0],
                             defineProperty = ret3[0],

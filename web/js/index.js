@@ -375,6 +375,7 @@ function propertybar() {
                         title: "远程函数"
                     }
                 ],
+                saveFile: new CommonService().saveFile,
                 systemFunction: systemFunction,
 				onSetProperty: function (expr) {
 					var id = $("#property_id").val();
@@ -413,7 +414,7 @@ function propertybar() {
 					localFunction = data3,
 					remoteFunction = data4,
                     systemFunction = data5;
-                    
+
 				// 关闭插入函数弹窗
 				$("#insertFunctionArgsModal .close").trigger('click')
 

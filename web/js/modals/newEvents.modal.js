@@ -449,11 +449,11 @@ function NewEventsModal($modal, $element) {
                 <table class="table table-bordered triggerCondition">
                     <thead>
                         <tr>
-                            <th>左值类型</th>
-                            <th>左数值</th>
-                            <th>操作符</th>
-                            <th>右值类型</th>
-                            <th>右数值</th>
+                            <th class="text-center">左值类型</th>
+                            <th class="text-center">左数值</th>
+                            <th class="text-center">操作符</th>
+                            <th class="text-center">右值类型</th>
+                            <th class="text-center">右数值</th>
                             <th><button class="btn btn-primary btn-sm addTriggerCondition">添加</button></th>
                         </tr>
                     </thead>
@@ -468,14 +468,12 @@ function NewEventsModal($modal, $element) {
             </td>
 
             <td class="condition">
-                <div class="notify">
-                    <span class="title">通知</span>
+                <div class="notify" ${item.subscribe.notify?"":'style="display:none"'}>
                     <div>
                         <table calss="table tabel-bordered">
                             <tbody>
                                 <tr>
                                     <td>
-                                        <span>通知元素</span>
                                         <input type="text" data-category="notify"  data-apply="add" class="form-control" data-key="notifyEl" value="${item.subscribe.notify||''}">
                                     </td>
                                 </tr>
@@ -483,20 +481,19 @@ function NewEventsModal($modal, $element) {
                         </table>
                     </div>
                 </div>
-                <div class="changeProperty" >
-                    <span class="title">属性改变</span>
+                <div class="changeProperty"  ${item.subscribe.property?"":'style="display:none"'}>
                     <div>
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>元素</th>
-                                    <th>字体</th>
-                                    <th>尺寸</th>
-                                    <th>颜色</th>
-                                    <th>背景色</th>
-                                    <th>可见性</th>
-                                    <th>禁用</th>
-                                    <th>只读</th>
+                                    <th class="text-center">元素</th>
+                                    <th class="text-center">字体</th>
+                                    <th class="text-center">尺寸</th>
+                                    <th class="text-center">颜色</th>
+                                    <th class="text-center">背景色</th>
+                                    <th class="text-center">可见性</th>
+                                    <th class="text-center">禁用</th>
+                                    <th class="text-center">只读</th>
                                     <th><button class="btn btn-primary btn-sm addChangeProperty">添加</button></th>
                                 </tr>
                             </thead>
@@ -506,21 +503,20 @@ function NewEventsModal($modal, $element) {
                         </table>
                     </div>
                 </div>
-                <div class="copySend">
-                    <span class="title">数据抄送</span>
+                <div class="copySend"  ${item.subscribe.copySend?"":'style="display:none"'}>
                     <div>
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th style="width:70px">元素</th>
-                                    <th style="width:80px">抄送状态</th>
-                                    <th style="width:100px">抄送数据库</th>
-                                    <th >抄送表</th>
-                                    <th >抄送列</th>
-                                    <th >抄送字段</th>
-                                    <th >抄送行</th>
-                                    <th>数据类型</th>
-                                    <th>运算符</th>
+                                    <th style="width:70px" class="text-center">元素</th>
+                                    <th style="width:80px" class="text-center">抄送状态</th>
+                                    <th style="width:100px" class="text-center">抄送数据库</th>
+                                    <th class="text-center">抄送表</th>
+                                    <th class="text-center">抄送列</th>
+                                    <th class="text-center">抄送字段</th>
+                                    <th class="text-center">抄送行</th>
+                                    <th class="text-center">数据类型</th>
+                                    <th class="text-center">运算符</th>
                                     <th ><button class="btn btn-primary btn-sm addCopySend">添加</button></th>
                                 </tr>
                                 
@@ -823,6 +819,7 @@ NewEventsModal.prototype = {
                 check = $(this).prop("checked"),
                 $copySendTable = $(this).parents("tr").find(".copySend"),
                 $changeProperty = $(this).parents("tr").find(".changeProperty");
+                $notify = $(this).parents("tr").find(".notify")
             if (value == "changeProperty") {
                 check ? $changeProperty.show() : $changeProperty.hide()
             }
@@ -830,7 +827,7 @@ NewEventsModal.prototype = {
                 check ? $copySendTable.show() : $copySendTable.hide()
             }
             if (value == "notify") {
-
+                check ? $notify.show() : $notify.hide()
             }
         })
         //增加属性改变栏
@@ -1081,7 +1078,6 @@ NewEventsModal.prototype = {
         })
         
         that.$modal.on('click', '.pm-elem3', function() {
-            console.log('点击了');
             // $(this).toggleClass('applied');
             var $target = that.$modal.find(":text.active"),
                 category = $target.data('category');
@@ -1103,7 +1099,6 @@ NewEventsModal.prototype = {
         });
 
         that.$modal.on('focusin input', ':text', function() {
-            console.log("123")
             // pm-elem3 添加类名 applied;
             that.$modal.find(":text.active").removeClass("active");
             $(this).addClass('active');

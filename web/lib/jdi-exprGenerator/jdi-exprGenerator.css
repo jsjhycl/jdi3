@@ -322,7 +322,7 @@
     top: 6px;
     left: 4px;
 }
-.cpanel .cpanel-body section:not(:first-child) {
+.cpanel .cpanel-body section {
     margin-top: 10px;
 }
 .cpanel .cpanel-body .fn-types {
@@ -336,6 +336,7 @@
     color: #333;
     text-align: center;
 }
+.cpanel .cpanel-body .fn-system .fn-system-item.selected,
 .cpanel .cpanel-body .fn-types .fn-types-item.selected {
     color: #fff;
     background-color: #c9302c;
@@ -370,6 +371,79 @@
 .cpanel .cpanel-body .fn-desc {
     font-size: 12px;
     color: #cecece;
+}
+.cpanel .cpanel-body .fn-system {
+    position: relative;
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding-bottom: 10px;
+}
+.cpanel .cpanel-body .fn-system::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    border: 1px dashed #fff;
+}
+.eg .eg-function .eg-system-list .fn-system-item,
+.cpanel .cpanel-body .fn-system .fn-system-item {
+    position: relative;
+    width: 71px;
+    margin: 2px;
+    padding: 2px 0;
+    font-size: 12px;
+    text-align: center;
+    background-color: #fff;
+}
+.eg .eg-function .eg-system-list .fn-system-item {
+    background: #f5f5f5;
+}
+.eg .fn-system .fn-system-item.canDel::after {
+    content: "x";
+    position: absolute;
+    top: -6px;
+    right: 0px;
+    color: #c9302c;
+    font-size: 15px
+}
+.eg .eg-system-list .fn-system-item.canAdd {
+    background-color: #fff;
+}
+.eg .fn-system-item.canAdd::after {
+    content: "√";
+    position: absolute;
+    top: -6px;
+    right: 0px;
+    color: rgb(65, 183, 131);
+    font-size: 15px
+}
+
+.cpanel .cpanel-body .fn-system .fn-system-more {
+    width: 24px;
+    margin: 5px;
+    padding-left: 4px;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+.cpanel .cpanel-body .fn-system .fn-system-more > div {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #fff;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+}
+.eg .eg-function .eg-system-list {
+    display: none;
 }
 .cfooter {
     padding: 10px 0;

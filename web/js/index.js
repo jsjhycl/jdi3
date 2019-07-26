@@ -40,8 +40,7 @@ function init() {
 		handle: ".modal-header"
 	}); //优化弹窗的拖拽
 	$("#events_modal .modal-dialog").resizable({
-		handles:"all",
-		also
+		handles:"all"
 	});
 }
 

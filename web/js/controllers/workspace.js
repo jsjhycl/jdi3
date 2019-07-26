@@ -454,7 +454,8 @@ Workspace.prototype = {
         if (!id || !name || !type || !subtype) return;//如果id和name和type和subtype不存在退出函数
 
         var that = this,
-            text = type + "/" + subtype + "/" + name,//赋值
+            // text = type + "/" + subtype + "/" + name,//赋值
+            text = name,//赋值
             attrs = {
                 "data-id": id,
                 "data-name": name,

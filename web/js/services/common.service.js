@@ -1,5 +1,6 @@
 function CommonService() {
     this.uploadUrl = "/api/upimg";
+    this.saveFileUrl = "/api/saveFile";
 }
 
 CommonService.prototype = {
@@ -46,6 +47,21 @@ CommonService.prototype = {
             processData: false,
             success: function (result, status, xhr) {
                 callback(result);
+            }
+        });
+    },
+    saveFile: function(fileName, data, callback) {
+        var that = this;
+        $.cajax({
+            url: that.saveFileUrl,
+            type: "POST",
+            data: {
+                fileName: fileName,
+                data: data
+            },
+            dataType: "json",
+            success: function (result, status, xhr) {
+                callback && callback(result);
             }
         });
     }

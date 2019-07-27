@@ -169,7 +169,7 @@
 
                 var html = '';
                 fns.forEach(function(el) {
-                    html += `<div class="btn btn-default fn-system-item" data-name="${el.cname}">${el.cname}</div>`
+                    html += `<div class="btn btn-default fn-system-item" data-type="系统函数" data-name="${el.name}" data-cname="${el.cname}">${el.cname}</div>`
                 });
                 $(".eg .eg-function .eg-system-list").empty().append(html);
             },
@@ -184,6 +184,17 @@
                     var name = $(this).data("name");
                     $(this).removeClass("canAdd").addClass(target.includes(name) ? "" : "canAdd");
                 });
+            },
+            getSystemFnOrder(fns) {
+                if (!Array.isArray(fns)) return;
+                var target = $(".eg .fn-system .fn-system-item").map(function() {
+                    return $(this).data('cname');
+                }).get();
+                fns.forEach(function(el) {
+                    var index = target.indexOf(el.cname);
+                    el.index = index > -1 ? index : 9999;
+                });
+                return fns;
             }
         };
     })();
@@ -293,7 +304,7 @@
             $(".eg .eg-dialog .eg-sidebar .eg-toolbar .btn.active").removeClass("active");
             $(".eg .eg-dialog .eg-function .function-args :text.active").removeClass("active");
 
-            $(".fn-system-item.selected, .fn-types-item.selected").removeClass('selected');
+            $(".fn-system-item.selected, .fn-types-item.selected, .fn-item.selected").removeClass('selected');
         },
         setData: function (element) {
             var cache = $.data(element, CACHE_KEY),
@@ -375,8 +386,9 @@
     
             var systemFn = "";
             if (Array.isArray(systemFunction)) {
-                systemFunction.slice(0, 8).forEach(function(el) {
-                    systemFn += `<div class="btn btn-default fn-system-item" data-name="${el.cname}">${el.cname}</div>`
+                systemFunction.sort(function(a, b){ return a.index > b.index})
+                systemFunction.filter(el => el.index !== 9999).forEach(function(el) {
+                    systemFn += `<div class="btn btn-default fn-system-item" data-type="系统函数" data-name="${el.name}" data-cname="${el.cname}">${el.cname}</div>`
                 });
                 systemFn += `<div class="fn-system-more"><div></div><div></div><div></div></div>`
             }
@@ -631,14 +643,12 @@
                             html = '';
                         functions.forEach(function(el) {
                             var title = el.title;
-                            console.log(el.data.items)
                             el.data.items.forEach(function(fn, idx) {
                                 if ((fn.name && fn.name.indexOf(val) > -1) || (fn.cname && fn.cname.indexOf(val) > -1)) {
                                     html += '<div class="fn-item" data-type="'+ title +'" data-name="'+ fn.name +'" data-index="'+ idx +'" data-desc="'+ fn.desc +'">'+ '（'+ el.title +'）' + (fn.cname || fn.name) + '（' + fn.name + '）</div>'
                                 }
                             })
                         });
-                        
                         $(".eg").find(".fn-wrap").empty().append(html)
                             .end().find(".fn-types-item").removeClass("selected")
                             .end().find(".fn-category-select").empty()
@@ -672,8 +682,8 @@
                 var $eg = $(".eg:visible"),
                     $egExpr = $eg.find(".eg-expr")
                     target = $eg.find('.eg-elem.current').data('id'),
-                    fnType = $eg.find(".fn-item.selected").data('type'),
-                    fnName = $eg.find(".fn-item.selected").data('name'),
+                    fnType = $eg.find(".fn-item.selected").data('type') || $eg.find(".fn-system-item.selected").data('type'),
+                    fnName = $eg.find(".fn-item.selected").data('name') ||  $eg.find(".fn-system-item.selected").data('name'),
                     result = "";
                 if (!target) return;
                 if(!fnName) return alert('无选中函数！');
@@ -694,6 +704,8 @@
                     var async = $eg.find('[data-type="async"]').val(),
                         voluation = $eg.find('[data-type="voluation"]').val();
                     result = "functions("+ '"'+ target + '"' + "," + '"'+ fnName + '"' + "," + async + "," + voluation + "," + args +")";
+                } else if (fnType === "系统函数") {
+                    result = fnName + "("+ args +")"
                 }
                 that.setExpr($egExpr, $egExpr.get(0), $egExpr.val(), result);
                 $(".eg .eg-function [data-type='arg'].active").removeClass("active");
@@ -710,7 +722,7 @@
             $(document).on("click" + EVENT_NAMESPACE, ".eg .fn-system .fn-system-item", {element: element}, function (event) {
                 if ($('.eg .eg-system-list').is(":visible")) return;
 
-                var cname = $(this).data('name'),
+                var cname = $(this).data('cname'),
                     cache = $.data(element, CACHE_KEY),
                     fnData = cache.systemFunction.filter(function(el) { return el.cname === cname });
                 that.clearStyle();
@@ -735,12 +747,14 @@
             // 切换配置函数
             $(document).on("click" + EVENT_NAMESPACE, ".eg .fn-system .fn-system-more", {element: element}, function (event) {
                 var $list = $('.eg .eg-function').find(".eg-system-list");
+                    cache = $.data(element, CACHE_KEY);
                 if ($list.is(":visible")) {
                     FunctionUtil.setSystemStatus(true);
                     $(this).find(".fn-system .fn-system-item").first().click();
                     $list.hide().prev().show();
+                    var newFn = FunctionUtil.getSystemFnOrder(cache.systemFunction);
+                    new CommonService().saveFile('system_functions.json', JSON.stringify(newFn));
                 } else {
-                    var cache = $.data(element, CACHE_KEY);
                     $(this).parents('.fn-system').find(".fn-system-item").addClass("canDel");
                     $list.show().prev().hide();
                     FunctionUtil.renderSystemFnList(cache.systemFunction);
@@ -751,8 +765,8 @@
 
             // 移除系统函数
             $(document).on("click" + EVENT_NAMESPACE, ".eg .fn-system .canDel", {element: element}, function (event) {
-                var name = $(this).remove().data('name');
-                $(".eg .eg-system-list").find('[data-name="'+ name +'"]').addClass("canAdd");
+                var name = $(this).remove().data('cname');
+                $(".eg .eg-system-list").find('[data-cname="'+ name +'"]').addClass("canAdd");
             });
 
             // 添加系统函数
@@ -765,8 +779,7 @@
                 }
                 $(this).removeClass("canAdd");
                 $clone.addClass("canDel").removeClass("canAdd").insertBefore($target.find(".fn-system-more"));
-                // FunctionUtil.setSystemStatus();
-                remove && $(".eg .eg-system-list").find('[data-name="'+ remove +'"]').addClass("canAdd");
+                remove && $(".eg .eg-system-list").find('[data-cname="'+ remove +'"]').addClass("canAdd");
             });
         },
         setExpr: function ($elem, elem, expr, value) {

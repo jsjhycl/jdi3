@@ -416,7 +416,7 @@ function propertybar() {
 					localFunction = data3,
 					remoteFunction = data4,
                     systemFunction = data5;
-                    
+
 				// 关闭插入函数弹窗
 				$("#insertFunctionArgsModal .close").trigger('click')
 

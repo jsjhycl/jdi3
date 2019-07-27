@@ -753,9 +753,7 @@
                     $(this).find(".fn-system .fn-system-item").first().click();
                     $list.hide().prev().show();
                     var newFn = FunctionUtil.getSystemFnOrder(cache.systemFunction);
-                    new CommonService().saveFile('system_functions.json', JSON.stringify(newFn), function(res) {
-                        // console.log(res);
-                    })
+                    new CommonService().saveFile('system_functions.json', JSON.stringify(newFn));
                 } else {
                     $(this).parents('.fn-system').find(".fn-system-item").addClass("canDel");
                     $list.show().prev().hide();
@@ -781,7 +779,6 @@
                 }
                 $(this).removeClass("canAdd");
                 $clone.addClass("canDel").removeClass("canAdd").insertBefore($target.find(".fn-system-more"));
-                // FunctionUtil.setSystemStatus();
                 remove && $(".eg .eg-system-list").find('[data-cname="'+ remove +'"]').addClass("canAdd");
             });
         },

@@ -378,7 +378,6 @@ function propertybar() {
                         title: "远程函数"
                     }
                 ],
-                saveFile: new CommonService().saveFile,
                 systemFunction: systemFunction,
 				onSetProperty: function (expr) {
 					var id = $("#property_id").val();

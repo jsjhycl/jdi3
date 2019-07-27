@@ -736,12 +736,14 @@
                     $list.hide().prev().show();
                     var newFn = FunctionUtil.getSystemFnOrder(cache.systemFunction);
                     new CommonService().saveFile('system_functions.json', JSON.stringify(newFn));
+                    $(".fn-container").slideDown('fast');
                 } else {
                     $(this).parents('.fn-system').find(".fn-system-item").addClass("canDel");
                     $list.show().prev().hide();
                     FunctionUtil.renderSystemFnList(cache.systemFunction);
                     FunctionUtil.setSystemStatus();
                     that.clearStyle();
+                    $(".fn-container").slideUp('fast');
                 }
             });
 

@@ -23,7 +23,7 @@ SubmitModal.prototype = {
             data["feature"] = $('[name="model_feature"]').val();
             data["userGrade"] = $('[name="model_userGrade"]').val();
             data["area"] = $('[name="model_area"]').val();
-
+            data["autoCreate"] = $('[name="model_autoCreate"]').val();
         } else {
             name = $('[name="template_name"]').val();
             data["category"] = $('[name="template_category"]').val();

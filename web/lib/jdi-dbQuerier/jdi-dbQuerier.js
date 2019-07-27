@@ -39,15 +39,20 @@
                 tableHtml = '<div class="form-group">' +
                     '<label class="col-lg-2 control-label">查询数据库：</label>' +
                     '<div class="col-lg-9"><select class="form-control querier-dbName"></select></div>' +
-                    '</div>'+'<div class="form-group">' +
-                    '<label class="col-lg-2 control-label">查询表格：</label>' +
-                    '<div class="col-lg-9"><select class="form-control querier-table"></select></div>' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label class="col-lg-2 control-label">查询表格：</label>' +
+                        '<div class="col-lg-9"><select class="form-control querier-table"></select></div>' +
                     '</div>',
+                querierTimeHtml = '<div class="form-group">' +
+                                        '<label class="col-lg-2 control-label">查询日期：</label>' +
+                                        '<div class="col-lg-3"><select class="form-control querier-date"><option value="">默认</select></div>' +
+                                    '</div>',
                 conditionsHtml = '<div class="form-group">' +
                     '<label class="col-lg-2 control-label">查询条件：</label>' +
                     '<div class="col-lg-9 querier-conditions"></div>' +
                     '</div>';
-            $(element).empty().append(tableHtml + that.renderFields(element) + conditionsHtml).addClass("form-horizontal querier");
+            $(element).empty().append(tableHtml + querierTimeHtml + that.renderFields(element) + conditionsHtml).addClass("form-horizontal querier");
         },
         renderFields: function (element) {
             var cache = $.data(element, CACHE_KEY),
@@ -89,51 +94,32 @@
                 fields = data.fields;
                 conditions = data.conditions;
             }
-
-            // var db = new Db();
-            // db.getTables(false, function (tables,dbNames) {
-            //     // ModalHelper.setSelectData($querierDbName, {name: "请选择数据库", value: ""}, dbNames, dbName, true)
-            //     // ModalHelper.setSelectData($querierTable, {name: "请选择查询表", value: ""}, tables, table, true);
-            //     db.getFields(table, function (arrs) {
-            //         console.log(fieldMode, arrs, fields)
-            //         // that.setFields($querierFields, fieldMode, arrs, fields);
-            //         $querierConditions.conditions({
-            //             mode: 1,
-            //             table: table,
-            //             data: conditions
-            //         });
-            //     });
-            // });
-            console.log(dbName,table,fields,conditions)
             var AllDbName = new CommonService().getFileSync("/lib/ZZZZZZZ/table.json")||{},
                 dbOptions = [],
-                tableOptions = [];
-                fieldsoptions = []
-                Object.keys(AllDbName).forEach(function(item){
-                    dbOptions.push({name:item,value:item})
+                tableOptions = [],
+                fieldsoptions = [];
+            Object.keys(AllDbName).forEach(function(item){
+                dbOptions.push({name:item,value:item})
+            })
+            Common.fillSelect($querierDbName,{name:"请选择数据库",value:""},dbOptions,dbName,true)
+            if(dbName){
+                Object.keys(AllDbName[dbName]).forEach(function(item){
+                    tableOptions.push({name:item,value:item})
                 })
-                Common.fillSelect($querierDbName,{name:"请选择数据库",value:""},dbOptions,dbName,true)
-                if(dbName){
-                    Object.keys(AllDbName[dbName]).forEach(function(item){
-                        tableOptions.push({name:item,value:item})
+                if(table){
+                    AllDbName[dbName][table].tableDetail.forEach(function(item){
+                        fieldsoptions.push({name:item.cname,value:item.id})
                     })
-                    if(table){
-                        AllDbName[dbName][table].tableDetail.forEach(function(item){
-                            console.log(item)
-                            fieldsoptions.push({name:item.cname,value:item.id})
-                        })
-                    }
                 }
-                Common.fillSelect($querierTable,{name:"请选择表",value:""},tableOptions,table,true)
-                that.setFields($querierFields, fieldMode, fieldsoptions, fields);
-                $querierConditions.conditions({
-                    mode: 1,
-                    dbName:dbName,
-                    table: table,
-                    data: conditions
-                });
-
-                
+            }
+            Common.fillSelect($querierTable,{name:"请选择表",value:""},tableOptions,table,true)
+            that.setFields($querierFields, fieldMode, fieldsoptions, fields);
+            $querierConditions.conditions({
+                mode: 1,
+                dbName:dbName,
+                table: table,
+                data: conditions
+            });
         },
         setFields: function ($fieldsDiv, fieldMode, fields, data) {
             if (!$fieldsDiv || $fieldsDiv.length <= 0) return;
@@ -180,6 +166,43 @@
                 });
             }
         },
+        setQuerierDate: function($date, autoCreate, times) {
+            var config = {
+                yearOffset: 0,
+                lang: 'ch',
+                timepicker: false,
+                format: "",
+                formatDate: "",
+            },
+            timeHtml = '<div class="col-lg-3"><input type="text" class="form-control querier-starttime" placeholder="查询开始日期" /></div>' +
+                        '<div class="col-lg-3"><input type="text" class="form-control querier-endtime" placeholder="查询截止日期" /></div>',
+            config1,
+            config2;
+            switch(autoCreate) {
+                case 'A':
+                    config["format"] = "Y";
+                    config["formatDate"] = "Y";
+                    break;
+                case 'B':
+                    config["format"] = "Y/m";
+                    config["formatDate"] = "Y/m";
+                    break;
+                case 'C':
+                    config["format"] = "Y/m/d";
+                    config["formatDate"] = "Y/m/d";
+                case 'Z':
+                    break;
+            }
+            if (config["format"]) {
+                config1 = times["starttime"] ? $.extend({}, config, { "value": times["starttime"] }) : config;
+                config2 = times["endtime"] ? $.extend({}, config, { "value": times["endtime"] }) : config;
+                $(".querier-starttime").length <= 0 && $date.after(timeHtml);
+                $(".querier-starttime").attr('data-format', config["format"]).datetimepicker(config1);
+                $(".querier-endtime").attr('data-format', config["format"]).datetimepicker(config2);
+            } else {
+                $(".querier-starttime, .querier-endtime").remove();
+            }
+        },
         //绑定事件
         bindEvents: function (element) {
             var that = this;
@@ -208,11 +231,13 @@
                     fieldMode = cache.fieldMode,
                     data = cache.data,
                     fieldsoptions = [],
+                    tableAutoCreate;
                     dbName = $(celement).find(".querier-dbName").val();
                     if(dbName&&table){
                         AllDbName[dbName][table].tableDetail.forEach(function(item){
                             fieldsoptions.push({name:item.cname,value:item.id})
                         })
+                        tableAutoCreate = AllDbName[dbName][table].autoCreate || 'Z';
                     }
                 if (fieldMode === "single") {
                     $querierFields = $(celement).find(".querier-fields-show,.querier-fields-real");
@@ -234,36 +259,7 @@
                         data: null
                     });
                 }
-
-
-
-                // new Db().getFields(table, function (fields) {
-                //     var celement = event.data.element,
-                //         cache = $.data(celement, CACHE_KEY),
-                //         $querierFields = $(celement).find(".querier-fields"),
-                //         $querierConditions = $(celement).find(".querier-conditions"),
-                //         fieldMode = cache.fieldMode,
-                //         data = cache.data;
-                //         console.log(celement,cache,$querierFields,$querierConditions,fieldMode,data)
-                //     if (fieldMode === "single") {
-                //         $querierFields = $(celement).find(".querier-fields-show,.querier-fields-real");
-                //     }
-                //     if (DataType.isObject(data) && data.table === table) {
-                //         that.setFields($querierFields, fieldMode, fields, data.fields);
-                //         $querierConditions.conditions({
-                //             mode: 1,
-                //             table: table,
-                //             data: data.conditions
-                //         });
-                //     } else {
-                //         that.setFields($querierFields, fieldMode, fields, null);
-                //         $querierConditions.conditions({
-                //             mode: 1,
-                //             table: table,
-                //             data: null
-                //         });
-                //     }
-                // });
+                that.setQuerierDate($(element).find(".querier-date").parent(), tableAutoCreate);
             });
         }
     };
@@ -314,6 +310,10 @@
         getData: function (elements) {
             var $querier = $(elements[0]),
                 cache = $.data(elements[0], CACHE_KEY),
+                $querierStartTime = $(elements[0]).find(".querier-starttime"),
+                $querierEndTime = $(elements[0]).find(".querier-endtime"),
+                format = $querierStartTime.data('format') || '',
+                now = new Date().toFormatString(format || 'yyyy/mm/dd', false, true),
                 fields;
             //获取字段数据
             if (cache.fieldMode === "single") {
@@ -332,6 +332,7 @@
             return {
                 dbName:$querier.find(".querier-dbName").val(),
                 table: $querier.find(".querier-table").val(),
+                querierTime: $querierStartTime.length > 0 ? { starttime: $querierStartTime.val() || now, endtime: $querierEndTime.val() || now } : {},
                 fields: fields,
                 conditions: $querier.find(".querier-conditions").conditions("getData")
             };

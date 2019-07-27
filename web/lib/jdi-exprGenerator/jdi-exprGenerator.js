@@ -458,7 +458,7 @@
                 cache = $.data(element, CACHE_KEY),
                 top = cache.top || 20,
                 zIndex = cache.zIndex || 9999,
-                width = cache.width || 1200,
+                width = cache.width || 1300,
                 height = cache.height || ($(window).height() - top * 2),
                 sWidth = $eg.find(".eg-sidebar").width(),
                 rHeight = $eg.find(".eg-result").height();
@@ -469,11 +469,11 @@
                 "width": width,
                 "height": height
             });
-            $eg.find(".eg-content").width(width - sWidth * 2);
+            // $eg.find(".eg-content").width(width - sWidth * 2);
             $eg.find(".eg-content,.eg-sidebar,.eg-toolbar,.eg-result,.eg-function,.eg-insertFn").css("z-index", zIndex + 1);
             $eg.find(".eg-close").css("z-index", zIndex + 2);
             $eg.find(".eg-toolbar").css("bottom", rHeight);
-            $eg.find(".eg-function,.eg-insertFn").width(sWidth);
+            // $eg.find(".eg-function,.eg-insertFn").width(sWidth);
             $eg.fadeIn();
             if (cache.onOpen) {
                 cache.onOpen();
@@ -566,18 +566,6 @@
 
                 // czp修改清除只改变值
                 $(".eg .eg-dialog .eg-sidebar .eg-result .eg-expr").val("");
-                // var $eg = $(".eg");
-                // that.clearData($eg);
-                // that.clearStyle($eg);
-                // $eg.fadeOut();
-
-                // var cache = $.data(event.data.element, CACHE_KEY),
-                //     $result = cache.$result;
-                // $result.removeAttr("data-expr");
-                // $result.is(":input") ? $result.val("") : $result.text("");
-                // if (cache.onClearProperty) {
-                //     cache.onClearProperty();
-                // }
             });
             //关闭
             $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-close", {element: element}, function (event) {
@@ -731,23 +719,17 @@
                 FunctionUtil.setArgsTbody(fnData[0]);
             });
 
-            // 依赖 sortable.js 插件
-            // (function() {
-            //     $(".fn-system").sortable({
-            //         items: ".fn-system-item",
-            //         containment: "parent"
-            //     });
-            //     $(".fn-system").disableSelection();
-            //     $(".eg-system-list").sortable({
-            //     });
-            //     $(".eg-system-list").disableSelection();
-
-            // })();
-
+            // 依赖  插件
+            (function() {
+                $(".eg:visible .eg-dialog").resizable({
+                    handles: 'e'
+                });
+            })();
+            
             // 切换配置函数
             $(document).on("click" + EVENT_NAMESPACE, ".eg .fn-system .fn-system-more", {element: element}, function (event) {
                 var $list = $('.eg .eg-function').find(".eg-system-list");
-                    cache = $.data(element, CACHE_KEY);
+                cache = $.data(element, CACHE_KEY);
                 if ($list.is(":visible")) {
                     FunctionUtil.setSystemStatus(true);
                     $(this).find(".fn-system .fn-system-item").first().click();
@@ -775,7 +757,7 @@
                     $target = $(".eg .fn-system"),
                     remove;
                 if ($target.find(".fn-system-item").length >= 8) {
-                    remove = $target.find(".fn-system-item").first().remove().data("name");
+                    remove = $target.find(".fn-system-item").first().remove().data("cname");
                 }
                 $(this).removeClass("canAdd");
                 $clone.addClass("canDel").removeClass("canAdd").insertBefore($target.find(".fn-system-more"));

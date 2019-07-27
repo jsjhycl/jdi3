@@ -854,3 +854,8 @@ li {
     position: relative; 
     display: inline-block
 }
+#events_modal .clickModal.pm3 {
+    transform: scale(.75);
+    -webkit-transform: scale(.75);
+    transform-origin: top left;
+}

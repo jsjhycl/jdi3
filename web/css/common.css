@@ -18,7 +18,9 @@
 .w100 {
     width: 100%;
 }
-
+.w640px {
+    width: 640px;
+}
 .w800px {
     width: 800px;
 }

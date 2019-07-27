@@ -767,7 +767,7 @@
 
             // 移除系统函数
             $(document).on("click" + EVENT_NAMESPACE, ".eg .fn-system .canDel", {element: element}, function (event) {
-                var name = $(this).remove().data('name');
+                var name = $(this).remove().data('cname');
                 $(".eg .eg-system-list").find('[data-cname="'+ name +'"]').addClass("canAdd");
             });
 

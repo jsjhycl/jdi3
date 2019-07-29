@@ -6,7 +6,7 @@ function SetDbDesignerModal($modal) {
     this.$dbName = this.$modalBody.find('[data-type="dbName"]'), //获取数据库名输入框
     this.$tableName = this.$modalBody.find('[data-type="tableName"]'), //获取表格名输入框
     this.$tabeleDesc = this.$modalBody.find('[data-type="tableDesc"]'), //获取表格描述输入框
-    this.$taleAutoCreate = this.$modalBody.find('[data-type="tableAutoCreate"]'), //获取备用1输入框
+    this.$reserveOne = this.$modalBody.find('[data-type="reserveOne"]'), //获取备用1输入框
     this.$reserveTwo = this.$modalBody.find('[data-type="reserveTwo"]'), //获取备用2输入框
     this.$reserveThere = this.$modalBody.find('[data-type="reserveThere"]'), //获取备用3输入框
     this.$reserveFour = this.$modalBody.find('[data-type="reserveFour"]'), //获取备用4输入框
@@ -22,26 +22,19 @@ function SetDbDesignerModal($modal) {
             dataType: "json"
         });
     }
-    this.getAutoCreate = function() {
-        new CommonService().getFile("/profile/category.json", function (result) {
-            if (DataType.isObject(result)) { //判断result是否为对象
-                Common.fillSelect($('[data-type="tableAutoCreate"]'), null, result["自动分表"], null, true);  //新增自动分表属性
-            }
-        });
-    }
     this._getTableValue = function () {
+
         return $("#name .text-danger").text().replace(/\(|\)/g, "")
     }
     this._setDefaultTableName = function () {
         var value = this._getTableValue()
         $("#setDbDesignerModal").find('[data-type="tableName"]').val(value)
-        this.getAutoCreate();
     }
     this._clearData = function () {
         this.$dbName.val("");
         this.$tableName.val("");
         this.$tabeleDesc.val("");
-        this.$taleAutoCreate.val("");
+        this.$reserveOne.val("");
         this.$reserveTwo.val("");
         this.$reserveThere.val("");
         this.$reserveFour.val("");
@@ -105,7 +98,7 @@ SetDbDesignerModal.prototype = {
             dbName = that.$dbName.val(),
             tableName = that.$tableName.val(),
             tableDesc = that.$tabeleDesc.val(),
-            taleAutoCreate = that.$taleAutoCreate.val(),
+            reserveOne = that.$reserveOne.val(),
             reserveTwo = that.$reserveTwo.val(),
             reserveThere = that.$reserveThere.val(),
             reserveFour = that.$reserveFour.val(),
@@ -121,7 +114,7 @@ SetDbDesignerModal.prototype = {
         if (localData[dbName]) {
             localData[dbName][tableName] = {
                 "tableDesc": tableDesc,
-                "taleAutoCreate": taleAutoCreate,
+                "reserveOne": reserveOne,
                 "reserveTwo": reserveTwo,
                 "reserveThere": reserveThere,
                 "reserveFour": reserveFour,
@@ -133,7 +126,7 @@ SetDbDesignerModal.prototype = {
             localData[dbName] = {
                 [tableName]: {
                     "tableDesc": tableDesc,
-                    "taleAutoCreate": taleAutoCreate,
+                    "reserveOne": reserveOne,
                     "reserveTwo": reserveTwo,
                     "reserveThere": reserveThere,
                     "reserveFour": reserveFour,

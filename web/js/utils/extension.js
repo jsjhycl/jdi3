@@ -124,9 +124,10 @@ Array.prototype.isRepeat = function () {
     return this.distinct().length !== this.length;
 };
 
-Date.prototype.toFormatString = function (format, zero) {
-    format = format || "";
-    zero = !!zero;
+Date.prototype.toFormatString = function (format, zero, noSubstr) {
+    format = format || "yyyy-MM-dd hh:mm:ss";
+    zero = !!zero,
+    noSubstr = !!noSubstr;
     var dy = this.getFullYear(),
         dM = this.getMonth() + 1,
         dd = this.getDate(),
@@ -142,19 +143,18 @@ Date.prototype.toFormatString = function (format, zero) {
             "m+": !zero ? dm.toString() : dm < 10 ? "0" + dm : dm.toString(),
             "s+": !zero ? ds.toString() : ds < 10 ? "0" + ds : ds.toString(),
             "S": dS.toString()
-        },
-        result = null;
+        };
     for (var i in config) {
-        var matches = format.match(new RegExp(i));
+        var matches = format.match(new RegExp(i, 'img'));
         if (matches) {
             var item = config[i],
                 first = matches[0];
             if (i === "S") {
-                result = format.replace(first, item);
+                format = format.replace(first, item);
             } else {
-                result = format.replace(first, item.substr(item.length - m.length));
+                format = format.replace(first, noSubstr ? item : item.substr(item.length - first.length));
             }
         }
     }
-    return result;
+    return format;
 };

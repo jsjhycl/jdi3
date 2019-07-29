@@ -10,7 +10,6 @@
 
 .eg .eg-dialog {
     position: relative;
-    display: block;
     margin: auto;
     background-color: white;
     border-radius: 10px;
@@ -19,15 +18,20 @@
 
 .eg .eg-dialog .eg-content,
 .eg .eg-dialog .eg-sidebar,
-.eg .eg-dialog .eg-function,
-.eg .eg-dialog .eg-insertFn {
+.eg .eg-dialog .eg-function {
     float: left;
     height: 100%;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
-
+.eg .eg-dialog .eg-content {
+    width: calc(100% - 500px);
+}
+.eg .eg-dialog .eg-sidebar,
+.eg .eg-dialog .eg-function {
+    width: 250px;
+}
 /*内容区域样式*/
 .eg .eg-dialog .eg-content {
     overflow: auto;
@@ -39,6 +43,9 @@
     margin: auto;
     background-color: #f8f8f8;
     outline: 1px dashed gainsboro;
+    transform: scale(.75);
+    -webkit-transform: scale(.75);
+    transform-origin: top left;
 }
 .eg .eg-dialog .eg-content .eg-page .eg-elem {
     color: #dafffe;

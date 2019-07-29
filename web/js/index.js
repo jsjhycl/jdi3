@@ -30,6 +30,8 @@ function init() {
 			Common.fillSelect($('[name="model_userGrade"]'), null, result["布局用户级别"], null, true);//填充用户级别的下拉框
 			Common.fillSelect($('[name="model_feature"]'), null, result["布局特性"], null, true);//填充布局特性的下拉框
             Common.fillSelect($('[name="model_area"]'), null, result["布局区域"], null, true);
+
+            Common.fillSelect($('[name="model_autoCreate"]'), null, result["自动分表"], null, true);  //新增自动分表属性
         }
 	});
 	//右键菜单

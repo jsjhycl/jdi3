@@ -115,6 +115,7 @@
     <link rel="stylesheet" href="../lib/jdi-dbDesigner/jdi-dbDesigner.css">
     <link rel="stylesheet" href="../lib/jdi-dbQuerier/jdi-dbQuerier.css">
     <link rel="stylesheet" href="../lib/jdi-propModifier/jdi-propModifier.css">
+    <link rel="stylesheet" href="../lib/datetimepicker/jquery.datetimepicker.css">
     <link rel="stylesheet" href="../css/index.css">
     <link rel="stylesheet" href="../css/model.css">
 
@@ -676,7 +677,7 @@
 
     <!-- 数据源tab选项卡 -->
     <section class="modal fade" id="dataSource_db_tab_modal">
-        <div class="modal-dialog w800px">
+        <div class="modal-dialog w640px">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -696,7 +697,7 @@
                         <div class="tab-pane fade in active" id="dataSource_static_tab">
                             <div class="form-group">
                                 <label class="control-label">数据项</label>
-                                <textarea class="form-control" cols="30" rows="10"
+                                <textarea class="form-control" cols="30" rows="6"
                                     placeholder="item以换行符[\r\n]、分号[;；]隔开，name、value以逗号[,，]隔开"></textarea>
                             </div>
                         </div>
@@ -885,13 +886,13 @@
                             <label class="control-label col-lg-3">表名</label>
                             <input class="form-control col-lg-3" type="text" data-type="tableName">
                         </div>
-                        <div class="form-groupb col-lg-3" style="margin-bottom: 5px">
+                        <div class="form-group col-lg-3" style="margin-bottom: 5px">
                             <label class="control-label col-lg-3">表注解</label>
                             <input class="form-control col-lg-3" type="text" data-type="tableDesc">
                         </div>
                         <div class="form-group col-lg-3" style="margin-bottom: 5px">
-                            <label class="control-label col-lg-3">备用1</label>
-                            <input class="form-control col-lg-3" type="text" data-type="reserveOne">
+                            <label class="control-label col-lg-3">自动分表</label>
+                            <select class="form-control" style="width: 196px" data-type="tableAutoCreate"></select>
                         </div>
                         <div class="form-group col-lg-3" style="margin-bottom: 5px">
                             <label class="control-label col-lg-3">备用2</label>
@@ -1002,6 +1003,10 @@
                             <div class="form-group">
                                 <label class="control-label" for="model_userGrade">布局用户级别</label>
                                 <select class="form-control" id="model_userGrade" name="model_userGrade"></select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="model_autoCreate">自动分表</label>
+                                <select class="form-control" id="model_autoCreate" name="model_autoCreate"></select>
                             </div>
                         </div>
                     </div>

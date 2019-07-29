@@ -33,7 +33,6 @@ DbQueryModal.prototype = {
                 that.$typeSelect.val(type);
             }
         }
-        console.log(queryData,111)
         that.$querier.dbQuerier({
             fieldMode: "multi",
             data: queryData
@@ -54,7 +53,6 @@ DbQueryModal.prototype = {
             },
             $workspace = $("#workspace"),
             $control = $workspace.find("#" + id);
-            console.log(result)
         that.$element.val(JSON.stringify(data));
         new Property().save(id === "BODY" ? $workspace : $control, that.$element);
     },

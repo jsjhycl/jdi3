@@ -112,11 +112,11 @@ function navbar() {
 	var insertFnModal = new InsertFnModal($("#insertFunctionModal"));
 	insertFnModal.execute();
 
-	(function saveAs() {
-		$("#saveAs").click(function () {
-			new Workspace().save(true, true)
-		})
-	})();
+	// (function saveAs() {
+	// 	$("#saveAs").click(function () {
+	// 		new Workspace().save(true, true)
+	// 	})
+	// })();
 
 	//保存
 	(function save() {

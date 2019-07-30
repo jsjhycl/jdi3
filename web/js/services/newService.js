@@ -12,7 +12,7 @@ NewService.prototype = {
         $.cajax({
             url: that.addUrl + "/" + type,
             type: "POST",
-            data: data,
+            data: {post:JSON.stringify(data)},
             dataType: "json",
             success: function (result, status, xhr) {
                 callback(result)

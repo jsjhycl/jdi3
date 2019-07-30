@@ -3,42 +3,26 @@
  * @param {*} type 初始化 资源 产品 数据库定义 发布
  * @param {*} subtype 加载 表单 布局
  */
-function Filter(type, subtype) {
-    this.type = type || null;//如果传入type就用type否则type为空
+function Filter(subtype) {
     this.subtype = subtype || null;//如果传入subtype就用subtype否则subtype为空
     /**
      * first: ["save","submit","recall","basic","validate","events","expression","dataSource","query","db"]。PS：basic之后（包含basic）为属性栏配置
      * second: ["id","name","cname","value","controlType","fontFamily","fontSize","color","backgroundColor","visibility","disable","readonly"…]。PS：控件属性数据配置
      */
     this.FILTER_CONFIG = {//定义一下过滤配置
-        "初始化/加载":{//
+        "加载":{//
             zero:["asider","delete","preview","test"],//0级过滤页面初始化的时候
             first:[],//一级过滤
             second:[]//二级过滤
         },
-        "资源/表单": {
+        "表单": {
             zero:[],
             first: ["save", "submit", "basic", "validate", "expression"],
             second: []
-        },
-        "资源/布局": {
+        },   
+        "布局": {
             zero:[],
-            first: ["save", "submit", "recall", "basic", "validate", "expression","dataSource", "events", "query"],
-            second: []
-        },
-        "产品/表单": {//目前没有这块的流程
-            zero:[],
-            first: ["save", "submit", "basic", "validate", "expression"],
-            second: []
-        },
-        "产品/布局": {//目前没有这块流程
-            zero:[],
-            first: ["save", "submit", "recall", "basic", "validate", "expression", "dataSource", "events", "query"],
-            second: []
-        },
-        "数据库定义/布局": {
-            zero:[],
-            first: ["save", "submit", "basic", "validate", "expression", "dataSource", "events", "query", "db"],
+            first: ["save", "submit","recall", "basic", "validate", "expression", "dataSource", "events", "query", "db"],
             second: []
         },
         "发布": {zero:[],first: [], second: []}
@@ -47,11 +31,12 @@ function Filter(type, subtype) {
 
 Filter.prototype.set = function () {
     var that = this,
-        type = that.type,//获取现在的type
-        subtype = that.subtype,//获取现在的subtype
-        key = [type, subtype].filter(function (item) {//把type和subtype和并并添加/
-            return item;
-        }).join("/"),
+        // type = that.type,//获取现在的type
+        // subtype = that.subtype,//获取现在的subtype
+        // key = [type, subtype].filter(function (item) {//把type和subtype和并并添加/
+        //     return item;
+        // }).join("/"),
+        key = that.subtype,
         filter = that.FILTER_CONFIG[key];
     $("[data-first-filter],[data-second-filter],[data-zero-filter]").show();//获取页面中所有属性data-first-filter和data-second-filter和data-zero-filter的元素让他们显示
 

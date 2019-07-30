@@ -246,8 +246,8 @@ function Workspace() {
         })
     }
 
-    this._getData = function (id, name, type, subtype, customId) {
-        if (!id || !name) return alert("无法保存没有编号、名称的数据！"); //如果id或者name不存在的退出函数并提示
+    this._getData = function (id, name, subtype, customId) {
+        if (!name) return alert("无法保存没有编号、名称的数据！"); //如果id或者name不存在的退出函数并提示
 
         var that = this;
         that.$workspace.click(); //执行工作区点击事件
@@ -342,7 +342,7 @@ function Workspace() {
 
         //获取table数据
         var tableData = null;
-        if ((type === "产品" || type === "数据库定义") && subtype === "布局" && customId) { //如果type是产品或则是数据库定义subtype是布局且customid存在
+        if (subtype === "布局" && customId) { //如果type是产品或则是数据库定义subtype是布局且customid存在
             tableData = new Property().getDbProperty(customId, name); //实例化property调用getDbproperty
         }
 
@@ -374,8 +374,8 @@ function Workspace() {
      * @param modelData
      * @private
      */
-    this._setData = function (isPrompt, id, type, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData) {
-        if (!id || !type || !subtype) return; //如果id或则type或则subtype都不存在则退出函数
+    this._setData = function (isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData) {
+        if ( !subtype) return; //如果id或则type或则subtype都不存在则退出函数
 
         isPrompt = !!isPrompt; //对isPrompt进行取布尔值
 
@@ -385,78 +385,118 @@ function Workspace() {
         for (var i in GLOBAL_PROPERTY) {
             i.startsWith('phone_') ? phone_property[i] = GLOBAL_PROPERTY[i] : property[i] = GLOBAL_PROPERTY[i];
         }
+        var name = "",
+            type="",
+            basicInfo = {};
+        //保存基本信息数据
+        if ($("#submit_model_tab").is(":visible")) {
+            type = 1
+            name = $('[name="model_name"]').val();
+            basicInfo["category"] = $('[name="model_category"]').val();
+            basicInfo["subCategory"] = $('[name="model_subCategory"]').val();
+            basicInfo["feature"] = $('[name="model_feature"]').val();
+            basicInfo["userGrade"] = $('[name="model_userGrade"]').val();
+            basicInfo["area"] = $('[name="model_area"]').val();
+            basicInfo["autoCreate"] = $('[name="model_autoCreate"]').val();
+            //缺少关联表单
+            basicInfo["contactId"] = ""
+        } else {
+            type = 0
+            name = $('[name="template_name"]').val();
+            basicInfo["category"] = $('[name="template_category"]').val();
+            basicInfo["subCategory"] = $('[name="template_subCategory"]:checked').val();
+        }
+        var params = {
+            customId:id,
+            name:name,
+            basicInfo:basicInfo,
+            data:{
+                "setting.json":JSON.stringify(settingData),
+                "property.json":JSON.stringify(property),
+                'modal.html':modelData,
+                "phone.html":phoneData,
+                'phone_setting.json':JSON.stringify(phoneSettingData),
+                'phone_property.json':JSON.stringify(phone_property),
+                'table.json':JSON.stringify(tableData)
+            }
 
-        var that = this,
-            arrs = [{ //定义arrs
-                name: "setting.json",
-                contentType: "text/plain;charset=utf-8",
-                data: JSON.stringify(settingData)
-            }, {
-                name: "property.json",
-                contentType: "text/plain;charset=utf-8",
-                data: JSON.stringify(property)
-            }, {
-                name: "model.html",
-                contentType: "text/html;charset=utf-8",
-                data: modelData
-            }, {
-                name: "phone.html",
-                contentType: "text/html;charset=utf-8",
-                data: phoneData
-            }, {
-                name: "phone_setting.json",
-                contentType: "text/html;charset=utf-8",
-                data: JSON.stringify(phoneSettingData)
-            }, {
-                name: "phone_property.json",
-                contentType: "text/html;charset=utf-8",
-                data: JSON.stringify(phone_property)
-            }];
-        if (flow) { //如果flow有值时
-            var FLOW_SETTING = { //定义FLOW_SETTING
-                "编辑": "property_history_edit.json",
-                "审核": "property_history_audit.json",
-                "定义": "property_history_define.json",
-            };
-            arrs.push({ //先数组中添加
-                name: FLOW_SETTING[flow],
-                contentType: "text/plain;charset=utf-8",
-                data: JSON.stringify(GLOBAL_PROPERTY)
-            });
         }
-        if ((type === "产品" || type === "数据库定义") && subtype === "布局" && tableData) { //如果type为产品或则type为数据库定义且type为布局且tabledata存在
-            arrs.push({ //向数组中添加
-                name: "table.json",
-                contentType: "text/plain;charset=utf-8",
-                data: JSON.stringify(tableData)
-            });
-        }
-        var $y = that._postAjax, //将调用函数的返回值赋值给$y
-            $ajax = null;
-        if (arrs.length === 3) { //如果数组的长度为3
-            $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2])); //调用ajax
-        } else if (arrs.length === 4) { //如果数组长度为4
-            $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2]), $y(id, arrs[3])); //调用ajax
-        } else if (arrs.length === 5) { //如果数组长度为5
-            $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2]), $y(id, arrs[3]), $y(id, arrs[4])); //调用数组长度
-        } else if (arrs.length === 6) { //如果数组长度为5
-            $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2]), $y(id, arrs[3]), $y(id, arrs[4]), $y(id, arrs[5])); //调用数组长度
-        } else if (arrs.length === 7) { //如果数组长度为5
-            $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2]), $y(id, arrs[3]), $y(id, arrs[4]), $y(id, arrs[5]), $y(id, arrs[6])); //调用数组长度
-        } else if (arrs.length === 8) { //如果数组长度为5
-            $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2]), $y(id, arrs[3]), $y(id, arrs[4]), $y(id, arrs[5]), $y(id, arrs[6]), $y(id, arrs[7])); //调用数组长度
-        }
-        if ($ajax) { //如果$ajax存在的话
-            $ajax.done(function () { //执行ajax函数的 done方法
-                if (isPrompt) { //如果ispromt是真值的话提示保存成功
-                    alert("保存成功！");
-                }
-            }).fail(function () {
-                if (isPrompt) { //如果ispromt是真值的话提示保存失败
-                    alert("保存失败！");
-                }
-            });
-        }
+        new NewService().add(type,params,function(result){
+            console.log(result)
+        })
+       
+
+        // var that = this,
+        //     arrs = [{ //定义arrs
+        //         name: "setting.json",
+        //         contentType: "text/plain;charset=utf-8",
+        //         data: JSON.stringify(settingData)
+        //     }, {
+        //         name: "property.json",
+        //         contentType: "text/plain;charset=utf-8",
+        //         data: JSON.stringify(property)
+        //     }, {
+        //         name: "model.html",
+        //         contentType: "text/html;charset=utf-8",
+        //         data: modelData
+        //     }, {
+        //         name: "phone.html",
+        //         contentType: "text/html;charset=utf-8",
+        //         data: phoneData
+        //     }, {
+        //         name: "phone_setting.json",
+        //         contentType: "text/html;charset=utf-8",
+        //         data: JSON.stringify(phoneSettingData)
+        //     }, {
+        //         name: "phone_property.json",
+        //         contentType: "text/html;charset=utf-8",
+        //         data: JSON.stringify(phone_property)
+        //     }];
+        // if (flow) { //如果flow有值时
+        //     var FLOW_SETTING = { //定义FLOW_SETTING
+        //         "编辑": "property_history_edit.json",
+        //         "审核": "property_history_audit.json",
+        //         "定义": "property_history_define.json",
+        //     };
+        //     arrs.push({ //先数组中添加
+        //         name: FLOW_SETTING[flow],
+        //         contentType: "text/plain;charset=utf-8",
+        //         data: JSON.stringify(GLOBAL_PROPERTY)
+        //     });
+        // }
+        // if (subtype === "布局" && tableData) { //如果type为产品或则type为数据库定义且type为布局且tabledata存在
+        //     arrs.push({ //向数组中添加
+        //         name: "table.json",
+        //         contentType: "text/plain;charset=utf-8",
+        //         data: JSON.stringify(tableData)
+        //     });
+        // }
+        // var $y = that._postAjax, //将调用函数的返回值赋值给$y
+        //     $ajax = null;
+        // if (arrs.length === 3) { //如果数组的长度为3
+        //     $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2])); //调用ajax
+        // } else if (arrs.length === 4) { //如果数组长度为4
+        //     $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2]), $y(id, arrs[3])); //调用ajax
+        // } else if (arrs.length === 5) { //如果数组长度为5
+        //     $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2]), $y(id, arrs[3]), $y(id, arrs[4])); //调用数组长度
+        // } else if (arrs.length === 6) { //如果数组长度为5
+        //     $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2]), $y(id, arrs[3]), $y(id, arrs[4]), $y(id, arrs[5])); //调用数组长度
+        // } else if (arrs.length === 7) { //如果数组长度为5
+        //     $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2]), $y(id, arrs[3]), $y(id, arrs[4]), $y(id, arrs[5]), $y(id, arrs[6])); //调用数组长度
+        // } else if (arrs.length === 8) { //如果数组长度为5
+        //     $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2]), $y(id, arrs[3]), $y(id, arrs[4]), $y(id, arrs[5]), $y(id, arrs[6]), $y(id, arrs[7])); //调用数组长度
+        // }
+        // if ($ajax) { //如果$ajax存在的话
+        //     $ajax.done(function () { //执行ajax函数的 done方法
+        //         if (isPrompt) { //如果ispromt是真值的话提示保存成功
+        //             alert("保存成功！");
+        //         }
+        //     }).fail(function () {
+        //         if (isPrompt) { //如果ispromt是真值的话提示保存失败
+        //             alert("保存失败！");
+        //         }
+        //     });
+        // }
     };
 
     this._sameNameValidate = function () {
@@ -468,8 +508,8 @@ function Workspace() {
 }
 
 Workspace.prototype = {
-    init: function (id, name, type, subtype, flow, customId, relTemplate) {
-        if (!id || !name || !type || !subtype) return; //如果id和name和type和subtype不存在退出函数
+    init: function (id, name, subtype, flow, customId, relTemplate) {
+        if (!name || !subtype) return; //如果id和name和type和subtype不存在退出函数
 
         var that = this,
             // text = type + "/" + subtype + "/" + name,//赋值
@@ -477,7 +517,6 @@ Workspace.prototype = {
             attrs = {
                 "data-id": id,
                 "data-name": name,
-                "data-type": type,
                 "data-subtype": subtype
             };
         if (flow) { //如果flow为真
@@ -487,25 +526,25 @@ Workspace.prototype = {
             text += '<span class="text-danger">(' + customId + ')</span>'; //赋值
             attrs["data-customId"] = customId; //向attrs中添加属性
         }
-        if (type === "资源" && subtype === "布局" && DataType.isObject(relTemplate)) { //如果type为资源subtype为布局relTemplate为对象
+        if (subtype === "布局" && DataType.isObject(relTemplate)) { //如果type为资源subtype为布局relTemplate为对象
             attrs["data-relTemplate"] = JSON.stringify(relTemplate); //向attrs中添加属性
         }
         $("#name").empty().append(text); //获取元素置空并添加html
         that.$workspace.empty().attr(attrs); //将工作区置空并添加属性
         that.$phone.empty().parents("#phone_warp").hide();
-        new Filter(type, subtype).set(); //实例化Filter并调用set方法
+        new Filter(subtype).set(); //实例化Filter并调用set方法
         $("#toolbar").css('right', "260px") //设置样式
         $("#toolbar").css('left', "140px") //设置样式
         GLOBAL_PROPERTY = {}; //全局属性值空
         LAST_SELECTED_ID = null; // 最后一次被选中的元素id
         LAST_POSITION = {}; // 选中元素的初始位置
     },
-    load: function (id, name, type, subtype, flow, customId, relTemplate) {
-        if (!id || !name || !type || !subtype) return; //如果id或则name或type或subtype都为空退出函数
+    load: function (id, name, subtype, flow, customId, relTemplate) {
+        if ( !name || !subtype) return; //如果id或则name或type或subtype都为空退出函数
 
         var that = this;
         $.when(that._getAjax("/lib/" + id + "/setting.json"), that._getAjax("/lib/" + id + "/property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
-            that.init(id, name, type, subtype, flow, customId, relTemplate); //调用init方法
+            that.init(id, name, subtype, flow, customId, relTemplate); //调用init方法
             var settingData = ret1[0],
                 propertyData = ret2[0],
                 control = new Control(), //实例化Control
@@ -563,7 +602,7 @@ Workspace.prototype = {
             });
             new Ruler().drawCoordinates() //调用Ruler的drawCoordinates
         }).fail(function () { //如果失败
-            that.init(id, name, type, subtype, flow, customId, relTemplate); //调用init方法
+            that.init(id, name, subtype, flow, customId, relTemplate); //调用init方法
             alert("数据加载出错！");
         });
     },
@@ -624,13 +663,12 @@ Workspace.prototype = {
 
         var id = that.$workspace.attr("data-id"), //获取工作区data-id
             name = that.$workspace.attr("data-name"), //获取工作区data-name
-            type = that.$workspace.attr("data-type"), //获取工作区data-type
             subtype = that.$workspace.attr("data-subtype"), //获取工作区data-subtype
             flow = that.$workspace.attr("data-flow"), //获取工作区data-flow
             customId = that.$workspace.attr("data-customId"); //获取工作区data-customid
         //获取数据
 
-        var data = that._getData(id, name, type, subtype, customId); //调用_getdata
+        var data = that._getData(id, name, subtype, customId); //调用_getdata
 
         var historyList = new CommonService().getFileSync("/lib/ZZZZZZZ/historyList.json") || {}; //获取编辑历史
         if (saveAs) { //如果是另存为
@@ -662,10 +700,10 @@ Workspace.prototype = {
             '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
             $temp.get(0).outerHTML;
         data.modelData = modelData;
-
+        console.log(data)
         if (data) { //如果data为true
             //保存数据
-            that._setData(isPrompt, id, type, subtype, flow, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData); //调用_setdata
+            that._setData(isPrompt, id, subtype, flow, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData); //调用_setdata
         }
     },
     clear: function () {

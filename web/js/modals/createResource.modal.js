@@ -52,7 +52,7 @@ CreateResource.prototype = {
         //保存资源
         that.$createResource.find(".modal-footer .save").click(function () {
             var name = that.$resoureName.val();
-            if (!name) return alert("布局资源名称不能为空！");
+            if (!name) return alert("布局名称不能为空！");
             var relid = that.$resoureRelId.val();
             if (!relid) return alert("关联表单不可以为空！");
             var data = {
@@ -66,7 +66,7 @@ CreateResource.prototype = {
                     new ProductService().detail(data.relid, function (presult) {
                         Common.handleResult(presult, function (pdata) {
                             if (pdata) {
-                                new Workspace().load(resId, data.name, "资源", "布局", null, null, pdata)
+                                new Workspace().load(resId, data.name, "布局", null, null, pdata)
                             }
                         })
                     })

@@ -58,6 +58,7 @@ Loader.prototype = {
                 that.JS_PATH + "/services/structure.service.js",
                 that.JS_PATH + "/services/resource.service.js",
                 that.JS_PATH + "/services/product.service.js",
+                that.JS_PATH + "/services/newService.js",
                 that.JS_PATH + "/controllers/accessControl.js",
                 that.JS_PATH + "/controllers/db.js",
                 that.JS_PATH + "/controllers/main.js",

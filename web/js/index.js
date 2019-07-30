@@ -1,7 +1,7 @@
 ﻿//初始化
 function init() {
 	//筛选
-	new Filter('初始化', '加载').set();
+	new Filter('加载').set();
 	//初始化属性栏
 	new Propertybar($("#propertybar")).init(false, null);
 
@@ -121,11 +121,11 @@ function navbar() {
 	// })();
 
 	//保存
-	(function save() {
-		$("#save").click(function () {
-			new Workspace().save(true);
-		});
-	})();
+	// (function save() {
+	// 	$("#save").click(function () {
+	// 		new Workspace().save(true);
+	// 	});
+	// })();
 
 	//提交
 	var submitModal = new SubmitModal($("#submitModal"), $("#submit"));
@@ -145,9 +145,8 @@ function navbar() {
 			var $workspace = $("#workspace"), //获取工作区
 				id = $workspace.attr("data-id"), //获取工作区的data-id
 				name = $workspace.attr("data-name"), //获取工作区data-name
-				type = $workspace.attr("data-type"), //获取data-type
 				subtype = $workspace.attr("data-subtype"); //获取data-subtype
-			if (id && type === "资源" && subtype === "布局") { //判断是否type等于资源subtype等于布局id存在
+			if (id && subtype === "布局") { //判断是否type等于资源subtype等于布局id存在
 				var result = confirm("确定要重新调用表单吗？"); //确认是否
 				if (!result) return;
 
@@ -156,7 +155,7 @@ function navbar() {
 						if (data !== id) return alert("调用失败！"); //入伙id不存在退出程序
 
 						//此处的relTemplate参数不需要的原因，data-relTemplate已经绑定
-						new Workspace().load(id, name, "资源", "布局", null, null, null); //加载工作区
+						new Workspace().load(id, name, "布局", null, null, null); //加载工作区
 						new Main().open();
 					});
 				});

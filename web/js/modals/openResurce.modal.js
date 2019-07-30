@@ -81,22 +81,17 @@ function OpenResource() {
                 var $tr = $(this).parents("tr"),
                     id = $tr.attr("data-id"),
                     name = $(this).text();
-                if (type === "布局") {
                     var relId = $tr.attr("data-relId");
                     new ProductService().detail(relId, function (result) {
                         Common.handleResult(result, function (data) {
                             if (data) {
-                                new Workspace().load(id, name, "资源", "布局", null, null, data);
+                                new Workspace().load(id, name, "布局", null, null, data);
                                 that.$openModal.modal("hide");
                                 new Main().open();
                             }
                         });
                     });
-                } else {
-                    new Workspace().load(id, name, "资源", type, null, null, null);
-                    that.$openModal.modal("hide");
-                    new Main().open();
-                }
+              
             },
             onRemove: function () {
                 var id = $(this).parents("tr").attr("data-id");

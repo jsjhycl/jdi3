@@ -542,16 +542,9 @@ function NewEventsModal($modal, $element) {
 
             <td class="condition">
                 <div class="notify" ${item.subscribe.notify?"":'style="display:none"'}>
-                    <div>
-                        <table calss="table tabel-bordered">
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <input type="text" data-category="notify"  data-apply="add" class="form-control" data-key="notifyEl" value="${item.subscribe.notify||''}">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div style="margin-bottom:20px">
+                        <span>通知元素</span>
+                        <input style="display:inline-block;width:300px;margin-left:10px;" type="text" data-category="notify"  data-apply="add" class="form-control" data-key="notifyEl" value="${item.subscribe.notify||''}">
                     </div>
                 </div>
                 <div class="changeProperty"  ${item.subscribe.property?"":'style="display:none"'}>

@@ -7,13 +7,11 @@ function OpenTemplate() {
         var that =this,
         $elem = $("#template_resource_page"),
         type = "表单",
-        attrs = [{key: "id", alias: "guid"}]; 
+        attrs = [{key: "id", alias: "customId"}]; 
         $elem.jpagination({
-            url: "/newapi/pagelist",
+            url: "/new/page",
             data: {
-                table: "resources",
-                conditions: {type: type},
-                sort: {addTime: -1},
+                type:0,
                 pageIndex: 1,
                 pageSize: 6
             },
@@ -62,6 +60,7 @@ function OpenTemplate() {
                 var $tr = $(this).parents("tr"),
                     id = $tr.attr("data-id"),
                     name = $(this).text();
+
                     new Workspace().load(id, name, "表单", null, null, null);
                     that.$openModal.modal("hide");
                     new Main().open();

@@ -16,7 +16,7 @@ function CreateResource() {
             }).map(function (mitem) {
                 return {
                     name: mitem.name,
-                    value: mitem.id
+                    value: mitem.customId
                 }
             });
         Common.fillSelect(that.$resoureRelId, defaultOption, options, null, false);
@@ -25,13 +25,24 @@ function CreateResource() {
 CreateResource.prototype = {
     initData: function () {
         var that = this;
-        new ProductService().list("表单", 20, function (result) {
-            Common.handleResult(result, function (data) {
-                if (!Array.isArray(data)) return;
-                that.data = data.slice(0);
-                that._fillRelId();
-            });
-        });
+        var parms = {
+            type:0,
+            isAll:true,
+        }
+        new NewService().list(parms ,function(result){
+            Common.handleResult(result,function(data){
+                if(!Array.isArray(data.data))return;
+                that.data = data.data.slice(0);
+                that._fillRelId()
+            })
+        })
+        // new ProductService().list("表单", 20, function (result) {
+        //     Common.handleResult(result, function (data) {
+        //         if (!Array.isArray(data)) return;
+        //         that.data = data.slice(0);
+        //         that._fillRelId();
+        //     });
+        // });
     },
     bindEvents: function () {
         var that = this;
@@ -60,19 +71,28 @@ CreateResource.prototype = {
                 name: name,
                 type: "布局"
             };
-            new ResourceService().add(data, function (result) {
-                var resId = result.result;
-                Common.handleResult(result, function () {
-                    new ProductService().detail(data.relid, function (presult) {
-                        Common.handleResult(presult, function (pdata) {
-                            if (pdata) {
-                                new Workspace().load(resId, data.name, "布局", null, null, pdata)
-                            }
-                        })
-                    })
-                    that.$createResource.modal("hide");
-                })
+            var subCategory = "";
+            that.data.forEach(function(item){
+                if(item.customId==relid){
+                    subCategory = item;
+                }
             })
+            console.log(relid)
+            new Workspace().load(relid, name, "表单", null, null, subCategory)
+            that.$createResource.modal("hide");
+            // new ResourceService().add(data, function (result) {
+            //     var resId = result.result;
+            //     Common.handleResult(result, function () {
+            //         new ProductService().detail(data.relid, function (presult) {
+            //             Common.handleResult(presult, function (pdata) {
+            //                 if (pdata) {
+            //                     new Workspace().load(resId, data.name, "布局", null, null, pdata)
+            //                 }
+            //             })
+            //         })
+            //         that.$createResource.modal("hide");
+            //     })
+            // })
             new Main().open();
         })
     }

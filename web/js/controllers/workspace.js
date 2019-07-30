@@ -375,7 +375,7 @@ function Workspace() {
      * @private
      */
     this._setData = function (isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData) {
-        if ( !subtype) return; //如果id或则type或则subtype都不存在则退出函数
+        if (!subtype) return; //如果id或则type或则subtype都不存在则退出函数
 
         isPrompt = !!isPrompt; //对isPrompt进行取布尔值
 
@@ -386,7 +386,7 @@ function Workspace() {
             i.startsWith('phone_') ? phone_property[i] = GLOBAL_PROPERTY[i] : property[i] = GLOBAL_PROPERTY[i];
         }
         var name = "",
-            type="",
+            type = "",
             basicInfo = {};
         //保存基本信息数据
         if ($("#submit_model_tab").is(":visible")) {
@@ -399,32 +399,33 @@ function Workspace() {
             basicInfo["area"] = $('[name="model_area"]').val();
             basicInfo["autoCreate"] = $('[name="model_autoCreate"]').val();
             //缺少关联表单
-            basicInfo["contactId"] = ""
+            basicInfo["contactId"] = this.$workspace.attr('data-concat')
         } else {
             type = 0
             name = $('[name="template_name"]').val();
             basicInfo["category"] = $('[name="template_category"]').val();
             basicInfo["subCategory"] = $('[name="template_subCategory"]:checked').val();
         }
+        console.log(id, name, basicInfo)
         var params = {
-            customId:id,
-            name:name,
-            basicInfo:basicInfo,
-            data:{
-                "setting.json":JSON.stringify(settingData),
-                "property.json":JSON.stringify(property),
-                'modal.html':modelData,
-                "phone.html":phoneData,
-                'phone_setting.json':JSON.stringify(phoneSettingData),
-                'phone_property.json':JSON.stringify(phone_property),
-                'table.json':JSON.stringify(tableData)
+            customId: id,
+            name: name,
+            basicInfo: basicInfo,
+            data: {
+                "setting.json": JSON.stringify(settingData),
+                "property.json": JSON.stringify(property),
+                'modal.html': modelData,
+                "phone.html": phoneData,
+                'phone_setting.json': JSON.stringify(phoneSettingData),
+                'phone_property.json': JSON.stringify(phone_property),
+                'table.json': JSON.stringify(tableData)
             }
 
         }
-        new NewService().add(type,params,function(result){
+        new NewService().add(type, params, function (result) {
             alert(result.result)
         })
-       
+
 
         // var that = this,
         //     arrs = [{ //定义arrs
@@ -515,10 +516,22 @@ Workspace.prototype = {
             // text = type + "/" + subtype + "/" + name,//赋值
             text = name, //赋值
             attrs = {
+                
+            };
+        if (!relTemplate) {
+            attrs = {
                 "data-id": id,
                 "data-name": name,
                 "data-subtype": subtype
-            };
+            }
+        }else{
+            subtype = "布局"
+            attrs = {
+                "data-concat": id,
+                "data-name": name,
+                "data-subtype": "布局",
+            }
+        }
         if (flow) { //如果flow为真
             attrs["data-flow"] = flow; //向attrs中添加属性
         }
@@ -539,11 +552,12 @@ Workspace.prototype = {
         LAST_SELECTED_ID = null; // 最后一次被选中的元素id
         LAST_POSITION = {}; // 选中元素的初始位置
     },
-    load: function (id, name, subtype, flow, customId, relTemplate) {
-        if ( !name || !subtype) return; //如果id或则name或type或subtype都为空退出函数
+    load: function (id, name, subtype, flow, customId, relTemplate, ) {
+        if (!name || !subtype) return; //如果id或则name或type或subtype都为空退出函数
 
         var that = this;
-        $.when(that._getAjax("/lib/" + id + "/setting.json"), that._getAjax("/lib/" + id + "/property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
+        var url = subtype == "表单" ? "/resource/" : "/product/"
+        $.when(that._getAjax(url + id + "/setting.json"), that._getAjax(url + id + "/property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
             that.init(id, name, subtype, flow, customId, relTemplate); //调用init方法
             var settingData = ret1[0],
                 propertyData = ret2[0],
@@ -667,9 +681,8 @@ Workspace.prototype = {
             flow = that.$workspace.attr("data-flow"), //获取工作区data-flow
             customId = that.$workspace.attr("data-customId"); //获取工作区data-customid
         //获取数据
-
+        console.log(id, name, subtype, flow, customId)
         var data = that._getData(id, name, subtype, customId); //调用_getdata
-
         var historyList = new CommonService().getFileSync("/lib/ZZZZZZZ/historyList.json") || {}; //获取编辑历史
         if (saveAs) { //如果是另存为
             if (historyList[id]) {
@@ -682,7 +695,7 @@ Workspace.prototype = {
             }
             that._historyListPost(historyList)
         }
-        if(isFinsh){
+        if (isFinsh) {
             historyList[id] = 99
             that._historyListPost(historyList)
         }
@@ -700,7 +713,6 @@ Workspace.prototype = {
             '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
             $temp.get(0).outerHTML;
         data.modelData = modelData;
-        console.log(data)
         if (data) { //如果data为true
             //保存数据
             that._setData(isPrompt, id, subtype, flow, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData); //调用_setdata

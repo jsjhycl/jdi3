@@ -12,7 +12,9 @@ NewService.prototype = {
         $.cajax({
             url: that.addUrl + "/" + type,
             type: "POST",
-            data: {post:JSON.stringify(data)},
+            data: {
+                post: JSON.stringify(data)
+            },
             dataType: "json",
             success: function (result, status, xhr) {
                 callback(result)
@@ -20,15 +22,14 @@ NewService.prototype = {
         })
     },
     //获取表单或则模板
-    list: function (type, callback) {
-        if (type) return;
+    list: function (data, callback) {
         var that = this;
         $.cajax({
-            url:that.listUrl+"/"+type,
-            type:"GET",
-            cache:false,
-            dataType:"json",
-            success:function(result,status,xhr){
+            url: that.listUrl,
+            type: "POST",
+            dataType: "json",
+            data: data,
+            success: function (result, status, xhr) {
                 callback(result);
             }
         })

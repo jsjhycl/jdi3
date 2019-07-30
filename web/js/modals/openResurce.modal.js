@@ -18,15 +18,9 @@ function OpenResource() {
             }
         ];
         $elem.jpagination({
-            url: "/newapi/pagelist",
+            url: "/new/page",
             data: {
-                table: "resources",
-                conditions: {
-                    type: type
-                },
-                sort: {
-                    addTime: -1
-                },
+                type:1,
                 pageIndex: 1,
                 pageSize: 6
             },

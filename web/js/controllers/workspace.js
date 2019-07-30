@@ -422,7 +422,7 @@ function Workspace() {
 
         }
         new NewService().add(type,params,function(result){
-            console.log(result)
+            alert(result.result)
         })
        
 

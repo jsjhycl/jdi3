@@ -1,6 +1,6 @@
 function NewService() {
-    this.addUrl = `/new/save`; //保存
-    this.listUrl = `/new/page`; //获取
+    this.addUrl = '/new/save'; //保存
+    this.listUrl = '/new/page'; //获取
 
 
 }

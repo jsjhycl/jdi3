@@ -149,16 +149,17 @@ function navbar() {
 			if (id && subtype === "布局") { //判断是否type等于资源subtype等于布局id存在
 				var result = confirm("确定要重新调用表单吗？"); //确认是否
 				if (!result) return;
+				console.log(id)
 
-				new ResourceService().recall(id, function (result) { //调用重新调用表单
-					Common.handleResult(result, function (data) {
-						if (data !== id) return alert("调用失败！"); //入伙id不存在退出程序
+				// new ResourceService().recall(id, function (result) { //调用重新调用表单
+				// 	Common.handleResult(result, function (data) {
+				// 		if (data !== id) return alert("调用失败！"); //入伙id不存在退出程序
 
-						//此处的relTemplate参数不需要的原因，data-relTemplate已经绑定
-						new Workspace().load(id, name, "布局", null, null, null); //加载工作区
-						new Main().open();
-					});
-				});
+				// 		//此处的relTemplate参数不需要的原因，data-relTemplate已经绑定
+				// 		new Workspace().load(id, name, "布局", null, null, null); //加载工作区
+				// 		new Main().open();
+				// 	});
+				// });
 			}
 		});
 	})();

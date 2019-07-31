@@ -524,11 +524,13 @@ Workspace.prototype = {
             attrs = {
                 "data-id": id,
                 "data-name": name,
-                "data-subtype": subtype
+                "data-subtype": subtype,
+                "data-concat":""
             }
         } else {
             subtype = "布局"
             attrs = {
+                'data-id':"",
                 "data-concat": id,
                 "data-name": name,
                 "data-subtype": "布局",

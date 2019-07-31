@@ -423,8 +423,9 @@ function Workspace() {
 
         }
         new NewService().add(type, params, function (result) {
-            alert(result.result)
-            window.location.reload(true)
+            Common.handleResult(result, function (data) {
+                window.location.reload(true)
+            })
         })
 
 
@@ -517,7 +518,7 @@ Workspace.prototype = {
             // text = type + "/" + subtype + "/" + name,//赋值
             text = name, //赋值
             attrs = {
-                
+
             };
         if (!relTemplate) {
             attrs = {
@@ -525,7 +526,7 @@ Workspace.prototype = {
                 "data-name": name,
                 "data-subtype": subtype
             }
-        }else{
+        } else {
             subtype = "布局"
             attrs = {
                 "data-concat": id,
@@ -601,7 +602,7 @@ Workspace.prototype = {
 
             GLOBAL_PROPERTY = propertyData; //赋值
 
-            that.loadPhone(id);
+            that.loadPhone(id, subtype);
 
             // 调整工作区大小
             var max_h = 0,
@@ -621,11 +622,12 @@ Workspace.prototype = {
             alert("数据加载出错！");
         });
     },
-    loadPhone: function (id) {
+    loadPhone: function (id, subtype) {
         if (!id) return;
 
         var that = this;
-        $.when(that._getAjax("/lib/" + id + "/phone_setting.json"), that._getAjax("/lib/" + id + "/phone_property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
+        var url = subtype == "表单" ? "/resource/" : "/product/"
+        $.when(that._getAjax(url + id + "/phone_setting.json"), that._getAjax(url + id + "/phone_property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
             var phoneSettingData = ret1[0] || {},
                 phonePropertyData = ret2[0] || {};
             var control = new Control(), //实例化Control

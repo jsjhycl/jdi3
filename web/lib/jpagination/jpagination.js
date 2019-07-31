@@ -100,7 +100,7 @@
 
                 var cache = $.data(current, CACHE_KEY),
                     postData = that.duplicate(cache.data);
-                postData["conditions"] = that.getConditionsData(current, cache.forms);
+                postData["name"] = that.getConditionsData(current, cache.forms);
                 that.getPageData(current, postData);
             });
             //上一页click事件
@@ -114,7 +114,7 @@
                 } else {
                     var cache = $.data(current, CACHE_KEY),
                         postData = that.duplicate(cache.data);
-                    postData["conditions"] = that.getConditionsData(current, cache.forms);
+                    postData["name"] = that.getConditionsData(current, cache.forms);
                     postData["pageIndex"] = pageIndex - 1;
                     that.getPageData(current, postData);
                 }
@@ -127,7 +127,7 @@
                 var cache = $.data(current, CACHE_KEY),
                     postData = that.duplicate(cache.data),
                     pageIndex = parseInt($(this).attr("data-number"));
-                postData["conditions"] = that.getConditionsData(current, cache.forms);
+                postData["name"] = that.getConditionsData(current, cache.forms);
                 postData["pageIndex"] = !isNaN(pageIndex) ? pageIndex : 1;
                 that.getPageData(current, postData);
             });
@@ -142,7 +142,7 @@
                 } else {
                     var cache = $.data(current, CACHE_KEY),
                         postData = that.duplicate(cache.data);
-                    postData["conditions"] = that.getConditionsData(current, cache.forms);
+                    postData["name"] = that.getConditionsData(current, cache.forms);
                     postData["pageIndex"] = pageIndex + 1;
                     that.getPageData(current, postData);
                 }
@@ -158,7 +158,7 @@
                             var current = event.data.element;
                             that.removeDisabled(current);
                             var postData = that.duplicate(cache.data);
-                            postData["conditions"] = that.getConditionsData(current, cache.forms);
+                            postData["name"] = that.getConditionsData(current, cache.forms);
                             postData["pageIndex"] = that.getPageIndex(current);
                             that.getPageData(current, postData);
                         } else {
@@ -192,7 +192,7 @@
                     if (ret && ret.status === 0) {
                         var result = ret.result;
                         //填充pagination
-                        var numbers = Math.ceil(result.sum / postData.pageSize);
+                        var numbers = Math.ceil(result.count / postData.pageSize);
                         if (numbers > 0) {
                             var html1 = "";
                             html1 += '<li><a class="jpage-up">&laquo;</a></li>';
@@ -268,7 +268,7 @@
         },
         getConditionsData: function (element, forms) {
             var $jpageForm = $(element).find(".jpage-form"),
-                conditions = {};
+                conditions = "";
             forms.forEach(function (item) {
                 var name = item.name,
                     $elem = $jpageForm.find('[name="' + name + '"]'),
@@ -276,16 +276,13 @@
                 if (value) {
                     switch (item.searchType) {
                         case "=":
-                            conditions[name] = value;
+                            conditions = value;
                             break;
                         case "like":
-                            conditions[name] = {
-                                $regex: value,
-                                $options: "$i"
-                            };
+                            conditions = value;
                             break;
                         default:
-                            conditions[name] = value;
+                            conditions = value;
                             break;
                     }
                 }

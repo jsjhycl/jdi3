@@ -44,7 +44,7 @@ Control.prototype = {
             default:
                 prefix = "";
                 $nodes = $workspace
-                    .find('.workspace-node:not(.workspace-node[data-type="img"],.workspace-node[data-type="div"]),.workspace-node[data-type="div"] :input');
+                    .find('.workspace-node:not(.workspace-node[data-type="img"],.workspace-node:not(.workspace-node[data-type="arrow"],.workspace-node[data-type="div"]),.workspace-node[data-type="div"] :input');
                 break;
         }
         $nodes.each(function () {

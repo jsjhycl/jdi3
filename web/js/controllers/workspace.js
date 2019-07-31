@@ -344,6 +344,7 @@ function Workspace() {
         //获取table数据
         var tableData = null;
         if (subtype === "布局" && customId) { //如果type是产品或则是数据库定义subtype是布局且customid存在
+            console.log("bujutable")
             tableData = new Property().getDbProperty(customId, name); //实例化property调用getDbproperty
         }
 
@@ -697,7 +698,7 @@ Workspace.prototype = {
             customId = that.$workspace.attr("data-customId"); //获取工作区data-customid
         //获取数据
         console.log(id, name, subtype, flow, customId)
-        var data = that._getData(id, name, subtype, customId); //调用_getdata
+        var data = that._getData(id, name, subtype, id); //调用_getdata
         var historyList = new CommonService().getFileSync("/lib/ZZZZZZZ/historyList.json") || {}; //获取编辑历史
         if (saveAs) { //如果是另存为
             if (historyList[id]) {

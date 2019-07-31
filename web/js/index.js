@@ -162,7 +162,7 @@ function navbar() {
 			}
 		});
 	})();
-	
+
 	//发布
 	(function publish() {
 		$("#publishModal").click(function () {
@@ -170,7 +170,7 @@ function navbar() {
 				id = $workspace.attr("data-id");
 			new NewService().publish(id, function (result) {
 				Common.handleResult(result, function (data) {
-					if(data=="true"){
+					if(data){
 						alert("发布成功")
 					}
 				})

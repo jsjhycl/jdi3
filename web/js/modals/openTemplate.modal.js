@@ -16,7 +16,6 @@ function OpenTemplate() {
                 pageSize: 6
             },
             forms: [
-                {name: "type", controlType: "hidden", searchType: "=", value: type},
                 {name: "name", controlType: "textbox", searchType: "like", labelText: "资源名称"}
             ],
             thead: {

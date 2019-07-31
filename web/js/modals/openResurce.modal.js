@@ -19,12 +19,7 @@ function OpenResource() {
                 pageIndex: 1,
                 pageSize: 6
             },
-            forms: [{
-                    name: "type",
-                    controlType: "hidden",
-                    searchType: "=",
-                    value: type
-                },
+            forms: [
                 {
                     name: "name",
                     controlType: "textbox",

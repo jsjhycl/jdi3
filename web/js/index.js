@@ -26,13 +26,13 @@ function init() {
 			Common.fillSelect($('[name="template_category"]'), null, result["表单分类"], null, true); //填充表单分类下拉框
 			Common.fillRadio($("#template_subCategory"), "template_subCategory", data); //填充表单分类的单选框
 			//布局资源提交表单
-			Common.fillSelect($('[name="model_category"]'), null, result["布局分类"], null, true);//填充布局分类的下拉框
-			Common.fillSelect($('[name="model_userGrade"]'), null, result["布局用户级别"], null, true);//填充用户级别的下拉框
-			Common.fillSelect($('[name="model_feature"]'), null, result["布局特性"], null, true);//填充布局特性的下拉框
-            Common.fillSelect($('[name="model_area"]'), null, result["布局区域"], null, true);
+			Common.fillSelect($('[name="model_category"]'), null, result["布局分类"], null, true); //填充布局分类的下拉框
+			Common.fillSelect($('[name="model_userGrade"]'), null, result["布局用户级别"], null, true); //填充用户级别的下拉框
+			Common.fillSelect($('[name="model_feature"]'), null, result["布局特性"], null, true); //填充布局特性的下拉框
+			Common.fillSelect($('[name="model_area"]'), null, result["布局区域"], null, true);
 
-            Common.fillSelect($('[name="model_autoCreate"]'), null, result["自动分表"], null, true);  //新增自动分表属性
-        }
+			Common.fillSelect($('[name="model_autoCreate"]'), null, result["自动分表"], null, true); //新增自动分表属性
+		}
 	});
 	//右键菜单
 	new ContextMenu().done(1, $workspace);
@@ -42,7 +42,7 @@ function init() {
 		handle: ".modal-header"
 	}); //优化弹窗的拖拽
 	$("#events_modal .modal-dialog").resizable({
-		handles:"all"
+		handles: "all"
 	});
 }
 
@@ -107,8 +107,8 @@ function navbar() {
 	setDbDesignerModal.bindEvents()
 
 	//产品记录查看器
-	var recordModal = new RecordModal($("#recordModal"));
-	recordModal.execute();
+	// var recordModal = new RecordModal($("#recordModal"));
+	// recordModal.execute();
 
 	//插入函数
 	var insertFnModal = new InsertFnModal($("#insertFunctionModal"));
@@ -149,26 +149,42 @@ function navbar() {
 			if (id && subtype === "布局") { //判断是否type等于资源subtype等于布局id存在
 				var result = confirm("确定要重新调用表单吗？"); //确认是否
 				if (!result) return;
+				console.log(id)
 
-				new ResourceService().recall(id, function (result) { //调用重新调用表单
-					Common.handleResult(result, function (data) {
-						if (data !== id) return alert("调用失败！"); //入伙id不存在退出程序
+				// new ResourceService().recall(id, function (result) { //调用重新调用表单
+				// 	Common.handleResult(result, function (data) {
+				// 		if (data !== id) return alert("调用失败！"); //入伙id不存在退出程序
 
-						//此处的relTemplate参数不需要的原因，data-relTemplate已经绑定
-						new Workspace().load(id, name, "布局", null, null, null); //加载工作区
-						new Main().open();
-					});
-				});
+				// 		//此处的relTemplate参数不需要的原因，data-relTemplate已经绑定
+				// 		new Workspace().load(id, name, "布局", null, null, null); //加载工作区
+				// 		new Main().open();
+				// 	});
+				// });
 			}
 		});
 	})();
+
+	//发布
+	// (function publish() {
+	// 	$("#publishModal").click(function () {
+	// 		$workspace = $("#workspace"), //获取工作区
+	// 			id = $workspace.attr("data-id");
+	// 		new NewService().publish(id, function (result) {
+	// 			Common.handleResult(result, function (data) {
+	// 				if(data){
+	// 					alert("发布成功")
+	// 				}
+	// 			})
+	// 		})
+	// 	})
+	// })();
 
 	//预览
 	(function preview() {
 		$("#preview").click(function () { //绑定事件
 			var id = $("#workspace").attr("data-id"); //获取工作区id
 			if (!id) return;
-
+			console.log(jdi.fileApi.getConfigUrl().resolverUrl)
 			// var href = "http://36.33.216.13:3001/home/model?id=" + id + "&type=preview";
 			var href = jdi.fileApi.getConfigUrl().resolverUrl + "/home/model?id=" + id + "&type=preview"; //拼接路径
 			// $(this).attr("href", href);
@@ -379,18 +395,17 @@ function propertybar() {
 					// {title: "全局变量", type: "normal", data: global, style: "cpanel-global"},
 					// {title: "本地函数", type: "local", data: localFunction, style: "cpanel-local"},
 					// {title: "远程函数", type: "remote", data: remoteFunction, style: "cpanel-remote"}
-                ],
-                functions: [
-                    {
-                        data: localFunction,
-                        title: "本地函数"
-                    },
-                    {
-                        data: remoteFunction,
-                        title: "远程函数"
-                    }
-                ],
-                systemFunction: systemFunction,
+				],
+				functions: [{
+						data: localFunction,
+						title: "本地函数"
+					},
+					{
+						data: remoteFunction,
+						title: "远程函数"
+					}
+				],
+				systemFunction: systemFunction,
 				onSetProperty: function (expr) {
 					var id = $("#property_id").val();
 					if (id) {
@@ -415,19 +430,19 @@ function propertybar() {
 				commonService.getAjax("/profile/remote_functions.json"),
 				commonService.getAjax("/profile/system_functions.json")).done(function (result1, result2, result3, result4, result5) {
 				if (!result1 || !result2 || !result3 || !result4 || !result5) return;
-				
+
 				var data1 = result1[0],
 					data2 = result2[0],
 					data3 = result3[0],
 					data4 = result4[0],
 					data5 = result5[0];
 				if (!data1 || !data2 || !data3 || !data4 || !data5) return;
-				
+
 				var globalId = data1.status === 0 ? (data1.result ? data1.result.id : null) : null,
 					staticGlobal = data2,
 					localFunction = data3,
 					remoteFunction = data4,
-                    systemFunction = data5;
+					systemFunction = data5;
 
 				// 关闭插入函数弹窗
 				$("#insertFunctionArgsModal .close").trigger('click')
@@ -442,7 +457,7 @@ function propertybar() {
 			}).fail(function (err) {
 				console.log(err);
 				alert("表达式生成器参数数据生成失败！");
-            });
+			});
 		});
 	})();
 
@@ -457,7 +472,7 @@ function propertybar() {
 	// 下拉列表数据源配置
 	var sourceTabModal = new DataSourceTabModal($("#dataSource_db_tab_modal"), $("#property_dataSource_static"), $("#property_dataSource_db"))
 	sourceTabModal.execute();
-	
+
 	//触发配置
 	// var eventsModal = new EventsModal($("#events_modal"), $("#property_events"));
 	// eventsModal.execute();
@@ -597,7 +612,7 @@ function workspace() {
 			ableToolBarBtn();
 		}
 	});
-    
+
 	//清除样式
 	$workspace.on("click", function (event) {
 		$("#delete").css('color', 'white');
@@ -614,130 +629,130 @@ function workspace() {
 	//清除右键菜单
 	$("#designer").on("click", function () {
 		$(".jcontextmenu:visible").hide();
-    });
+	});
 
-    // 记录每次移动时，选中元素的位置
-    $workspace.on("mousedown", function() {
-        $workspace.find(".resizable").each(function() {
-            var $this = $(this);
-                id = $this.find('.workspace-node').attr('id');
-            if (id) {
-                LAST_POSITION[id] = {
-                    top: parseFloat($this.css('top')) + parseFloat($(this).css('border-top-width')) + 'px',
-                    left: parseFloat($this.css('left')) + parseFloat($(this).css('border-left-width')) + 'px',
-                };
-            }
-        })
-    })
+	// 记录每次移动时，选中元素的位置
+	$workspace.on("mousedown", function () {
+		$workspace.find(".resizable").each(function () {
+			var $this = $(this);
+			id = $this.find('.workspace-node').attr('id');
+			if (id) {
+				LAST_POSITION[id] = {
+					top: parseFloat($this.css('top')) + parseFloat($(this).css('border-top-width')) + 'px',
+					left: parseFloat($this.css('left')) + parseFloat($(this).css('border-left-width')) + 'px',
+				};
+			}
+		})
+	})
 }
 
 // 手机页面配置
 function phone() {
-    var $phone_wrap = $("#phone_warp"), 
-        $phone_content = $("#phone #phone_content");
+	var $phone_wrap = $("#phone_warp"),
+		$phone_content = $("#phone #phone_content");
 
-    $phone_wrap.draggable();
-    
-    $phone_content.selectable({
-        filter: ".workspace-node",
-        delay: 50,
-        // selected: function () {},//巨坑注意：此事件会被调用多次
-        stop: function (event, ui) {
-            $("#delete").css('color','red');
-            if (!event.ctrlKey) {
-                $("#workspace").find(".workspace-node").jresizable("destroy");
-                $phone_content.find(".workspace-node").jresizable("destroy");
-            }
-            $phone_content.find(".ui-selected").jresizable({
-                mode: "region",
-                $container: $("#phone_content"),
-                color: "red",
-                onStart: function () {
-                    $phone_content.selectable("disable");
-                },
-                onStop: function () {
-                    $phone_content.selectable("enable");
-                }
-            });
-            new Property().clearDOM();
-        }
-    });
+	$phone_wrap.draggable();
 
-    $phone_content.on("click", ".workspace-node", function (event) {
-        $("#delete").css('color','red');
-        
-        // 页面上存在一个选中元素的时候，可以 关联手机页面元素
-        // 多个时，需要销毁
-        // $("#workspace").find(".resizable").length > 1 && $("#workspace").find(".workspace-node").jresizable("destroy");
-        $("#workspace").find(".workspace-node").jresizable("destroy");
-        event.stopPropagation();
-        $(this).jresizable({
-            mode: "single",
-            color: "red",
-            $container: $("#phone_content"),
-            scroll: true,
-            containment: "#phone #phone_content",
-            onStart: function () {
-                $phone_content.selectable("disable");
-            },
-            onStop: function () {
-                $phone_content.selectable("enable");
-            }
-        });
-        $phone_content.find(".ui-selected").removeClass("ui-selected");
-    });
+	$phone_content.selectable({
+		filter: ".workspace-node",
+		delay: 50,
+		// selected: function () {},//巨坑注意：此事件会被调用多次
+		stop: function (event, ui) {
+			$("#delete").css('color', 'red');
+			if (!event.ctrlKey) {
+				$("#workspace").find(".workspace-node").jresizable("destroy");
+				$phone_content.find(".workspace-node").jresizable("destroy");
+			}
+			$phone_content.find(".ui-selected").jresizable({
+				mode: "region",
+				$container: $("#phone_content"),
+				color: "red",
+				onStart: function () {
+					$phone_content.selectable("disable");
+				},
+				onStop: function () {
+					$phone_content.selectable("enable");
+				}
+			});
+			new Property().clearDOM();
+		}
+	});
 
-    $phone_content.droppable({
-        accept: ".control-item, #workspace .resizable",
+	$phone_content.on("click", ".workspace-node", function (event) {
+		$("#delete").css('color', 'red');
+
+		// 页面上存在一个选中元素的时候，可以 关联手机页面元素
+		// 多个时，需要销毁
+		// $("#workspace").find(".resizable").length > 1 && $("#workspace").find(".workspace-node").jresizable("destroy");
+		$("#workspace").find(".workspace-node").jresizable("destroy");
+		event.stopPropagation();
+		$(this).jresizable({
+			mode: "single",
+			color: "red",
+			$container: $("#phone_content"),
+			scroll: true,
+			containment: "#phone #phone_content",
+			onStart: function () {
+				$phone_content.selectable("disable");
+			},
+			onStop: function () {
+				$phone_content.selectable("enable");
+			}
+		});
+		$phone_content.find(".ui-selected").removeClass("ui-selected");
+	});
+
+	$phone_content.droppable({
+		accept: ".control-item, #workspace .resizable",
 		drop: function (event, ui) {
 			var type = ui.helper.data("type"),
-                control = new Control(),
-                property = new Property();
-            if (type) {
-                control.setControl(type, function ($node) {
-                    var id = 'phone_' + NumberHelper.getNewId(type, $phone_content),
-                        offset = $phone_content.offset();
-                    $node.attr({
-                        "id": id,
-                        "name": id
-                    }).css({
-                        "left": event.pageX - offset.left + $phone_content.scrollLeft(),
-                        "top": event.pageY - offset.top + $phone_content.scrollTop()
-                    });
-                    $phone_content.append($node);
-                    property.setDefault(id);
-                    return false
-                }, true);
-            } else {
-                // 从工作区拖拽
-                var contextMenu = new ContextMenu();
-                $("#workspace .resizable").each(function() {
-                    var $this = $(this),
-                        offset = $this.offset(),
-                        p_offset = $phone_content.offset();
-                    if (DomHelper.isInPhone($("#phone_warp"), $this, offset.top, offset.left)) {
-                        var $ori = $this.find(".workspace-node"),
-                            type = $ori.data('type'),
-                            oriId = $ori.attr('id'),
-                            oriProperty = property.getValue(oriId),
-                            newId = 'phone_' + NumberHelper.getNewId(type, $phone_content),
-                            $newDom = $($ori.get(0).outerHTML).removeAttr('class').attr('class', 'workspace-node')
-                                .attr({
-                                    id: newId,
-                                    name: newId
-                                }).css({
-                                "width": $ori.outerWidth(),
-                                "height": $ori.outerHeight(),
-                                "left": $ori.offset().left - p_offset.left + $phone_content.scrollLeft(),
-                                "top": $ori.offset().top - p_offset.top + $phone_content.scrollTop()
-                            });
-                        $this.css(LAST_POSITION[oriId]);
-                        oriProperty && property.setValue(newId, null, oriProperty);
-                        $newDom.appendTo($phone_content);
-                        contextMenu.done(4, $newDom);
-                    }
-                })
-            }
+				control = new Control(),
+				property = new Property();
+			if (type) {
+				control.setControl(type, function ($node) {
+					var id = 'phone_' + NumberHelper.getNewId(type, $phone_content),
+						offset = $phone_content.offset();
+					$node.attr({
+						"id": id,
+						"name": id
+					}).css({
+						"left": event.pageX - offset.left + $phone_content.scrollLeft(),
+						"top": event.pageY - offset.top + $phone_content.scrollTop()
+					});
+					$phone_content.append($node);
+					property.setDefault(id);
+					return false
+				}, true);
+			} else {
+				// 从工作区拖拽
+				var contextMenu = new ContextMenu();
+				$("#workspace .resizable").each(function () {
+					var $this = $(this),
+						offset = $this.offset(),
+						p_offset = $phone_content.offset();
+					if (DomHelper.isInPhone($("#phone_warp"), $this, offset.top, offset.left)) {
+						var $ori = $this.find(".workspace-node"),
+							type = $ori.data('type'),
+							oriId = $ori.attr('id'),
+							oriProperty = property.getValue(oriId),
+							newId = 'phone_' + NumberHelper.getNewId(type, $phone_content),
+							$newDom = $($ori.get(0).outerHTML).removeAttr('class').attr('class', 'workspace-node')
+							.attr({
+								id: newId,
+								name: newId
+							}).css({
+								"width": $ori.outerWidth(),
+								"height": $ori.outerHeight(),
+								"left": $ori.offset().left - p_offset.left + $phone_content.scrollLeft(),
+								"top": $ori.offset().top - p_offset.top + $phone_content.scrollTop()
+							});
+						$this.css(LAST_POSITION[oriId]);
+						oriProperty && property.setValue(newId, null, oriProperty);
+						$newDom.appendTo($phone_content);
+						contextMenu.done(4, $newDom);
+					}
+				})
+			}
 		}
 	});
 

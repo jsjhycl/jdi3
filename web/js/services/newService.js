@@ -1,7 +1,8 @@
 function NewService() {
     this.addUrl = '/new/save'; //保存
     this.listUrl = '/new/page'; //获取
-    this.removeUrl = '/new/delete/'
+    this.removeUrl = '/new/delete/';
+    this.publishUrl = "/new/submit/"
 
 }
 NewService.prototype = {
@@ -51,6 +52,20 @@ NewService.prototype = {
                     return reject(error)
                 }
             })
+        })
+    },
+    //发布
+    publish:function(id,callback){
+        if(!id) return alert("请先保存数据");
+        var that = this;
+        $.cajax({
+            url:that.publishUrl+id,
+            type:"GET",
+            cache:false,
+            dataType:"json",
+            success:function(result){
+                callback(result)
+            }
         })
     }
 }

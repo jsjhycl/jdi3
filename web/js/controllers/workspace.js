@@ -489,7 +489,6 @@ function Workspace() {
             basicInfo["category"] = $('[name="template_category"]').val();
             basicInfo["subCategory"] = $('[name="template_subCategory"]:checked').val();
         }
-        console.log(id, name, basicInfo)
         var params = {
             customId: id,
             name: name,
@@ -608,7 +607,7 @@ Workspace.prototype = {
                             contextMenu.done(3, $node.find(":input")); //调用contextMenu中的done方法
                             break;
                         case "arrow":
-                            $node.data('subtype', item.subtype)
+                            $node.attr('data-subtype', item.subtype)
                             control.drawArrow($node, item.subtype, item.rect.width, item.rect.height)
                         default:
                             contextMenu.done(3, $node); //调用contextMenu中的done方法

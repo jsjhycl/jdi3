@@ -165,19 +165,19 @@ function navbar() {
 	})();
 
 	//发布
-	(function publish() {
-		$("#publishModal").click(function () {
-			$workspace = $("#workspace"), //获取工作区
-				id = $workspace.attr("data-id");
-			new NewService().publish(id, function (result) {
-				Common.handleResult(result, function (data) {
-					if(data){
-						alert("发布成功")
-					}
-				})
-			})
-		})
-	})();
+	// (function publish() {
+	// 	$("#publishModal").click(function () {
+	// 		$workspace = $("#workspace"), //获取工作区
+	// 			id = $workspace.attr("data-id");
+	// 		new NewService().publish(id, function (result) {
+	// 			Common.handleResult(result, function (data) {
+	// 				if(data){
+	// 					alert("发布成功")
+	// 				}
+	// 			})
+	// 		})
+	// 	})
+	// })();
 
 	//预览
 	(function preview() {

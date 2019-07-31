@@ -265,6 +265,7 @@ function Workspace() {
 
             var cid = $(this).attr("id"), //获取当前元素的id
                 type = $(this).attr("data-type"), //获取当前元素的data-type
+                subtype = $(this).data("subtype"),
                 position = $(this).position(), //获取当前元素的定位信息
                 item = { //对item对象进行一些赋值
                     id: cid,
@@ -293,7 +294,7 @@ function Workspace() {
                     break;
             }
             settingData.items.push(item); //向settingData中添加item
-            html += new Control().renderHtml(id, item); //实例化control调用renderHtml函数累加起来
+            html += new Control().renderHtml(id, item, subtype); //实例化control调用renderHtml函数累加起来
         });
 
         // 获取 phone 中的元素

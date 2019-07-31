@@ -208,8 +208,19 @@ function controlbar() {
 				left: 0,
 				top: 0
 			}
-		});
+        });
+        
+        // 拖拽画图元素
+        $("#controlbar .draw-item").draggable({ //给draggable传递参数可拖动的控件
+			helper: 'clone',
+			cursorAt: {
+				left: 0,
+				top: 0
+			}
+        });
 	})();
+
+
 
 	//测试添加图片
 	/*(function testAddImage() {
@@ -475,26 +486,44 @@ function workspace() {
 
 	//droppable
 	$workspace.droppable({
-		accept: ".control-item",
+		accept: ".control-item, .draw-item",
 		drop: function (event, ui) {
             var isPhone = DomHelper.isInPhone($("#phone_warp"), $(ui.helper[0]), ui.offset.top, ui.offset.left);
             if (isPhone) return false;
-			var type = ui.helper.data("type"),
-				control = new Control();
-			control.setControl(type, function ($node) {
-				var number = control.createNumber(type),
-					offset = $workspace.offset();
-				$node.attr({
-					"id": number,
-					"name": number
-				}).css({
-					"left": event.pageX - offset.left,
-					"top": event.pageY - offset.top
-				});
-				$workspace.append($node);
-                new Property().setDefault(number);
-                return false;
-			});
+            var $target = $(ui.helper[0]),
+                type = ui.helper.data("type"),
+                subtype = ui.helper.data("subtype"),
+                control = new Control();
+            if (!$target.hasClass("draw-item")) {
+                control.setControl(type, function ($node) {
+                	var number = control.createNumber(type),
+                		offset = $workspace.offset();
+                	$node.attr({
+                		"id": number,
+                		"name": number
+                	}).css({
+                		"left": event.pageX - offset.left,
+                		"top": event.pageY - offset.top
+                	});
+                	$workspace.append($node);
+                    new Property().setDefault(number);
+                    return false;
+                });
+            } else {
+                control.setDrawControl(type, subtype, function($canvas) {
+                    var number = control.createNumber(type),
+                        offset = $workspace.offset();
+                	$canvas.attr({
+                		"id": number,
+                		"name": number
+                	}).css({
+                		"left": event.pageX - offset.left,
+                		"top": event.pageY - offset.top
+                	});
+                    $workspace.append($canvas);
+                    new Property().setDefault(number, type);
+                })
+            }
 		}
 	});
 
@@ -533,7 +562,11 @@ function workspace() {
 	$workspace.on("click", ".workspace-node", function (event) {
 		$("#delete").css('color', 'red');
 		$("#phone_content").find(".workspace-node").jresizable("destroy");
-		event.stopPropagation();
+        event.stopPropagation();
+        var $this = $(this),
+            isArrow = $this.data('type') === 'arrow',
+            subtype = $this.data('subtype'),
+            control = new Control();
 		$(this).jresizable({
 			mode: "single",
 			multi: event.ctrlKey,
@@ -543,8 +576,10 @@ function workspace() {
 			},
 			onStop: function () {
                 $workspace.selectable("enable");
-                console.log(1)
-			}
+            },
+            onResize: function(width, height) {
+                isArrow && control.drawArrow($this, subtype, width, height)
+            },
 		});
 		ableToolBarBtn();
 		$workspace.find(".resizable").length == 1 && (LAST_SELECTED_ID = $(this).attr('id'))

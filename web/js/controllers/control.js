@@ -4,14 +4,16 @@ function Control() {
         button: '<input data-type="button" type="button" value="button">',
         checkbox: '<input data-type="checkbox" type="checkbox" value="">',
         img: '<img data-type="img">',
-        div: '<div data-type="div"></div>'
+        div: '<div data-type="div"></div>',
+        arrow: '<canvas data-type="arrow" width="60" height="40"></canvas>'
     };
     this.CONTROL_HTML = {
         text: '<input data-type="text" type="text">',
         button: '<input data-type="button" type="button">',
         checkbox: '<input data-type="checkbox" type="checkbox">',
         img: '<div data-type="img"></div>',
-        div: '<div data-type="div"></div>'
+        div: '<div data-type="div"></div>',
+        arrow: '<canvas data-type="arrow"></canvas>'
     };
 }
 
@@ -34,6 +36,10 @@ Control.prototype = {
                 prefix = "";
                 $nodes = $workspace
                     .find('.workspace-node:not(.workspace-node[data-type="img"],.workspace-node[data-type="div"]),.workspace-node[data-type="div"] :input');
+                break;
+            case "arrow":
+                    prefix = "ARROW_";
+                    $nodes = $workspace.find('.workspace-node[data-type="arrow"]');
                 break;
             default:
                 prefix = "";
@@ -79,7 +85,7 @@ Control.prototype = {
             callback.call(this, $node);
         }
     },
-    renderHtml: function (id, basic) {
+    renderHtml: function (id, basic, subtype) {
         var that = this,
             $node = $(that.CONTROL_HTML[basic.type]);
         $node.attr({"id": basic.id, "name": basic.name, value: basic.value || ""});
@@ -103,6 +109,12 @@ Control.prototype = {
             case "div":
                 $node.append(basic.attach ? basic.attach.html : "");
                 break;
+            case "arrow":
+                $node.attr({
+                    width: basic.rect.width,
+                    height: basic.rect.height,
+                    subtype: subtype,
+                });
             default:
                 break;
         }
@@ -190,5 +202,97 @@ Control.prototype = {
                 spanHtml += "<span style='position: absolute; top: "+ (height > span_height ? (height - span_height)/2 + top : top ) +"px; left: "+ (left - span_width - 8) +"px'>"+ newCname +"</span>";
             }
             return controlHtml + spanHtml;
+    },
+
+    drawRightArrow: function($cvs, w, h, color) {
+        if (!$cvs || !w || !h) return;
+
+        color = color || '#ccc';
+
+        var ctx = $cvs.get(0).getContext('2d'),
+            w = w || parseInt($cvs.attr("width")),
+            h = h || parseInt($cvs.attr("height"));
+            d1 = [,],
+            d2 = [,],
+            d3 = [,],
+            d4 = [,],
+            d5 = [,],
+            d6 = [,],
+            d7 = [,];
+
+        $cvs.attr({
+            width: w,
+            height: h
+        })
+
+        d4[0] = w;
+        d4[1] = h / 2;
+
+        d1[0] = 0;
+        d1[1] = h / 3 * 1;
+
+        d2[0] = w * 0.618;
+        d2[1] = h / 3 * 1;
+
+        d3[0] = w * 0.618;
+        d3[1] = 0
+
+        d5[0] = w * 0.618;
+        d5[1] = h;
+
+        d6[0] = w * 0.618;
+        d6[1] = h / 3 * 2;
+
+        d7[0] = 0;
+        d7[1] = h / 3 * 2
+
+        ctx.clearRect(0, 0, w, h);
+
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(...d1);
+        ctx.lineTo(...d2);
+        ctx.lineTo(...d3);
+        ctx.lineTo(...d4);
+        ctx.lineTo(...d5);
+        ctx.lineTo(...d6);
+        ctx.lineTo(...d7);
+        ctx.lineTo(...d1);
+        ctx.strokeStyle = color;
+        ctx.stroke();
+        ctx.closePath();
+    },
+
+    setDrawControl: function(type, subtype, callback) {
+        var that = this,
+            $canvas = $(that.CONTROL_TYPES[type]);
+        $canvas.addClass("workspace-node").css({
+            "position": "absolute",
+            "z-index": 500
+        }).attr({
+            "data-subtype": subtype
+        });
+        switch (subtype) {
+            case "right-arrow":
+                that.drawRightArrow($canvas, 80, 20);
+                break;
+            case "":
+                break;
+            default:
+                break;
+        }
+        if (callback) {
+            callback.call(this, $canvas);
+        }
+    },
+
+    drawArrow: function($canvas, subtype, w, h) {
+        if (!$canvas || !subtype) return;
+        var that = this;
+        switch(subtype) {
+            case 'right-arrow':
+                that.drawRightArrow($canvas, w, h);
+                break;
+        }
     }
 };

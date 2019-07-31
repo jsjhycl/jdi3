@@ -14,6 +14,7 @@ function Property() {
 
         var that = this,
             id = $elem.attr("id");//获取当前元素的id值
+            isArrow = $elem.data('type') === 'arrow';
         if (id === "workspace") {//如果id值为workspace
             id = that.BODY;//id赋值为BODY
             that.setDefault(id);//调用setDefault方法 设置一下默认的属性
@@ -55,7 +56,7 @@ function Property() {
                 }
             }
         }
-        $elem.addClass("focus");//给这个元素添加类名focus
+        !isArrow && $elem.addClass("focus");//给这个元素添加类名focus
     };
     //生成下拉列表
     this.setOptions=function($select,ckey,data){
@@ -327,7 +328,10 @@ Property.prototype = {
             GLOBAL_PROPERTY[id]["fontSize"] = "10px";
             GLOBAL_PROPERTY[id]["color"] = "black";
             GLOBAL_PROPERTY[id]["backgroundColor"] = "white";
-        } else {//如果不是文本输入框则设置下面这些属性
+        } else if (type === "arrow"){//如果不是文本输入框则设置下面这些属性
+            GLOBAL_PROPERTY[id]["visibility"] = true;
+            GLOBAL_PROPERTY[id]["controlType"] = "无";
+        } else {
             GLOBAL_PROPERTY[id]["name"] = id;
             GLOBAL_PROPERTY[id]["cname"] = id;
             GLOBAL_PROPERTY[id]["visibility"] = true;

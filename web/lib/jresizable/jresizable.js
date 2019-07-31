@@ -255,7 +255,8 @@
             else return value;
         },
         resize: function (event) {
-            var resizeData = event.data;
+            var resizeData = event.data,
+                cache = $.data(event.data.element, CACHE_KEY);
             if (resizeData.direction.indexOf("e") !== -1) {
                 resizeData.width = resizeData.startWidth + event.pageX - resizeData.startX;
             }
@@ -281,6 +282,9 @@
                     position: 'absolute',
                     top: resizeData.startY - event.pageY + lastTop
                 });
+            }
+            if (cache.onResize) {
+                cache.onResize.call(event.data.target, resizeData.width, resizeData.height);
             }
         },
         applyResize: function (event) {

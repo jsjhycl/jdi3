@@ -107,8 +107,8 @@ function navbar() {
 	setDbDesignerModal.bindEvents()
 
 	//产品记录查看器
-	var recordModal = new RecordModal($("#recordModal"));
-	recordModal.execute();
+	// var recordModal = new RecordModal($("#recordModal"));
+	// recordModal.execute();
 
 	//插入函数
 	var insertFnModal = new InsertFnModal($("#insertFunctionModal"));
@@ -184,7 +184,7 @@ function navbar() {
 		$("#preview").click(function () { //绑定事件
 			var id = $("#workspace").attr("data-id"); //获取工作区id
 			if (!id) return;
-
+			console.log(jdi.fileApi.getConfigUrl().resolverUrl)
 			// var href = "http://36.33.216.13:3001/home/model?id=" + id + "&type=preview";
 			var href = jdi.fileApi.getConfigUrl().resolverUrl + "/home/model?id=" + id + "&type=preview"; //拼接路径
 			// $(this).attr("href", href);

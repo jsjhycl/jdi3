@@ -32,7 +32,6 @@ CreateResource.prototype = {
         new NewService().list(parms ,function(result){
             Common.handleResult(result,function(data){
                 if(!Array.isArray(data.data))return;
-                console.log(data)
                 that.data = data.data;
                 that._fillRelId()
             })

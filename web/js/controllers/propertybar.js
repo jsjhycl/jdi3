@@ -175,7 +175,7 @@ Propertybar.prototype = {
         that.$container.on("change" + that.NAME_SPACE, ".property-color-input", function(event){
             var $this = $(this),
                 target = $this.data('belong');
-            $("#" + target).val($this.val());
+            $("#" + target).val($this.val()).focus().trigger("blur");
             $this.val("#000000")
         })
     }

@@ -6,21 +6,16 @@ function OpenResource() {
     this.$openModal = $("#open_resource_modal")
     this._pageList = function () {
         var that = this,
-        $elem = $("#model_resource_page"),
-        type = "布局",
-        attrs = [{
+            $elem = $("#model_resource_page"),
+            type = "布局",
+            attrs = [{
                 key: "id",
-                alias: "guid"
-            },
-            {
-                key: "relId",
-                alias: "relid"
-            }
-        ];
+                alias: "customId"
+            }];
         $elem.jpagination({
             url: "/new/page",
             data: {
-                type:1,
+                type: 1,
                 pageIndex: 1,
                 pageSize: 6
             },
@@ -75,29 +70,33 @@ function OpenResource() {
                 var $tr = $(this).parents("tr"),
                     id = $tr.attr("data-id"),
                     name = $(this).text();
-                    var relId = $tr.attr("data-relId");
-                    new ProductService().detail(relId, function (result) {
-                        Common.handleResult(result, function (data) {
-                            if (data) {
-                                new Workspace().load(id, name, "布局", null, null, data);
-                                that.$openModal.modal("hide");
-                                new Main().open();
-                            }
-                        });
-                    });
-              
+                var relId = $tr.attr("data-relId");
+                new Workspace().load(id, name, "布局", null, null, null);
+                that.$openModal.modal("hide");
+                new Main().open();
+
+                // new ProductService().detail(relId, function (result) {
+                //     Common.handleResult(result, function (data) {
+                //         if (data) {
+                //             new Workspace().load(id, name, "布局", null, null, data);
+                //             that.$openModal.modal("hide");
+                //             new Main().open();
+                //         }
+                //     });
+                // });
+
             },
             onRemove: function () {
                 var id = $(this).parents("tr").attr("data-id");
-                return new ResourceService().removePromise(id);
+                    return new NewService().removePromise(id, 1)
             }
         });
     }
 }
 OpenResource.prototype = {
-    initData:function(){
+    initData: function () {
         var that = this;
-        
+
         that._pageList()
     }
 }

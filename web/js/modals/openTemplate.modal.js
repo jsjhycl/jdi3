@@ -67,7 +67,7 @@ function OpenTemplate() {
             },
             onRemove: function () {
                 var id = $(this).parents("tr").attr("data-id");
-                return new ResourceService().removePromise(id);
+                return new NewService().removePromise(id, 0)
             }
         });
     }

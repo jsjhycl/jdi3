@@ -424,6 +424,7 @@ function Workspace() {
         }
         new NewService().add(type, params, function (result) {
             alert(result.result)
+            window.location.reload(true)
         })
 
 

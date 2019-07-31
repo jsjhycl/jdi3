@@ -1,7 +1,7 @@
 function NewService() {
     this.addUrl = '/new/save'; //保存
     this.listUrl = '/new/page'; //获取
-
+    this.removeUrl = '/new/delete/'
 
 }
 NewService.prototype = {
@@ -33,6 +33,24 @@ NewService.prototype = {
                 callback(result);
             }
         })
+    },
+    //移除
+    removePromise: function (id, type) {
+        if (!id) return Promise.reject("无效的编号");
+        var that = this;
+        return new Promise(function (resolve, reject) {
+            $.cajax({
+                url: that.removeUrl + id + "/" + type,
+                type: "GET",
+                cache: false,
+                dataType: "json",
+                success: function (result, status, xhr) {
+                    return resolve(result)
+                },
+                error: function (xhr, status, xhr) {
+                    return reject(error)
+                }
+            })
+        })
     }
-    //
 }

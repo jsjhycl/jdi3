@@ -184,9 +184,11 @@ function navbar() {
 		$("#preview").click(function () { //绑定事件
 			var id = $("#workspace").attr("data-id"); //获取工作区id
 			if (!id) return;
+			var subtype = $("#workspace").attr("data-subtype");
+			subtype = subtype == "布局" ? 1 : 0;
 			console.log(jdi.fileApi.getConfigUrl().resolverUrl)
 			// var href = "http://36.33.216.13:3001/home/model?id=" + id + "&type=preview";
-			var href = jdi.fileApi.getConfigUrl().resolverUrl + "/home/model?id=" + id + "&type=preview"; //拼接路径
+			var href = jdi.fileApi.getConfigUrl().resolverUrl + "/home/model?customId=" + id + "&type=" + subtype + "&isPreview=preview"; //拼接路径
 			// $(this).attr("href", href);
 			require('electron').shell.openExternal(href); //使用electron打开默认浏览器
 		});
@@ -239,7 +241,7 @@ function controlbar() {
 				left: 0,
 				top: 0
 			}
-        });
+		});
 	})();
 
 
@@ -583,11 +585,11 @@ function workspace() {
 	$workspace.on("click", ".workspace-node", function (event) {
 		$("#delete").css('color', 'red');
 		$("#phone_content").find(".workspace-node").jresizable("destroy");
-        event.stopPropagation();
-        var $this = $(this),
-            isArrow = $this.data('type') === 'arrow',
-            subtype = $this.data('subtype'),
-            control = new Control();
+		event.stopPropagation();
+		var $this = $(this),
+			isArrow = $this.data('type') === 'arrow',
+			subtype = $this.data('subtype'),
+			control = new Control();
 		$(this).jresizable({
 			mode: "single",
 			multi: event.ctrlKey,
@@ -596,11 +598,11 @@ function workspace() {
 				$workspace.selectable("disable");
 			},
 			onStop: function () {
-                $workspace.selectable("enable");
-            },
-            onResize: function(width, height) {
-                isArrow && control.drawArrow($this, subtype, width, height)
-            },
+				$workspace.selectable("enable");
+			},
+			onResize: function (width, height) {
+				isArrow && control.drawArrow($this, subtype, width, height)
+			},
 		});
 		ableToolBarBtn();
 		$workspace.find(".resizable").length == 1 && (LAST_SELECTED_ID = $(this).attr('id'))

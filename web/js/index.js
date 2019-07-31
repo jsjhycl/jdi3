@@ -188,7 +188,7 @@ function navbar() {
 			subtype = subtype == "布局" ? 1 : 0;
 			console.log(jdi.fileApi.getConfigUrl().resolverUrl)
 			// var href = "http://36.33.216.13:3001/home/model?id=" + id + "&type=preview";
-			var href = jdi.fileApi.getConfigUrl().resolverUrl + "/home/model?id=" + id + "&type=" + subtype + "&isPreview=preview"; //拼接路径
+			var href = jdi.fileApi.getConfigUrl().resolverUrl + "/home/model?customId=" + id + "&type=" + subtype + "&isPreview=preview"; //拼接路径
 			// $(this).attr("href", href);
 			require('electron').shell.openExternal(href); //使用electron打开默认浏览器
 		});

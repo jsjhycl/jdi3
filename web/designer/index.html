@@ -21,20 +21,7 @@
             <li class="dropdown">
                 <a class="item dropdown-toggle" data-toggle="dropdown">操作<b class="caret"></b></a>
                 <ul class="dropdown-menu"></ul> <ul class="dropdown-menu">
-                    <!-- <li><a data-toggle="modal" href="#create_resource_modal">新建资源</a></li>
-                    <li><a data-toggle="modal" href="#open_resource_modal">打开资源</a></li> -->
-                    <!-- <li class="divider"></li>  -->
-                    <!-- <li><a data-toggle="modal" href="#receive_product_modal">接收产品</a></li>
-                    <li><a data-toggle="modal" href="#open_product_modal">打开产品</a></li> -->
-                    <!-- <li class="divider"></li> -->
-                    <li><a data-toggle="modal" href="#dbDefineModal">数据库定义</a></li>
-                    <li class="divider" data-first-filter="save"></li>
-                    <!-- <li><a data-toggle="modal" href="#saveAsModal" data-first-filter="save">另存为...</a></a></li>  后面关联表单-->
-                    <!-- <li><a id="saveAs" data-first-filter="save">另存为...</a></a></li> -->
-                    <!-- <li><a data-toggle="modal" href="#publishModal">发布布局</a></li> -->
-                    <!-- <li class="divider"></li> -->
                 </ul>
-    
             </li>
             <li class="dropdown">
                 <a class="item dropdowm-toggle" data-toggle="dropdown">表单<b class="caret"></b></a>
@@ -68,7 +55,6 @@
             <li><a class="item" id="recall" data-first-filter="recall" style="display: none">重新调用表单</a></li>
             <li><a class="item" id="preview" data-zero-filter="preview" style="display: none" target="_blank">预览</a>
             </li>
-            <!-- <li><a class="item" id="test" data-zero-filter="test" style="display: none">测试</a></li> -->
             <li><a class="item" data-toggle="modal" href="#workspaceModal">工作区设置</a></li>
             <li><a class="item" data-toggle="modal" href="#publishModal" data-first-filter="db">发布布局</a></li>
         </ul>
@@ -118,8 +104,11 @@
     <!--控件栏-->
     <aside id="controlbar" data-zero-filter="asider" style="display: none">
         <ul class="control-list">
-            <li data-type="arrow" title="右箭头">
-                <img class="draw-item icon-right-arrow" src="../images/arrow.png" class="icon-right-arrow" data-type="arrow" data-subtype="right-arrow">
+            <li class="arrow-wrap" title="箭头">
+                <img class="draw-item icon-arrow icon-right-arrow" src="../images/right-arrow.png" data-type="arrow" data-subtype="right-arrow" data-w="25" data-h="17">
+                <img class="draw-item icon-arrow icon-left-arrow" src="../images/right-arrow.png" data-type="arrow" data-subtype="left-arrow" data-w="25" data-h="17">
+                <img class="draw-item icon-arrow icon-up-arrow" src="../images/top-arrow.png" data-type="arrow" data-subtype="up-arrow" data-w="17" data-h="25">
+                <img class="draw-item icon-arrow icon-bottom-arrow" src="../images/top-arrow.png" data-type="arrow" data-subtype="bottom-arrow" data-w="17" data-h="25">
             </li>
             <li class="control-item" data-type="text" title="文本框">
                 <span class="glyphicon glyphicon-subtitles"></span>

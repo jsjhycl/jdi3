@@ -111,13 +111,14 @@ Control.prototype = {
                 break;
             case "arrow":
                 $node.attr({
-                    width: basic.rect.width,
-                    height: basic.rect.height,
-                    subtype: subtype,
+                    "width": basic.rect.width,
+                    "height": basic.rect.height,
+                    "data-subtype": subtype,
                 });
             default:
                 break;
         }
+        console.log($node.get(0).outerHTML)
         return $node.get(0).outerHTML;
     },
     remove: function () {
@@ -204,10 +205,11 @@ Control.prototype = {
             return controlHtml + spanHtml;
     },
 
-    drawRightArrow: function($cvs, w, h, color) {
-        if (!$cvs || !w || !h) return;
+    drawRightArrow: function($cvs, w, h, color, rotate) {
+        if (!$cvs || Number.isNaN(Number(w))) return;
 
         color = color || '#ccc';
+        rotate = rotate || 0;
 
         var ctx = $cvs.get(0).getContext('2d'),
             w = w || parseInt($cvs.attr("width")),
@@ -219,35 +221,26 @@ Control.prototype = {
             d5 = [,],
             d6 = [,],
             d7 = [,];
-
-        $cvs.attr({
-            width: w,
-            height: h
-        })
-
+        $cvs.attr({ width: w, height: h })
         d4[0] = w;
         d4[1] = h / 2;
-
         d1[0] = 0;
         d1[1] = h / 3 * 1;
-
         d2[0] = w * 0.618;
         d2[1] = h / 3 * 1;
-
         d3[0] = w * 0.618;
         d3[1] = 0
-
         d5[0] = w * 0.618;
         d5[1] = h;
-
         d6[0] = w * 0.618;
         d6[1] = h / 3 * 2;
-
         d7[0] = 0;
         d7[1] = h / 3 * 2
 
         ctx.clearRect(0, 0, w, h);
-
+        ctx.translate( w / 2, h / 2);
+        ctx.rotate(rotate * Math.PI/180);
+        ctx.translate(-w / 2, -h / 2);
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(...d1);
@@ -263,7 +256,77 @@ Control.prototype = {
         ctx.closePath();
     },
 
-    setDrawControl: function(type, subtype, callback) {
+    drawUpArrow: function($cvs, w, h, color, rotate) {
+        if (!$cvs || Number.isNaN(Number(w))) return;
+        color = color || '#ccc';
+        rotate = rotate || 0;
+
+        var ctx = $cvs.get(0).getContext('2d'),
+            w = w || parseInt($cvs.attr("width")),
+            h = h || parseInt($cvs.attr("height"));
+            d1 = [,],
+            d2 = [,],
+            d3 = [,],
+            d4 = [,],
+            d5 = [,],
+            d6 = [,],
+            d7 = [,];
+        $cvs.attr({ width: w, height: h })
+        d4[0] = w /2;
+        d4[1] = 0;
+
+        d1[0] = w / 3 * 1;
+        d1[1] = h;
+        d2[0] = w / 3 * 1;
+        d2[1] = h * 0.382;
+        d3[0] = 0;
+        d3[1] = h * 0.382;
+        d5[0] = w;
+        d5[1] = h * 0.382;
+        d6[0] = w / 3 * 2;
+        d6[1] = h * 0.382;
+        d7[0] = w / 3 * 2;
+        d7[1] = h;
+
+        ctx.clearRect(0, 0, w, h);
+        ctx.translate( w / 2, h / 2);
+        ctx.rotate(rotate * Math.PI/180);
+        ctx.translate(-w / 2, -h / 2);
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(...d1);
+        ctx.lineTo(...d2);
+        ctx.lineTo(...d3);
+        ctx.lineTo(...d4);
+        ctx.lineTo(...d5);
+        ctx.lineTo(...d6);
+        ctx.lineTo(...d7);
+        ctx.lineTo(...d1);
+        ctx.strokeStyle = color;
+        ctx.stroke();
+        ctx.closePath();
+    },
+
+    drawArrow: function($canvas, subtype, w, h) {
+        if (!$canvas || !subtype) return;
+        var that = this;
+        switch(subtype) {
+            case "up-arrow":
+                that.drawUpArrow($canvas, w, h, null, 0);
+                break;
+            case 'right-arrow':
+                that.drawRightArrow($canvas, w, h, null, 0);
+                break;
+            case "bottom-arrow":
+                that.drawUpArrow($canvas, w, h, null, 180);
+                break;
+            case "left-arrow":
+                that.drawRightArrow($canvas, w, h, null, 180);
+                break;
+        }
+    },
+
+    setDrawControl: function(type, subtype, w, h, callback) {
         var that = this,
             $canvas = $(that.CONTROL_TYPES[type]);
         $canvas.addClass("workspace-node").css({
@@ -272,27 +335,9 @@ Control.prototype = {
         }).attr({
             "data-subtype": subtype
         });
-        switch (subtype) {
-            case "right-arrow":
-                that.drawRightArrow($canvas, 80, 20);
-                break;
-            case "":
-                break;
-            default:
-                break;
-        }
+        that.drawArrow($canvas, subtype, w, h);
         if (callback) {
             callback.call(this, $canvas);
         }
     },
-
-    drawArrow: function($canvas, subtype, w, h) {
-        if (!$canvas || !subtype) return;
-        var that = this;
-        switch(subtype) {
-            case 'right-arrow':
-                that.drawRightArrow($canvas, w, h);
-                break;
-        }
-    }
 };

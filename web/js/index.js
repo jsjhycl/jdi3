@@ -228,7 +228,13 @@ function controlbar() {
         
         // 拖拽画图元素
         $("#controlbar .draw-item").draggable({ //给draggable传递参数可拖动的控件
-			helper: 'clone',
+			helper: function(event, ui) {
+                var $target = $(event.currentTarget)
+                return $($target.get(0).outerHTML).css({
+                    width: $target.width() * 3,
+                    height: $target.height() * 3
+                }).get(0).outerHTML
+            },
 			cursorAt: {
 				left: 0,
 				top: 0
@@ -525,7 +531,7 @@ function workspace() {
                     return false;
                 });
             } else {
-                control.setDrawControl(type, subtype, function($canvas) {
+                control.setDrawControl(type, subtype, $target.outerWidth(), $target.outerHeight(), function($canvas) {
                     var number = control.createNumber(type),
                         offset = $workspace.offset();
                 	$canvas.attr({

@@ -126,7 +126,7 @@ Control.prototype = {
             }
         });
         $selected.remove();
-        new Workspace().save(false);
+        // new Workspace().save(false);
     },
     copy: function ($selected) {
         if (!$selected || $selected.length <= 0) return;

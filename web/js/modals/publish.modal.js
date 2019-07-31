@@ -57,7 +57,7 @@ PublishModal.prototype = {
                 Common.handleResult(result,function(data){
                   if(data){
                       alert("发布成功")
-                    //   window.location.reload(true)
+                      window.location.reload(true)
                     }
                })
             })

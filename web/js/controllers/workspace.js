@@ -225,10 +225,10 @@ function Workspace() {
         });
     };
 
-    this._postAjax = function (id, item) {
+    this._postAjax = function (type, id, item) {
         if (!id || !DataType.isObject(item)) return; //如果id或则item不是对象退出函数
         return $.cajax({ //返回一个ajax对象
-            url: "/api/save/" + id + "/" + item.name,
+            url: "/new/saveFile/" + type + "/" + id + "/" + item.name,
             type: "POST",
             contentType: item.contentType,
             data: item.data,
@@ -375,9 +375,86 @@ function Workspace() {
      * @param modelData
      * @private
      */
-    this._setData = function (isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData) {
-        if (!subtype) return; //如果id或则type或则subtype都不存在则退出函数
+    this._savefile = function (isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, type) {
+        var that = this;
+        var property = {}
+        phone_property = {};
 
+        for (var i in GLOBAL_PROPERTY) {
+            i.startsWith('phone_') ? phone_property[i] = GLOBAL_PROPERTY[i] : property[i] = GLOBAL_PROPERTY[i];
+        }
+        arrs = [{ //定义arrs
+            name: "setting.json",
+            contentType: "text/plain;charset=utf-8",
+            data: JSON.stringify(settingData)
+        }, {
+            name: "property.json",
+            contentType: "text/plain;charset=utf-8",
+            data: JSON.stringify(property)
+        }, {
+            name: "model.html",
+            contentType: "text/html;charset=utf-8",
+            data: modelData
+        }, {
+            name: "phone.html",
+            contentType: "text/html;charset=utf-8",
+            data: phoneData
+        }, {
+            name: "phone_setting.json",
+            contentType: "text/html;charset=utf-8",
+            data: JSON.stringify(phoneSettingData)
+        }, {
+            name: "phone_property.json",
+            contentType: "text/html;charset=utf-8",
+            data: JSON.stringify(phone_property)
+        }];
+        // arrs.push({ //先数组中添加
+        //     name: FLOW_SETTING[flow],
+        //     contentType: "text/plain;charset=utf-8",
+        //     data: JSON.stringify(GLOBAL_PROPERTY)
+        // });
+        if (subtype === "布局" && tableData) { //如果type为产品或则type为数据库定义且type为布局且tabledata存在
+            arrs.push({ //向数组中添加
+                name: "table.json",
+                contentType: "text/plain;charset=utf-8",
+                data: JSON.stringify(tableData)
+            });
+        }
+        var $y = that._postAjax, //将调用函数的返回值赋值给$y
+            $ajax = null;
+        if (arrs.length === 3) { //如果数组的长度为3
+            $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2])); //调用ajax
+        } else if (arrs.length === 4) { //如果数组长度为4
+            $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3])); //调用ajax
+        } else if (arrs.length === 5) { //如果数组长度为5
+            $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4])); //调用数组长度
+        } else if (arrs.length === 6) { //如果数组长度为5
+            $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4]), $y(type, id, arrs[5])); //调用数组长度
+        } else if (arrs.length === 7) { //如果数组长度为5
+            $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4]), $y(type, id, arrs[5]), $y(type, id, arrs[6])); //调用数组长度
+        } else if (arrs.length === 8) { //如果数组长度为5
+            $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4]), $y(type, id, arrs[5]), $y(type, id, arrs[6]), $y(type, id, arrs[7])); //调用数组长度
+        }
+        if ($ajax) { //如果$ajax存在的话
+            $ajax.done(function () { //执行ajax函数的 done方法
+
+                if (isPrompt) { //如果ispromt是真值的话提示保存成功
+                    alert("保存成功！");
+                }
+                window.location.reload(true)
+            }).fail(function () {
+                if (isPrompt) { //如果ispromt是真值的话提示保存失败
+                    alert("保存失败！");
+                }
+            });
+        }
+    }
+
+
+    this._setData = function (isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData) {
+
+        if (!subtype) return; //如果id或则type或则subtype都不存在则退出函数
+        var that = this;
         isPrompt = !!isPrompt; //对isPrompt进行取布尔值
 
         var property = {}
@@ -412,95 +489,27 @@ function Workspace() {
             customId: id,
             name: name,
             basicInfo: basicInfo,
-            data: {
-                "setting.json": JSON.stringify(settingData),
-                "property.json": JSON.stringify(property),
-                'modal.html': modelData,
-                "phone.html": phoneData,
-                'phone_setting.json': JSON.stringify(phoneSettingData),
-                'phone_property.json': JSON.stringify(phone_property),
-                'table.json': JSON.stringify(tableData)
-            }
+            // data: {
+            //     "setting.json": JSON.stringify(settingData),
+            //     "property.json": JSON.stringify(property),
+            //     'modal.html': modelData,
+            //     "phone.html": phoneData,
+            //     'phone_setting.json': JSON.stringify(phoneSettingData),
+            //     'phone_property.json': JSON.stringify(phone_property),
+            //     'table.json': JSON.stringify(tableData)
+            // }
 
         }
+
+
         new NewService().add(type, params, function (result) {
             Common.handleResult(result, function (data) {
-                window.location.reload(true)
+                id = data
+                that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, type)
             })
         })
 
 
-        // var that = this,
-        //     arrs = [{ //定义arrs
-        //         name: "setting.json",
-        //         contentType: "text/plain;charset=utf-8",
-        //         data: JSON.stringify(settingData)
-        //     }, {
-        //         name: "property.json",
-        //         contentType: "text/plain;charset=utf-8",
-        //         data: JSON.stringify(property)
-        //     }, {
-        //         name: "model.html",
-        //         contentType: "text/html;charset=utf-8",
-        //         data: modelData
-        //     }, {
-        //         name: "phone.html",
-        //         contentType: "text/html;charset=utf-8",
-        //         data: phoneData
-        //     }, {
-        //         name: "phone_setting.json",
-        //         contentType: "text/html;charset=utf-8",
-        //         data: JSON.stringify(phoneSettingData)
-        //     }, {
-        //         name: "phone_property.json",
-        //         contentType: "text/html;charset=utf-8",
-        //         data: JSON.stringify(phone_property)
-        //     }];
-        // if (flow) { //如果flow有值时
-        //     var FLOW_SETTING = { //定义FLOW_SETTING
-        //         "编辑": "property_history_edit.json",
-        //         "审核": "property_history_audit.json",
-        //         "定义": "property_history_define.json",
-        //     };
-        //     arrs.push({ //先数组中添加
-        //         name: FLOW_SETTING[flow],
-        //         contentType: "text/plain;charset=utf-8",
-        //         data: JSON.stringify(GLOBAL_PROPERTY)
-        //     });
-        // }
-        // if (subtype === "布局" && tableData) { //如果type为产品或则type为数据库定义且type为布局且tabledata存在
-        //     arrs.push({ //向数组中添加
-        //         name: "table.json",
-        //         contentType: "text/plain;charset=utf-8",
-        //         data: JSON.stringify(tableData)
-        //     });
-        // }
-        // var $y = that._postAjax, //将调用函数的返回值赋值给$y
-        //     $ajax = null;
-        // if (arrs.length === 3) { //如果数组的长度为3
-        //     $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2])); //调用ajax
-        // } else if (arrs.length === 4) { //如果数组长度为4
-        //     $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2]), $y(id, arrs[3])); //调用ajax
-        // } else if (arrs.length === 5) { //如果数组长度为5
-        //     $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2]), $y(id, arrs[3]), $y(id, arrs[4])); //调用数组长度
-        // } else if (arrs.length === 6) { //如果数组长度为5
-        //     $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2]), $y(id, arrs[3]), $y(id, arrs[4]), $y(id, arrs[5])); //调用数组长度
-        // } else if (arrs.length === 7) { //如果数组长度为5
-        //     $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2]), $y(id, arrs[3]), $y(id, arrs[4]), $y(id, arrs[5]), $y(id, arrs[6])); //调用数组长度
-        // } else if (arrs.length === 8) { //如果数组长度为5
-        //     $ajax = $.when($y(id, arrs[0]), $y(id, arrs[1]), $y(id, arrs[2]), $y(id, arrs[3]), $y(id, arrs[4]), $y(id, arrs[5]), $y(id, arrs[6]), $y(id, arrs[7])); //调用数组长度
-        // }
-        // if ($ajax) { //如果$ajax存在的话
-        //     $ajax.done(function () { //执行ajax函数的 done方法
-        //         if (isPrompt) { //如果ispromt是真值的话提示保存成功
-        //             alert("保存成功！");
-        //         }
-        //     }).fail(function () {
-        //         if (isPrompt) { //如果ispromt是真值的话提示保存失败
-        //             alert("保存失败！");
-        //         }
-        //     });
-        // }
     };
 
     this._sameNameValidate = function () {
@@ -526,12 +535,12 @@ Workspace.prototype = {
                 "data-id": id,
                 "data-name": name,
                 "data-subtype": subtype,
-                "data-concat":""
+                "data-concat": ""
             }
         } else {
             subtype = "布局"
             attrs = {
-                'data-id':"",
+                'data-id': "",
                 "data-concat": id,
                 "data-name": name,
                 "data-subtype": "布局",
@@ -684,7 +693,7 @@ Workspace.prototype = {
         var id = that.$workspace.attr("data-id"), //获取工作区data-id
             name = that.$workspace.attr("data-name"), //获取工作区data-name
             subtype = that.$workspace.attr("data-subtype"), //获取工作区data-subtype
-            flow = that.$workspace.attr("data-flow"), //获取工作区data-flow
+            flow = that.$workspace.attr("data-flow"), //获取工作区data-flow     
             customId = that.$workspace.attr("data-customId"); //获取工作区data-customid
         //获取数据
         console.log(id, name, subtype, flow, customId)

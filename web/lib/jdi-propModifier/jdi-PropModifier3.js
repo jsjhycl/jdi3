@@ -65,7 +65,7 @@
                 var temp = {},
                     $pmPage = $element;
                 $pmPage.html($source.html()).outerWidth($source.outerWidth()).outerHeight($source.outerHeight());
-                $source.find("input").each(function () {
+                $source.find("input, canvas").each(function () {
                     var id = this.id,
                         position = $(this).position();
                     if (!temp.hasOwnProperty(id) && position) {
@@ -80,7 +80,7 @@
                         };
                     }
                 });
-                $pmPage.find("input").each(function () {
+                $pmPage.find("input, canvas").each(function () {
                     var id = this.id,
                         item = temp[id];
                     if (item) {
@@ -139,7 +139,6 @@
             var that = this;
             //加载
             $(document).on("click" + EVENT_NAMESPACE, ".pm3 .pm-elem3", {element: element}, function (event) {
-                console.log("点击事件")
                 // var $this = $(this);
 
                 // if($this.hasClass('selected')) return;

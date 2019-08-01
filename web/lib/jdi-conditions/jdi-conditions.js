@@ -53,7 +53,6 @@
 
             var $tbody = $(element).find(".table tbody");
             $tbody.empty();
-            console.log(data)
             data.forEach(function (item) {
                 that.setTr(cache.mode, $tbody, item, cache.table, cache.dbName);
             });
@@ -63,13 +62,11 @@
 
             $(element).on("click" + EVENT_NAMESPACE, ".add", {element: element}, function (event) {
                 event.stopPropagation();
-                console.log(12324)
                 var celement = event.data.element,
                     cache = $.data(celement, CACHE_KEY);
                 if (!DataType.isObject(cache)) return;
 
                 var $tbody = $(celement).find(".table tbody");
-                console.log(cache)
                 that.setTr(cache.mode, $tbody, null, cache.table,cache.dbName);
             });
 

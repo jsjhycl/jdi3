@@ -15,6 +15,74 @@ function Control() {
         div: '<div data-type="div"></div>',
         arrow: '<canvas data-type="arrow"></canvas>'
     };
+    this.getArrowConfig =  function(subtype, w, h) {
+        var result = { dots: [], rotate: 0 };
+        switch(subtype) {
+            case 'left-arrow':
+                result.rotate = 180;
+            case 'right-arrow':
+                result.dots = [
+                    [0, h / 3 * 1],
+                    [w * 0.618, h / 3 * 1],
+                    [w * 0.618, 0],
+                    [w, h / 2],
+                    [w * 0.618, h],
+                    [w * 0.618, h / 3 * 2],
+                    [0, h / 3 * 2]
+                ];
+                break;
+            case 'bottom-arrow':
+                result.rotate = 180;
+            case 'up-arrow':
+                result.dots = [
+                    [w / 3 * 1, h],
+                    [w / 3 * 1, h * 0.382],
+                    [0, h * 0.382],
+                    [w / 2, 0],
+                    [w, h * 0.382],
+                    [w / 3 * 2, h * 0.382],
+                    [w / 3 * 2, h],
+                ]
+                break;
+            case "bottom-right-arrow":
+                result.rotate = 180;
+            case "up-left-arrow":
+                result.dots = [
+                    [0, h / 3],
+                    [w * 0.618, h / 3],
+                    [w * 0.618, 0],
+                    [w, h / 2],
+                    [w * 0.618, h],
+                    [w * 0.618, h / 3 * 2],
+                    [h / 3, h / 3 * 2],
+                    [h / 3, h],
+                    [0, h]
+                ]
+                break;
+            case "up-right-arrow":
+                result.rotate = 180;
+            case "bottom-left-arrow":
+                result.dots = [
+                    [w / 3, h],
+                    [w / 3, h * 0.382],
+                    [0, h * 0.382],
+                    [w / 2, 0],
+                    [w, h * 0.382],
+                    [w / 3 * 2, h * 0.382],
+                    [w / 3 * 2, h - w / 3],
+                    [w, h - w / 3],
+                    [w, h]
+                ]
+                break;
+        }
+        return result;
+    };
+    this.rotateCenter = function(ctx, rotate, w, h) {
+        if (!ctx || !rotate) return;
+        ctx.translate( w / 2, h / 2);
+        ctx.rotate(rotate * Math.PI/180);
+        ctx.translate(-w / 2, -h / 2);
+    };
 }
 
 Control.prototype = {
@@ -203,129 +271,32 @@ Control.prototype = {
                 spanHtml += "<span style='position: absolute; top: "+ (height > span_height ? (height - span_height)/2 + top : top ) +"px; left: "+ (left - span_width - 8) +"px'>"+ newCname +"</span>";
             }
             return controlHtml + spanHtml;
-    },
-
-    drawRightArrow: function($cvs, w, h, color, rotate) {
+    },    
+    drawArrow: function($cvs, subtype, w, h) {
         if (!$cvs || Number.isNaN(Number(w))) return;
-
-        color = color || '#ccc';
-        rotate = rotate || 0;
 
         var ctx = $cvs.get(0).getContext('2d'),
             w = w || parseInt($cvs.attr("width")),
             h = h || parseInt($cvs.attr("height"));
-            d1 = [,],
-            d2 = [,],
-            d3 = [,],
-            d4 = [,],
-            d5 = [,],
-            d6 = [,],
-            d7 = [,];
-        $cvs.attr({ width: w, height: h })
-        d4[0] = w;
-        d4[1] = h / 2;
-        d1[0] = 0;
-        d1[1] = h / 3 * 1;
-        d2[0] = w * 0.618;
-        d2[1] = h / 3 * 1;
-        d3[0] = w * 0.618;
-        d3[1] = 0
-        d5[0] = w * 0.618;
-        d5[1] = h;
-        d6[0] = w * 0.618;
-        d6[1] = h / 3 * 2;
-        d7[0] = 0;
-        d7[1] = h / 3 * 2
-
+    
+        $cvs.attr({ width: w, height: h });
+        var config = this.getArrowConfig(subtype, w, h);
+        
+        // 清空画布
         ctx.clearRect(0, 0, w, h);
-        ctx.translate( w / 2, h / 2);
-        ctx.rotate(rotate * Math.PI/180);
-        ctx.translate(-w / 2, -h / 2);
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(...d1);
-        ctx.lineTo(...d2);
-        ctx.lineTo(...d3);
-        ctx.lineTo(...d4);
-        ctx.lineTo(...d5);
-        ctx.lineTo(...d6);
-        ctx.lineTo(...d7);
-        ctx.lineTo(...d1);
-        ctx.strokeStyle = color;
+        // 旋转
+        this.rotateCenter(ctx, config.rotate, w, h)
+        // 画坐标
+        var dots = config.dots;
+        dots.forEach(function(item, idx) {
+            if (idx === 0) return ctx.moveTo(item[0], item[1]);
+            ctx.lineTo(item[0], item[1]);
+            idx === dots.length - 1 && ctx.lineTo(dots[0][0], dots[0][1]);
+        });
+        // 线条色
+        ctx.strokeStyle = "#ccc";
         ctx.stroke();
-        ctx.closePath();
     },
-
-    drawUpArrow: function($cvs, w, h, color, rotate) {
-        if (!$cvs || Number.isNaN(Number(w))) return;
-        color = color || '#ccc';
-        rotate = rotate || 0;
-
-        var ctx = $cvs.get(0).getContext('2d'),
-            w = w || parseInt($cvs.attr("width")),
-            h = h || parseInt($cvs.attr("height"));
-            d1 = [,],
-            d2 = [,],
-            d3 = [,],
-            d4 = [,],
-            d5 = [,],
-            d6 = [,],
-            d7 = [,];
-        $cvs.attr({ width: w, height: h })
-        d4[0] = w /2;
-        d4[1] = 0;
-
-        d1[0] = w / 3 * 1;
-        d1[1] = h;
-        d2[0] = w / 3 * 1;
-        d2[1] = h * 0.382;
-        d3[0] = 0;
-        d3[1] = h * 0.382;
-        d5[0] = w;
-        d5[1] = h * 0.382;
-        d6[0] = w / 3 * 2;
-        d6[1] = h * 0.382;
-        d7[0] = w / 3 * 2;
-        d7[1] = h;
-
-        ctx.clearRect(0, 0, w, h);
-        ctx.translate( w / 2, h / 2);
-        ctx.rotate(rotate * Math.PI/180);
-        ctx.translate(-w / 2, -h / 2);
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(...d1);
-        ctx.lineTo(...d2);
-        ctx.lineTo(...d3);
-        ctx.lineTo(...d4);
-        ctx.lineTo(...d5);
-        ctx.lineTo(...d6);
-        ctx.lineTo(...d7);
-        ctx.lineTo(...d1);
-        ctx.strokeStyle = color;
-        ctx.stroke();
-        ctx.closePath();
-    },
-
-    drawArrow: function($canvas, subtype, w, h) {
-        if (!$canvas || !subtype) return;
-        var that = this;
-        switch(subtype) {
-            case "up-arrow":
-                that.drawUpArrow($canvas, w, h, null, 0);
-                break;
-            case 'right-arrow':
-                that.drawRightArrow($canvas, w, h, null, 0);
-                break;
-            case "bottom-arrow":
-                that.drawUpArrow($canvas, w, h, null, 180);
-                break;
-            case "left-arrow":
-                that.drawRightArrow($canvas, w, h, null, 180);
-                break;
-        }
-    },
-
     setDrawControl: function(type, subtype, w, h, callback) {
         var that = this,
             $canvas = $(that.CONTROL_TYPES[type]);

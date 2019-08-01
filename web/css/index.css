@@ -862,21 +862,26 @@ li {
     transform-origin: top left;
 }
 .icon-left-arrow,
-.icon-right-arrow {
+.icon-right-arrow,
+.icon-up-left-arrow,
+.icon-bottom-right-arrow {
     width: 25px;
     height: 17px;
 }
-.icon-left-arrow {
+.icon-left-arrow,
+.icon-bottom-right-arrow {
     transform: rotate(180deg);
     -webkit-transform: rotate(180deg);
 }
 .icon-up-arrow,
-.icon-bottom-arrow {
+.icon-bottom-arrow,
+.icon-bottom-left-arrow,
+.icon-up-right-arrow {
     width: 17px;
     height: 25px;
 }
-
-.icon-bottom-arrow {
+.icon-bottom-arrow,
+.icon-up-right-arrow {
     transform: rotate(180deg);
     -webkit-transform: rotate(180deg);
 }

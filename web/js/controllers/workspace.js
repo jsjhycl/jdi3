@@ -235,16 +235,7 @@ function Workspace() {
             dataType: "json"
         });
     };
-    this._historyListPost = function (data) {
-        if (!DataType.isObject(data)) return;
-        $.cajax({
-            url: "/api/save/ZZZZZZZ/historyList.json",
-            type: "POST",
-            contentType: "text/plain;charset=utf-8",
-            data: JSON.stringify(data),
-            dataType: "json"
-        })
-    }
+
 
     this._getData = function (id, name, subtype, customId) {
         if (!name) return alert("无法保存没有编号、名称的数据！"); //如果id或者name不存在的退出函数并提示
@@ -470,7 +461,7 @@ function Workspace() {
         //保存基本信息数据
         if ($("#submit_model_tab").is(":visible")) {
             type = 1
-            name = $('[name="model_name"]').val();
+            name = $('[name="model_name"]').val() || this.$workspace.attr('data-name');
             basicInfo["category"] = $('[name="model_category"]').val();
             basicInfo["subCategory"] = $('[name="model_subCategory"]').val();
             basicInfo["feature"] = $('[name="model_feature"]').val();
@@ -481,7 +472,7 @@ function Workspace() {
             basicInfo["contactId"] = this.$workspace.attr('data-concat')
         } else {
             type = 0
-            name = $('[name="template_name"]').val();
+            name = $('[name="template_name"]').val() || this.$workspace.attr('data-name');
             basicInfo["category"] = $('[name="template_category"]').val();
             basicInfo["subCategory"] = $('[name="template_subCategory"]:checked').val();
         }
@@ -531,6 +522,9 @@ Workspace.prototype = {
             attrs = {
 
             };
+        if (id) {
+            text += '<span class="text-danger">' + id + '</span>'; //赋值
+        }
         if (!relTemplate) {
             attrs = {
                 "data-id": id,
@@ -686,7 +680,7 @@ Workspace.prototype = {
      * @param {*} saveAs //另存
      * @param {*} isFinsh 是否是最后流程99
      */
-    save: function (isPrompt, saveAs, isFinsh) {
+    save: function (isPrompt, saveAsId, isFinsh) {
         var that = this,
             isValidate = that._sameNameValidate(); //调用_sameNameValidate
         if (!isValidate) return; //如果isValidate退出函数
@@ -699,23 +693,12 @@ Workspace.prototype = {
         //获取数据
         console.log(id, name, subtype, flow, customId)
         var data = that._getData(id, name, subtype, id); //调用_getdata
-        var historyList = new CommonService().getFileSync("/lib/ZZZZZZZ/historyList.json") || {}; //获取编辑历史
-        if (saveAs) { //如果是另存为
-            if (historyList[id]) {
-                historyList[id] = Number(historyList[id]) + 1;
-                id = id + "_" + historyList[id];
-            } else {
-                historyList[id] = 1
-                id = id + "_" + 1
-
-            }
-            that._historyListPost(historyList)
+        if (saveAsId) { //如果是另存为
+            id = saveAsId
         }
         if (isFinsh) {
-            historyList[id] = 99
-            that._historyListPost(historyList)
+            id = `${id}(99)`
         }
-
         //修改modal的生成位置  2017/7/18
         var $temp = $('<div></div>');
         $temp.css({
@@ -726,9 +709,10 @@ Workspace.prototype = {
             "overflow": "hidden"
         }).append(data.modelData); //插入到html中
         var modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
-            '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
-            $temp.get(0).outerHTML;
+        '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
+        $temp.get(0).outerHTML;
         data.modelData = modelData;
+        
         if (data) { //如果data为true
             //保存数据
             that._setData(isPrompt, id, subtype, flow, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData); //调用_setdata

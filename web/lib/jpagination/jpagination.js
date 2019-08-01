@@ -211,10 +211,12 @@
                             var html2 = "",
                                 thead = cache.thead;
                             data.forEach(function (item) {
+                                var customId = "";
                                 //添加data-*属性
                                 var tr = '<tr';
                                 thead.attrs.forEach(function (aitem) {
                                     var value = that.recurseObject(item, aitem.alias);
+                                    customId = value;
                                     tr += ' data-' + aitem.key + '="' + value + '"';
                                 });
                                 tr += '>';
@@ -236,7 +238,7 @@
                                         if (fitem.func) {
                                             var $template = $(str);
                                             $template.addClass(fitem.func);
-                                            tr += '<td>' + $template.get(0).outerHTML + '</td>';
+                                            tr += '<td>' + $template.get(0).outerHTML +"_"+customId + '</td>';
                                         } else {
                                             tr += '<td>' + str + '</td>';
                                         }

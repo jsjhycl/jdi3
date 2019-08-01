@@ -283,6 +283,9 @@ function Workspace() {
                         html: $(this).html()
                     }; //对item下面的attach属性进行赋值
                     break;
+                case "arrow":
+                    item["subtype"] = subtype
+                    break;
             }
             settingData.items.push(item); //向settingData中添加item
             html += new Control().renderHtml(id, item, subtype); //实例化control调用renderHtml函数累加起来
@@ -476,7 +479,6 @@ function Workspace() {
             basicInfo["category"] = $('[name="template_category"]').val();
             basicInfo["subCategory"] = $('[name="template_subCategory"]:checked').val();
         }
-        console.log(id, name, basicInfo)
         var params = {
             customId: id,
             name: name,
@@ -500,8 +502,6 @@ function Workspace() {
                 that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, type)
             })
         })
-
-
     };
 
     this._sameNameValidate = function () {
@@ -599,6 +599,9 @@ Workspace.prototype = {
                             contextMenu.done(2, $node); //调用contextMenu中的done方法
                             contextMenu.done(3, $node.find(":input")); //调用contextMenu中的done方法
                             break;
+                        case "arrow":
+                            $node.attr('data-subtype', item.subtype)
+                            control.drawArrow($node, item.subtype, item.rect.width, item.rect.height)
                         default:
                             contextMenu.done(3, $node); //调用contextMenu中的done方法
                             break;

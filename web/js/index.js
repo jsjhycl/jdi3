@@ -226,11 +226,17 @@ function controlbar() {
 				left: 0,
 				top: 0
 			}
-		});
-
-		// 拖拽画图元素
-		$("#controlbar .draw-item").draggable({ //给draggable传递参数可拖动的控件
-			helper: 'clone',
+        });
+        
+        // 拖拽画图元素
+        $("#controlbar .draw-item").draggable({ //给draggable传递参数可拖动的控件
+			helper: function(event, ui) {
+                var $target = $(event.currentTarget)
+                return $($target.get(0).outerHTML).css({
+                    width: $target.width() * 3,
+                    height: $target.height() * 3
+                }).get(0).outerHTML
+            },
 			cursorAt: {
 				left: 0,
 				top: 0
@@ -505,42 +511,42 @@ function workspace() {
 	$workspace.droppable({
 		accept: ".control-item, .draw-item",
 		drop: function (event, ui) {
-			var isPhone = DomHelper.isInPhone($("#phone_warp"), $(ui.helper[0]), ui.offset.top, ui.offset.left);
-			if (isPhone) return false;
-			var $target = $(ui.helper[0]),
-				type = ui.helper.data("type"),
-				subtype = ui.helper.data("subtype"),
-				control = new Control();
-			if (!$target.hasClass("draw-item")) {
-				control.setControl(type, function ($node) {
-					var number = control.createNumber(type),
-						offset = $workspace.offset();
-					$node.attr({
-						"id": number,
-						"name": number
-					}).css({
-						"left": event.pageX - offset.left,
-						"top": event.pageY - offset.top
-					});
-					$workspace.append($node);
-					new Property().setDefault(number);
-					return false;
-				});
-			} else {
-				control.setDrawControl(type, subtype, function ($canvas) {
-					var number = control.createNumber(type),
-						offset = $workspace.offset();
-					$canvas.attr({
-						"id": number,
-						"name": number
-					}).css({
-						"left": event.pageX - offset.left,
-						"top": event.pageY - offset.top
-					});
-					$workspace.append($canvas);
-					new Property().setDefault(number, type);
-				})
-			}
+            var isPhone = DomHelper.isInPhone($("#phone_warp"), $(ui.helper[0]), ui.offset.top, ui.offset.left);
+            if (isPhone) return false;
+            var $target = $(ui.helper[0]),
+                type = ui.helper.data("type"),
+                subtype = ui.helper.data("subtype"),
+                control = new Control();
+            if (!$target.hasClass("draw-item")) {
+                control.setControl(type, function ($node) {
+                	var number = control.createNumber(type),
+                		offset = $workspace.offset();
+                	$node.attr({
+                		"id": number,
+                		"name": number
+                	}).css({
+                		"left": event.pageX - offset.left,
+                		"top": event.pageY - offset.top
+                	});
+                	$workspace.append($node);
+                    new Property().setDefault(number);
+                    return false;
+                });
+            } else {
+                control.setDrawControl(type, subtype, $target.outerWidth(), $target.outerHeight(), function($canvas) {
+                    var number = control.createNumber(type),
+                        offset = $workspace.offset();
+                	$canvas.attr({
+                		"id": number,
+                		"name": number
+                	}).css({
+                		"left": event.pageX - offset.left,
+                		"top": event.pageY - offset.top
+                	});
+                    $workspace.append($canvas);
+                    new Property().setDefault(number, type);
+                })
+            }
 		}
 	});
 

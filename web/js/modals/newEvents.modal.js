@@ -887,6 +887,8 @@ NewEventsModal.prototype = {
 
         })
         that.$element.val(JSON.stringify(result))
+        var $workspace = $("#workspace"),//获取工作区
+         $control = $workspace.find("#" + id);//获取对应id的元素
         new Property().save(id === "BODY" ? $workspace : $control, that.$element);//实例化property调用save方法
 
     },

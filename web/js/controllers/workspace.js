@@ -480,25 +480,28 @@ function Workspace() {
             basicInfo["subCategory"] = $('[name="template_subCategory"]:checked').val();
         }
         var params = {
-            customId: id,
             name: name,
             basicInfo: basicInfo,
-            // data: {
-            //     "setting.json": JSON.stringify(settingData),
-            //     "property.json": JSON.stringify(property),
-            //     'modal.html': modelData,
-            //     "phone.html": phoneData,
-            //     'phone_setting.json': JSON.stringify(phoneSettingData),
-            //     'phone_property.json': JSON.stringify(phone_property),
-            //     'table.json': JSON.stringify(tableData)
-            // }
-
+        }
+        if(id){
+            params.customId = id;
         }
 
 
         new NewService().add(type, params, function (result) {
             Common.handleResult(result, function (data) {
                 id = data
+                var $temp = $('<div></div>');
+                $temp.css({
+                    "position": "absolute",
+                    "width": settingData.width,
+                    "height": settingData.height,
+                    "background-color": settingData.bgColor,
+                    "overflow": "hidden"
+                }).append(modelData); //插入到html中
+                var modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
+                '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
+                $temp.get(0).outerHTML;
                 that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, type)
             })
         })
@@ -703,19 +706,7 @@ Workspace.prototype = {
             id = `${id}(99)`
         }
         //修改modal的生成位置  2017/7/18
-        var $temp = $('<div></div>');
-        $temp.css({
-            "position": "absolute",
-            "width": data.settingData.width,
-            "height": data.settingData.height,
-            "background-color": data.settingData.bgColor,
-            "overflow": "hidden"
-        }).append(data.modelData); //插入到html中
-        var modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
-        '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
-        $temp.get(0).outerHTML;
-        data.modelData = modelData;
-        
+               
         if (data) { //如果data为true
             //保存数据
             that._setData(isPrompt, id, subtype, flow, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData); //调用_setdata

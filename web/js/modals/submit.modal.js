@@ -12,7 +12,7 @@ function SubmitModal($modal, $submit) {
 
 SubmitModal.prototype = {
     saveData: function () {
-        new Workspace().save(false)
+        new Workspace().save(true)
         // var that = this,
         //     id = $("#workspace").attr("data-id"),
         //     attrName = $("#workspace").attr("data-name"),

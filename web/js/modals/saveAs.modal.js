@@ -8,74 +8,82 @@ function SaveAsModal($modal) {
     this.$isFinalName = this.$modalBody.find('[data-key="isFinalName"]');
     this.$workspace = $("#workspce");
 
-    this._clearData = function(){
+    this._clearData = function () {
         this.$saveAsName.val();
         this.$lastName.val();
-        this.$isFinalName.attr("checked",false);
+        this.$isFinalName.attr("checked", false);
     }
 
 }
 SaveAsModal.prototype = {
-    initData:function(){
-        console.log(123)
+    initData: function () {
         var that = this;
         that._clearData();
         var $workspace = $("#workspace"),
-        id = $workspace.attr("data-id"),//获取工作区data-id
-        name = $workspace.attr("data-name"),//获取工作区data-name
-        historyList = new CommonService().getFileSync("/lib/ZZZZZZZ/historyList.json") || {},
-        lastId = historyList[id],
-        saveName ,lastName,isFinalName;
-        if(lastId==99){
-            saveName = `${name}_${lastId}`;
-            lastName = `${name}_${lastId}`;
-            that.$isFinalName.attr("checked",true)
-        }else{
-            that.$isFinalName.attr("checked",false)
-            if(lastId){
-                saveName = `${name}_${lastId+1}`;
-                lastName = `${name}_${lastId}`;
-            }else{
-                saveName = `${name}_1`
-                lastName = "暂无上次另存的数据"
-            }
-        }
-        that.$saveAsName.val(saveName)
-        that.$lastName.val(lastName)
+            id = $workspace.attr("data-id"),
+            id = id.replace(/\((.*)\)/img, ""), //获取工作区data-id
+            saveName;
+        var subtype = $workspace.attr("data-subtype");
+        var type = subtype == "表单" ? "0" : "1";
+        var promise = new NewService().queryHistory(id, type)
+        promise.then(function (res) {
+            if (res.status == -1) return alert("获取数据失败");
+            var data = res.result
+            var count = data;
+            saveName = `${id}(${count})`;
+            that.$saveAsName.val(saveName)
+        })
 
-        
     },
     saveData: function () {
-        console.log("保存")
         var that = this;
         isFinsh = that.$isFinalName.prop("checked");
-        if(isFinsh){
+        if (isFinsh) {
             new Workspace().save(true, false, isFinsh)
-        }else{
-            new Workspace().save(true,true)
+        } else {
+            var $workspace = $("#workspace"),
+                id = $workspace.attr("data-id"),
+                subtype = $workspace.attr("data-subtype"),
+                id = id.replace(/\((.*)\)/img, "");
+                var type = subtype == "表单" ? "0" : "1";
+            promise = new NewService().queryHistory(id, type);
+            promise.then(function (res) {
+                if (res.status == -1) return alert("获取数据失败");
+                var data = res.result,
+                    count = data,
+                    saveId = `${id}(${count})`;
+                new Workspace().save(true, saveId)
+            })
         }
     },
-   
+
     execute: function () {
         var that = this;
         that.basicEvents(true, that.initData, that.saveData, null)
     },
     bindEvents: function () {
         var that = this;
-        that.$isFinalName.on("click",function(){
+        that.$isFinalName.on("click", function () {
             var flag = that.$isFinalName.prop("checked"),
-            $workspace = $("#workspace"),
-            id = $workspace.attr("data-id"),//获取工作区data-id
-            name = $workspace.attr("data-name"),//获取工作区data-name
-            historyList = new CommonService().getFileSync("/lib/ZZZZZZZ/historyList.json") || {},
-            lastId = historyList[id];
-            if(flag){
-                that.$saveAsName.val(name+"_"+99)
-            }else{
-                lastId?name = name+"_"+(lastId+1):name=name+"_"+1
-                that.$saveAsName.val(name)
-            }
-            
+                $workspace = $("#workspace"),
+                id = $workspace.attr("data-id")
+            subtype = $workspace.attr("data-subtype"); //获取工作区data-id\
+            id = id.replace(/\((.*)\)/img, "");
+            var type = subtype == "表单" ? "0" : "1";
+
+            var promise = new NewService().queryHistory(id, subtype)
+            promise.then(function (res) {
+                if (res.status == -1) return alert("获取数据失败");
+                var data = res.result,
+                    count = data;
+                if (flag) {
+                    count = 99;
+                }
+                var saveName = `${id}(${count})`;
+                that.$saveAsName.val(saveName)
+            })
+
+
         })
     }
 }

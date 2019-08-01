@@ -1,8 +1,9 @@
 function NewService() {
     this.addUrl = '/new/save'; //保存
     this.listUrl = '/new/page'; //获取
-    this.removeUrl = '/new/delete/';
-    this.publishUrl = "/new/submit/"
+    this.removeUrl = '/new/delete/'; //删除
+    this.publishUrl = "/new/submit/"; //提交
+    this.queryHistoryUrl = "/new/customIdCount/"
 
 }
 NewService.prototype = {
@@ -48,24 +49,43 @@ NewService.prototype = {
                 success: function (result, status, xhr) {
                     return resolve(result)
                 },
-                error: function (xhr, status, xhr) {
+                error: function (error, status, xhr) {
                     return reject(error)
                 }
             })
         })
     },
     //发布
-    publish:function(id,callback){
-        if(!id) return alert("请先保存数据");
+    publish: function (id, callback) {
+        if (!id) return alert("请先保存数据");
         var that = this;
         $.cajax({
-            url:that.publishUrl+id,
-            type:"GET",
-            cache:false,
-            dataType:"json",
-            success:function(result){
+            url: that.publishUrl + id,
+            type: "GET",
+            cache: false,
+            dataType: "json",
+            success: function (result) {
                 callback(result)
             }
+        })
+    },
+    //查询历史发布
+    queryHistory: function (id, type) {
+        if (!id || !type) return Promise.reject("请先保存数据");
+        var that = this;
+        return new Promise(function (resolve, reject) {
+            $.cajax({
+                url: that.queryHistoryUrl + id + "/" + type,
+                type: "GET",
+                cache: false,
+                dataType: "json",
+                success: function (result) {
+                    return resolve(result)
+                },
+                error: function (error) {
+                    return reject(error)
+                }
+            })
         })
     }
 }

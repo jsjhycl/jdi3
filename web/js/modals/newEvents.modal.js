@@ -887,6 +887,8 @@ NewEventsModal.prototype = {
 
         })
         that.$element.val(JSON.stringify(result))
+        new Property().save(id === "BODY" ? $workspace : $control, that.$element);//实例化property调用save方法
+
     },
     clearData: function () {
         var that = this,

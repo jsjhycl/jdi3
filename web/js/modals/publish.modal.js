@@ -10,21 +10,6 @@ function PublishModal($modal) {
 PublishModal.prototype = {
     initData: function () {
         var that = this;
-        // new ProductService().list("布局", 40, function (result) {
-        //     Common.handleResult(result, function (data) {
-        //         if (!Array.isArray(data)) return;
-
-        //         var html = "";
-        //         for (var i = 0; i < data.length; i++) {
-        //             var item = data[i];
-        //             html += '<tr data-id="' + item.id + '">' +
-        //                 '<td>' + item.name + '</td>' +
-        //                 '<td class="text-center"><a class="btn btn-default btn-sm">发布</a></td>' +
-        //                 '</tr>';
-        //         }
-        //         that.$modalBody.find(".table").empty().append(html);
-        //     });
-        // });
         var param = {type:1,isAll:true}
         new NewService().list(param,function(result){
             Common.handleResult(result,function(data){
@@ -38,7 +23,6 @@ PublishModal.prototype = {
                         <td class="text-center"><a class="btn btn-default btn-sm">发布</a></td>
                     </tr>`
                 })
-                console.log(html)
                 that.$modalBody.find(".table tbody").empty().append(html)
             })
         })
@@ -51,9 +35,7 @@ PublishModal.prototype = {
         var that = this;
         that.$modal.on("click", ".modal-body .table .btn", function () {
             var id = $(this).parents("tr").attr("data-id");
-            console.log(id)
             new NewService().publish(id,function(result){
-                console.log(result)
                 Common.handleResult(result,function(data){
                   if(data){
                       alert("发布成功")

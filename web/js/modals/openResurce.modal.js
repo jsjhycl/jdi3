@@ -19,14 +19,12 @@ function OpenResource() {
                 pageIndex: 1,
                 pageSize: 6
             },
-            forms: [
-                {
-                    name: "name",
-                    controlType: "textbox",
-                    searchType: "like",
-                    labelText: "资源名称"
-                }
-            ],
+            forms: [{
+                name: "name",
+                controlType: "textbox",
+                searchType: "like",
+                labelText: "资源名称"
+            }],
             thead: {
                 fields: [{
                         text: "资源名称",
@@ -65,10 +63,30 @@ function OpenResource() {
                 var $tr = $(this).parents("tr"),
                     id = $tr.attr("data-id"),
                     name = $(this).text();
-                var relId = $tr.attr("data-relId");
-                new Workspace().load(id, name, "布局", null, null, null);
-                that.$openModal.modal("hide");
-                new Main().open();
+                var params = { type: 1,isAll: true,}
+                new NewService().list(params, function (res) {
+                    if (res.status == -1) return alert("请求错误");
+                    res.result.data.forEach(function (item) {
+                        if (item.customId == id) {
+                            var contactId = item.basicInfo.contactId;
+                            gettableList(contactId)
+                        }
+                    });
+                })
+
+                function gettableList(contactId) {
+                    var params1 = { type: 0,isAll: true}
+                    new NewService().list(params1, function (res) {
+                        res.result.data.forEach( function (item) {
+                            if(item.customId==contactId){
+                                var relTemplate = item;
+                                new Workspace().load(id, name, "布局", item.customId, relTemplate);
+                                that.$openModal.modal("hide");
+                                new Main().open();
+                            }
+                        })
+                    })
+                }
 
                 // new ProductService().detail(relId, function (result) {
                 //     Common.handleResult(result, function (data) {
@@ -83,7 +101,7 @@ function OpenResource() {
             },
             onRemove: function () {
                 var id = $(this).parents("tr").attr("data-id");
-                    return new NewService().removePromise(id, 1)
+                return new NewService().removePromise(id, 1)
             }
         });
     }

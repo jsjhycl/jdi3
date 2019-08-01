@@ -77,8 +77,7 @@ CreateResource.prototype = {
                     subCategory = item;
                 }
             })
-            console.log(relid)
-            new Workspace().load(relid, name, "表单", null, null, subCategory)
+            new Workspace().load(null, name, "表单", relid, subCategory)
             that.$createResource.modal("hide");
             // new ResourceService().add(data, function (result) {
             //     var resId = result.result;

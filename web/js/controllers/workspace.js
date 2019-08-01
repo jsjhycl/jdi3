@@ -499,7 +499,7 @@ function Workspace() {
                     "background-color": settingData.bgColor,
                     "overflow": "hidden"
                 }).append(modelData); //插入到html中
-                var modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
+                modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
                 '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
                 $temp.get(0).outerHTML;
                 that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, type)

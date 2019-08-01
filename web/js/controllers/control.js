@@ -186,7 +186,6 @@ Control.prototype = {
             default:
                 break;
         }
-        console.log($node.get(0).outerHTML)
         return $node.get(0).outerHTML;
     },
     remove: function () {

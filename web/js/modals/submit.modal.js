@@ -39,7 +39,6 @@ SubmitModal.prototype = {
         //     basicInfo["subCategory"] = $('[name="template_subCategory"]:checked').val();
         // }
         // var data = new Workspace()._getData(id, attrName, subtype, customId);
-        // console.log(data)
         //     params = {
         //         customId: id,
         //         name: name,
@@ -48,7 +47,6 @@ SubmitModal.prototype = {
         //     }
         // // params = JSON.stringify(params)
         // new NewService().add(type, params, function (result) {
-        //     console.log(result)
         // })
 
         // new ResourceService().submit(id, name, data, function (result) {
@@ -72,7 +70,6 @@ SubmitModal.prototype = {
                 id = $workspace.attr("data-id"),
                 name = $workspace.attr("data-name"),
                 subtype = $workspace.attr("data-subtype");
-            console.log(id, name, subtype)
             // if (subtype=="表单" || !id) return alert("无法提交没有编号的数据！");
 
             // new Workspace().save(false);

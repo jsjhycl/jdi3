@@ -13,51 +13,6 @@ function SubmitModal($modal, $submit) {
 SubmitModal.prototype = {
     saveData: function () {
         new Workspace().save(true)
-        // var that = this,
-        //     id = $("#workspace").attr("data-id"),
-        //     attrName = $("#workspace").attr("data-name"),
-        //     subtype = $("#workspace").attr("data-subtype"),
-        //     customId = $("#workspace").attr("data-customId"),
-        //     name = "",
-        //     basicInfo = {},
-        //     data = {};
-        // if ($("#submit_model_tab").is(":visible")) {
-        //     type = 1
-        //     name = $('[name="model_name"]').val();
-        //     basicInfo["category"] = $('[name="model_category"]').val();
-        //     basicInfo["subCategory"] = $('[name="model_subCategory"]').val();
-        //     basicInfo["feature"] = $('[name="model_feature"]').val();
-        //     basicInfo["userGrade"] = $('[name="model_userGrade"]').val();
-        //     basicInfo["area"] = $('[name="model_area"]').val();
-        //     basicInfo["autoCreate"] = $('[name="model_autoCreate"]').val();
-        //     //缺少关联表单
-        //     basicInfo["contactId"] = ""
-        // } else {
-        //     type = 0
-        //     name = $('[name="template_name"]').val();
-        //     basicInfo["category"] = $('[name="template_category"]').val();
-        //     basicInfo["subCategory"] = $('[name="template_subCategory"]:checked').val();
-        // }
-        // var data = new Workspace()._getData(id, attrName, subtype, customId);
-        //     params = {
-        //         customId: id,
-        //         name: name,
-        //         basicInfo: basicInfo,
-        //         data: data
-        //     }
-        // // params = JSON.stringify(params)
-        // new NewService().add(type, params, function (result) {
-        // })
-
-        // new ResourceService().submit(id, name, data, function (result) {
-        //     Common.handleResult(result, function (data) {
-        //         if (!data) return;
-
-        //         alert("提交成功！");
-        //         that.$modal.modal("hide");
-        //         window.location.reload(true);
-        //     });
-        // });
     },
     execute: function () {
         var that = this;

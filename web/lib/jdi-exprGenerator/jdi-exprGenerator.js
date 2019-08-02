@@ -319,7 +319,7 @@
                 var temp = {},
                     $egPage = $eg.find(".eg-page");
                 $egPage.html($source.html()).outerWidth($source.outerWidth()).outerHeight($source.outerHeight());
-                $source.find("input").each(function () {
+                $source.find("input, canvas").each(function () {
                     var id = this.id,
                         position = $(this).position();
                     if (!temp.hasOwnProperty(id) && position) {
@@ -334,9 +334,10 @@
                     }
                 });
                 var cid = $("#property_id").val();
-                $egPage.find("input").each(function () {
+                $egPage.find("input, canvas").each(function () {
                     var id = this.id,
                         item = temp[id];
+                    console.log($(this), id, item)
                     if (item) {
                         var styles = id === cid && !cache.hasSelf ? "eg-elem current" : "eg-elem",
                             $new = $('<a class="' + styles + '" data-id="' + id + '">' + id + '</a>');

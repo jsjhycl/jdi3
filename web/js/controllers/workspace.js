@@ -149,7 +149,6 @@ var WorkspaceUtil = {
         // 选择参数事件
         $('#workspace_copy').on('click.workspace', '.workspace-node-switch', function (event) {
             event.stopPropagation(); //阻止默认事件
-            console.log("qiehuang")
             var that = this,
                 $el = $(this), //获取点击的元素
                 val = '{' + $el.text() + '}', //获取点击元素的内容
@@ -338,7 +337,6 @@ function Workspace() {
         //获取table数据
         var tableData = null;
         if (subtype === "布局" && customId) { //如果type是产品或则是数据库定义subtype是布局且customid存在
-            console.log("bujutable")
             tableData = new Property().getDbProperty(customId, name); //实例化property调用getDbproperty
         }
 
@@ -432,7 +430,6 @@ function Workspace() {
         }
         if ($ajax) { //如果$ajax存在的话
             $ajax.done(function () { //执行ajax函数的 done方法
-
                 if (isPrompt) { //如果ispromt是真值的话提示保存成功
                     alert("保存成功！");
                 }
@@ -487,7 +484,6 @@ function Workspace() {
             params.customId = id;
         }
 
-
         new NewService().add(type, params, function (result) {
             Common.handleResult(result, function (data) {
                 id = data
@@ -516,7 +512,7 @@ function Workspace() {
 }
 
 Workspace.prototype = {
-    init: function (id, name, subtype, flow, customId, relTemplate) {
+    init: function (id, name, subtype, customId, relTemplate) {
         if (!name || !subtype) return; //如果id和name和type和subtype不存在退出函数
 
         var that = this,
@@ -526,31 +522,31 @@ Workspace.prototype = {
 
             };
         if (id) {
-            text += '<span class="text-danger">' + id + '</span>'; //赋值
+            text += '<span class="text-danger">' + "("+id+")" + '</span>'; //赋值
         }
         if (!relTemplate) {
             attrs = {
                 "data-id": id,
                 "data-name": name,
                 "data-subtype": subtype,
-                "data-concat": ""
+                "data-concat": "",
+                "data-relTemplate":""
             }
         } else {
             subtype = "布局"
             attrs = {
-                'data-id': "",
-                "data-concat": id,
+                'data-id': id,
+                "data-concat": customId,
                 "data-name": name,
                 "data-subtype": "布局",
+                "data-relTemplate":""
             }
         }
-        if (flow) { //如果flow为真
-            attrs["data-flow"] = flow; //向attrs中添加属性
-        }
-        if (customId) { //如果cusomId存在
-            text += '<span class="text-danger">(' + customId + ')</span>'; //赋值
-            attrs["data-customId"] = customId; //向attrs中添加属性
-        }
+        
+        // if (id) { //如果cusomId存在
+        //     text += '<span class="text-danger">(' + id + ')</span>'; //赋值
+        //     attrs["data-customId"] = id; //向attrs中添加属性
+        // }
         if (subtype === "布局" && DataType.isObject(relTemplate)) { //如果type为资源subtype为布局relTemplate为对象
             attrs["data-relTemplate"] = JSON.stringify(relTemplate); //向attrs中添加属性
         }
@@ -564,13 +560,13 @@ Workspace.prototype = {
         LAST_SELECTED_ID = null; // 最后一次被选中的元素id
         LAST_POSITION = {}; // 选中元素的初始位置
     },
-    load: function (id, name, subtype, flow, customId, relTemplate, ) {
+    load: function (id, name, subtype, customId, relTemplate ) {
         if (!name || !subtype) return; //如果id或则name或type或subtype都为空退出函数
 
         var that = this;
         var url = subtype == "表单" ? "/resource/" : "/product/"
-        $.when(that._getAjax(url + id + "/setting.json"), that._getAjax(url + id + "/property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
-            that.init(id, name, subtype, flow, customId, relTemplate); //调用init方法
+        $.when(that._getAjax(url + `${id||customId}` + "/setting.json"), that._getAjax(url + `${id ||customId}`+ "/property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
+            that.init(id, name, subtype, customId, relTemplate); //调用init方法
             var settingData = ret1[0],
                 propertyData = ret2[0],
                 control = new Control(), //实例化Control
@@ -631,7 +627,7 @@ Workspace.prototype = {
             });
             new Ruler().drawCoordinates() //调用Ruler的drawCoordinates
         }).fail(function () { //如果失败
-            that.init(id, name, subtype, flow, customId, relTemplate); //调用init方法
+            that.init(id, name, subtype, customId, relTemplate); //调用init方法
             alert("数据加载出错！");
         });
     },
@@ -697,7 +693,6 @@ Workspace.prototype = {
             flow = that.$workspace.attr("data-flow"), //获取工作区data-flow     
             customId = that.$workspace.attr("data-customId"); //获取工作区data-customid
         //获取数据
-        console.log(id, name, subtype, flow, customId)
         var data = that._getData(id, name, subtype, id); //调用_getdata
         if (saveAsId) { //如果是另存为
             id = saveAsId

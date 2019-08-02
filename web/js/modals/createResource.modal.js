@@ -1,3 +1,4 @@
+
 //新建布局资源模态框
 function CreateResource() {
     this.$createResource = $("#create_resource_modal")
@@ -25,24 +26,16 @@ function CreateResource() {
 CreateResource.prototype = {
     initData: function () {
         var that = this;
-        var parms = {
-            type:0,
-            isAll:true,
-        }
-        new NewService().list(parms ,function(result){
-            Common.handleResult(result,function(data){
-                if(!Array.isArray(data.data))return;
-                that.data = data.data;
-                that._fillRelId()
-            })
+
+        //查询表单中的布局
+        var dbCollection = "newResources";
+        new Service().query(dbCollection,null,null).then(res=>{
+            if(!Array.isArray(res)) return;
+            that.data = res;
+            console.log(res)
+            that._fillRelId()
         })
-        // new ProductService().list("表单", 20, function (result) {
-        //     Common.handleResult(result, function (data) {
-        //         if (!Array.isArray(data)) return;
-        //         that.data = data.slice(0);
-        //         that._fillRelId();
-        //     });
-        // });
+       
     },
     bindEvents: function () {
         var that = this;
@@ -79,19 +72,6 @@ CreateResource.prototype = {
             })
             new Workspace().load(null, name, "表单", relid, subCategory)
             that.$createResource.modal("hide");
-            // new ResourceService().add(data, function (result) {
-            //     var resId = result.result;
-            //     Common.handleResult(result, function () {
-            //         new ProductService().detail(data.relid, function (presult) {
-            //             Common.handleResult(presult, function (pdata) {
-            //                 if (pdata) {
-            //                     new Workspace().load(resId, data.name, "布局", null, null, pdata)
-            //                 }
-            //             })
-            //         })
-            //         that.$createResource.modal("hide");
-            //     })
-            // })
             new Main().open();
         })
     }

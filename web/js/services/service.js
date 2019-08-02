@@ -8,7 +8,8 @@ Service.prototype = {
             $.cajax({
                 url: that.baseUrl,
                 type: "POST",
-                data: data,
+                data: JSON.stringify(data),
+                contentType: "application/json",
                 dataType: "json",
                 success: rst => {
                     var failedMsg = "操作失败！\n消息：";
@@ -31,7 +32,7 @@ Service.prototype = {
         })
     },
 
-    queryCount: function(table, condition) {
+    queryCount: function (table, condition) {
         if (!table) return alert('查询表名不存在！');
         let config = {
             command: "query",
@@ -41,7 +42,7 @@ Service.prototype = {
         return this.base(config);
     },
 
-    query: function(table, condition, fields, page, size, callBack) {
+    query: function (table, condition, fields, page, size, callBack) {
         if (!table) return alert('查询表名不存在！');
         let config = {
             command: "query",
@@ -51,21 +52,21 @@ Service.prototype = {
         };
         page != undefined && (config['page'] = page);
         size && (config['size'] = size);
-        
+
         return this.base(config, callBack);
     },
 
-    pageList: async function(table, condition, fields, page, size) {
-        var that = this;
-        try {
-            var all = await that.queryCount(table, condition);
-                querys = await that.query(table, condition, fields, page, size);
-            querys.count = all.length;
-            return querys;
-        } catch (err) {
-            throw ('pageList err: ', err)
-        }
-    },
+    // pageList: async function(table, condition, fields, page, size) {
+    //     var that = this;
+    //     try {
+    //         var all = await that.queryCount(table, condition);
+    //             querys = await that.query(table, condition, fields, page, size);
+    //         querys.count = all.length;
+    //         return querys;
+    //     } catch (err) {
+    //         throw ('pageList err: ', err)
+    //     }
+    // },
 
     insert: function(table, save, callBack) {
         if (!table) return alert("插入表名不存在")
@@ -74,26 +75,27 @@ Service.prototype = {
             table: table,
             save: save || []
         }
+        console.log(config)
         return this.base(config, callBack);
     },
 
-    update: function(table, condition, save, callBack) {
+    update: function (table, condition, save, callBack) {
         if (!table || !Array.isArray(condition) || condition.length <= 0) return alert("更新表名或条件不存在！");
         let config = {
             command: "update",
             table: table,
-            condition: condition|| [],
+            condition: condition || [],
             save: save || []
         }
         return this.base(config, callBack);
     },
 
-    remove: function(table, condition, callBack) {
+    remove: function (table, condition, callBack) {
         if (!table || !Array.isArray(condition) || condition.length <= 0) return alert("删除表名或条件不存在！");
         let config = {
             command: "remove",
             table: table,
-            condition: condition|| [],
+            condition: condition || [],
         }
         return this.base(config, callBack);
     },

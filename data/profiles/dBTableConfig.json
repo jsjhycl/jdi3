@@ -1,0 +1,66 @@
+{
+    "数据库1": {
+        "newResources": {
+            "name": "",
+            "desc": "表单",
+            "key": 0,
+            "tableDetail": [
+                {
+                    "id": "name",
+                    "cname": "资源名称"
+                },
+                {
+                    "id": "customId",
+                    "cname": "编号"
+                },
+                {
+                    "id": "basicInfo.category",
+                    "cname": "表单分类"
+                },
+                {
+                    "id": "basicInfo.subCategory",
+                    "cname": "表单子分类"
+                }
+            ]
+        },
+        "newResources": {
+            "name": "",
+            "desc": "布局",
+            "key": 1,
+            "tableDetail": [
+                {
+                    "id": "name",
+                    "cname": "资源名称"
+                },
+                {
+                    "id": "customId",
+                    "cname": "编号"
+                },
+                {
+                    "id": "basicInfo.category",
+                    "cname": "表单分类"
+                },
+                {
+                    "id": "basicInfo.subCategory",
+                    "cname": "表单子分类"
+                },
+                {
+                    "id": "basicInfo.feature",
+                    "cname": "布局特性"
+                },
+                {
+                    "id": "basicInfo.userGrade",
+                    "cname": "布局用户级别"
+                },
+                {
+                    "id": "basicInfo.area",
+                    "cname": "布局区域"
+                },
+                {
+                    "id": "basicInfo.autoCreate",
+                    "cname": "自动分表"
+                }
+            ]
+        }
+    }
+}

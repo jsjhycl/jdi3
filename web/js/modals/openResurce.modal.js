@@ -1,17 +1,24 @@
 /**
  * 打开资源
  */
-function OpenResource() {
+function OpenResource($openModal) {
+    BaseModal.call(this, $openModal);
+    this.$openModal = $openModal;
+    
+    this.getQueryConfig = function() {
+        var config = jdi.fileApi.getProfile('dBTableConfig_custom.json'),
+            query = [];
+        query.push(config['table'], config['conditions'], config['fields'])
+    };
 
-    this.$openModal = $("#open_resource_modal")
     this._pageList = function () {
         var that = this,
             $elem = $("#model_resource_page"),
-            type = "布局",
             attrs = [{
                 key: "id",
                 alias: "customId"
             }];
+            this.getQueryConfig();
         $elem.jpagination({
             url: "/new/page",
             data: {
@@ -109,7 +116,11 @@ function OpenResource() {
 OpenResource.prototype = {
     initData: function () {
         var that = this;
-
-        that._pageList()
+        console.log(1111)
+        that._pageList();
+    },
+    execute: function() {
+        var that = this;
+        that.basicEvents(false, that.initData);
     }
 }

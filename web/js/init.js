@@ -100,6 +100,7 @@ Loader.prototype = {
                 that.JS_PATH + "/modals/openTemplate.modal.js",
                 that.JS_PATH + "/modals/openResurce.modal.js",
                 that.JS_PATH + "/modals/newEvents.modal.js", 
+                that.JS_PATH + "/modals/openConfig.modal.js", 
                 that.JS_PATH + "/index.js"
             ];
         that.recurseLoadScript(scripts);

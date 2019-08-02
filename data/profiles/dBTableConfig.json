@@ -1,7 +1,6 @@
 {
     "数据库1": {
         "newResources": {
-            "name": "",
             "desc": "表单",
             "key": 0,
             "tableDetail": [
@@ -23,8 +22,7 @@
                 }
             ]
         },
-        "newResources": {
-            "name": "",
+        "newProducts": {
             "desc": "布局",
             "key": 1,
             "tableDetail": [
@@ -59,6 +57,23 @@
                 {
                     "id": "basicInfo.autoCreate",
                     "cname": "自动分表"
+                }
+            ]
+        },
+        "AAAAASADAS": {
+            "desc": "表单",
+            "key": 0,
+            "tableDetail": []
+        }
+    },
+    "数据库1.1": {
+    	"AAVVVVAAASS": {
+            "desc": "表单",
+            "key": 0,
+            "tableDetail": [
+                {
+                    "id": "name",
+                    "cname": "资源名称"
                 }
             ]
         }

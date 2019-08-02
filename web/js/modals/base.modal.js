@@ -48,7 +48,8 @@ function BaseModal($modal, $element) {
             $save.off("click");//移除事件
             $save.on("click", function () {//移除事件
                 if (saveFn) {//如果issaveFn为真
-                    saveFn.call(that);//绑定事件
+                    var result = saveFn.call(that);//绑定事件
+                    if (result === -1) return false
                 }
                 that.$modal.modal("hide");//隐藏模态框
             });
@@ -60,7 +61,8 @@ function BaseModal($modal, $element) {
             $clear.off("click");//移除事件
             $clear.on("click", function () {//移除事件
                 if (clearFn) {//如果clearFn为真
-                    clearFn.call(that);//绑定事件
+                    var result = clearFn.call(that);//绑定事件
+                    if (result) that.$modal.modal("hide");//隐藏模态框
                 }
             });
         }

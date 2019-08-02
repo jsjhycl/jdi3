@@ -11,10 +11,20 @@ Service.prototype = {
                 data: data,
                 dataType: "json",
                 success: rst => {
-                    if (rst.status === 0) {
-                        callBack && callBack(rst.result)
-                        resolve(rst.result)
-                    } else resolve(rst.result)
+                    var failedMsg = "操作失败！\n消息：";
+                    if (DataType.isObject(rst)) {
+                        var data = rst.result;
+                        if (rst.status === 0) {
+                            callBack && callBack(rst.result);
+                            resolve(rst.result);
+                        } else {
+                            alert(failedMsg + JSON.stringify(data, null, 2));
+                            reject(data);
+                        }
+                    } else {
+                        alert(failedMsg + "服务器数据获取异常！")
+                        reject("服务器数据获取异常！");
+                    };
                 },
                 error: err => reject(err)
             })

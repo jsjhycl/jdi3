@@ -430,7 +430,6 @@ function Workspace() {
         }
         if ($ajax) { //如果$ajax存在的话
             $ajax.done(function () { //执行ajax函数的 done方法
-
                 if (isPrompt) { //如果ispromt是真值的话提示保存成功
                     alert("保存成功！");
                 }

@@ -30,6 +30,19 @@ function getProfile(fileName: string) {
     return JSON.parse(fs.readFileSync(path.join(config.profileDir, fileName)).toString())
 }
 
+/**
+ * 将文件保存到指定路径
+ * @param resourceId 
+ */
+function setProfile(fileName: string, content: string) {
+    try {
+        fs.writeFileSync(path.join(config.profileDir, fileName), content);
+        return true;
+    } catch (err) {
+        return false;
+    }
+}
+
 /* 以下方法基于操作的模板，只生成在缓存文件夹 */
 /**
  * 将文件压缩并上传到服务器
@@ -133,4 +146,4 @@ function done(resolve: any, reject: any) {
     }
 }
 
-export { getProfile, uploadToServer, downloadFromServer, getConfigUrl}
+export { getProfile, setProfile, getConfigUrl }

@@ -6,18 +6,25 @@ function OpenTemplate($openModal) {
     this.$openModal = $openModal;
     this.getQueryConfig = function() {
         var config = jdi.fileApi.getProfile('dBTableConfig_custom.json'),
-            query = $.extend({}, config, { size: 10, page: 0 });
+            query = $.extend({}, config, { size: 6, page: 1 });
         query['command'] = "query"
+        if (Array.isArray(query['condition'])) {
+            query['condition'].forEach(con => {
+                con.isReg && (con.value = ('/' + con.value + '/'));
+                delete con.isReg
+                delete con.cate
+            })
+        }
         delete query['db'];
         return query;
     };
     this.getTheadFields = function(fields) {
         var data = fields.map((i, idx) => {
-            console.log(i.name, i.value);
             return {
                     text: i.name,
                     key: i.value,
                     type: 0,
+                    func: idx === 0 && "detail",
                     template: function (value) {
                         return idx === 0
                                 ? '<a>' + value + '</a>'
@@ -44,7 +51,7 @@ function OpenTemplate($openModal) {
     this._pageList = function(){
         var that =this,
             $elem = $("#template_resource_page"),
-            attrs = [{key: "id", alias: "customId"}]; 
+            attrs = [{key: "id", alias: "_id"}]; 
             query = that.getQueryConfig();
         $elem.jpagination({
             getPage: new Service().pageList,
@@ -57,14 +64,14 @@ function OpenTemplate($openModal) {
                 fields: that.getTheadFields(query["fields"]),
                 attrs: attrs
             },
-            onDetail: function () {
+            onDetail: async function () {
                 var $tr = $(this).parents("tr"),
                     id = $tr.attr("data-id"),
-                    name = $(this).text();
-
-                    new Workspace().load(id, name, "表单", null, null, null);
-                    that.$openModal.modal("hide");
-                    new Main().open();
+                    // name = $(this).text();
+                    
+                    // new Workspace().load(id, name, "表单", null, null, null);
+                    // that.$openModal.modal("hide");
+                    // new Main().open();
             },
             onRemove: function () {
                 var id = $(this).parents("tr").attr("data-id");

@@ -33,12 +33,8 @@ function init() {
 
 			Common.fillSelect($('[name="model_autoCreate"]'), null, result["自动分表"], null, true); //新增自动分表属性
 		}
-	});
-
-	new FileService().readFile("./profile/category.json",function(result){
-		console.log(result)
-	})
-
+    });
+    
 	//右键菜单
 	new ContextMenu().done(1, $workspace);
 	// add at 2017/12/27绑定draggable

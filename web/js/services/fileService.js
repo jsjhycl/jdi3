@@ -12,7 +12,6 @@ FileService.prototype = {
                 contentType: "application/json",
                 dataType: "json",
                 success: rst => {
-                    console.log(rst)
                     var faileMsg = "操作失败! \n消息:";
                     if (DataType.isObject(rst)) {
                         var data = rst.result;
@@ -45,50 +44,51 @@ FileService.prototype = {
         return this.base(config, callBack)
     },
     //写文件
-    writeFile: function (router, data) {
+    writeFile: function (router, data, callBack) {
         if (!router) return alert("没有写入路径");
         let config = ["writeFile", router, data]
         return this.base(config)
     },
     //检查路径是否存在
-    exists: function (router) {
+    exists: function (router, callBack) {
         if (!router) return alert("路径不存在");
         let config = ["exists", router]
-        return this.base(config)
+        return this.base(config, callBack)
     },
     //移除文件
-    unlink: function (router) {
+    unlink: function (router, callBack) {
         if (!router) return alert("路径不存在");
         let config = ["unlink", router];
-        return this.base(config)
+        return this.base(config, callBack)
     },
     //更改文件名
-    rename: function (router, newRoter) {
+    rename: function (router, newRoter, callBack) {
         if (!router && !newRoter) return ("路径不正确");
-        let config = ["rename", router, newRoter]
+        let config = ["rename", router, newRoter];
+        return this.base(config, callBack)
     },
     //移除文件夹
-    rmdir: function (router) {
+    rmdir: function (router, callBack) {
         if (!router) return alert("路径不存在");
         let config = ["rmdir", router];
-        return this.base(config)
+        return this.base(config, callBack)
     },
     //新增文件夹
-    mkdir: function (router) {
+    mkdir: function (router, callBack) {
         if (!router) return alert("路径不存在");
         let config = ["mkdir", router];
-        return this.base(config)
+        return this.base(config, callBack)
     },
     //读取文件夹
-    readdir: function (router) {
+    readdir: function (router, callBack) {
         if (!router) return alert("路径不存在");
         let config = ["readdir", router];
-        return this.base(config)
+        return this.base(config, callBack)
     },
     //查看文件状态判断路径是否存在
-    stat: function (router) {
+    stat: function (router, callBack) {
         if (!router) return alert("路径不存在");
         let config = ["stat", router];
-        return this.base(config)
+        return this.base(config, callBack)
     }
 }

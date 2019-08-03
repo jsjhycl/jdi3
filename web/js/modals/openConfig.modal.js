@@ -6,15 +6,18 @@ function OpenConfigModal($modal, key) {
     this.customData = null;
     this.cate = null;
 
-    this.renderCondition = function($node, fields, $conditions, defaultData) {
-        !this.cate && (this.cate = new CommonService().getFileSync('/profile/category.json'));
-        
+    this.renderCondition = async function($node, fields, $conditions, defaultData) {
+        try {
+            !this.cate && (this.cate = await new FileService().readFile('./profiles/category.json', 'utf-8'));
+        } catch (err) {
+            alert('获取配置文件失败！')
+        }
+        if (!this.cate) alert('获取配置文件失败！')
         if (!$node || !Array.isArray(fields)) return;
         
         var that = this,
             html = '';
         fields = fields.map(el => { return { name: el.cname, value: el.id } });
-
         if (Array.isArray(defaultData)) {
             defaultData.forEach(i => {
                 html += that.renderConditionItem(i, !i.isReg);
@@ -23,32 +26,27 @@ function OpenConfigModal($modal, key) {
        
         Common.fillSelect($node, { name:"选择查询字段", value: "" }, fields);
         $conditions.empty().append(html);
-        // if (DataType.isObject(defaultData)) {
-        //     Object.keys(defaultData).forEach(el => {
-        //         $(`[data-condition="${el}"]`).val(el);
-        //     })
-        // }
     };
-    this.renderConditionItem = function(condition, isSelect, cate) {
+    this.renderConditionItem = function(condition, isSelect, category) {
         var that = this,
             html = "",
             id = condition.col,
-            name = condition.value;
-            cate = condition.cate || i.cate
+            value = condition.value;
+            category = condition.cate || category
         if (isSelect) {
-            var options = that.cate[cate].slice(0);
+            var options = that.cate[category].slice(0);
             options.unshift({ name: '全部', value: '' });
             html += `
-                    <label class="col-lg-3 control-label">${cate}：</label>
+                    <label class="col-lg-3 control-label">${category}：</label>
                     <div class="col-lg-9">
-                        <select class="form-control" data-cate="${cate}" data-condition data-name="${id}">${options.map(col => `<option value="${col.value}" ${col.value == name ? "selected" : ""} >${col.name}(${col.value})</option>`).join("")}</select>
+                        <select class="form-control" data-cate="${category}" data-condition data-name="${id}">${options.map(col => `<option value="${col.value}" ${col.value == value ? "selected" : ""} >${col.name}(${col.value})</option>`).join("")}</select>
                     </div>
                     `
         } else {
             html += `
-                    <label class="col-lg-3 control-label">${cate}：</label>
+                    <label class="col-lg-3 control-label">${category}：</label>
                     <div class="col-lg-9">
-                        <input class="form-control" data-cate="${cate}" data-condition data-name="${id}" value="${name}" placehold="输入关键字进行查询">
+                        <input class="form-control" data-cate="${category}" data-condition data-name="${id}" value="${value}" placehold="输入关键字进行查询">
                     </div>
                     `
         }
@@ -62,7 +60,6 @@ function OpenConfigModal($modal, key) {
             })
         $node.empty().append(html);
     };
-
 }
 
 OpenConfigModal.prototype = {
@@ -133,7 +130,7 @@ OpenConfigModal.prototype = {
                     
         Common.fillSelect($dnName, null, dbSelect, customData["db"]);
         Common.fillSelect($tableName, { name: "全部", value: "" }, tableSelect.filter(el => !!el), customData["table"]);
-        this.renderCondition($tableConditions, fields, $tableConditionsWrap, customData["conditions"]);
+        this.renderCondition($tableConditions, fields, $tableConditionsWrap, customData["condition"]);
         this.renderFields($tableFields, fields, customData["fields"]);
     },
 
@@ -151,11 +148,11 @@ OpenConfigModal.prototype = {
         
         data['db'] = dnName;
         data['table'] = tableName;
-        data['conditions'] = [];
+        data['condition'] = [];
         $tableConditions.each(function() {
             var $this = $(this),
                 val = $this.val();
-            val && data['conditions'].push({
+            val && data['condition'].push({
                 col: $this.data('name'),
                 value: val,
                 isReg: !$this.is("select"),
@@ -229,7 +226,7 @@ OpenConfigModal.prototype = {
                 $tableConditionsWrap = that.$body.find('[data-name="table_conditions_wrap"]'),
                 html = '';
             if (value && $(`[data-condition][data-name="${value}"]`).length <= 0) {
-                html += that.renderConditionItem({col: value, value: name}, !!that.cate[name], name)
+                html += that.renderConditionItem({col: value, value: ""}, !!that.cate[name], name)
                 $tableConditionsWrap.append(html)
             };
             that.$body.find(`[data-condition][data-name="${value}"]`).focus()

@@ -178,7 +178,6 @@
                 }
             });
         },
-
         getPageCount: function(url, postData) {
             var postData = $.extend({}, postData);
             delete postData["page"];
@@ -211,7 +210,6 @@
                 })
             })
         },
-
         getPageData: async function (element, postData) {
             var that = this,
                 $jpage = $(element),
@@ -248,38 +246,40 @@
                     var customId = "";
                     //添加data-*属性
                     var tr = '<tr';
-                    // thead.attrs.forEach(function (aitem) {
-                    //     var value = that.recurseObject(item, aitem.alias);
-                    //     customId = value;
-                    //     tr += ' data-' + aitem.key + '="' + value + '"';
-                    // });
+                    thead.attrs.forEach(function (aitem) {
+                        var value = that.recurseObject(item, aitem.alias);
+                        customId = value;
+                        tr += ' data-' + aitem.key + '="' + value + '"';
+                    });
                     tr += '>';
                     //添加td数据
                     thead.fields.forEach(function (fitem) {
                         var type = fitem.type,
-                            dataType = fitem.dataType || "String";
-                            // fitem.key = that.duplicate(fitem.key);
-                        if (fitem.key.indexOf('.') > -1) {
-                            fitem.key = fitem.key.split(".")[0]
-                        }
-                        
+                            dataType = fitem.dataType || "String",
+                            key = fitem.key,
+                            keys = key.split('.'),
+                            secondKey;
+                        keys.length > 0 && (secondKey = keys[keys.length - 1])
+                        firstKey = keys[0]
                         if (type === 0) {
                             var value;
                             if (dataType === "Number") {
-                                value = isNaN(item[fitem.key]) ? item[fitem.pkey] : item[fitem.key];
+                                value = isNaN(item[firstKey]) ? item[fitem.pkey] : item[firstKey];
                             } else {
-                                value = item[fitem.key] || item[fitem.pkey];
+                                value = item[firstKey] || item[fitem.pkey];
                             }
-                            typeof value === 'object' && (value = value[Object.keys(value)[0]])
-                            console.log(toString.call(this, value), value)
+
+                            secondKey && typeof value === 'object' && (value = that.recurseObject(value, secondKey))
                             var template = fitem.template || function (value) {
                                         return value;
                                     },
                                 str = template(value);
+
                             if (fitem.func) {
                                 var $template = $(str);
                                 $template.addClass(fitem.func);
-                                tr += '<td>' + $template.get(0).outerHTML +"_"+customId + '</td>';
+                                // tr += '<td>' + $template.get(0).outerHTML +"_"+customId + '</td>';
+                                tr += '<td>' + $template.get(0).outerHTML + '</td>';
                             } else {
                                 tr += '<td>' + str + '</td>';
                             }

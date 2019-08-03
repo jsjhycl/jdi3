@@ -19,7 +19,11 @@ Service.prototype = {
                             callBack && callBack(rst.result);
                             resolve(rst.result);
                         } else {
-                            alert(failedMsg + JSON.stringify(data, null, 2));
+                            if (data.indexOf('key') > -1 && data.indexOf('insertDocument') > -1 ) {
+                                alert(failedMsg + '当前编号已存在！');
+                            } else {
+                                alert(failedMsg + JSON.stringify(data, null, 2));
+                            }
                             reject(data);
                         }
                     } else {

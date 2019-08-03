@@ -38,9 +38,9 @@ FileService.prototype = {
         })
     },
     //读文件
-    readFile: function (router, format, callBack) {
+    readFile: function (router, format = 'UTF-8', callBack) {
         if (!router) return alert("没有文件路径");
-        let config = ["readFile", router, "UTF-8"];
+        let config = ["readFile", router, format];
         return this.base(config, callBack)
     },
     //写文件

@@ -52,7 +52,7 @@ SaveAsModal.prototype = {
             that.getLastSaveId(table, id).then(res => {
                 var count = res.length;
                 new Workspace().save(true, `${id}(${count})`)
-            })
+            });
         }
     },
 

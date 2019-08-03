@@ -74,7 +74,7 @@
             }
         },
         //设置数据
-        setData: function (element) {
+        setData: async function (element) {
             var that = this,
                 cache = $.data(element, CACHE_KEY),
                 $querierDbName = $(element).find(".querier-dbName"),
@@ -94,10 +94,11 @@
                 fields = data.fields;
                 conditions = data.conditions;
             }
-            var AllDbName = new CommonService().getFileSync("/lib/ZZZZZZZ/table.json")||{},
+            var AllDbName = await new FileService().readFile("/profiles/table.json"),
                 dbOptions = [],
                 tableOptions = [],
                 fieldsoptions = [];
+            
             Object.keys(AllDbName).forEach(function(item){
                 dbOptions.push({name:item,value:item})
             })
@@ -206,10 +207,10 @@
         //绑定事件
         bindEvents: function (element) {
             var that = this;
-            $(element).on("change"+ EVENT_NAMESPACE, ".querier-dbName",{element:element},function(event){
+            $(element).on("change"+ EVENT_NAMESPACE, ".querier-dbName",{element:element}, async function(event){
                 event.stopPropagation();
                 var dbName = $(this).val(),
-                AllDbName = new CommonService().getFileSync("/lib/ZZZZZZZ/table.json")||{},
+                AllDbName = await new FileService().readFile("/profiles/table.json"),
                 tableOptions = [],
                 $querierTable = $(element).find(".querier-table");
                 if(dbName){
@@ -219,7 +220,7 @@
                 }
                 Common.fillSelect($querierTable,{name:"请选择表",value:""},tableOptions,null,true)
             })
-            $(element).on("change" + EVENT_NAMESPACE, ".querier-table", {element: element}, function (event) {
+            $(element).on("change" + EVENT_NAMESPACE, ".querier-table", {element: element}, async function (event) {
                 event.stopPropagation();
 
                 var table = $(this).val(),
@@ -227,7 +228,7 @@
                     cache = $.data(celement, CACHE_KEY),
                     $querierFields = $(celement).find(".querier-fields"),
                     $querierConditions = $(celement).find(".querier-conditions"),
-                    AllDbName = new CommonService().getFileSync("/lib/ZZZZZZZ/table.json")||{},
+                    AllDbName = await new FileService().readFile("/profiles/table.json"),
                     fieldMode = cache.fieldMode,
                     data = cache.data,
                     fieldsoptions = [],

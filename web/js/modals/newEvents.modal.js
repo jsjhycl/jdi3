@@ -100,8 +100,13 @@ function NewEventsModal($modal, $element) {
     this.copySendDbName = [];
     this.evetnsDesc = {};
     //获取客户自定义的事件
-    this._initCustomMethods = function () {
-        var result = new CommonService().getFileSync("/profile/custom_methods.json"); //调用commonService中的getFileSync方法
+    this._initCustomMethods = async function () {
+        var result;
+        try {
+            result = await new FileService().readFile("/profiles/custom_methods.json"); //调用commonService中的getFileSync方法
+        } catch(err) {
+            return alert('获取配置文件错误！')
+        }
         this.METHODS = result || [];
     };
     //获取表格查询或则通用查询
@@ -802,7 +807,7 @@ function NewEventsModal($modal, $element) {
 
 }
 NewEventsModal.prototype = {
-    initData: function (data) {
+    initData: async function (data) {
         var that = this;
         that._resetData()
         that._initCustomMethods();
@@ -810,7 +815,12 @@ NewEventsModal.prototype = {
         if (!Array.isArray(data)) { //如果data不是一个数组 添加一个默认值
             data = that.data
         }
-        var desc = new CommonService().getFileSync("/profile/events_desc.json")
+        var desc 
+        try {
+            desc = await new FileService().readFile("/profiles/events_desc.json")
+        } catch(err) {
+            return alert('获取配置文件错误！')
+        }
         that.evetnsDesc = desc || {
             triggerType: {}
         }

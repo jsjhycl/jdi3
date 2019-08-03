@@ -736,7 +736,7 @@
                     $(this).find(".fn-system .fn-system-item").first().click();
                     $list.hide().prev().show();
                     var newFn = FunctionUtil.getSystemFnOrder(cache.systemFunction);
-                    new CommonService().saveFile('system_functions.json', JSON.stringify(newFn));
+                    new FileService().writeFile('system_functions.json', JSON.stringify(newFn));
                     $(".fn-container").slideDown('fast');
                 } else {
                     $(this).parents('.fn-system').find(".fn-system-item").addClass("canDel");

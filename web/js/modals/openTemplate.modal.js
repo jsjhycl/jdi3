@@ -7,7 +7,8 @@ function OpenTemplate($openModal) {
     this.getQueryConfig = function() {
         var config = jdi.fileApi.getProfile('dBTable0Config_custom.json'),
             query = $.extend({}, config, { size: 8, page: 1 });
-        query['command'] = "query"
+        query['command'] = "query";
+        query['table'] = "newResources";
         if (Array.isArray(query['condition'])) {
             query['condition'].forEach(con => {
                 con.isReg && (con.value = ('/' + con.value + '/'));

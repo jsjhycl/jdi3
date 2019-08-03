@@ -182,7 +182,7 @@
             var postData = $.extend({}, postData);
             delete postData["page"];
             delete postData["size"];
-            postData["fields"] = ['_id']
+            postData["fields"] = ['customId']
             return new Promise((resolve, reject) => {
                 return $.cajax({
                     url,
@@ -245,13 +245,13 @@
                 data.forEach(function (item) {
                     var customId = "";
                     //添加data-*属性
-                    var tr = '<tr';
-                    thead.attrs.forEach(function (aitem) {
-                        var value = that.recurseObject(item, aitem.alias);
-                        customId = value;
-                        tr += ' data-' + aitem.key + '="' + value + '"';
-                    });
-                    tr += '>';
+                    var tr = '<tr data-id=' + item.customId + ' >';
+                    // thead.attrs.forEach(function (aitem) {
+                    //     var value = that.recurseObject(item, aitem.alias);
+                    //     customId = value;
+                        
+                    // });
+                    // tr += '';
                     //添加td数据
                     thead.fields.forEach(function (fitem) {
                         var type = fitem.type,

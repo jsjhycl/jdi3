@@ -16,21 +16,24 @@ function OpenTemplate($openModal) {
             })
         }
         delete query['db'];
+        query['fields'].push({ value: "customId" });
         return query;
     };
     this.getTheadFields = function(fields) {
         var data = fields.map((i, idx) => {
-            return {
-                    text: i.name,
-                    key: i.value,
-                    type: 0,
-                    func: idx === 0 && "detail",
-                    template: function (value) {
-                        return idx === 0
-                                ? '<a>' + value + '</a>'
-                                : '<span>' + value + '</span>';
+            if (i.name) {
+                return {
+                        text: i.name,
+                        key: i.value,
+                        type: 0,
+                        func: idx === 0 && "detail",
+                        template: function (value) {
+                            return idx === 0
+                                    ? '<a>' + value + '</a>'
+                                    : '<span>' + value + '</span>';
+                        }
                     }
-                }
+            }
         });
         data.push({
             text: "操作",
@@ -46,7 +49,7 @@ function OpenTemplate($openModal) {
                 }
             ]
         })
-        return data;
+        return data.filter(el => !!el);
     };
     this._pageList = function(){
         var that =this,
@@ -57,21 +60,16 @@ function OpenTemplate($openModal) {
             getPage: new Service().pageList,
             url: new Service().baseUrl,
             query,
-            // forms: [
-            //     {name: "name", controlType: "textbox", searchType: "like", labelText: "资源名称"}
-            // ],
             thead: {
                 fields: that.getTheadFields(query["fields"]),
-                attrs: attrs
             },
             onDetail: async function () {
                 var $tr = $(this).parents("tr"),
                     id = $tr.attr("data-id"),
-                    // name = $(this).text();
-                    
-                    // new Workspace().load(id, name, "表单", null, null, null);
-                    // that.$openModal.modal("hide");
-                    // new Main().open();
+                    template = await new Service().query(query['table'], [{ col: 'customId', value: id }], ['customId', 'name'])
+                    new Workspace().load(template.customId, template.name, "表单", null, null, null);
+                    that.$openModal.modal("hide");
+                    new Main().open();
             },
             onRemove: function () {
                 var id = $(this).parents("tr").attr("data-id");

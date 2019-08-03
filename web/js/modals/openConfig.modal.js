@@ -103,19 +103,14 @@ OpenConfigModal.prototype = {
         this.$body.empty().append(str);
     },
 
-    setData: function() {
+    setData: async function() {
         try {
-            var data = jdi.fileApi.getProfile("dBTableConfig.json");
-            console.log(data)
-            var customData = jdi.fileApi.getProfile(this.configFile);
-                // if (!DataType.isObject(data)) return;
-            console.log(customData)
+            var data = await new FileService().readFile("./profiles/dBTableConfig.json", 'utf-8'),
+                customData = jdi.fileApi.getProfile(this.configFile);
         } catch(err) {
             !customData && jdi.fileApi.setProfile(this.configFile, "{}");
             customData = {}
         }
-
-
 
         this.data = data;
         this.customData = customData;

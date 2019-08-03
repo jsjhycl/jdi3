@@ -101,63 +101,26 @@ function OpenResource($openModal) {
             //     attrs: attrs
             // },
             onDetail: async function () {
-                var $tr = $(this).parents("tr"),
-                    id = $tr.attr("data-id"),
-                    name = $(this).text();
-                // var params = { type: 1,isAll: true,}
-                // 先获取 布局（分页）
+                var id = $(this).parents("tr").attr("data-id");
 
                 var resources = await new Service().query(query['table'], [{ col: 'customId', value: id }], ['basicInfo.contactId', 'basicInfo.contactTable', 'basicInfo.contactDb', 'name']),
                     resource = Array.isArray(resources) && resources[0];
-                
                 if (DataType.isObject(resource)) {
-
                     var customId = Common.recurseObject(resource, 'basicInfo.contactId'),
                         templates = await new Service().query(resource['basicInfo.contactId'] || 'newResources', [{ col: 'customId', value: customId }]);
                         relTemplate = Array.isArray(templates) && templates[0];
-                    new Workspace().load(resource.customId, resource.name, "布局", relTemplate.customId, relTemplate);
+                    new Workspace().load(id, resource.name, "布局", relTemplate.customId, relTemplate);
+                    that.$openModal.modal("hide");
+                    new Main().open();
                 } else {
                     alert('数据加载失败！')
                 }
-                // new NewService().list(params, function (res) {
-                //     if (res.status == -1) return alert("请求错误");
-                //     res.result.data.forEach(function (item) {
-                //         if (item.customId == id) {
-                //             var contactId = item.basicInfo.contactId;
-                //             gettableList(contactId)
-                //         }
-                //     });
-                // });
-
-                // function gettableList(contactId) {
-                //     var params1 = { type: 0,isAll: true}
-                //     new NewService().list(params1, function (res) {
-                //         res.result.data.forEach( function (item) {
-                //             if(item.customId==contactId){
-                //                 var relTemplate = item;
-                //                 new Workspace().load(id, name, "布局", item.customId, relTemplate);
-                //                 that.$openModal.modal("hide");
-                //                 new Main().open();
-                //             }
-                //         })
-                //     })
-                // }
-
-                // new ProductService().detail(relId, function (result) {
-                //     Common.handleResult(result, function (data) {
-                //         if (data) {
-                //             new Workspace().load(id, name, "布局", null, null, data);
-                //             that.$openModal.modal("hide");
-                //             new Main().open();
-                //         }
-                //     });
-                // });
-
             },
             onRemove: function () {
-                var id = $(this).parents("tr").attr("data-id");
-                alert('删除，还没写')
-                // return new NewService().removePromise(id, 1)
+                var id = $(this).parents("tr").attr("data-id"),
+                    p1 = new Service().removeByCustomId(query['table'], id);
+                    p2 = new FileService().rmdir('/product/' + id);
+                return Promise.all([p1, p2]);
             }
         });
     }

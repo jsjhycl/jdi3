@@ -68,11 +68,19 @@ FileService.prototype = {
         return this.base(config, callBack)
     },
     //移除文件夹
-    rmdir: function (router, callBack) {
+    rmdir: async function (router, callBack) {
         if (!router) return alert("路径不存在");
-        let config = ["rmdir", router];
+
+        let files = await this.readdir(router),
+            config = ["rmdir", router];
+        if (Array.isArray(files)) {
+            for(let i of files) {
+                await this.unlink(router + '/' + i);
+            }
+        }
         return this.base(config, callBack)
     },
+
     //新增文件夹
     mkdir: function (router, callBack) {
         if (!router) return alert("路径不存在");

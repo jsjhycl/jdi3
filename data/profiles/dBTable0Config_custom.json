@@ -1,1 +1,1 @@
-{"db":"数据库1","table":"newResources","condition":[],"fields":[{"name":"资源名称","value":"name"}]}
+{"db":"数据库1","table":"newResources","fields":[{"value":"name","name":"资源名称"}]}

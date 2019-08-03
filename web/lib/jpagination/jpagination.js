@@ -151,17 +151,13 @@
                     cache = $.data(current, CACHE_KEY);
                 if (cache.onRemove) {
                     var promise = cache.onRemove.call(this, null);
-                    promise.then(function (result) {
-                        if (result.status === 0) {
-                            var current = event.data.element;
-                            that.removeDisabled(current);
-                            var postData = that.duplicate(cache.data);
-                            // postData["name"] = that.getConditionsData(current, cache.forms);
-                            postData["pageIndex"] = that.getPageIndex(current);
-                            that.getPageData(current, postData);
-                        } else {
-                            alert("操作失败！消息：" + JSON.stringify(result.result, null, 2));
-                        }
+                    promise.then(function () {
+                        var current = event.data.element;
+                        that.removeDisabled(current);
+                        var postData = that.duplicate(cache.query);
+                        postData["page"] = that.getPageIndex(current);
+                        that.getPageData(current, postData);
+                        // alert("操作失败！消息：" + JSON.stringify(result.result, null, 2));
                     }).catch(function (err) {
                         alert("err:" + JSON.stringify(err, null, 2));
                     });

@@ -402,7 +402,7 @@ function Workspace() {
                 data: JSON.stringify(tableData)
             });
         }
-        var router = subtype == "布局" ? `./public/${id}` : `./resource/${id}`;
+        var router = subtype == "布局" ? `./product/${id}` : `./resource/${id}`;
         that.judgeFile(router).then(res => {
             //文件夹不存在
             if (!res) {
@@ -510,7 +510,7 @@ function Workspace() {
                 })
             }
             if (subtype == "布局") {
-                id = basicInfo.autoCreate + basicInfo.area + basicInfo.feature + basicInfo.userGrade + basicInfo.contactId + "ZZ" + basicInfo.autoCreate;
+                id = basicInfo.autoCreate + basicInfo.area + basicInfo.feature + basicInfo.userGrade + basicInfo.contactId.replace(/\((.*)\)/img, "") + "ZZ" + basicInfo.autoCreate;
                 var params = [{ col: "name", value: name},
                     { col: "customId", value: id},
                     { col: "basicInfo",

@@ -73,12 +73,8 @@ function OpenTemplate($openModal) {
             onRemove: function () {
                 var id = $(this).parents("tr").attr("data-id"),
                     p1 = new Service().removeByCustomId(query['table'], id);
-                    p2 = new FileService().rmdir('/resource' + id);
-                Promise.all([p1, p2]).then(res => {
-                    console.log(res);
-                })
-                // alert('删除，还没写');
-                // return new NewService().removePromise(id, 0)
+                    p2 = new FileService().rmdir('/resource/' + id);
+                return Promise.all([p1, p2])
             }
         });
     }

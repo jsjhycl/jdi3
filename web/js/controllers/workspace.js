@@ -236,7 +236,7 @@ function Workspace() {
     };
 
     this.saveFilePost = function (Router, name, data) {
-        console.log(Router,name,data)
+        console.log(Router, name, data)
 
     }
 
@@ -415,29 +415,29 @@ function Workspace() {
         new FileService().mkdir("resource/AA").then(res => {
             console.log(res)
         })
-        var router = subtype == "布局" ? `resource/${id}` : `public/${id}`;
+        var router = subtype == "布局" ? `public/${id}` : `resource/${id}`;
 
         var $y = that.saveFilePost,
             res = null;
-            // var $y = that._postAjax, //将调用函数的返回值赋值给$y
-            //     $ajax = null;
-            if (arrs.length === 3) { //如果数组的长度为3
-                res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data))
-            } else if (arrs.length === 4) { //如果数组长度为4
-                res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data), $y(router, arrs[3].name, arrs[3].data))
-            } else if (arrs.length === 5) { //如果数组长度为5
-                res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data), $y(router, arrs[3].name, arrs[3].data), $y(router, arrs[4].name, arrs[4].data))
-                // $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4])); //调用数组长度
-            } else if (arrs.length === 6) { //如果数组长度为5
-                res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data), $y(router, arrs[3].name, arrs[3].data), $y(router, arrs[4].name, arrs[4].data), $y(router, arrs[5].name, arrs[5].data))
-                // $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4]), $y(type, id, arrs[5])); //调用数组长度
-            } else if (arrs.length === 7) { //如果数组长度为5
-                res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data), $y(router, arrs[3].name, arrs[3].data), $y(router, arrs[4].name, arrs[4].data), $y(router, arrs[5].name, arrs[5].data), $y(router, arrs[6].name, arrs[6].data))
-                // $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4]), $y(type, id, arrs[5]), $y(type, id, arrs[6])); //调用数组长度
-            } else if (arrs.length === 8) { //如果数组长度为5
-                res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data), $y(router, arrs[3].name, arrs[3].data), $y(router, arrs[4].name, arrs[4].data), $y(router, arrs[5].name, arrs[5].data), $y(router, arrs[6].name, arrs[6].data), $y(router, arrs[7].name, arrs[7].data))
-                // $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4]), $y(type, id, arrs[5]), $y(type, id, arrs[6]), $y(type, id, arrs[7])); //调用数组长度
-            }
+        // var $y = that._postAjax, //将调用函数的返回值赋值给$y
+        //     $ajax = null;
+        if (arrs.length === 3) { //如果数组的长度为3
+            res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data))
+        } else if (arrs.length === 4) { //如果数组长度为4
+            res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data), $y(router, arrs[3].name, arrs[3].data))
+        } else if (arrs.length === 5) { //如果数组长度为5
+            res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data), $y(router, arrs[3].name, arrs[3].data), $y(router, arrs[4].name, arrs[4].data))
+            // $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4])); //调用数组长度
+        } else if (arrs.length === 6) { //如果数组长度为5
+            res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data), $y(router, arrs[3].name, arrs[3].data), $y(router, arrs[4].name, arrs[4].data), $y(router, arrs[5].name, arrs[5].data))
+            // $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4]), $y(type, id, arrs[5])); //调用数组长度
+        } else if (arrs.length === 7) { //如果数组长度为5
+            res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data), $y(router, arrs[3].name, arrs[3].data), $y(router, arrs[4].name, arrs[4].data), $y(router, arrs[5].name, arrs[5].data), $y(router, arrs[6].name, arrs[6].data))
+            // $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4]), $y(type, id, arrs[5]), $y(type, id, arrs[6])); //调用数组长度
+        } else if (arrs.length === 8) { //如果数组长度为5
+            res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data), $y(router, arrs[3].name, arrs[3].data), $y(router, arrs[4].name, arrs[4].data), $y(router, arrs[5].name, arrs[5].data), $y(router, arrs[6].name, arrs[6].data), $y(router, arrs[7].name, arrs[7].data))
+            // $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4]), $y(type, id, arrs[5]), $y(type, id, arrs[6]), $y(type, id, arrs[7])); //调用数组长度
+        }
         // if ($ajax) { //如果$ajax存在的话
         //     $ajax.done(function () { //执行ajax函数的 done方法
         //         if (isPrompt) { //如果ispromt是真值的话提示保存成功

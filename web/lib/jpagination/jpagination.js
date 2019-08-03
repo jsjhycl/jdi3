@@ -88,21 +88,21 @@
                 $jpageThead.append(html_thead);
             }
             //初始化分页数据
-            that.getPageData(element, cache.data);
+            that.getPageData(element, cache.query);
         },
         bindEvents: function (element) {
             var that = this;
             //查询click事件
-            $(element).on("click" + EVENT_NAMESPACE, ".jpage-search", {element: element}, function (event) {
-                var current = event.data.element;
-                $(current).find(".jpage-form").submit(false);
-                that.removeDisabled(current);
+            // $(element).on("click" + EVENT_NAMESPACE, ".jpage-search", {element: element}, function (event) {
+            //     var current = event.data.element;
+            //     $(current).find(".jpage-form").submit(false);
+            //     that.removeDisabled(current);
 
-                var cache = $.data(current, CACHE_KEY),
-                    postData = that.duplicate(cache.data);
-                postData["name"] = that.getConditionsData(current, cache.forms);
-                that.getPageData(current, postData);
-            });
+            //     var cache = $.data(current, CACHE_KEY),
+            //         postData = that.duplicate(cache.data);
+            //     postData["name"] = that.getConditionsData(current, cache.forms);
+            //     that.getPageData(current, postData);
+            // });
             //上一页click事件
             $(element).on("click" + EVENT_NAMESPACE, ".jpage-up", {element: element}, function (event) {
                 var current = event.data.element;
@@ -178,95 +178,133 @@
                 }
             });
         },
-        getPageData: function (element, postData) {
+
+        getPageCount: function(url, postData) {
+            var postData = $.extend({}, postData);
+            delete postData["page"];
+            delete postData["size"];
+            postData["fields"] = ['_id']
+            return new Promise((resolve, reject) => {
+                return $.cajax({
+                    url,
+                    type: "POST",
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify(postData),
+                    dataType: "json",
+                    success: rst => rst.status === 0 ? resolve(rst.result) : reject(rst.result),
+                    error: err => reject(err)
+                })
+            })
+        },
+        getPage: function(url, postData) {
+            var postData = $.extend({}, postData);
+            postData["fields"] = postData["fields"].map(el => el.value);
+            return new Promise((resolve, reject) => {
+                return $.cajax({
+                    url,
+                    type: "POST",
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify(postData),
+                    dataType: "json",
+                    success: rst => rst.status === 0 ? resolve(rst.result) : reject(rst.result),
+                    error: err => reject(err)
+                })
+            })
+        },
+
+        getPageData: async function (element, postData) {
             var that = this,
                 $jpage = $(element),
-                cache = $.data(element, CACHE_KEY);
-            $.cajax({
-                url: cache.url,
-                type: "POST",
-                contentType: "application/json;charset=utf-8",
-                data: JSON.stringify(postData),
-                dataType: "json",
-                success: function (ret) {
-                    if (ret && ret.status === 0) {
-                        var result = ret.result;
-                        //填充pagination
-                        var numbers = Math.ceil(result.count / postData.pageSize);
-                        if (numbers > 0) {
-                            var html1 = "";
-                            html1 += '<li><a class="jpage-up">&laquo;</a></li>';
-                            for (var i = 1; i <= numbers; i++) {
-                                html1 += '<li><a class="jpage-number" data-number="' + i + '">' + i + '</a></li>';
-                            }
-                            html1 += '<li><a class="jpage-down">&raquo;</a></li>';
-                            $jpage.find(".jpage-pagination").empty().append(html1);
-                            $jpage.find('.jpage-number[data-number="' + postData.pageIndex + '"]').parent().addClass("active");
-                        } else {
-                            $jpage.find(".jpage-pagination").empty().append('<li><a class="jpage-up">&laquo;</a></li><li><a class="jpage-down">&raquo;</a></li>');
-                        }
-                        //填充table
-                        var data = result.data;
-                        if (Array.isArray(data)) {
-                            var html2 = "",
-                                thead = cache.thead;
-                            data.forEach(function (item) {
-                                var customId = "";
-                                //添加data-*属性
-                                var tr = '<tr';
-                                thead.attrs.forEach(function (aitem) {
-                                    var value = that.recurseObject(item, aitem.alias);
-                                    customId = value;
-                                    tr += ' data-' + aitem.key + '="' + value + '"';
-                                });
-                                tr += '>';
-                                //添加td数据
-                                thead.fields.forEach(function (fitem) {
-                                    var type = fitem.type,
-                                        dataType = fitem.dataType || "String";
-                                    if (type === 0) {
-                                        var value;
-                                        if (dataType === "Number") {
-                                            value = isNaN(item[fitem.key]) ? item[fitem.pkey] : item[fitem.key];
-                                        } else {
-                                            value = item[fitem.key] || item[fitem.pkey];
-                                        }
-                                        var template = fitem.template || function (value) {
-                                                    return value;
-                                                },
-                                            str = template(value);
-                                        if (fitem.func) {
-                                            var $template = $(str);
-                                            $template.addClass(fitem.func);
-                                            tr += '<td>' + $template.get(0).outerHTML +"_"+customId + '</td>';
-                                        } else {
-                                            tr += '<td>' + str + '</td>';
-                                        }
-                                    } else if (type === 1) {
-                                        tr += '<td>';
-                                        fitem.items.forEach(function (sitem) {
-                                            var str = sitem.template ? sitem.template() : "";
-                                            if (sitem.func) {
-                                                var $template = $(str);
-                                                $template.addClass(sitem.func);
-                                                tr += $template.get(0).outerHTML;
-                                            } else {
-                                                tr += str;
-                                            }
-                                        });
-                                        tr += '</td>';
-                                    } else {
-                                        tr += '<td></td>';
-                                    }
-                                });
-                                tr += '</tr>';
-                                html2 += tr;
-                            });
-                            $jpage.find(".jpage-table tbody").empty().append(html2);
-                        }
-                    } else alert("分页数据加载失败！");
+                cache = $.data(element, CACHE_KEY),
+                result = { count: 0, data: null };
+            try {
+                var all = await this.getPageCount(cache.url, postData),
+                    data = await this.getPage(cache.url, postData);
+                result.count = all.length;
+                result.data = data;
+            } catch(err) {
+                alert("分页数据加载失败！");
+                throw (err);
+            }
+            var numbers = Math.ceil(result.count / postData.pageSize);
+            if (numbers > 0) {
+                var html1 = "";
+                html1 += '<li><a class="jpage-up">&laquo;</a></li>';
+                for (var i = 1; i <= numbers; i++) {
+                    html1 += '<li><a class="jpage-number" data-number="' + i + '">' + i + '</a></li>';
                 }
-            });
+                html1 += '<li><a class="jpage-down">&raquo;</a></li>';
+                $jpage.find(".jpage-pagination").empty().append(html1);
+                $jpage.find('.jpage-number[data-number="' + postData.pageIndex + '"]').parent().addClass("active");
+            } else {
+                $jpage.find(".jpage-pagination").empty().append('<li><a class="jpage-up">&laquo;</a></li><li><a class="jpage-down">&raquo;</a></li>');
+            }
+            //填充table
+            var data = result.data;
+            if (Array.isArray(data)) {
+                var html2 = "",
+                    thead = cache.thead;
+                data.forEach(function (item) {
+                    var customId = "";
+                    //添加data-*属性
+                    var tr = '<tr';
+                    // thead.attrs.forEach(function (aitem) {
+                    //     var value = that.recurseObject(item, aitem.alias);
+                    //     customId = value;
+                    //     tr += ' data-' + aitem.key + '="' + value + '"';
+                    // });
+                    tr += '>';
+                    //添加td数据
+                    thead.fields.forEach(function (fitem) {
+                        var type = fitem.type,
+                            dataType = fitem.dataType || "String";
+                            // fitem.key = that.duplicate(fitem.key);
+                        if (fitem.key.indexOf('.') > -1) {
+                            fitem.key = fitem.key.split(".")[0]
+                        }
+                        
+                        if (type === 0) {
+                            var value;
+                            if (dataType === "Number") {
+                                value = isNaN(item[fitem.key]) ? item[fitem.pkey] : item[fitem.key];
+                            } else {
+                                value = item[fitem.key] || item[fitem.pkey];
+                            }
+                            typeof value === 'object' && (value = value[Object.keys(value)[0]])
+                            console.log(toString.call(this, value), value)
+                            var template = fitem.template || function (value) {
+                                        return value;
+                                    },
+                                str = template(value);
+                            if (fitem.func) {
+                                var $template = $(str);
+                                $template.addClass(fitem.func);
+                                tr += '<td>' + $template.get(0).outerHTML +"_"+customId + '</td>';
+                            } else {
+                                tr += '<td>' + str + '</td>';
+                            }
+                        } else if (type === 1) {
+                            tr += '<td>';
+                            fitem.items.forEach(function (sitem) {
+                                var str = sitem.template ? sitem.template() : "";
+                                if (sitem.func) {
+                                    var $template = $(str);
+                                    $template.addClass(sitem.func);
+                                    tr += $template.get(0).outerHTML;
+                                } else {
+                                    tr += str;
+                                }
+                            });
+                            tr += '</td>';
+                        } else {
+                            tr += '<td></td>';
+                        }
+                    });
+                    tr += '</tr>';
+                    html2 += tr;
+                });
+                $jpage.find(".jpage-table tbody").empty().append(html2);
+            }
         },
         getConditionsData: function (element, forms) {
             var $jpageForm = $(element).find(".jpage-form"),
@@ -336,68 +374,6 @@
             return new Pagination(this, options).init();
         }
     });
-
-    //demo defaults data
-    // $.fn.jpagination.defaults = {
-    //     disabled: false,
-    //     url: "/newapi/pagelist",
-    //     data: {
-    //         table: "resources",
-    //         conditions: {
-    //             type: "模板"
-    //         },
-    //         sort: null,
-    //         pageIndex: 1,
-    //         pageSize: 5
-    //     },
-    //     forms: [
-    //         {name: "type", controlType: "hidden", searchType: "=", value: "模板"},
-    //         {name: "name", controlType: "textbox", searchType: "like", labelText: "资源名称："}
-    //     ],
-    //     thead: {
-    //         fields: [
-    //             {
-    //                 text: "名称",
-    //                 key: "name",
-    //                 type: 0,
-    //                 func: "detail",
-    //                 template: function (value) {
-    //                     return '<a>' + value + '</a>';
-    //                 }
-    //             },
-    //             {
-    //                 text: "状态",
-    //                 key: "state",
-    //                 type: 0,
-    //                 func: null,
-    //                 template: function (value) {
-    //                     return value === 1 ? '<span class="text-success">已入库</span>' : '<span class="text-warning">未入库</span>';
-    //                 }
-    //             },
-    //             {
-    //                 text: "操作",
-    //                 key: "",
-    //                 type: 1,
-    //                 items: [
-    //                     {
-    //                         text: "删除",
-    //                         func: "remove",
-    //                         template: function () {
-    //                             return '<button class="btn btn-danger">删除</button>';
-    //                         }
-    //                     }
-    //                 ]
-    //             }
-    //         ],
-    //         attrs: [
-    //             {key: "id", alias: "guid"}
-    //         ]
-    //     },
-    //     onDetail: function () {
-    //     },
-    //     onRemove: function () {
-    //     }
-    // };
 
     $.fn.jpagination.defaults = {
         disabled: false,

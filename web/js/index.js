@@ -34,6 +34,11 @@ function init() {
 			Common.fillSelect($('[name="model_autoCreate"]'), null, result["自动分表"], null, true); //新增自动分表属性
 		}
 	});
+
+	new FileService().readFile("./profile/category.json",function(result){
+		console.log(result)
+	})
+
 	//右键菜单
 	new ContextMenu().done(1, $workspace);
 	// add at 2017/12/27绑定draggable
@@ -64,12 +69,12 @@ function navbar() {
 	createResource.bindEvents(); //绑定新建布局表单资源
 
 	//打开表单资源
-	var openTemplate = new OpenTemplate();
-	openTemplate.initData();
+	var openTemplate = new OpenTemplate($("#open_template_modal"));
+	openTemplate.execute();
 
 	//打开资源布局
-	var openResource = new OpenResource();
-	openResource.initData();
+	var openResource = new OpenResource($("#open_resource_modal"));
+	openResource.execute();
 
 
 	//另存为
@@ -114,18 +119,8 @@ function navbar() {
 	var insertFnModal = new InsertFnModal($("#insertFunctionModal"));
 	insertFnModal.execute();
 
-	// (function saveAs() {
-	// 	$("#saveAs").click(function () {
-	// 		new Workspace().save(true, true)
-	// 	})
-	// })();
-
-	//保存
-	// (function save() {
-	// 	$("#save").click(function () {
-	// 		new Workspace().save(true);
-	// 	});
-	// })();
+    var resourcesModal = new OpenConfigModal($("#resource_config_modal"), 0);
+    resourcesModal.execute();
 
 	//提交
 	var submitModal = new SubmitModal($("#submitModal"), $("#submit"));

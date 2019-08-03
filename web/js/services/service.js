@@ -56,7 +56,19 @@ Service.prototype = {
         return this.base(config, callBack);
     },
 
-    insert: function (table, save, callBack) {
+    // pageList: async function(table, condition, fields, page, size) {
+    //     var that = this;
+    //     try {
+    //         var all = await that.queryCount(table, condition);
+    //             querys = await that.query(table, condition, fields, page, size);
+    //         querys.count = all.length;
+    //         return querys;
+    //     } catch (err) {
+    //         throw ('pageList err: ', err)
+    //     }
+    // },
+
+    insert: function(table, save, callBack) {
         if (!table) return alert("插入表名不存在")
         let config = {
             command: "insert",

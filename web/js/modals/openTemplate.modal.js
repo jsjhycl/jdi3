@@ -1,59 +1,60 @@
 /**
  * 打开表单资源
  */
-function OpenTemplate() {
-    this.$openModal = $("#open_template_modal")
+function OpenTemplate($openModal) {
+    BaseModal.call(this, $openModal);
+    this.$openModal = $openModal;
+    this.getQueryConfig = function() {
+        var config = jdi.fileApi.getProfile('dBTableConfig_custom.json'),
+            query = $.extend({}, config, { size: 10, page: 0 });
+        query['command'] = "query"
+        delete query['db'];
+        return query;
+    };
+    this.getTheadFields = function(fields) {
+        var data = fields.map((i, idx) => {
+            console.log(i.name, i.value);
+            return {
+                    text: i.name,
+                    key: i.value,
+                    type: 0,
+                    template: function (value) {
+                        return idx === 0
+                                ? '<a>' + value + '</a>'
+                                : '<span>' + value + '</span>';
+                    }
+                }
+        });
+        data.push({
+            text: "操作",
+            key: "",
+            type: 1,
+            items: [
+                {
+                    text: "删除",
+                    func: "remove",
+                    template: function () {
+                        return '<button class="btn btn-danger">删除</button>';
+                    }
+                }
+            ]
+        })
+        return data;
+    };
     this._pageList = function(){
         var that =this,
-        $elem = $("#template_resource_page"),
-        type = "表单",
-        attrs = [{key: "id", alias: "customId"}]; 
+            $elem = $("#template_resource_page"),
+            attrs = [{key: "id", alias: "customId"}]; 
+            query = that.getQueryConfig();
         $elem.jpagination({
-            url: "/new/table",
-            data: {
-                commond:"query",
-                table:"newResources",
-                size:6,
-                page:1
-            },
-            forms: [
-                {name: "name", controlType: "textbox", searchType: "like", labelText: "资源名称"}
-            ],
+            getPage: new Service().pageList,
+            url: new Service().baseUrl,
+            query,
+            // forms: [
+            //     {name: "name", controlType: "textbox", searchType: "like", labelText: "资源名称"}
+            // ],
             thead: {
-                fields: [
-                    {
-                        text: "资源名称",
-                        key: "name",
-                        type: 0,
-                        func: "detail",
-                        template: function (value) {
-                            return '<a>' + value + '</a>';
-                        }
-                    },
-                    {
-                        text: "处理状态",
-                        key: "state",
-                        type: 0,
-                        func: null,
-                        template: function (value) {
-                            return value === 1 ? '<span class="text-success">已入库</span>' : '<span class="text-warning">未入库</span>';
-                        }
-                    },
-                    {
-                        text: "操作",
-                        key: "",
-                        type: 1,
-                        items: [
-                            {
-                                text: "删除",
-                                func: "remove",
-                                template: function () {
-                                    return '<button class="btn btn-danger">删除</button>';
-                                }
-                            }
-                        ]
-                    }
-                ],
+                fields: that.getTheadFields(query["fields"]),
                 attrs: attrs
             },
             onDetail: function () {
@@ -76,5 +77,9 @@ OpenTemplate.prototype = {
     initData: function () {
         var that = this;
         that._pageList()
+    },
+    execute: function() {
+        var that = this;
+        that.basicEvents(false, that.initData)
     }
 }

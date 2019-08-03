@@ -19,8 +19,9 @@ SaveAsModal.prototype = {
     initData: function () {
         var that = this;
         that._clearData();
+        var id = $workspace.attr("data-id");
+        if(!id) return alert("保存才可以另存")
         var $workspace = $("#workspace"),
-            id = $workspace.attr("data-id"),
             id = id.replace(/\((.*)\)/img, ""), //获取工作区data-id
             saveName;
         var subtype = $workspace.attr("data-subtype");

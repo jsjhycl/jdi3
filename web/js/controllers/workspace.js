@@ -216,28 +216,18 @@ function Workspace() {
     this.$phone = $("#phone_content");
     this.NAMESPACE = ".workspace"
 
-    this._getAjax = function (url) {
-        return $.cajax({ //返回一个ajax
-            url: url,
-            type: "GET",
-            dataType: "json"
-        });
-    };
+    this.readFile = function (Router) {
+        return new FileService().readFile(Router, "UTF-8")
+    }
 
-    this._postAjax = function (type, id, item) {
-        if (!id || !DataType.isObject(item)) return; //如果id或则item不是对象退出函数
-        return $.cajax({ //返回一个ajax对象
-            url: "/new/saveFile/" + type + "/" + id + "/" + item.name,
-            type: "POST",
-            contentType: item.contentType,
-            data: item.data,
-            dataType: "json"
-        });
-    };
-
-    this.saveFilePost = function (Router, name, data) {
-        console.log(Router, name, data)
-
+    this.judgeFile = function (Router) {
+        return new FileService().exists(Router)
+    }
+    this.mkdirFile = function (Router) {
+        return new FileService().mkdir(Router)
+    }
+    this.saveFilePost = function (Router, data) {
+        return new FileService().writeFile(Router, data)
     }
 
     this._getData = function (id, name, subtype, customId) {
@@ -412,44 +402,30 @@ function Workspace() {
                 data: JSON.stringify(tableData)
             });
         }
-        new FileService().mkdir("resource/AA").then(res => {
-            console.log(res)
-        })
         var router = subtype == "布局" ? `public/${id}` : `resource/${id}`;
-
-        var $y = that.saveFilePost,
-            res = null;
-        // var $y = that._postAjax, //将调用函数的返回值赋值给$y
-        //     $ajax = null;
-        if (arrs.length === 3) { //如果数组的长度为3
-            res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data))
-        } else if (arrs.length === 4) { //如果数组长度为4
-            res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data), $y(router, arrs[3].name, arrs[3].data))
-        } else if (arrs.length === 5) { //如果数组长度为5
-            res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data), $y(router, arrs[3].name, arrs[3].data), $y(router, arrs[4].name, arrs[4].data))
-            // $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4])); //调用数组长度
-        } else if (arrs.length === 6) { //如果数组长度为5
-            res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data), $y(router, arrs[3].name, arrs[3].data), $y(router, arrs[4].name, arrs[4].data), $y(router, arrs[5].name, arrs[5].data))
-            // $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4]), $y(type, id, arrs[5])); //调用数组长度
-        } else if (arrs.length === 7) { //如果数组长度为5
-            res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data), $y(router, arrs[3].name, arrs[3].data), $y(router, arrs[4].name, arrs[4].data), $y(router, arrs[5].name, arrs[5].data), $y(router, arrs[6].name, arrs[6].data))
-            // $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4]), $y(type, id, arrs[5]), $y(type, id, arrs[6])); //调用数组长度
-        } else if (arrs.length === 8) { //如果数组长度为5
-            res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data), $y(router, arrs[3].name, arrs[3].data), $y(router, arrs[4].name, arrs[4].data), $y(router, arrs[5].name, arrs[5].data), $y(router, arrs[6].name, arrs[6].data), $y(router, arrs[7].name, arrs[7].data))
-            // $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4]), $y(type, id, arrs[5]), $y(type, id, arrs[6]), $y(type, id, arrs[7])); //调用数组长度
-        }
-        // if ($ajax) { //如果$ajax存在的话
-        //     $ajax.done(function () { //执行ajax函数的 done方法
-        //         if (isPrompt) { //如果ispromt是真值的话提示保存成功
-        //             alert("保存成功！");
-        //         }
-        //         window.location.reload(true)
-        //     }).fail(function () {
-        //         if (isPrompt) { //如果ispromt是真值的话提示保存失败
-        //             alert("保存失败！");
-        //         }
-        //     });
-        // }
+        that.judgeFile(router).then(res => {
+            //文件夹不存在
+            if (!res) {
+                return that.mkdirFile(router)
+            }
+        }).then(() => {
+            var $y = that.saveFilePost,
+                res = $.when(arrs.map(i => {
+                    return $y(`${router}/${i.name}`, i.data)
+                }))
+            if (res) { //如果$ajax存在的话
+                res.done(function () { //执行ajax函数的 done方法
+                    if (isPrompt) { //如果ispromt是真值的话提示保存成功
+                        alert("保存成功！");
+                    }
+                    window.location.reload(true)
+                }).fail(function () {
+                    if (isPrompt) { //如果ispromt是真值的话提示保存失败
+                        alert("保存失败！");
+                    }
+                });
+            }
+        })
     }
     //查询表单的最大id
     this._getMaxId = async function (type) {
@@ -646,11 +622,12 @@ Workspace.prototype = {
         if (!name || !subtype) return; //如果id或则name或type或subtype都为空退出函数
 
         var that = this;
-        var url = subtype == "表单" ? "/resource/" : "/product/"
-        $.when(that._getAjax(url + `${id||customId}` + "/setting.json"), that._getAjax(url + `${id ||customId}` + "/property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
+        var url = subtype == "表单" ? "./resource/" : "./product/";
+
+        $.when(that.readFile(url + `${id||customId}` + "/setting.json"), that.readFile(url + `${id ||customId}` + "/property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
             that.init(id, name, subtype, customId, relTemplate); //调用init方法
-            var settingData = ret1[0],
-                propertyData = ret2[0],
+            var settingData = ret1,
+                propertyData = ret2,
                 control = new Control(), //实例化Control
                 contextMenu = new ContextMenu(); //实例化contextMenu
             for (var i = 0; i < settingData.items.length; i++) { //遍历小于settingData.items.length的数
@@ -693,7 +670,7 @@ Workspace.prototype = {
 
             GLOBAL_PROPERTY = propertyData; //赋值
 
-            that.loadPhone(id, subtype);
+            that.loadPhone(id, customId, subtype);
 
             // 调整工作区大小
             var max_h = 0,
@@ -713,14 +690,13 @@ Workspace.prototype = {
             alert("数据加载出错！");
         });
     },
-    loadPhone: function (id, subtype) {
-        if (!id) return;
+    loadPhone: function (id, customId, subtype) {
 
         var that = this;
-        var url = subtype == "表单" ? "/resource/" : "/product/"
-        $.when(that._getAjax(url + id + "/phone_setting.json"), that._getAjax(url + id + "/phone_property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
-            var phoneSettingData = ret1[0] || {},
-                phonePropertyData = ret2[0] || {};
+        var url = subtype == "表单" ? "./resource/" : "./product/";
+        $.when(that.readFile(url + `${id||customId}` + "/phone_setting.json"), that.readFile(url + `${id ||customId}` + "/phone_property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
+            var phoneSettingData = ret1 || {},
+                phonePropertyData = ret2 || {};
             var control = new Control(), //实例化Control
                 contextMenu = new ContextMenu(); //实例化contextMenu
 

@@ -23,7 +23,7 @@ Propertybar.prototype = {
         suffix = suffix || "";//如果suffix存在则用suffix否则为空
         var that = this,
             AllDbName = new CommonService().getFileSync("/lib/ZZZZZZZ/table.json"),
-            result = new CommonService().getFileSync("/profile/propertybar.json");//实例化CommonService调用getFileSync方法
+            result = new FileService().readFile("../profile/propertybar.json");//实例化CommonService调用getFileSync方法
         if (!result) return;//如果没有退出函数
 
         //添加总数据库属性

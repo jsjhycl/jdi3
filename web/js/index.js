@@ -13,7 +13,29 @@ function init() {
 		"background-color": $("#bgColor").val()
 	});
 	//初始化下拉列表
-	new CommonService().getFile("/profile/category.json", function (result) {
+	// new CommonService().getFile("/profile/category.json", function (result) {
+	// 	if (DataType.isObject(result)) { //判断result是否为对象
+	// 		var data = result["子分类"].map(function (item) { //遍历result的子分类
+	// 			return {
+	// 				name: item,
+	// 				value: item
+	// 			};
+	// 		});
+	// 		Common.fillRadio($("#model_resource_subCategory"), "model_resource_subCategory", data); //调用Common的fillRadio的资源分类
+	// 		//表单资源提交表单
+	// 		Common.fillSelect($('[name="template_category"]'), null, result["表单分类"], null, true); //填充表单分类下拉框
+	// 		Common.fillRadio($("#template_subCategory"), "template_subCategory", data); //填充表单分类的单选框
+	// 		//布局资源提交表单
+	// 		Common.fillSelect($('[name="model_category"]'), null, result["布局分类"], null, true); //填充布局分类的下拉框
+	// 		Common.fillSelect($('[name="model_userGrade"]'), null, result["布局用户级别"], null, true); //填充用户级别的下拉框
+	// 		Common.fillSelect($('[name="model_feature"]'), null, result["布局特性"], null, true); //填充布局特性的下拉框
+	// 		Common.fillSelect($('[name="model_area"]'), null, result["布局区域"], null, true);
+
+	// 		Common.fillSelect($('[name="model_autoCreate"]'), null, result["自动分表"], null, true); //新增自动分表属性
+	// 	}
+	// });
+
+	new FileService().readFile("./profiles/category.json","UTF-8",function(result){
 		if (DataType.isObject(result)) { //判断result是否为对象
 			var data = result["子分类"].map(function (item) { //遍历result的子分类
 				return {
@@ -33,10 +55,6 @@ function init() {
 
 			Common.fillSelect($('[name="model_autoCreate"]'), null, result["自动分表"], null, true); //新增自动分表属性
 		}
-	});
-
-	new FileService().readFile("./profile/category.json",function(result){
-		console.log(result)
 	})
 
 	//右键菜单
@@ -427,13 +445,14 @@ function propertybar() {
 		$(document).on("click", "#propertybar .btn-expr", function () {
 			var $expr = $(this),
 				commonService = new CommonService();
-			$.when(commonService.getAjax("/newapi/getprozz"),
-				commonService.getAjax("/profile/global.json"),
-				commonService.getAjax("/profile/local_functions.json"),
-				commonService.getAjax("/profile/remote_functions.json"),
-				commonService.getAjax("/profile/system_functions.json")).done(function (result1, result2, result3, result4, result5) {
+				var getFile = new FileService();
+			$.when(getFile.readFile("/newapi/getprozz"),
+				getFile.readFile("/profile/global.json"),
+				getFile.readFile("/profile/local_functions.json"),
+				getFile.readFile("/profile/remote_functions.json"),
+				getFile.readFile("/profile/system_functions.json")).done(function (result1, result2, result3, result4, result5) {
 				if (!result1 || !result2 || !result3 || !result4 || !result5) return;
-
+					console.log(result1, result2, result3, result4, result5)
 				var data1 = result1[0],
 					data2 = result2[0],
 					data3 = result3[0],

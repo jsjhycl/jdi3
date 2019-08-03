@@ -271,7 +271,6 @@
                                 value = item[fitem.key] || item[fitem.pkey];
                             }
                             typeof value === 'object' && (value = value[Object.keys(value)[0]])
-                            console.log(toString.call(this, value), value)
                             var template = fitem.template || function (value) {
                                         return value;
                                     },

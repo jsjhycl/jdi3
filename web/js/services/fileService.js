@@ -12,7 +12,6 @@ FileService.prototype = {
                 contentType: "application/json",
                 dataType: "json",
                 success: rst => {
-                    console.log(rst)
                     var faileMsg = "操作失败! \n消息:";
                     if (DataType.isObject(rst)) {
                         var data = rst.result;

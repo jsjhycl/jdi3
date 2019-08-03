@@ -13,28 +13,30 @@ function SaveAsModal($modal) {
         this.$lastName.val();
         this.$isFinalName.attr("checked", false);
     }
+    this.getLastSaveId = async function (table, id) {
+        var condition = [{
+                col: "customId",
+                value: id
+            }],
+            fields = ["customId"]
+        return await new Service().query(table, condition, fields)
+    }
 
 }
 SaveAsModal.prototype = {
     initData: function () {
         var that = this;
         that._clearData();
-        var id = $workspace.attr("data-id");
-        if(!id) return alert("保存才可以另存")
         var $workspace = $("#workspace"),
-            id = id.replace(/\((.*)\)/img, ""), //获取工作区data-id
-            saveName;
+            id = $workspace.attr("data-id");
+        if (!id) return alert("保存才可以另存")
+        var id = id.replace(/\((.*)\)/img, "");
         var subtype = $workspace.attr("data-subtype");
-        var type = subtype == "表单" ? "0" : "1";
-        var promise = new NewService().queryHistory(id, type)
-        promise.then(function (res) {
-            if (res.status == -1) return alert("获取数据失败");
-            var data = res.result
-            var count = data;
-            saveName = `${id}(${count})`;
-            that.$saveAsName.val(saveName)
+        var table = subtype == "表单" ? "newResources" : "newProducts";
+        that.getLastSaveId(table, id).then(res => {
+            var count = res.length;
+            that.$saveAsName.val(`${id}(${count})`)
         })
-
     },
     saveData: function () {
         var that = this;
@@ -46,14 +48,11 @@ SaveAsModal.prototype = {
                 id = $workspace.attr("data-id"),
                 subtype = $workspace.attr("data-subtype"),
                 id = id.replace(/\((.*)\)/img, "");
-                var type = subtype == "表单" ? "0" : "1";
-            promise = new NewService().queryHistory(id, type);
-            promise.then(function (res) {
-                if (res.status == -1) return alert("获取数据失败");
-                var data = res.result,
-                    count = data,
-                    saveId = `${id}(${count})`;
-                new Workspace().save(true, saveId)
+            var table = subtype == "表单" ? "newResources" : "newProducts";
+            that.getLastSaveId(table, id).then(res => {
+                var count = res.length;
+                console.log("save")
+                new Workspace().save(true, `${id}(${count})`)
             })
         }
     },
@@ -70,21 +69,14 @@ SaveAsModal.prototype = {
                 id = $workspace.attr("data-id")
             subtype = $workspace.attr("data-subtype"); //获取工作区data-id\
             id = id.replace(/\((.*)\)/img, "");
-            var type = subtype == "表单" ? "0" : "1";
-
-            var promise = new NewService().queryHistory(id, subtype)
-            promise.then(function (res) {
-                if (res.status == -1) return alert("获取数据失败");
-                var data = res.result,
-                    count = data;
+            var table = subtype == "表单" ? "newResources" : "newProducts";
+            that.getLastSaveId(table, id).then(res => {
+                var count = res.length;
                 if (flag) {
                     count = 99;
                 }
-                var saveName = `${id}(${count})`;
-                that.$saveAsName.val(saveName)
+                that.$saveAsName.val(`${id}(${count})`)                
             })
-
-
         })
     }
 }

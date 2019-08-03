@@ -55,8 +55,8 @@ function init() {
 
 			Common.fillSelect($('[name="model_autoCreate"]'), null, result["自动分表"], null, true); //新增自动分表属性
 		}
-	})
-
+    });
+    
 	//右键菜单
 	new ContextMenu().done(1, $workspace);
 	// add at 2017/12/27绑定draggable
@@ -451,7 +451,6 @@ function propertybar() {
 				getFile.readFile("/profile/local_functions.json"),
 				getFile.readFile("/profile/remote_functions.json"),
 				getFile.readFile("/profile/system_functions.json")).done(function (result1, result2, result3, result4, result5) {
-					console.log(result1, result2, result3, result4, result5)
 				if (!result1 || !result2 || !result3 || !result4 || !result5) return;
 				var data1 = result1[0],
 					data2 = result2[0],

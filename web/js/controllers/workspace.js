@@ -402,7 +402,7 @@ function Workspace() {
                 data: JSON.stringify(tableData)
             });
         }
-        var router = subtype == "布局" ? `public/${id}` : `resource/${id}`;
+        var router = subtype == "布局" ? `./public/${id}` : `./resource/${id}`;
         that.judgeFile(router).then(res => {
             //文件夹不存在
             if (!res) {
@@ -411,7 +411,7 @@ function Workspace() {
         }).then(() => {
             var $y = that.saveFilePost,
                 res = $.when(arrs.map(i => {
-                    return $y(`${router}/${i.name}`, i.data)
+                    return $y(`./${router}/${i.name}`, i.data)
                 }))
             if (res) { //如果$ajax存在的话
                 res.done(function () { //执行ajax函数的 done方法
@@ -663,7 +663,7 @@ Workspace.prototype = {
         console.log(id, name)
         if (!name || !subtype) return; //如果id或则name或type或subtype都为空退出函数
         var that = this;
-        var url = subtype == "表单" ? "../resources/" : "../product/";
+        var url = subtype == "表单" ? "./resource/" : "./product/";
 
         $.when(that.readFile(url + `${id||customId}` + "/setting.json"), that.readFile(url + `${id ||customId}` + "/property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
             that.init(id, name, subtype, customId, relTemplate); //调用init方法
@@ -734,7 +734,7 @@ Workspace.prototype = {
     loadPhone: function (id, customId, subtype) {
 
         var that = this;
-        var url = subtype == "表单" ? "../resources/" : "../product/";
+        var url = subtype == "表单" ? "./resource/" : "./product/";
         $.when(that.readFile(url + `${id||customId}` + "/phone_setting.json"), that.readFile(url + `${id ||customId}` + "/phone_property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
             var phoneSettingData = ret1 || {},
                 phonePropertyData = ret2 || {};

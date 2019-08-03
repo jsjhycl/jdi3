@@ -1,5 +1,5 @@
 function Service() {
-    this.baseUrl = "/new/table";
+    this.baseUrl = "/dbApi/dbOperate";
 }
 Service.prototype = {
     base: function (data, callBack) {

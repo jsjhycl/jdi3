@@ -9,11 +9,12 @@ function OpenTemplate() {
         type = "表单",
         attrs = [{key: "id", alias: "customId"}]; 
         $elem.jpagination({
-            url: "/new/page",
+            url: "/new/table",
             data: {
-                type:0,
-                pageIndex: 1,
-                pageSize: 6
+                commond:"query",
+                table:"newResources",
+                size:6,
+                page:1
             },
             forms: [
                 {name: "name", controlType: "textbox", searchType: "like", labelText: "资源名称"}

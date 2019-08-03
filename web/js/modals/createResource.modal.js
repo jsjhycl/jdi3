@@ -20,6 +20,7 @@ function CreateResource() {
                     value: mitem.customId
                 }
             });
+            console.log(options)
         Common.fillSelect(that.$resoureRelId, defaultOption, options, null, false);
     }
 }
@@ -32,7 +33,6 @@ CreateResource.prototype = {
         new Service().query(dbCollection,null,null).then(res=>{
             if(!Array.isArray(res)) return;
             that.data = res;
-            console.log(res)
             that._fillRelId()
         })
        

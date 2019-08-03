@@ -235,6 +235,10 @@ function Workspace() {
         });
     };
 
+    this.saveFilePost = function (Router, name, data) {
+        console.log(Router,name,data)
+
+    }
 
     this._getData = function (id, name, subtype, customId) {
         if (!name) return alert("无法保存没有编号、名称的数据！"); //如果id或者name不存在的退出函数并提示
@@ -401,11 +405,6 @@ function Workspace() {
             contentType: "text/html;charset=utf-8",
             data: JSON.stringify(phone_property)
         }];
-        // arrs.push({ //先数组中添加
-        //     name: FLOW_SETTING[flow],
-        //     contentType: "text/plain;charset=utf-8",
-        //     data: JSON.stringify(GLOBAL_PROPERTY)
-        // });
         if (subtype === "布局" && tableData) { //如果type为产品或则type为数据库定义且type为布局且tabledata存在
             arrs.push({ //向数组中添加
                 name: "table.json",
@@ -413,33 +412,44 @@ function Workspace() {
                 data: JSON.stringify(tableData)
             });
         }
-        var $y = that._postAjax, //将调用函数的返回值赋值给$y
-            $ajax = null;
-        if (arrs.length === 3) { //如果数组的长度为3
-            $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2])); //调用ajax
-        } else if (arrs.length === 4) { //如果数组长度为4
-            $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3])); //调用ajax
-        } else if (arrs.length === 5) { //如果数组长度为5
-            $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4])); //调用数组长度
-        } else if (arrs.length === 6) { //如果数组长度为5
-            $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4]), $y(type, id, arrs[5])); //调用数组长度
-        } else if (arrs.length === 7) { //如果数组长度为5
-            $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4]), $y(type, id, arrs[5]), $y(type, id, arrs[6])); //调用数组长度
-        } else if (arrs.length === 8) { //如果数组长度为5
-            $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4]), $y(type, id, arrs[5]), $y(type, id, arrs[6]), $y(type, id, arrs[7])); //调用数组长度
-        }
-        if ($ajax) { //如果$ajax存在的话
-            $ajax.done(function () { //执行ajax函数的 done方法
-                if (isPrompt) { //如果ispromt是真值的话提示保存成功
-                    alert("保存成功！");
-                }
-                window.location.reload(true)
-            }).fail(function () {
-                if (isPrompt) { //如果ispromt是真值的话提示保存失败
-                    alert("保存失败！");
-                }
-            });
-        }
+        new FileService().mkdir("resource/AA").then(res => {
+            console.log(res)
+        })
+        var router = subtype == "布局" ? `resource/${id}` : `public/${id}`;
+
+        var $y = that.saveFilePost,
+            res = null;
+            // var $y = that._postAjax, //将调用函数的返回值赋值给$y
+            //     $ajax = null;
+            if (arrs.length === 3) { //如果数组的长度为3
+                res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data))
+            } else if (arrs.length === 4) { //如果数组长度为4
+                res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data), $y(router, arrs[3].name, arrs[3].data))
+            } else if (arrs.length === 5) { //如果数组长度为5
+                res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data), $y(router, arrs[3].name, arrs[3].data), $y(router, arrs[4].name, arrs[4].data))
+                // $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4])); //调用数组长度
+            } else if (arrs.length === 6) { //如果数组长度为5
+                res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data), $y(router, arrs[3].name, arrs[3].data), $y(router, arrs[4].name, arrs[4].data), $y(router, arrs[5].name, arrs[5].data))
+                // $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4]), $y(type, id, arrs[5])); //调用数组长度
+            } else if (arrs.length === 7) { //如果数组长度为5
+                res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data), $y(router, arrs[3].name, arrs[3].data), $y(router, arrs[4].name, arrs[4].data), $y(router, arrs[5].name, arrs[5].data), $y(router, arrs[6].name, arrs[6].data))
+                // $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4]), $y(type, id, arrs[5]), $y(type, id, arrs[6])); //调用数组长度
+            } else if (arrs.length === 8) { //如果数组长度为5
+                res = Promise.all($y(router, arrs[0].name, arrs[0].data), $y(router, arrs[1].name, arrs[1].data), $y(router, arrs[2].name, arrs[2].data), $y(router, arrs[3].name, arrs[3].data), $y(router, arrs[4].name, arrs[4].data), $y(router, arrs[5].name, arrs[5].data), $y(router, arrs[6].name, arrs[6].data), $y(router, arrs[7].name, arrs[7].data))
+                // $ajax = $.when($y(type, id, arrs[0]), $y(type, id, arrs[1]), $y(type, id, arrs[2]), $y(type, id, arrs[3]), $y(type, id, arrs[4]), $y(type, id, arrs[5]), $y(type, id, arrs[6]), $y(type, id, arrs[7])); //调用数组长度
+            }
+        // if ($ajax) { //如果$ajax存在的话
+        //     $ajax.done(function () { //执行ajax函数的 done方法
+        //         if (isPrompt) { //如果ispromt是真值的话提示保存成功
+        //             alert("保存成功！");
+        //         }
+        //         window.location.reload(true)
+        //     }).fail(function () {
+        //         if (isPrompt) { //如果ispromt是真值的话提示保存失败
+        //             alert("保存失败！");
+        //         }
+        //     });
+        // }
     }
     //查询表单的最大id
     this._getMaxId = async function (type) {
@@ -451,9 +461,11 @@ function Workspace() {
             var numberId = NumberHelper.nameToId(item.customId.replace(/\((.*)\)/img, ""))
             arr.push(numberId)
         })
-        if(arr.length>0){
+        if (arr.length > 0) {
             maxId = arr.max();
-        }else{maxId=-1}
+        } else {
+            maxId = -1
+        }
         return NumberHelper.idToName(maxId + 1, 3);
     }
     //存入数据库信息
@@ -462,7 +474,6 @@ function Workspace() {
         return await new Service().insert(dbCollection, params)
     }
     this._setData = function (isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData) {
-
         if (!subtype) return; //如果id或则type或则subtype都不存在则退出函数
         var that = this;
         isPrompt = !!isPrompt; //对isPrompt进行取布尔值
@@ -496,13 +507,19 @@ function Workspace() {
             if (subtype == "表单") {
                 this._getMaxId(subtype).then(res => {
                     id = res;
-                    var params = [
-                        {col:"name",value:name},
-                        {col:"customId",value:id},
+                    var params = [{
+                            col: "name",
+                            value: name
+                        },
                         {
-                            col:"basicInfo",value:{
+                            col: "customId",
+                            value: id
+                        },
+                        {
+                            col: "basicInfo",
+                            value: {
                                 category: basicInfo.category,
-                                subCategory:basicInfo.subCategory
+                                subCategory: basicInfo.subCategory
                             }
                         }
                     ]
@@ -529,19 +546,24 @@ function Workspace() {
                     basicInfo.userGrade +
                     basicInfo.contactId + "ZZ" +
                     basicInfo.autoCreate;
-                var params = [
-                    {col:"name",value:name},
-                    {col:"customId",value:id},
+                var params = [{
+                        col: "name",
+                        value: name
+                    },
                     {
-                        col:"basicInfo",
-                        value:{
-                            category:basicInfo.category,
-                            subCategory:basicInfo.subCategory,
-                            feature:basicInfo.feature,
-                            userGrade:basicInfo.userGrade,
-                            area:basicInfo.area,
-                            autoCreate:basicInfo.autoCreate,
-                            contactId:basicInfo.contactId
+                        col: "customId",
+                        value: id
+                    },
+                    {
+                        col: "basicInfo",
+                        value: {
+                            category: basicInfo.category,
+                            subCategory: basicInfo.subCategory,
+                            feature: basicInfo.feature,
+                            userGrade: basicInfo.userGrade,
+                            area: basicInfo.area,
+                            autoCreate: basicInfo.autoCreate,
+                            contactId: basicInfo.contactId
                         }
                     }
                 ]

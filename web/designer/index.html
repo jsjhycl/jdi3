@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <title>JDI模型设计器</title>
+    <title>JDI设计器</title>
     <link rel="stylesheet" href="../lib/jquery-ui/jquery-ui.min.css">
     <link rel="stylesheet" href="../lib/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/common.css">
@@ -357,7 +357,8 @@
                                 <div class="row">
                                     <label class="col-lg-2 control-label">资源名称：</label>
                                     <div class="col-lg-4">
-                                        <input type="email" class="form-control" id="inputEmail3" placeholder="输入资源名称关键字">
+                                        <input type="email" class="form-control" id="inputEmail3"
+                                            placeholder="输入资源名称关键字">
                                     </div>
                                     <label class="col-lg-2 control-label">编号</label>
                                     <div class="col-lg-4">
@@ -405,7 +406,7 @@
                                     <input type="checkbox" name="querier_fields" value="customId">表单子分类
                                 </label>
                             </div>
-                    </div>
+                        </div>
                 </section>
                 <footer class="modal-footer">
                     <button class="btn btn-primary save">保存</button>
@@ -931,6 +932,14 @@
                     <div class="tab-content">
                         <div class="tab-pane fade" id="submit_template_tab">
                             <div class="form-group">
+                                <label class="control-label" for="template_db">存入数据库</label>
+                                <select class="form-control" id="template_db" name="template_db"></select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="template_table">存入表格</label>
+                                <select class="form-control" id="template_table" name="template_table"></select>
+                            </div>
+                            <div class="form-group">
                                 <label class="control-label" for="template_name">表单名称</label>
                                 <input class="form-control" id="template_name" type="text" name="template_name">
                             </div>
@@ -945,6 +954,14 @@
                             </div>
                         </div>
                         <div class="tab-pane fade" id="submit_model_tab">
+                            <div class="form-group">
+                                <label class="control-label" for="model_db">存入数据库</label>
+                                <select class="form-control" id="model_db" name="model_db"></select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="model_table">存入表格</label>
+                                <select class="form-control" id="model_table" name="model_table"></select>
+                            </div>
                             <div class="form-group">
                                 <label class="control-label" for="model_name">布局名称</label>
                                 <input class="form-control" id="model_name" type="text" name="model_name">

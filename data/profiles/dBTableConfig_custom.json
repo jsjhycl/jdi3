@@ -1,1 +1,0 @@
-{"db":"数据库1","table":"newResources","condition":[{"col":"customId","value":"A","isReg":true,"cate":"编号"}],"fields":[{"name":"表单分类","value":"basicInfo.category"},{"name":"子分类","value":"basicInfo.subCategory"}]}

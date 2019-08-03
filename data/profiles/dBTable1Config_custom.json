@@ -1,0 +1,1 @@
+{"db":"数据库1","table":"newProducts","condition":[],"fields":[{"name":"资源名称","value":"name"},{"name":"布局区域","value":"basicInfo.area"},{"name":"自动分表","value":"basicInfo.autoCreate"}]}

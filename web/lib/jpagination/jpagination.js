@@ -113,9 +113,9 @@
                     $(this).parent().addClass("disabled");
                 } else {
                     var cache = $.data(current, CACHE_KEY),
-                        postData = that.duplicate(cache.data);
-                    postData["name"] = that.getConditionsData(current, cache.forms);
-                    postData["pageIndex"] = pageIndex - 1;
+                    postData = that.duplicate(cache.query);
+                    // postData["name"] = that.getConditionsData(current, cache.forms);
+                    postData["page"] = pageIndex - 1;
                     that.getPageData(current, postData);
                 }
             });
@@ -125,10 +125,9 @@
                 that.removeDisabled(current);
 
                 var cache = $.data(current, CACHE_KEY),
-                    postData = that.duplicate(cache.data),
+                    postData = that.duplicate(cache.query),
                     pageIndex = parseInt($(this).attr("data-number"));
-                postData["name"] = that.getConditionsData(current, cache.forms);
-                postData["pageIndex"] = !isNaN(pageIndex) ? pageIndex : 1;
+                postData["page"] = !isNaN(pageIndex) ? pageIndex : 1;
                 that.getPageData(current, postData);
             });
             //下一页click事件
@@ -141,9 +140,8 @@
                     $(this).parent().addClass("disabled");
                 } else {
                     var cache = $.data(current, CACHE_KEY),
-                        postData = that.duplicate(cache.data);
-                    postData["name"] = that.getConditionsData(current, cache.forms);
-                    postData["pageIndex"] = pageIndex + 1;
+                        postData = that.duplicate(cache.query);
+                    postData["page"] = pageIndex + 1;
                     that.getPageData(current, postData);
                 }
             });
@@ -158,7 +156,7 @@
                             var current = event.data.element;
                             that.removeDisabled(current);
                             var postData = that.duplicate(cache.data);
-                            postData["name"] = that.getConditionsData(current, cache.forms);
+                            // postData["name"] = that.getConditionsData(current, cache.forms);
                             postData["pageIndex"] = that.getPageIndex(current);
                             that.getPageData(current, postData);
                         } else {
@@ -190,7 +188,7 @@
                     contentType: "application/json;charset=utf-8",
                     data: JSON.stringify(postData),
                     dataType: "json",
-                    success: rst => rst.status === 0 ? resolve(rst.result) : reject(rst.result),
+                    success: rst => rst.status === 0 ? resolve(rst.result.length) : reject(rst.result),
                     error: err => reject(err)
                 })
             })
@@ -216,15 +214,15 @@
                 cache = $.data(element, CACHE_KEY),
                 result = { count: 0, data: null };
             try {
-                var all = await this.getPageCount(cache.url, postData),
+                var count = await this.getPageCount(cache.url, postData),
                     data = await this.getPage(cache.url, postData);
-                result.count = all.length;
+                result.count = count;
                 result.data = data;
             } catch(err) {
                 alert("分页数据加载失败！");
                 throw (err);
             }
-            var numbers = Math.ceil(result.count / postData.pageSize);
+            var numbers = Math.ceil(result.count / postData.size);
             if (numbers > 0) {
                 var html1 = "";
                 html1 += '<li><a class="jpage-up">&laquo;</a></li>';
@@ -233,7 +231,7 @@
                 }
                 html1 += '<li><a class="jpage-down">&raquo;</a></li>';
                 $jpage.find(".jpage-pagination").empty().append(html1);
-                $jpage.find('.jpage-number[data-number="' + postData.pageIndex + '"]').parent().addClass("active");
+                $jpage.find('.jpage-number[data-number="' + postData.page + '"]').parent().addClass("active");
             } else {
                 $jpage.find(".jpage-pagination").empty().append('<li><a class="jpage-up">&laquo;</a></li><li><a class="jpage-down">&raquo;</a></li>');
             }

@@ -95,9 +95,12 @@ Service.prototype = {
         let config = {
             command: "remove",
             table: table,
-            condition: condition || [],
+            condition: condition,
         }
         return this.base(config, callBack);
     },
 
+    removeByCustomId: function(table, customId, callBack) {
+        return this.remove(table, [{col: 'customId', value: customId}], callBack);
+    },
 }

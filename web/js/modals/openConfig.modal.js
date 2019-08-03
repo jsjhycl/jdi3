@@ -6,6 +6,8 @@ function OpenConfigModal($modal, key) {
     this.customData = null;
     this.cate = null;
 
+    this.configFile = key === 0 ? 'dBTable0Config_custom.json' : 'dBTable1Config_custom.json'
+
     this.renderCondition = async function($node, fields, $conditions, defaultData) {
         try {
             !this.cate && (this.cate = await new FileService().readFile('./profiles/category.json', 'utf-8'));
@@ -102,14 +104,22 @@ OpenConfigModal.prototype = {
     },
 
     setData: function() {
-        var data = jdi.fileApi.getProfile("dBTableConfig.json"),
-            customData = jdi.fileApi.getProfile("dBTableConfig_custom.json");
+        try {
+            var data = jdi.fileApi.getProfile("dBTableConfig.json");
+            console.log(data)
+            var customData = jdi.fileApi.getProfile(this.configFile);
+                // if (!DataType.isObject(data)) return;
+            console.log(customData)
+        } catch(err) {
+            !customData && jdi.fileApi.setProfile(this.configFile, "{}");
+            customData = {}
+        }
 
-        if (!DataType.isObject(data)) return;
+
 
         this.data = data;
         this.customData = customData;
-        var $dnName = this.$body.find('[data-name="dbName"]'),
+        var $dbName = this.$body.find('[data-name="dbName"]'),
             dbSelect = [],
             $tableName = this.$body.find('[data-name="tableName"]'),
             tableSelect,
@@ -128,15 +138,16 @@ OpenConfigModal.prototype = {
                     ? data[customData["db"]][customData["table"]].tableDetail
                     : [];
                     
-        Common.fillSelect($dnName, null, dbSelect, customData["db"]);
+        Common.fillSelect($dbName, null, dbSelect, customData["db"]);
         Common.fillSelect($tableName, { name: "全部", value: "" }, tableSelect.filter(el => !!el), customData["table"]);
         this.renderCondition($tableConditions, fields, $tableConditionsWrap, customData["condition"]);
         this.renderFields($tableFields, fields, customData["fields"]);
     },
 
     saveData: function () {
-        var data = {},
-            dnName = this.$body.find('[data-name="dbName"]').val(),
+        var that = this,
+            data = {},
+            dbName = this.$body.find('[data-name="dbName"]').val(),
             tableName = this.$body.find('[data-name="tableName"]').val(),
             $tableConditions = this.$body.find('[data-condition]'),
             $tableFields = this.$body.find('[data-field]:checked');
@@ -146,8 +157,8 @@ OpenConfigModal.prototype = {
             return -1
         }
         
-        data['db'] = dnName;
-        data['table'] = tableName;
+        data['db'] = dbName;
+        data['table'] = tableName || Object.keys(this.data[dbName]).filter(table => this.data[dbName][table].key === that.key);
         data['condition'] = [];
         $tableConditions.each(function() {
             var $this = $(this),
@@ -167,7 +178,7 @@ OpenConfigModal.prototype = {
                 value: $this.val(),
             });
         });
-        jdi.fileApi.setProfile('dBTableConfig_custom.json', JSON.stringify(data))
+        jdi.fileApi.setProfile(this.configFile, JSON.stringify(data))
     },
 
     clearData: function() {
@@ -181,7 +192,7 @@ OpenConfigModal.prototype = {
                 "table": tables[0],
                 "fields": [{ value: that.data[db][tables[0]].tableDetail[0].id, name: that.data[db][tables[0]].tableDetail[0].cname}]
             }
-            jdi.fileApi.setProfile('dBTableConfig_custom.json', JSON.stringify(data));
+            jdi.fileApi.setProfile(this.configFile, JSON.stringify(data));
             return result;
         }
     },

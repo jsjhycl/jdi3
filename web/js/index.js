@@ -90,10 +90,17 @@ function navbar() {
 	var openTemplate = new OpenTemplate($("#open_template_modal"));
 	openTemplate.execute();
 
+    // 表单查询配置
+    var templateModal = new OpenConfigModal($("#template_config_modal"), 0);
+    templateModal.execute();
+
 	//打开资源布局
 	var openResource = new OpenResource($("#open_resource_modal"));
 	openResource.execute();
 
+    // 表单查询配置
+    var resourcesModal = new OpenConfigModal($("#resource_config_modal"), 1);
+    resourcesModal.execute();
 
 	//另存为
 	var saveAsModal = new SaveAsModal($("#saveAsModal"));
@@ -137,8 +144,7 @@ function navbar() {
 	var insertFnModal = new InsertFnModal($("#insertFunctionModal"));
 	insertFnModal.execute();
 
-    var resourcesModal = new OpenConfigModal($("#resource_config_modal"), 0);
-    resourcesModal.execute();
+    
 
 	//提交
 	var submitModal = new SubmitModal($("#submitModal"), $("#submit"));

@@ -466,6 +466,8 @@ function Workspace() {
         if ($("#submit_model_tab").is(":visible")) {
             name = $('[name="model_name"]').val() || this.$workspace.attr('data-name');
             basicInfo["category"] = $('[name="model_category"]').val();
+            basicInfo["contactDb"] = $('#model_db');
+            basicInfo["contactTable"] =$('#model_table') 
             basicInfo["subCategory"] = $('[name="model_subCategory"]').val();
             basicInfo["feature"] = $('[name="model_feature"]').val();
             basicInfo["userGrade"] = $('[name="model_userGrade"]').val();
@@ -521,7 +523,9 @@ function Workspace() {
                             userGrade: basicInfo.userGrade,
                             area: basicInfo.area,
                             autoCreate: basicInfo.autoCreate,
-                            contactId: basicInfo.contactId
+                            contactId: basicInfo.contactId,
+                            contactDb : basicInfo.contactDb,
+                            contactTable:basicInfo.contactTable
                         }
                     }
                 ]
@@ -580,7 +584,9 @@ function Workspace() {
                             userGrade: basicInfo.userGrade,
                             area: basicInfo.area,
                             autoCreate: basicInfo.autoCreate,
-                            contactId: basicInfo.contactId
+                            contactId: basicInfo.contactId,
+                            contactDb : basicInfo.contactDb,
+                            contactTable:basicInfo.contactTable
                         }
                     }
                 ]

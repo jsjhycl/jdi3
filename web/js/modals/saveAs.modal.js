@@ -51,7 +51,6 @@ SaveAsModal.prototype = {
             var table = subtype == "表单" ? "newResources" : "newProducts";
             that.getLastSaveId(table, id).then(res => {
                 var count = res.length;
-                console.log("save")
                 new Workspace().save(true, `${id}(${count})`)
             })
         }

@@ -6,17 +6,60 @@
  */
 function SubmitModal($modal, $submit) {
     BaseModal.call(this, $modal, null);
+    this.$modalBody = this.$modal.find(".modal-body")
 
     this.$submit = $submit;
 }
 
 SubmitModal.prototype = {
+    initData: async function () {
+        var that = this;
+        res = await new FileService().readFile('./profiles/dBTableConfig.json')
+        console.log(res)
+        if (!DataType.isObject(res)) return;
+        var $templateDbName = that.$modalBody.find('#template_db'), //表单
+            $templateTableName = that.$modalBody.find('#template_table'),
+            $modelDbName = that.$modalBody.find("#model_db"),
+            $modelTableName = that.$modalBody.find("#model_table");
+        var templateDbOptions = [],
+            templateTableOptions = [],
+            modelDbOptions = [],
+            modelTableOptions = [];
+        Object.keys(res).forEach(item => {
+            templateDbOptions.push({name: item,value: item})
+            modelDbOptions.push({name: item,value: item})
+        })
+        Common.fillSelect($templateDbName, null, templateDbOptions, templateDbOptions[0].value)
+        Common.fillSelect($modelDbName, null, modelDbOptions, modelDbOptions[0].value)
+        
+        if (DataType.isObject(res[Object.keys(res)[0]])) {
+            templateTableOptions = Object.keys(res[Object.keys(res)[0]]).filter(i => res[Object.keys(res)[0]][i].key === 0)
+            templateTableOptions = templateTableOptions.map(i => { return { value: i, name: i } })
+
+            modelTableOptions = Object.keys(res[Object.keys(res)[0]]).filter(i => res[Object.keys(res)[0]][i].key === 1)
+            modelTableOptions = modelTableOptions.map(i => { return { value: i, name: i } })
+        }
+        // Object.keys(res[Object.keys(res)[0]]).forEach(item => {
+        //     console.log(item)
+        //     if (item.key == 0) {
+        //         console.log(item,"table")
+        //         templateTableOptions.push({name: item,value: item})
+        //     }
+        //     if (item.key == 1) {
+        //         console.log(item,"db")
+        //         modelTableOptions.push({name: item,value: item})
+        //     }
+        // })
+        console.log(templateTableOptions[0])
+        Common.fillSelect($templateTableName, null, templateTableOptions, templateTableOptions[0].value)
+        Common.fillSelect($modelTableName, null, modelTableOptions, modelTableOptions[0].value)
+    },
     saveData: function () {
         new Workspace().save(true)
     },
     execute: function () {
         var that = this;
-        that.basicEvents(true, null, that.saveData, null);
+        that.basicEvents(true, that.initData, that.saveData, null);
     },
     bindEvents: function () {
         var that = this;
@@ -25,9 +68,6 @@ SubmitModal.prototype = {
                 id = $workspace.attr("data-id"),
                 name = $workspace.attr("data-name"),
                 subtype = $workspace.attr("data-subtype");
-            // if (subtype=="表单" || !id) return alert("无法提交没有编号的数据！");
-
-            // new Workspace().save(false);
             that.$modal.modal("show");
             that.$modal.find("#resource_name").text(name);
             if (subtype === "表单") {
@@ -41,41 +81,7 @@ SubmitModal.prototype = {
                 }
                 that.$modal.find('.nav-tabs li:eq(1) a[data-toggle="tab"]').click();
             }
-            // switch (type) {
-            //     case "资源":
-            //         that.$modal.modal("show");
-            //         that.$modal.find("#resource_name").text(name);
-            //         if (subtype === "表单") {
-            //             $('[name="template_name"]').val(name.replace("_表单资源", "_表单产品"));
-            //             that.$modal.find('.nav-tabs li:eq(0) a[data-toggle="tab"]').click();
-            //         } else if (subtype === "布局") {
-            //             $('[name="model_name"]').val(name.replace("_布局资源", ""));
-            //             var relTemplate = Common.parseData($workspace.attr("data-relTemplate") || null);
-            //             if (relTemplate) {
-            //                 $('[name="model_subCategory"]').val(relTemplate.basicInfo.subCategory);
-            //             }
-            //             that.$modal.find('.nav-tabs li:eq(1) a[data-toggle="tab"]').click();
-            //         }
-            //         break;
-            //     case "产品":
-            //         new ProductService().submit(id, function (result) {
-            //             Common.handleResult(result, function () {
-            //                 alert("提交成功！");
-            //                 window.location.reload(true);
-            //             });
-            //         });
-            //         break;
-            //     case "数据库定义":
-            //         new ProductService().submitDB(id, function (result) {
-            //             Common.handleResult(result, function (data) {
-            //                 if (!data) return;
 
-            //                 alert("提交成功！");
-            //                 window.location.reload(true);
-            //             });
-            //         });
-            //         break;
-            // }
         });
     }
 };

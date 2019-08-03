@@ -40,7 +40,7 @@ FileService.prototype = {
     //读文件
     readFile: function (router, format, callBack) {
         if (!router) return alert("没有文件路径");
-        let config = ["readFile", router, format];
+        let config = ["readFile", router, "UTF-8"];
         return this.base(config, callBack)
     },
     //写文件

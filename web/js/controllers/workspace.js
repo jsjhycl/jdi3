@@ -402,7 +402,7 @@ function Workspace() {
                 data: JSON.stringify(tableData)
             });
         }
-        var router = subtype == "布局" ? `public/${id}` : `resource/${id}`;
+        var router = subtype == "布局" ? `./public/${id}` : `./resource/${id}`;
         that.judgeFile(router).then(res => {
             //文件夹不存在
             if (!res) {
@@ -411,7 +411,7 @@ function Workspace() {
         }).then(() => {
             var $y = that.saveFilePost,
                 res = $.when(arrs.map(i => {
-                    return $y(`${router}/${i.name}`, i.data)
+                    return $y(`./${router}/${i.name}`, i.data)
                 }))
             if (res) { //如果$ajax存在的话
                 res.done(function () { //执行ajax函数的 done方法
@@ -471,7 +471,6 @@ function Workspace() {
             basicInfo["userGrade"] = $('[name="model_userGrade"]').val();
             basicInfo["area"] = $('[name="model_area"]').val();
             basicInfo["autoCreate"] = $('[name="model_autoCreate"]').val();
-            //缺少关联表单
             basicInfo["contactId"] = this.$workspace.attr('data-concat')
         } else {
             name = $('[name="template_name"]').val() || this.$workspace.attr('data-name');
@@ -483,16 +482,10 @@ function Workspace() {
             if (subtype == "表单") {
                 this._getMaxId(subtype).then(res => {
                     id = res;
-                    var params = [{
-                            col: "name",
-                            value: name
-                        },
-                        {
-                            col: "customId",
-                            value: id
-                        },
-                        {
-                            col: "basicInfo",
+                    var params = [
+                        {col: "name",value: name},
+                        {col: "customId",value: id},
+                        {col: "basicInfo",
                             value: {
                                 category: basicInfo.category,
                                 subCategory: basicInfo.subCategory
@@ -500,6 +493,7 @@ function Workspace() {
                         }
                     ]
                     this._saveDb(subtype, params).then(res => {
+                        console.log(res)
                         var $temp = $('<div></div>');
                         $temp.css({
                             "position": "absolute",
@@ -516,22 +510,69 @@ function Workspace() {
                 })
             }
             if (subtype == "布局") {
-                id = basicInfo.autoCreate +
-                    basicInfo.area +
-                    basicInfo.feature +
-                    basicInfo.userGrade +
-                    basicInfo.contactId + "ZZ" +
-                    basicInfo.autoCreate;
-                var params = [{
-                        col: "name",
-                        value: name
-                    },
-                    {
-                        col: "customId",
-                        value: id
-                    },
-                    {
-                        col: "basicInfo",
+                id = basicInfo.autoCreate + basicInfo.area + basicInfo.feature + basicInfo.userGrade + basicInfo.contactId + "ZZ" + basicInfo.autoCreate;
+                var params = [{ col: "name", value: name},
+                    { col: "customId", value: id},
+                    { col: "basicInfo",
+                        value: {
+                            category: basicInfo.category,
+                            subCategory: basicInfo.subCategory,
+                            feature: basicInfo.feature,
+                            userGrade: basicInfo.userGrade,
+                            area: basicInfo.area,
+                            autoCreate: basicInfo.autoCreate,
+                            contactId: basicInfo.contactId
+                        }
+                    }
+                ]
+                this._saveDb(subtype, params).then(res => {
+                    var $temp = $('<div></div>');
+                    $temp.css({
+                        "position": "absolute",
+                        "width": settingData.width,
+                        "height": settingData.height,
+                        "background-color": settingData.bgColor,
+                        "overflow": "hidden"
+                    }).append(modelData); //插入到html中
+                    modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
+                        '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
+                        $temp.get(0).outerHTML;
+                    that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, 1)
+                })
+            }
+        }
+        else{
+            if(subtype=="表单"){
+                var params = [
+                    {col: "name",value: name},
+                    {col: "customId",value: id},
+                    {col: "basicInfo",
+                        value: {
+                            category: basicInfo.category,
+                            subCategory: basicInfo.subCategory
+                        }
+                    }
+                ]
+                this._saveDb(subtype, params).then(res => {
+                    console.log(res)
+                    var $temp = $('<div></div>');
+                    $temp.css({
+                        "position": "absolute",
+                        "width": settingData.width,
+                        "height": settingData.height,
+                        "background-color": settingData.bgColor,
+                        "overflow": "hidden"
+                    }).append(modelData); //插入到html中
+                    modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
+                        '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
+                        $temp.get(0).outerHTML;
+                    that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, 0)
+                })
+            }
+            if(subtype=="布局"){
+                var params = [{ col: "name", value: name},
+                    { col: "customId", value: id},
+                    { col: "basicInfo",
                         value: {
                             category: basicInfo.category,
                             subCategory: basicInfo.subCategory,
@@ -693,7 +734,7 @@ Workspace.prototype = {
     loadPhone: function (id, customId, subtype) {
 
         var that = this;
-        var url = subtype == "表单" ? "./resource/" : "../product/";
+        var url = subtype == "表单" ? "./resource/" : "./product/";
         $.when(that.readFile(url + `${id||customId}` + "/phone_setting.json"), that.readFile(url + `${id ||customId}` + "/phone_property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
             var phoneSettingData = ret1 || {},
                 phonePropertyData = ret2 || {};

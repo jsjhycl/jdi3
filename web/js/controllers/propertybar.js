@@ -18,12 +18,12 @@ function Propertybar($container) {
 }
 
 Propertybar.prototype = {
-    init: function (isPM, suffix) {
+    init: async function (isPM, suffix) {
         isPM = !!isPM;//对isPM转换为正则
         suffix = suffix || "";//如果suffix存在则用suffix否则为空
         var that = this,
-            AllDbName = new CommonService().getFileSync("/lib/ZZZZZZZ/table.json"),
-            result = new CommonService().getFileSync("/profile/propertybar.json");//实例化CommonService调用getFileSync方法
+            AllDbName = await new FileService().readFile("./profiles/table.json", 'utf-8'),
+            result = await new FileService().readFile("./profiles/propertybar.json", 'utf-8');//实例化CommonService调用getFileSync方法
         if (!result) return;//如果没有退出函数
 
         //添加总数据库属性

@@ -619,10 +619,10 @@ Workspace.prototype = {
         LAST_POSITION = {}; // 选中元素的初始位置
     },
     load: function (id, name, subtype, customId, relTemplate) {
+        console.log(id, name)
         if (!name || !subtype) return; //如果id或则name或type或subtype都为空退出函数
-
         var that = this;
-        var url = subtype == "表单" ? "./resource/" : "./product/";
+        var url = subtype == "表单" ? "../resources/" : "../product/";
 
         $.when(that.readFile(url + `${id||customId}` + "/setting.json"), that.readFile(url + `${id ||customId}` + "/property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
             that.init(id, name, subtype, customId, relTemplate); //调用init方法
@@ -693,7 +693,7 @@ Workspace.prototype = {
     loadPhone: function (id, customId, subtype) {
 
         var that = this;
-        var url = subtype == "表单" ? "./resource/" : "./product/";
+        var url = subtype == "表单" ? "../resources/" : "../product/";
         $.when(that.readFile(url + `${id||customId}` + "/phone_setting.json"), that.readFile(url + `${id ||customId}` + "/phone_property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
             var phoneSettingData = ret1 || {},
                 phonePropertyData = ret2 || {};

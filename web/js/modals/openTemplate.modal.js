@@ -67,7 +67,7 @@ function OpenTemplate($openModal) {
                 var $tr = $(this).parents("tr"),
                     id = $tr.attr("data-id"),
                     template = await new Service().query(query['table'], [{ col: 'customId', value: id }], ['customId', 'name'])
-                    new Workspace().load(template.customId, template.name, "表单", null, null, null);
+                    new Workspace().load(template[0].customId, template[0].name, "表单", null, null, null);
                     that.$openModal.modal("hide");
                     new Main().open();
             },

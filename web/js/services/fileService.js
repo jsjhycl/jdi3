@@ -12,12 +12,19 @@ FileService.prototype = {
                 contentType: "application/json",
                 dataType: "json",
                 success: rst => {
+                    console.log(rst)
                     var faileMsg = "操作失败! \n消息:";
                     if (DataType.isObject(rst)) {
                         var data = rst.result;
                         if (rst.status === 0) {
-                            callBack && callBack(rst.result);
-                            resolve(rst.result)
+                            try {
+                                var dataJSON = JSON.parse(rst.result);
+                                callBack && callBack(dataJSON);
+                                resolve(dataJSON);
+                            } catch (err) {
+                                callBack && callBack(rst.result);
+                                resolve(rst.result);
+                            }
                         } else {
                             alert(faileMsg + JSON.stringify(data, null, 2));
                             reject(data)
@@ -32,10 +39,10 @@ FileService.prototype = {
         })
     },
     //读文件
-    readFile: function (router, format) {
+    readFile: function (router, format, callBack) {
         if (!router) return alert("没有文件路径");
         let config = ["readFile", router, format];
-        return this.base(config)
+        return this.base(config, callBack)
     },
     //写文件
     writeFile: function (router, data) {

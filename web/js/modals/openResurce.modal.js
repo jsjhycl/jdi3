@@ -23,7 +23,7 @@ function OpenResource($openModal) {
             })
         }
         delete query['db'];
-        Array.isArray(query['fields']) ? query['fields'].push({ value: "customId" }) : query['fields'] = [{ name: "布局名称", value: "name" }]
+        Array.isArray(query['fields']) ? query['fields'].push({ value: "customId" }) : query['fields'] = [{ name: "布局名称", value: "name" }, { value: "customId" }]
         return query;
     };
     this.getTheadFields = function(fields) {
@@ -75,13 +75,13 @@ function OpenResource($openModal) {
             onDetail: async function () {
                 var id = $(this).parents("tr").attr("data-id");
 
-                var resources = await new Service().query(query['table'], [{ col: 'customId', value: id }], ['basicInfo.contactId', 'basicInfo.contactTable', 'basicInfo.contactDb', 'name']),
+                var resources = await new Service().query(query['table'], [{ col: 'customId', value: id }], ['basicInfo.contactId', 'basicInfo.contactTable', 'basicInfo.contactDb', 'name', 'edit']),
                     resource = Array.isArray(resources) && resources[0];
                 if (DataType.isObject(resource)) {
                     var customId = Common.recurseObject(resource, 'basicInfo.contactId'),
                         templates = await new Service().query(resource['basicInfo.contactId'] || 'newResources', [{ col: 'customId', value: customId }]);
                         relTemplate = Array.isArray(templates) && templates[0];
-                    new Workspace().load(id, resource.name, "布局", relTemplate ? relTemplate.customId : '', relTemplate);
+                    new Workspace().load(id, resource.name, "布局", relTemplate ? relTemplate.customId : '', relTemplate, resource.edit);
                     that.$openModal.modal("hide");
                     new Main().open();
                 } else {

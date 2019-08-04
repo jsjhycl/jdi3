@@ -22,7 +22,7 @@ function OpenTemplate($openModal) {
             })
         }
         delete query['db'];
-        Array.isArray(query['fields']) ? query['fields'].push({ value: "customId" }) : (query['fields'] = [{ name: "资源名称", value: "name" }])
+        Array.isArray(query['fields']) ? query['fields'].push({ value: "customId" }) : (query['fields'] = [{ name: "资源名称", value: "name" }, { value: "customId" }])
         return query;
     };
     this.getTheadFields = function(fields) {

@@ -215,6 +215,7 @@ function Workspace() {
     this.$workspace = $("#workspace"); //获取工作区的元素
     this.$phone = $("#phone_content");
     this.NAMESPACE = ".workspace"
+    this.editor = null;
 
     this.readFile = function (Router) {
         return new FileService().readFile(Router, "UTF-8")
@@ -461,7 +462,8 @@ function Workspace() {
 
         var that = this,
             property = {}
-            phone_property = {};
+            phone_property = {},
+            USER = 'admin';
 
         for (var i in GLOBAL_PROPERTY) {
             i.startsWith('phone_') ? phone_property[i] = GLOBAL_PROPERTY[i] : property[i] = GLOBAL_PROPERTY[i];
@@ -484,10 +486,11 @@ function Workspace() {
             basicInfo["subCategory"] = $('[name="template_subCategory"]:checked').val();
         }
 
-        var params = [{col: "name",value: name}];
+        var params = [{col: "name", value: name}];
         params.push({ col: "basicInfo", value: { ...basicInfo } })
         // 新建
         if (!id) {
+            params = params.concat([{ col: "createTime", value: new Date().toFormatString(null, true) }, { col: "createor", value: USER }]);
             if (subtype == "表单") {
                 this._getMaxId(subtype).then(res => {
                     id = res;
@@ -527,6 +530,8 @@ function Workspace() {
                 }).catch(err => {})
             }
         } else{
+            var edit = (that.edit ? ";" : "") + USER + "," + new Date().toFormatString(null, true)
+            params.push({ col: "edit", value: USER + "," + edit });
             // 修改
             var flag = subtype == "表单" ? 0 : 1;
             params.push({ col: '_id', value: id }, { col: 'customId', value: id });
@@ -556,7 +561,7 @@ function Workspace() {
 }
 
 Workspace.prototype = {
-    init: function (id, name, subtype, customId, relTemplate) {
+    init: function (id, name, subtype, customId, relTemplate, edit) {
         if (!name || !subtype) return; //如果id和name和type和subtype不存在退出函数
 
         var that = this,
@@ -568,6 +573,7 @@ Workspace.prototype = {
                 "data-subtype": subtype,
                 "data-concat": customId || (id && id.slice(id.length - 6, id.length - 3)) || ""
             };
+        that.edit = edit;
         id && (text += '<span class="text-danger">' + "(" + id + ")" + '</span>'); //赋值
         if (subtype === "布局" && DataType.isObject(relTemplate)) { //如果type为资源subtype为布局relTemplate为对象
             attrs["data-relTemplate"] = JSON.stringify(relTemplate); //向attrs中添加属性
@@ -583,13 +589,12 @@ Workspace.prototype = {
         LAST_SELECTED_ID = null; // 最后一次被选中的元素id
         LAST_POSITION = {}; // 选中元素的初始位置
     },
-    load: function (id, name, subtype, customId, relTemplate) {
+    load: function (id, name, subtype, customId, relTemplate, edit) {
         if (!name || !subtype) return; //如果id或则name或type或subtype都为空退出函数
         var that = this,
             url = subtype === "表单" ? "./resource/" : id ? "./product/" : "./resource/";
-
         $.when(that.readFile(url + `${id||customId}` + "/setting.json"), that.readFile(url + `${id ||customId}` + "/property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
-            that.init(id, name, subtype, customId, relTemplate); //调用init方法
+            that.init(id, name, subtype, customId, relTemplate, edit); //调用init方法
             var settingData = ret1,
                 propertyData = ret2,
                 control = new Control(), //实例化Control

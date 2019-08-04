@@ -20,9 +20,8 @@ $.cajax = function (options, isPrompt) {
         }
     };
 
-    // var ip = 'http://172.18.152.111:3000',
-    //    var ip =  jdi.fileApi.getConfigUrl().serverUrl,
-    var ip = 'http://172.18.152.111'
+    var ip =  jdi.fileApi.getConfigUrl().serverUrl,
+    // var ip = 'http://172.18.152.111'
     oUrl = options.url;
     nUrl = ip + oUrl;
     options.url = nUrl;

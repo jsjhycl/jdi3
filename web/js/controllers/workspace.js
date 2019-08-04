@@ -570,23 +570,11 @@ Workspace.prototype = {
         if (id) {
             text += '<span class="text-danger">' + "(" + id + ")" + '</span>'; //赋值
         }
-        if (!relTemplate) {
-            attrs = {
-                "data-id": id,
-                "data-name": name,
-                "data-subtype": subtype,
-                "data-concat": "",
-                "data-relTemplate": ""
-            }
-        } else {
-            subtype = "布局"
-            attrs = {
-                'data-id': id,
-                "data-name": name,
-                "data-concat": customId,
-                "data-subtype": "布局",
-                "data-relTemplate": ""
-            }
+        attrs = {
+            'data-id': id,
+            "data-name": name,
+            "data-subtype": subtype,
+            "data-concat": customId || id.slice(id.length - 6, id.length - 3),
         }
         if (subtype === "布局" && DataType.isObject(relTemplate)) { //如果type为资源subtype为布局relTemplate为对象
             attrs["data-relTemplate"] = JSON.stringify(relTemplate); //向attrs中添加属性
@@ -602,10 +590,9 @@ Workspace.prototype = {
         LAST_POSITION = {}; // 选中元素的初始位置
     },
     load: function (id, name, subtype, customId, relTemplate) {
-        console.log(id, name)
         if (!name || !subtype) return; //如果id或则name或type或subtype都为空退出函数
-        var that = this;
-        var url = subtype == "表单" ? "./resource/" : "./product/";
+        var that = this,
+            url = subtype == "表单" ? "./resource/" : "./product/";
 
         $.when(that.readFile(url + `${id||customId}` + "/setting.json"), that.readFile(url + `${id ||customId}` + "/property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
             that.init(id, name, subtype, customId, relTemplate); //调用init方法

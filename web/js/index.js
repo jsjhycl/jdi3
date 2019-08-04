@@ -50,11 +50,6 @@ function init() {
 //导航栏
 function navbar() {
 
-	//资源
-	// var resourceModal = new ResourceModal();
-	// resourceModal.create();//给资源模态框绑定事件
-	// resourceModal.open();//绑定事件
-
 	//新建表单资源
 	var createTemplate = new CreateTemplate();
 	createTemplate.bindEvents();
@@ -85,12 +80,6 @@ function navbar() {
 	saveAsModal.execute();
 	saveAsModal.bindEvents();
 
-	//产品
-	// var productModal = new ProductModal();
-	// productModal.receive(); //绑定模态框事件
-	// productModal.open();
-
-	
 	//发布布局
 	var publishModal = new PublishModal($("#publishModal"));
 	publishModal.execute();
@@ -109,10 +98,6 @@ function navbar() {
 	var setDbDesignerModal = new SetDbDesignerModal($("#setDbDesignerModal"))
 	setDbDesignerModal.execute();
 	setDbDesignerModal.bindEvents()
-
-	//产品记录查看器
-	// var recordModal = new RecordModal($("#recordModal"));
-	// recordModal.execute();
 
 	//插入函数
 	var insertFnModal = new InsertFnModal($("#insertFunctionModal"));
@@ -138,21 +123,19 @@ function navbar() {
 			var $workspace = $("#workspace"), //获取工作区
 				id = $workspace.attr("data-id"), //获取工作区的data-id
 				name = $workspace.attr("data-name"), //获取工作区data-name
-				subtype = $workspace.attr("data-subtype"); //获取data-subtype
+                subtype = $workspace.attr("data-subtype");
 			if (id && subtype === "布局") { //判断是否type等于资源subtype等于布局id存在
 				var result = confirm("确定要重新调用表单吗？"); //确认是否
 				if (!result) return;
-				console.log(id)
-
-				// new ResourceService().recall(id, function (result) { //调用重新调用表单
-				// 	Common.handleResult(result, function (data) {
-				// 		if (data !== id) return alert("调用失败！"); //入伙id不存在退出程序
-
-				// 		//此处的relTemplate参数不需要的原因，data-relTemplate已经绑定
-				// 		new Workspace().load(id, name, "布局", null, null, null); //加载工作区
-				// 		new Main().open();
-				// 	});
-				// });
+                
+                new Service().query("newProducts", [{col: "customId", value: id}], null, null, null, function(rst) {
+                    if (Array.isArray(rst) && rst[0]) {
+                        new Workspace().load(id, name, "布局", null, null, null); //加载工作区
+                        new Main().open();
+                    } else {
+                        return alert("调用失败！");
+                    }
+                });
 			}
 		});
 	})();

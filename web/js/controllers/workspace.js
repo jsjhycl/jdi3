@@ -566,17 +566,12 @@ Workspace.prototype = {
             // text = type + "/" + subtype + "/" + name,//赋值
             text = name, //赋值
             attrs = {
-
+                'data-id': id,
+                "data-name": name,
+                "data-subtype": subtype,
+                "data-concat": customId || (id && id.slice(id.length - 6, id.length - 3)) || ""
             };
-        if (id) {
-            text += '<span class="text-danger">' + "(" + id + ")" + '</span>'; //赋值
-        }
-        attrs = {
-            'data-id': id,
-            "data-name": name,
-            "data-subtype": subtype,
-            "data-concat": customId || (id && id.slice(id.length - 6, id.length - 3)) || ""
-        }
+        id && (text += '<span class="text-danger">' + "(" + id + ")" + '</span>'); //赋值
         if (subtype === "布局" && DataType.isObject(relTemplate)) { //如果type为资源subtype为布局relTemplate为对象
             attrs["data-relTemplate"] = JSON.stringify(relTemplate); //向attrs中添加属性
         }
@@ -584,6 +579,7 @@ Workspace.prototype = {
         that.$workspace.empty().attr(attrs); //将工作区置空并添加属性
         that.$phone.empty().parents("#phone_warp").hide();
         new Filter(subtype).set(); //实例化Filter并调用set方法
+        id ? $("#saveAs").show() : $("#saveAs").hide(); 
         $("#toolbar").css('right', "260px") //设置样式
         $("#toolbar").css('left', "140px") //设置样式
         GLOBAL_PROPERTY = {}; //全局属性值空

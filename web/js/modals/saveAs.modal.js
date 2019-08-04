@@ -16,7 +16,7 @@ function SaveAsModal($modal) {
     this.getLastSaveId = async function (table, id) {
         var condition = [{
                 col: "customId",
-                value: id
+                value: `/${id}/`
             }],
             fields = ["customId"]
         return await new Service().query(table, condition, fields)
@@ -33,7 +33,7 @@ SaveAsModal.prototype = {
         var subtype = $workspace.attr("data-subtype");
         var table = subtype == "表单" ? "newResources" : "newProducts";
         that.getLastSaveId(table, id).then(res => {
-            var count = res.length+1;
+            var count = res.length;
             that.$saveAsName.val(`${id}(${count})`)
         })
     },
@@ -49,7 +49,7 @@ SaveAsModal.prototype = {
                 id = id.replace(/\((.*)\)/img, "");
             var table = subtype == "表单" ? "newResources" : "newProducts";
             that.getLastSaveId(table, id).then(res => {
-                var count = res.length+1;
+                var count = res.length;
                 new Workspace().save(true, `${id}(${count})`)
             });
         }
@@ -69,7 +69,7 @@ SaveAsModal.prototype = {
             id = id.replace(/\((.*)\)/img, "");
             var table = subtype == "表单" ? "newResources" : "newProducts";
             that.getLastSaveId(table, id).then(res => {
-                var count = res.length+1;
+                var count = res.length;
                 if (flag) {
                     count = 99;
                 }

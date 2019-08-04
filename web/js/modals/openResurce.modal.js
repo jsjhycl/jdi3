@@ -6,10 +6,15 @@ function OpenResource($openModal) {
     this.$openModal = $openModal;
     
     this.getQueryConfig = function() {
-        var config = jdi.fileApi.getProfile('dBTable1Config_custom.json'),
-            query = $.extend({}, config, { size: 6, page: 1 });
-        query['command'] = "query";
-        query['table'] = "newProducts";
+        var config;
+        try {
+            config = jdi.fileApi.getProfile('dBTable1Config_custom.json');
+        } catch(err) {
+            config = {}
+        }
+        var query = $.extend({}, config, { size: 6, page: 1 });
+            query['command'] = "query";
+            query['table'] = "newProducts";
         if (Array.isArray(query['condition'])) {
             query['condition'].forEach(con => {
                 con.isReg && (con.value = ('/' + con.value + '/'));
@@ -18,7 +23,7 @@ function OpenResource($openModal) {
             })
         }
         delete query['db'];
-        query['fields'].push({ value: "customId" });
+        Array.isArray(query['fields']) ? query['fields'].push({ value: "customId" }) : query['fields'] = [{ name: "布局名称", value: "name" }]
         return query;
     };
     this.getTheadFields = function(fields) {

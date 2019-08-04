@@ -528,12 +528,9 @@ function Workspace() {
             }
         } else{
             // 修改
-            var flag = subtype == "表单" ? 0 : 1,
-                func = /\(([1-9]+)\)/img.test(id) ? this._saveDb : this._updateDb,
-                args = /\(([1-9]+)\)/img.test(id) ? [subtype, params] : [subtype, id, params];
-
+            var flag = subtype == "表单" ? 0 : 1;
             params.push({ col: '_id', value: id }, { col: 'customId', value: id });
-            (func)(...args).then(res => {
+            this._updateDb(subtype, id, params).then(res => {
                 var $temp = $('<div></div>');
                 $temp.css({
                     "position": "absolute",

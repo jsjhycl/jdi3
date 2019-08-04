@@ -35,6 +35,7 @@ ProductService.prototype = {
             }
         });
     },
+    
     receive: function (id, callback) {//接收表单
         if (!id) return;
         var that = this;

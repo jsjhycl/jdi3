@@ -39,18 +39,6 @@ SubmitModal.prototype = {
             modelTableOptions = Object.keys(res[Object.keys(res)[0]]).filter(i => res[Object.keys(res)[0]][i].key === 1)
             modelTableOptions = modelTableOptions.map(i => { return { value: i, name: i } })
         }
-        // Object.keys(res[Object.keys(res)[0]]).forEach(item => {
-        //     console.log(item)
-        //     if (item.key == 0) {
-        //         console.log(item,"table")
-        //         templateTableOptions.push({name: item,value: item})
-        //     }
-        //     if (item.key == 1) {
-        //         console.log(item,"db")
-        //         modelTableOptions.push({name: item,value: item})
-        //     }
-        // })
-        console.log(templateTableOptions[0])
         Common.fillSelect($templateTableName, null, templateTableOptions, templateTableOptions[0].value)
         Common.fillSelect($modelTableName, null, modelTableOptions, modelTableOptions[0].value)
     },

@@ -14,7 +14,7 @@
     <!--导航栏-->
     <nav class="navbar navbar-fixed-top">
         <div class="navbar-header">
-            <a class="navbar-brand" href="javascript:void()">JDI模型设计器</a>
+            <a class="navbar-brand" href="javascript:void()">JDI设计器</a>
         </div>
 
         <ul class="nav navbar-nav navbar-left">
@@ -30,7 +30,7 @@
                     <li><a data-toggle="modal" href="#create_template_modal">新建</a></li>
                     <li class="divider"></li>
                     <li><a data-toggle="modal" href="#open_template_modal">打开</a></li>
-                    <li><a data-toggle="modal" href="#resource_config_modal">配置表达查询</a></li>
+                    <li><a data-toggle="modal" href="#template_config_modal">配置查询</a></li>
                 </ul>
             </li>
             <li class="dropdown">
@@ -39,6 +39,7 @@
                     <li><a data-toggle="modal" href="#create_resource_modal">新建</a></li>
                     <li class="divider"></li>
                     <li><a data-toggle="modal" href="#open_resource_modal">打开</a></li>
+                    <li><a data-toggle="modal" href="#resource_config_modal">配置查询</a></li>
                 </ul>
             </li>
             <li class="dropdown">
@@ -342,7 +343,7 @@
     </section>
 
     <!-- 表单配置 -->
-    <section class="modal fade" id="resource_config_modal">
+    <section class="modal fade" id="template_config_modal">
         <div class="modal-dialog w800px">
             <div class="modal-content">
                 <header class="modal-header">
@@ -357,6 +358,7 @@
             </div>
         </div>
     </section>
+
     <!-- 打开布局资源 -->
     <section class="modal fade" id="open_resource_modal">
         <div class="modal-dialog w800px">
@@ -375,6 +377,21 @@
             </div>
         </div>
     </section>
+    <section class="modal fade" id="resource_config_modal">
+            <div class="modal-dialog w800px">
+                <div class="modal-content">
+                    <header class="modal-header">
+                        <button class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">配置布局查询项</h4>
+                    </header>
+                    <section class="modal-body"></section>
+                    <footer class="modal-footer">
+                        <button class="btn btn-primary save">保存</button>
+                        <button class="btn btn-danger clear">删除</button>
+                    </footer>
+                </div>
+            </div>
+        </section>
 
     <!--接收产品模态框-->
     <section class="modal fade" id="receive_product_modal">
@@ -873,14 +890,6 @@
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade" id="submit_template_tab">
-                            <div class="form-group" style="display: none">
-                                <label class="control-label" for="template_db">存入数据库</label>
-                                <select class="form-control" id="template_db" name="template_db"></select>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="template_table">存入表格</label>
-                                <select class="form-control" id="template_table" name="template_table"></select>
-                            </div>
                             <div class="form-group">
                                 <label class="control-label" for="template_name">表单名称</label>
                                 <input class="form-control" id="template_name" type="text" name="template_name">
@@ -896,14 +905,6 @@
                             </div>
                         </div>
                         <div class="tab-pane fade" id="submit_model_tab">
-                            <div class="form-group" style="display: none">
-                                <label class="control-label" for="model_db">存入数据库</label>
-                                <select class="form-control" id="model_db" name="model_db"></select>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="model_table">存入表格</label>
-                                <select class="form-control" id="model_table" name="model_table"></select>
-                            </div>
                             <div class="form-group">
                                 <label class="control-label" for="model_name">布局名称</label>
                                 <input class="form-control" id="model_name" type="text" name="model_name">

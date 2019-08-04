@@ -19,7 +19,7 @@ var AccessControl = (function () {
          * 执行是否入库按钮的点击
          * @param {*} isSave 
          */
-        executeIsSave: function (isSave) {
+        executeIsSave: async function (isSave) {
             isSave = !!isSave;//强制转换为布尔值
             var $workspace = $("#workspace"),//获取工作区
                 $propDbName = $("#property_db_dbName"),
@@ -31,7 +31,7 @@ var AccessControl = (function () {
                 id = $("#property_id").val(),//获取基本属性的编号值
                 cname = $("#property_cname").val();//获取基本属性的中文名
             if (!id) return;//如果获取的基本属性的编号值为空直接退出函数
-            var dbList = new CommonService().getFileSync("/lib/ZZZZZZZ/table.json")||{},
+            var dbList = await new FileService().readFile("/profiles/table.json"),
                 options =[];
             Object.keys(dbList).forEach(function(item){
                 options.push({name:item,value:item})

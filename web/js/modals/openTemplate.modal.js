@@ -5,9 +5,10 @@ function OpenTemplate($openModal) {
     BaseModal.call(this, $openModal);
     this.$openModal = $openModal;
     this.getQueryConfig = function() {
-        var config = jdi.fileApi.getProfile('dBTableConfig_custom.json'),
-            query = $.extend({}, config, { size: 6, page: 1 });
-        query['command'] = "query"
+        var config = jdi.fileApi.getProfile('dBTable0Config_custom.json'),
+            query = $.extend({}, config, { size: 8, page: 1 });
+        query['command'] = "query";
+        query['table'] = "newResources";
         if (Array.isArray(query['condition'])) {
             query['condition'].forEach(con => {
                 con.isReg && (con.value = ('/' + con.value + '/'));
@@ -16,7 +17,7 @@ function OpenTemplate($openModal) {
             })
         }
         delete query['db'];
-        query['fields'].push({ value: "customId" });
+        Array.isArray(query['fields']) ? query['fields'].push({ value: "customId" }) : (query['fields'] = [{ value: "customId" }])
         return query;
     };
     this.getTheadFields = function(fields) {
@@ -64,16 +65,17 @@ function OpenTemplate($openModal) {
                 fields: that.getTheadFields(query["fields"]),
             },
             onDetail: async function () {
-                var $tr = $(this).parents("tr"),
-                    id = $tr.attr("data-id"),
+                var id = $(this).parents("tr").attr("data-id"),
                     template = await new Service().query(query['table'], [{ col: 'customId', value: id }], ['customId', 'name'])
                     new Workspace().load(template[0].customId, template[0].name, "表单", null, null, null);
                     that.$openModal.modal("hide");
                     new Main().open();
             },
             onRemove: function () {
-                var id = $(this).parents("tr").attr("data-id");
-                return new NewService().removePromise(id, 0)
+                var id = $(this).parents("tr").attr("data-id"),
+                    p1 = new Service().removeByCustomId(query['table'], id);
+                    p2 = new FileService().rmdir('/resource/' + id);
+                return Promise.all([p1, p2])
             }
         });
     }

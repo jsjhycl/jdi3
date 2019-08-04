@@ -20,7 +20,6 @@ function CreateResource() {
                     value: mitem.customId
                 }
             });
-            console.log(options)
         Common.fillSelect(that.$resoureRelId, defaultOption, options, null, false);
     }
 }

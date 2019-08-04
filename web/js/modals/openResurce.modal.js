@@ -6,11 +6,53 @@ function OpenResource($openModal) {
     this.$openModal = $openModal;
     
     this.getQueryConfig = function() {
-        var config = jdi.fileApi.getProfile('dBTableConfig_custom.json'),
-            query = [];
-        query.push(config['table'], config['conditions'], config['fields'])
+        var config = jdi.fileApi.getProfile('dBTable1Config_custom.json'),
+            query = $.extend({}, config, { size: 6, page: 1 });
+        query['command'] = "query";
+        query['table'] = "newProducts";
+        if (Array.isArray(query['condition'])) {
+            query['condition'].forEach(con => {
+                con.isReg && (con.value = ('/' + con.value + '/'));
+                delete con.isReg
+                delete con.cate
+            })
+        }
+        delete query['db'];
+        query['fields'].push({ value: "customId" });
+        return query;
     };
-
+    this.getTheadFields = function(fields) {
+        var data = fields.map((i, idx) => {
+            if (i.name) {
+                return {
+                        text: i.name,
+                        key: i.value,
+                        type: 0,
+                        func: idx === 0 && "detail",
+                        template: function (value) {
+                            return idx === 0
+                                    ? '<a>' + value + '</a>'
+                                    : '<span>' + value + '</span>';
+                        }
+                    }
+            }
+        });
+        data.push({
+            text: "操作",
+            key: "",
+            type: 1,
+            items: [
+                {
+                    text: "删除",
+                    func: "remove",
+                    template: function () {
+                        return '<button class="btn btn-danger">删除</button>';
+                    }
+                }
+            ]
+        })
+        return data.filter(el => !!el);
+    };
     this._pageList = function () {
         var that = this,
             $elem = $("#model_resource_page"),
@@ -18,97 +60,68 @@ function OpenResource($openModal) {
                 key: "id",
                 alias: "customId"
             }];
-            this.getQueryConfig();
+            query = this.getQueryConfig();
         $elem.jpagination({
-            url: "/new/page",
-            data: {
-                type: 1,
-                pageIndex: 1,
-                pageSize: 6
-            },
-            forms: [{
-                name: "name",
-                controlType: "textbox",
-                searchType: "like",
-                labelText: "资源名称"
-            }],
+            url: new Service().baseUrl,
+            query,
             thead: {
-                fields: [{
-                        text: "资源名称",
-                        key: "name",
-                        type: 0,
-                        func: "detail",
-                        template: function (value) {
-                            return '<a>' + value + '</a>';
-                        }
-                    },
-                    {
-                        text: "处理状态",
-                        key: "state",
-                        type: 0,
-                        func: null,
-                        template: function (value) {
-                            return value === 1 ? '<span class="text-success">已入库</span>' : '<span class="text-warning">未入库</span>';
-                        }
-                    },
-                    {
-                        text: "操作",
-                        key: "",
-                        type: 1,
-                        items: [{
-                            text: "删除",
-                            func: "remove",
-                            template: function () {
-                                return '<button class="btn btn-danger">删除</button>';
-                            }
-                        }]
-                    }
-                ],
-                attrs: attrs
+                fields: that.getTheadFields(query["fields"]),
             },
-            onDetail: function () {
-                var $tr = $(this).parents("tr"),
-                    id = $tr.attr("data-id"),
-                    name = $(this).text();
-                var params = { type: 1,isAll: true,}
-                new NewService().list(params, function (res) {
-                    if (res.status == -1) return alert("请求错误");
-                    res.result.data.forEach(function (item) {
-                        if (item.customId == id) {
-                            var contactId = item.basicInfo.contactId;
-                            gettableList(contactId)
-                        }
-                    });
-                })
+            // thead: {
+            //     fields: [{
+            //             text: "资源名称",
+            //             key: "name",
+            //             type: 0,
+            //             func: "detail",
+            //             template: function (value) {
+            //                 return '<a>' + value + '</a>';
+            //             }
+            //         },
+            //         {
+            //             text: "处理状态",
+            //             key: "state",
+            //             type: 0,
+            //             func: null,
+            //             template: function (value) {
+            //                 return value === 1 ? '<span class="text-success">已入库</span>' : '<span class="text-warning">未入库</span>';
+            //             }
+            //         },
+            //         {
+            //             text: "操作",
+            //             key: "",
+            //             type: 1,
+            //             items: [{
+            //                 text: "删除",
+            //                 func: "remove",
+            //                 template: function () {
+            //                     return '<button class="btn btn-danger">删除</button>';
+            //                 }
+            //             }]
+            //         }
+            //     ],
+            //     attrs: attrs
+            // },
+            onDetail: async function () {
+                var id = $(this).parents("tr").attr("data-id");
 
-                function gettableList(contactId) {
-                    var params1 = { type: 0,isAll: true}
-                    new NewService().list(params1, function (res) {
-                        res.result.data.forEach( function (item) {
-                            if(item.customId==contactId){
-                                var relTemplate = item;
-                                new Workspace().load(id, name, "布局", item.customId, relTemplate);
-                                that.$openModal.modal("hide");
-                                new Main().open();
-                            }
-                        })
-                    })
+                var resources = await new Service().query(query['table'], [{ col: 'customId', value: id }], ['basicInfo.contactId', 'basicInfo.contactTable', 'basicInfo.contactDb', 'name']),
+                    resource = Array.isArray(resources) && resources[0];
+                if (DataType.isObject(resource)) {
+                    var customId = Common.recurseObject(resource, 'basicInfo.contactId'),
+                        templates = await new Service().query(resource['basicInfo.contactId'] || 'newResources', [{ col: 'customId', value: customId }]);
+                        relTemplate = Array.isArray(templates) && templates[0];
+                    new Workspace().load(id, resource.name, "布局", relTemplate.customId, relTemplate);
+                    that.$openModal.modal("hide");
+                    new Main().open();
+                } else {
+                    alert('数据加载失败！')
                 }
-
-                // new ProductService().detail(relId, function (result) {
-                //     Common.handleResult(result, function (data) {
-                //         if (data) {
-                //             new Workspace().load(id, name, "布局", null, null, data);
-                //             that.$openModal.modal("hide");
-                //             new Main().open();
-                //         }
-                //     });
-                // });
-
             },
             onRemove: function () {
-                var id = $(this).parents("tr").attr("data-id");
-                return new NewService().removePromise(id, 1)
+                var id = $(this).parents("tr").attr("data-id"),
+                    p1 = new Service().removeByCustomId(query['table'], id);
+                    p2 = new FileService().rmdir('/product/' + id);
+                return Promise.all([p1, p2]);
             }
         });
     }

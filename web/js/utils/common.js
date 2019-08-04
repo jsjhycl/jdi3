@@ -69,6 +69,32 @@ var Common = (function () {
           let reg = /([a-zA-Z]+)([0-9]+)/;
           reg.test(str)
           return { $1: RegExp.$1, $2: Number(RegExp.$2) }
+        },
+        duplicate: function (data) {
+            var result = {};
+            for (var key in data) {
+                result[key] = data[key];
+            }
+            return result;
+        },
+        recurseObject: function (data, key) {
+            var that = this;
+            if (key.indexOf(".") > -1) {
+                var temp = that.duplicate(data),
+                    keys = key.split(".");
+                for (var i = 0; i < keys.length; i++) {
+                    var ckey = keys[i],
+                        cvalue = temp[ckey];
+                    if (!cvalue) {
+                        break;
+                    } else {
+                        temp = cvalue;
+                    }
+                }
+                return temp;
+            } else {
+                return data[key];
+            }
         }
     };
 })();

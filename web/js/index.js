@@ -11,31 +11,9 @@ function init() {
 		"width": $("#width").val(),
 		"height": $("#height").val(),
 		"background-color": $("#bgColor").val()
-	});
-	//初始化下拉列表
-	// new CommonService().getFile("/profile/category.json", function (result) {
-	// 	if (DataType.isObject(result)) { //判断result是否为对象
-	// 		var data = result["子分类"].map(function (item) { //遍历result的子分类
-	// 			return {
-	// 				name: item,
-	// 				value: item
-	// 			};
-	// 		});
-	// 		Common.fillRadio($("#model_resource_subCategory"), "model_resource_subCategory", data); //调用Common的fillRadio的资源分类
-	// 		//表单资源提交表单
-	// 		Common.fillSelect($('[name="template_category"]'), null, result["表单分类"], null, true); //填充表单分类下拉框
-	// 		Common.fillRadio($("#template_subCategory"), "template_subCategory", data); //填充表单分类的单选框
-	// 		//布局资源提交表单
-	// 		Common.fillSelect($('[name="model_category"]'), null, result["布局分类"], null, true); //填充布局分类的下拉框
-	// 		Common.fillSelect($('[name="model_userGrade"]'), null, result["布局用户级别"], null, true); //填充用户级别的下拉框
-	// 		Common.fillSelect($('[name="model_feature"]'), null, result["布局特性"], null, true); //填充布局特性的下拉框
-	// 		Common.fillSelect($('[name="model_area"]'), null, result["布局区域"], null, true);
-
-	// 		Common.fillSelect($('[name="model_autoCreate"]'), null, result["自动分表"], null, true); //新增自动分表属性
-	// 	}
-	// });
-
-	new FileService().readFile("./profiles/category.json","UTF-8",function(result){
+    });
+    
+	new FileService().readFile("./profiles/category.json", "UTF-8", function(result){
 		if (DataType.isObject(result)) { //判断result是否为对象
 			var data = result["子分类"].map(function (item) { //遍历result的子分类
 				return {
@@ -90,10 +68,17 @@ function navbar() {
 	var openTemplate = new OpenTemplate($("#open_template_modal"));
 	openTemplate.execute();
 
+    // 表单查询配置
+    var templateModal = new OpenConfigModal($("#template_config_modal"), 0);
+    templateModal.execute();
+
 	//打开资源布局
 	var openResource = new OpenResource($("#open_resource_modal"));
 	openResource.execute();
 
+    // 表单查询配置
+    var resourcesModal = new OpenConfigModal($("#resource_config_modal"), 1);
+    resourcesModal.execute();
 
 	//另存为
 	var saveAsModal = new SaveAsModal($("#saveAsModal"));
@@ -137,8 +122,7 @@ function navbar() {
 	var insertFnModal = new InsertFnModal($("#insertFunctionModal"));
 	insertFnModal.execute();
 
-    var resourcesModal = new OpenConfigModal($("#resource_config_modal"), 0);
-    resourcesModal.execute();
+    
 
 	//提交
 	var submitModal = new SubmitModal($("#submitModal"), $("#submit"));
@@ -445,36 +429,28 @@ function propertybar() {
 		$(document).on("click", "#propertybar .btn-expr", function () {
 			var $expr = $(this),
 				commonService = new CommonService();
-				var getFile = new FileService();
-			$.when(getFile.readFile("/newapi/getprozz"),
-				getFile.readFile("./profile/global.json"),
-				getFile.readFile("./profile/local_functions.json"),
-				getFile.readFile("./profile/remote_functions.json"),
-				getFile.readFile("./profile/system_functions.json")).done(function (result1, result2, result3, result4, result5) {
-				if (!result1 || !result2 || !result3 || !result4 || !result5) return;
-				var data1 = result1[0],
-					data2 = result2[0],
-					data3 = result3[0],
-					data4 = result4[0],
-					data5 = result5[0];
-				if (!data1 || !data2 || !data3 || !data4 || !data5) return;
-
-				var globalId = data1.status === 0 ? (data1.result ? data1.result.id : null) : null,
-					staticGlobal = data2,
-					localFunction = data3,
-					remoteFunction = data4,
-					systemFunction = data5;
+                fileService = new FileService();
+                
+			$.when(fileService.readFile("/profiles/global.json", "UTF-8"),
+            fileService.readFile("/profiles/local_functions.json", "UTF-8"),
+            fileService.readFile("/profiles/remote_functions.json", "UTF-8"),
+            fileService.readFile("/profiles/system_functions.json", "UTF-8")).done(function (result1, result2, result3, result4) {
+				if (!result1 || !result2 || !result3 || !result4) return;
+				var staticGlobal = result1,
+					localFunction = result2,
+					remoteFunction = result3,
+					systemFunction = result4;
 
 				// 关闭插入函数弹窗
 				$("#insertFunctionArgsModal .close").trigger('click')
 
-				if (globalId) {
-					commonService.getFile("/publish/" + globalId + "/property.json", function (dynamicGlobal) {
-						buildArgs($expr, staticGlobal, dynamicGlobal, localFunction, remoteFunction, systemFunction);
-					});
-				} else {
+				// if (globalId) {
+				// 	commonService.getFile("/publish/" + globalId + "/property.json", function (dynamicGlobal) {
+				// 		buildArgs($expr, staticGlobal, dynamicGlobal, localFunction, remoteFunction, systemFunction);
+				// 	});
+				// } else {
 					buildArgs($expr, staticGlobal, null, localFunction, remoteFunction, systemFunction);
-				}
+				// }
 			}).fail(function (err) {
 				console.log(err);
 				alert("表达式生成器参数数据生成失败！");

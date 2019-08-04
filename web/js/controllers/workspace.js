@@ -247,33 +247,34 @@ function Workspace() {
         that.$workspace.find(".workspace-node").each(function () { //获取工作区中类名workspace-node的元素遍历函数
             if ($(this).attr("id").startsWith('phone_')) return;
 
-            var cid = $(this).attr("id"), //获取当前元素的id
-                type = $(this).attr("data-type"), //获取当前元素的data-type
-                subtype = $(this).data("subtype"),
-                position = $(this).position(), //获取当前元素的定位信息
+            var $this = $(this),
+                cid = $this.attr("id"), //获取当前元素的id
+                type = $this.attr("data-type"), //获取当前元素的data-type
+                subtype = $this.data("subtype"),
+                position = $this.position(), //获取当前元素的定位信息
                 item = { //对item对象进行一些赋值
                     id: cid,
-                    name: $(this).attr("name"),
-                    value: $(this).val(),
+                    name: $this.attr("name"),
+                    value: $this.val(),
                     type: type,
                     rect: {
-                        width: parseFloat($(this).css("width")),
-                        height: parseFloat($(this).css("height")),
+                        width: parseFloat($this.css("width")),
+                        height: parseFloat($this.css("height")),
                         left: position.left,
                         top: position.top,
-                        zIndex: $(this).css("z-index")
+                        zIndex: $this.css("z-index")
                     },
                     attach: {}
                 };
             switch (type) { //对类型进行判断
                 case "img": //如果是img类型
                     item.attach = {
-                        src: cid + ".jpg"
+                        src: $this.attr('src')
                     }; //item下面的属性进行赋值
                     break;
                 case "div": //如果为div类型
                     item.attach = {
-                        html: $(this).html()
+                        html: $this.html()
                     }; //对item下面的attach属性进行赋值
                     break;
                 case "arrow":
@@ -291,37 +292,37 @@ function Workspace() {
             phoneHtml = "";
         that.$phone.click();
         that.$phone.find(".workspace-node").each(function () {
-            var cid = $(this).attr("id"),
-                type = $(this).attr("data-type"),
-                left = parseFloat($(this).css("left")),
-                top = parseFloat($(this).css("top")),
+            var $this = $(this),
+                cid = $this.attr("id"),
+                type = $this.attr("data-type"),
+                left = parseFloat($this.css("left")),
+                top = parseFloat($this.css("top")),
                 item = { //对item对象进行一些赋值
                     id: cid,
-                    name: $(this).attr("name"),
-                    value: $(this).val(),
+                    name: $this.attr("name"),
+                    value: $this.val(),
                     type: type,
                     rect: {
-                        width: parseFloat($(this).css("width")),
-                        height: parseFloat($(this).css("height")),
+                        width: parseFloat($this.css("width")),
+                        height: parseFloat($this.css("height")),
                         left: left,
                         top: top,
-                        zIndex: $(this).css("z-index")
+                        zIndex: $this.css("z-index")
                     }
                 };
             switch (type) { //对类型进行判断
                 case "img": //如果是img类型
                     item.attach = {
-                        src: cid + ".jpg"
+                        src: $this.attr('src')
                     }; //item下面的属性进行赋值
                     break;
                 case "div": //如果为div类型
                     item.attach = {
-                        html: $(this).html()
+                        html: $this.html()
                     }; //对item下面的attach属性进行赋值
                     break;
             }
-            phoneHtml += new Control().getPhoneControlHtml($(this), cid);
-            // phoneHtml += $($(this).get(0).outerHTML).attr('id', GLOBAL_PROPERTY[cid] && GLOBAL_PROPERTY[cid].relatedId ? GLOBAL_PROPERTY[cid].relatedId : cid).get(0).outerHTML;
+            phoneHtml += new Control().getPhoneControlHtml($this, cid);
             phoneSettingData.items.push(item);
         });
 
@@ -618,7 +619,7 @@ Workspace.prototype = {
                     });
                     switch (item.type) {
                         case "img": //如果类型为img
-                            var src = "/lib/" + id + "/res/" + item.attach.src; //生成src
+                            var src = item.attach.src; //生成src
                             $node.attr("src", !item.attach ? "../public/images/demo.jpg" : (!item.attach.src ? "../public/images/demo.jpg" : src)); //如果item.attach不存在
                             contextMenu.done(1, $node); //调用contextMenu中的done方法
                             break;

@@ -1,5 +1,7 @@
 function FileService() {
-    this.baseUrl = "/ioApi/fsop"
+    this.baseUrl = "/ioApi/fsop";
+    this.imgUploadUrl = "/ioApi/upimg";
+    this.imgUrl = "/ioApi";
 }
 FileService.prototype = {
     base: function (data, callBack) {
@@ -98,5 +100,22 @@ FileService.prototype = {
         if (!router) return alert("路径不存在");
         let config = ["stat", router];
         return this.base(config, callBack)
+    },
+
+    upImg: function(id, img, data, callBack) {
+        var that = this
+        return $.cajax({
+            url: that.imgUploadUrl,
+            type: "POST",
+            data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success(rst) {
+                callBack && callBack(rst);
+            },
+            error(err) {
+            }
+        })
     }
 }

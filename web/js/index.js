@@ -140,21 +140,6 @@ function navbar() {
 		});
 	})();
 
-	//发布
-	// (function publish() {
-	// 	$("#publishModal").click(function () {
-	// 		$workspace = $("#workspace"), //获取工作区
-	// 			id = $workspace.attr("data-id");
-	// 		new NewService().publish(id, function (result) {
-	// 			Common.handleResult(result, function (data) {
-	// 				if(data){
-	// 					alert("发布成功")
-	// 				}
-	// 			})
-	// 		})
-	// 	})
-	// })();
-
 	//预览
 	(function preview() {
 		$("#preview").click(function () { //绑定事件
@@ -162,19 +147,11 @@ function navbar() {
 			if (!id) return;
 			var subtype = $("#workspace").attr("data-subtype");
 			subtype = subtype == "布局" ? 1 : 0;
-			console.log(jdi.fileApi.getConfigUrl().resolverUrl)
-			// var href = "http://36.33.216.13:3001/home/model?id=" + id + "&type=preview";
 			var href = jdi.fileApi.getConfigUrl().resolverUrl + "/home/model?customId=" + id + "&type=" + subtype + "&isPreview=preview"; //拼接路径
-			// $(this).attr("href", href);
 			require('electron').shell.openExternal(href); //使用electron打开默认浏览器
 		});
 	})();
 
-	//编号查看器
-	// $("#viewer").numViewer({
-	// 	$source: $("#workspace"),
-	// 	selector: ".workspace-node"
-	// });
 	$("#viewer").click(function () {
 		WorkspaceUtil.numViewer(); //调用编号查看器
 	});
@@ -243,24 +220,24 @@ function controlbar() {
 				img = new Control().createNumber("img") + ".jpg"; //生成img类型的id编号
 			if (!id) return alert("无法上传没有编号的图片！");
 
-			new CommonService().upload(id, img, formData, function (result) { //上传图片到服务器
-				Common.handleResult(result, function () {
-					var control = new Control(); //实例化控件对象
-					control.setControl("img", function ($node) { //建立新的图片控件
-						var number = control.createNumber("img");
-						$node.attr({
-							"id": number,
-							"name": number,
-							"src": "/lib/" + id + "/res/" + img
-						}).css({
-							"left": "5px",
-							"top": "5px"
-						});
-						new ContextMenu().done(1, $node); //生成控件的右键菜单浪
-						$("#workspace").append($node); //添加到工作区
-						new Property().setDefault(number); //初始化属性栏设置默认的属性
-					});
-				});
+            new FileService().upImg(id, img, formData, function (rst) { //上传图片到服务器
+                if (rst.status === 0) {
+                    var control = new Control(); //实例化控件对象
+                    control.setControl("img", function ($node) { //建立新的图片控件
+                        var number = control.createNumber("img");
+                        $node.attr({
+                            "id": number,
+                            "name": number,
+                            "src": jdi.fileApi.getConfigUrl().serverUrl + new FileService().imgUrl + '/' + rst.result
+                        }).css({
+                            "left": "5px",
+                            "top": "5px"
+                        });
+                        new ContextMenu().done(1, $node); //生成控件的右键菜单浪
+                        $("#workspace").append($node); //添加到工作区
+                        new Property().setDefault(number); //初始化属性栏设置默认的属性
+                    });
+                }
 			});
 		});
 	})();

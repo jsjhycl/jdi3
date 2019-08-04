@@ -17,7 +17,7 @@ function CreateResource() {
                 return value === fitem.basicInfo.subCategory;
             }).map(function (mitem) {
                 return {
-                    name: mitem.name,
+                    name: `${mitem.name}__${mitem.customId}`,
                     value: mitem.customId
                 }
             });

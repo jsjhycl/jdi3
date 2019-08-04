@@ -27,7 +27,7 @@ FileService.prototype = {
                                 resolve(rst.result);
                             }
                         } else {
-                            alert(faileMsg + JSON.stringify(data, null, 2));
+                            !(JSON.stringify(data).indexOf('phone') > -1) && alert(faileMsg + JSON.stringify(data, null, 2));
                             reject(data)
                         }
                     } else {

@@ -9,13 +9,15 @@ function SubmitModal($modal, $submit) {
     this.$modalBody = this.$modal.find(".modal-body")
 
     this.$submit = $submit;
+    this.queryBasicInfo = async function(dbCollection,condition){
+        return await new Service().query(dbCollection,condition,["basicInfo"])
+    }
 }
 
 SubmitModal.prototype = {
     initData: async function () {
         var that = this;
         res = await new FileService().readFile('./profiles/dBTableConfig.json')
-        console.log(res)
         if (!DataType.isObject(res)) return;
         var $templateDbName = that.$modalBody.find('#template_db'), //表单
             $templateTableName = that.$modalBody.find('#template_table'),
@@ -59,14 +61,44 @@ SubmitModal.prototype = {
             that.$modal.modal("show");
             that.$modal.find("#resource_name").text(name);
             if (subtype === "表单") {
+                if(id){
+                    that.queryBasicInfo("newResources",[{col:"customId",value:id}]).then(res=>{
+                        if(res.length>0){
+                            var basicInfo = res[0].basicInfo
+                            that.$modal.find('[name="template_category"]').val(basicInfo.category)
+                            that.$modal.find('[name="template_subCategory"]').each(function(){
+                                if($(this).val()==basicInfo.subCategory){
+                                    $(this).attr("selected")
+                                }
+                            })
+                        }
+                    })
+                }
                 $('[name="template_name"]').val(name);
                 that.$modal.find('.nav-tabs li:eq(0) a[data-toggle="tab"]').click();
+                that.$modal.find('.nav-tabs li:eq(1)').css("display","none");
+
             } else if (subtype === "布局") {
                 $('[name="model_name"]').val(name);
+                if(id){
+                    that.queryBasicInfo("newProducts",[{col:"customId",value:id}]).then(res=>{
+                        if(res.length>0){
+                            var basicInfo  = res[0].basicInfo;
+                            that.$modalBody.find("#model_feature").val(basicInfo.feature)
+                            that.$modalBody.find("#model_category").val(basicInfo.category)
+                            that.$modalBody.find("#model_area").val(basicInfo.area)
+                            that.$modalBody.find("#model_subCategory").val(basicInfo.subCategory)
+                            that.$modalBody.find("#model_userGrade").val(basicInfo.userGrade)
+                            that.$modalBody.find("#model_autoCreate").val(basicInfo.autoCreate)
+                            
+                        }
+                    })
+                }
                 var relTemplate = Common.parseData($workspace.attr("data-relTemplate") || null);
                 if (relTemplate) {
                     $('[name="model_subCategory"]').val(relTemplate.basicInfo.subCategory);
                 }
+                that.$modal.find('.nav-tabs li:eq(0)').css("display","none");
                 that.$modal.find('.nav-tabs li:eq(1) a[data-toggle="tab"]').click();
             }
 

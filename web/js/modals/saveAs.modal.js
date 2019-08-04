@@ -29,12 +29,11 @@ SaveAsModal.prototype = {
         that._clearData();
         var $workspace = $("#workspace"),
             id = $workspace.attr("data-id");
-        if (!id) return alert("保存才可以另存")
-        var id = id.replace(/\((.*)\)/img, "");
+            id = id.replace(/\((.*)\)/img, "");
         var subtype = $workspace.attr("data-subtype");
         var table = subtype == "表单" ? "newResources" : "newProducts";
         that.getLastSaveId(table, id).then(res => {
-            var count = res.length;
+            var count = res.length+1;
             that.$saveAsName.val(`${id}(${count})`)
         })
     },
@@ -50,7 +49,7 @@ SaveAsModal.prototype = {
                 id = id.replace(/\((.*)\)/img, "");
             var table = subtype == "表单" ? "newResources" : "newProducts";
             that.getLastSaveId(table, id).then(res => {
-                var count = res.length;
+                var count = res.length+1;
                 new Workspace().save(true, `${id}(${count})`)
             });
         }
@@ -70,7 +69,7 @@ SaveAsModal.prototype = {
             id = id.replace(/\((.*)\)/img, "");
             var table = subtype == "表单" ? "newResources" : "newProducts";
             that.getLastSaveId(table, id).then(res => {
-                var count = res.length;
+                var count = res.length+1;
                 if (flag) {
                     count = 99;
                 }

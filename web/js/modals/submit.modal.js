@@ -68,7 +68,7 @@ SubmitModal.prototype = {
                             that.$modal.find('[name="template_category"]').val(basicInfo.category)
                             that.$modal.find('[name="template_subCategory"]').each(function(){
                                 if($(this).val()==basicInfo.subCategory){
-                                    $(this).attr("selected")
+                                    $(this).attr("checked","true")
                                 }
                             })
                         }

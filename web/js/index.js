@@ -447,10 +447,10 @@ function propertybar() {
 				commonService = new CommonService();
 				var getFile = new FileService();
 			$.when(getFile.readFile("/newapi/getprozz"),
-				getFile.readFile("/profile/global.json"),
-				getFile.readFile("/profile/local_functions.json"),
-				getFile.readFile("/profile/remote_functions.json"),
-				getFile.readFile("/profile/system_functions.json")).done(function (result1, result2, result3, result4, result5) {
+				getFile.readFile("./profile/global.json"),
+				getFile.readFile("./profile/local_functions.json"),
+				getFile.readFile("./profile/remote_functions.json"),
+				getFile.readFile("./profile/system_functions.json")).done(function (result1, result2, result3, result4, result5) {
 				if (!result1 || !result2 || !result3 || !result4 || !result5) return;
 				var data1 = result1[0],
 					data2 = result2[0],

@@ -477,7 +477,7 @@ function Workspace() {
             basicInfo["userGrade"] = $('[name="model_userGrade"]').val();
             basicInfo["area"] = $('[name="model_area"]').val();
             basicInfo["autoCreate"] = $('[name="model_autoCreate"]').val();
-            basicInfo["contactId"] = this.$workspace.attr('data-concat') || id.slice(id.length - 6, id.length - 3);
+            basicInfo["contactId"] = this.$workspace.attr('data-concat') || (id && id.slice(id.length - 6, id.length - 3)) || "";
         } else {
             name = $('[name="template_name"]').val() || this.$workspace.attr('data-name');
             basicInfo["category"] = $('[name="template_category"]').val();
@@ -575,7 +575,7 @@ Workspace.prototype = {
             'data-id': id,
             "data-name": name,
             "data-subtype": subtype,
-            "data-concat": customId || id.slice(id.length - 6, id.length - 3),
+            "data-concat": customId || (id && id.slice(id.length - 6, id.length - 3)) || ""
         }
         if (subtype === "布局" && DataType.isObject(relTemplate)) { //如果type为资源subtype为布局relTemplate为对象
             attrs["data-relTemplate"] = JSON.stringify(relTemplate); //向attrs中添加属性

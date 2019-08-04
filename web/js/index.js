@@ -218,8 +218,6 @@ function controlbar() {
 			var formData = new FormData($("#imgForm")[0]), //获取表单数据
 				id = $("#workspace").attr("data-id"), //获取id
 				img = new Control().createNumber("img") + ".jpg"; //生成img类型的id编号
-			if (!id) return alert("无法上传没有编号的图片！");
-
             new FileService().upImg(id, img, formData, function (rst) { //上传图片到服务器
                 if (rst.status === 0) {
                     var control = new Control(); //实例化控件对象

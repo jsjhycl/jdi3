@@ -115,6 +115,7 @@ FileService.prototype = {
                 callBack && callBack(rst);
             },
             error(err) {
+                alert('图片上传失败！')
             }
         })
     }

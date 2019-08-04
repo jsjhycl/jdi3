@@ -426,7 +426,7 @@ function propertybar() {
 
 	
 	//新的触发配置
-	var eventmodal = new NewEventsModal($("#events_modal"))
+	var eventmodal = new NewEventsModal($("#events_modal"), $("#property_events"))
 	eventmodal.bindEvents();
 	eventmodal.execute();
 	//数据库查询

@@ -105,7 +105,7 @@ OpenConfigModal.prototype = {
 
     setData: async function() {
         try {
-            var data = await new FileService().readFile("./profiles/dBTableConfig.json", 'utf-8'),
+            var data = await new FileService().readFile("./profiles/table.json", 'utf-8'),
                 customData = jdi.fileApi.getProfile(this.configFile);
         } catch(err) {
             !customData && jdi.fileApi.setProfile(this.configFile, "{}");

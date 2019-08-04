@@ -167,8 +167,7 @@ Control.prototype = {
         });
         switch (basic.type) {
             case "img":
-                var src = "/lib/" + id + "/res/" + basic.attach.src,
-                    img = !basic.attach ? "../public/images/demo.jpg" : (!basic.attach.src ? "../public/images/demo.jpg" : src);
+                var src = basic.attach.src;
                 $node.css({
                     "background": "url(" + src + ") no-repeat center center",
                     "background-size": "100% 100%"

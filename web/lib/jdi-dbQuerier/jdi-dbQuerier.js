@@ -105,7 +105,7 @@
             Common.fillSelect($querierDbName,{name:"请选择数据库",value:""},dbOptions,dbName,true)
             if(dbName){
                 Object.keys(AllDbName[dbName]).forEach(function(item){
-                    tableOptions.push({name:item,value:item})
+                    (AllDbName[dbName][item] !== 0 || AllDbName[dbName][item] !== 1) && tableOptions.push({name:item,value:item})
                 })
                 if(table){
                     AllDbName[dbName][table].tableDetail.forEach(function(item){
@@ -215,7 +215,7 @@
                 $querierTable = $(element).find(".querier-table");
                 if(dbName){
                    Object.keys(AllDbName[dbName]).forEach(function(item){
-                       tableOptions.push({name:item,value:item})
+                    (AllDbName[dbName][item] !== 0 || AllDbName[dbName][item] !== 1) && tableOptions.push({name:item,value:item})
                    }) 
                 }
                 Common.fillSelect($querierTable,{name:"请选择表",value:""},tableOptions,null,true)

@@ -56,20 +56,6 @@ NewService.prototype = {
         })
     },
 
-    //发布
-    publish: function (id, callback) {
-        if (!id) return alert("请先保存数据");
-        var that = this;
-        $.cajax({
-            url: that.publishUrl + id,
-            type: "GET",
-            cache: false,
-            dataType: "json",
-            success: function (result) {
-                callback(result)
-            }
-        })
-    },
     //查询历史发布
     queryHistory: function (id, type) {
         if (!id || !type) return Promise.reject("请先保存数据");
@@ -89,11 +75,12 @@ NewService.prototype = {
             })
         })
     },
-
     getProducts: function(callback) {
         return new Service().query('newProducts', null, null, null, null, callback)
     },
-
+    // getTemplate: function(callback) {
+    //     return new Service().query('newResources', null, null, null, null, callback)
+    // },
     publish: function(id, callback) {
         return new Service().update('newProducts', [{ col: 'customId', value: id }], [{ col: 'status', value: 10 }], callback)
     }

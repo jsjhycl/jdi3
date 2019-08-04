@@ -62,7 +62,7 @@ Loader.prototype = {
                 that.JS_PATH + "/services/service.js",
                 that.JS_PATH + "/services/fileService.js",
                 that.JS_PATH + "/controllers/accessControl.js",
-                that.JS_PATH + "/controllers/db.js",
+                // that.JS_PATH + "/controllers/db.js",
                 that.JS_PATH + "/controllers/main.js",
                 that.JS_PATH + "/controllers/filter.js",
                 that.JS_PATH + "/controllers/workspace.js",
@@ -75,7 +75,7 @@ Loader.prototype = {
                 that.JS_PATH + "/controllers/ruler.js",//标尺
                 that.JS_PATH + "/controllers/keyEvent.js",//标尺
                 that.JS_PATH + "/modals/base.modal.js",
-                that.JS_PATH + "/modals/resource.modal.js",
+                // that.JS_PATH + "/modals/resource.modal.js",
                 that.JS_PATH + "/modals/saveAs.modal.js",//
                 that.JS_PATH + "/modals/product.modal.js",
                 that.JS_PATH + "/modals/dbDefine.modal.js",
@@ -83,7 +83,7 @@ Loader.prototype = {
                 that.JS_PATH + "/modals/workspace.modal.js",
                 that.JS_PATH + "/modals/page.modal.js",
                 that.JS_PATH + "/modals/dbDesigner.modal.js",
-                that.JS_PATH + "/modals/record.modal.js",
+                // that.JS_PATH + "/modals/record.modal.js",
                 that.JS_PATH + "/modals/submit.modal.js",
                 that.JS_PATH + "/modals/dataSource.modal.js",
                 that.JS_PATH + "/modals/prompt.modal.js",

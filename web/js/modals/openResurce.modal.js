@@ -67,40 +67,6 @@ function OpenResource($openModal) {
             thead: {
                 fields: that.getTheadFields(query["fields"]),
             },
-            // thead: {
-            //     fields: [{
-            //             text: "资源名称",
-            //             key: "name",
-            //             type: 0,
-            //             func: "detail",
-            //             template: function (value) {
-            //                 return '<a>' + value + '</a>';
-            //             }
-            //         },
-            //         {
-            //             text: "处理状态",
-            //             key: "state",
-            //             type: 0,
-            //             func: null,
-            //             template: function (value) {
-            //                 return value === 1 ? '<span class="text-success">已入库</span>' : '<span class="text-warning">未入库</span>';
-            //             }
-            //         },
-            //         {
-            //             text: "操作",
-            //             key: "",
-            //             type: 1,
-            //             items: [{
-            //                 text: "删除",
-            //                 func: "remove",
-            //                 template: function () {
-            //                     return '<button class="btn btn-danger">删除</button>';
-            //                 }
-            //             }]
-            //         }
-            //     ],
-            //     attrs: attrs
-            // },
             onDetail: async function () {
                 var id = $(this).parents("tr").attr("data-id");
 
@@ -129,7 +95,6 @@ function OpenResource($openModal) {
 OpenResource.prototype = {
     initData: function () {
         var that = this;
-        console.log(1111)
         that._pageList();
     },
     execute: function() {

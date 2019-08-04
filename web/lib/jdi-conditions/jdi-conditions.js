@@ -134,27 +134,10 @@
                     });
                 }
 
-                var $expr = $(this),
-                    commonService = new CommonService();
-                $.when(commonService.getAjax("/newapi/getprozz"),
-                    commonService.getAjax("/profile/global.json")).done(function (result1, result2) {
-                    if (!result1 || !result2) return;
-
-                    var data1 = result1[0],
-                        data2 = result2[0];
-                    if (!data1 || !data2) return;
-
-                    var globalId = data1.status === 0 ? (data1.result ? data1.result.id : null) : null,
-                        staticGlobal = data2;
-                    if (globalId) {
-                        commonService.getFile("/publish/" + globalId + "/property.json", function (dynamicGlobal) {
-                            buildArgs($expr, staticGlobal, dynamicGlobal);
-                        });
-                    } else {
-                        buildArgs($expr, staticGlobal, null);
-                    }
-                }).fail(function (err) {
-                    alert("表达式生成器参数数据生成失败！");
+                var $expr = $(this);
+                new FileService().readFile("/profiles/global.json", function(data) {
+                    if (!data) return;
+                    buildArgs($expr, data, null);
                 });
             });
         },
@@ -177,7 +160,6 @@
                     type = data.type;
                     value = data.value;
                 }
-                console.log(table,dbName)
                 if(dbName&&table){
                     var AllDbName = JSON.parse(localStorage.getItem("AllDbName"))||{};
                     AllDbName[dbName][table].tableDetail.forEach(function(item){

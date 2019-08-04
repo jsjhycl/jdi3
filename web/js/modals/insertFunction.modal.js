@@ -45,9 +45,9 @@ function InsertFnModal($modal) {
 }
 
 InsertFnModal.prototype = {
-    initData: function(data) {
+    initData: async function(data) {
         let that = this,
-            result = new CommonService().getFileSync('/profile/insert_function.json');
+            result = await new FileService().readFile('./profile/insert_function.json');
         if (!result || result.length <= 0) {
             alert('暂无插入函数配置!');
             that.$modal.hide();
@@ -139,7 +139,7 @@ InsertFnModal.prototype = {
         })
 
         // 本地/远程 函数切换
-        that.$modal.on('change' + that.NAMESPACE, '[name="functionType"]', function(event) {
+        that.$modal.on('change' + that.NAMESPACE, '[name="functionType"]', async function(event) {
             let urlObj = {
                 'local': {
                     url: '/profile/insert_function.json',
@@ -151,7 +151,7 @@ InsertFnModal.prototype = {
                 }
             },
                 type = $(this).data('type');
-                result = new CommonService().getFileSync(urlObj[type].url);
+                result = await new FileService().readFile(urlObj[type].url);
             if (!result || result.length <= 0) { return alert('暂无该函数配置！') };
             that._render(result, urlObj[type].index)
         })

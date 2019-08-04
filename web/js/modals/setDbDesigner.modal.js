@@ -13,14 +13,17 @@ function SetDbDesignerModal($modal) {
     this.$reserveFive = this.$modalBody.find('[data-type="reserveFive"]'); //获取备用5输入框
 
     //向数据库添加目录总表
+    // this._uploderDb = function (data) {
+    //     return $.cajax({ //返回一个ajax对象
+    //         url: "/api/save/ZZZZZZZ/table.json",
+    //         type: "POST",
+    //         contentType: "text/plain;charset=utf-8",
+    //         data: data,
+    //         dataType: "json"
+    //     });
+    // }
     this._uploderDb = function (data) {
-        return $.cajax({ //返回一个ajax对象
-            url: "/api/save/ZZZZZZZ/table.json",
-            type: "POST",
-            contentType: "text/plain;charset=utf-8",
-            data: data,
-            dataType: "json"
-        });
+        return new FileService().writeFile('./profiles/table.json', 'UTF-8', data);
     }
     this._getTableValue = function () {
 

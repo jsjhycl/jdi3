@@ -23,7 +23,7 @@ Propertybar.prototype = {
         suffix = suffix || "";//如果suffix存在则用suffix否则为空
         var that = this,
             AllDbName = await new FileService().readFile("./profiles/table.json", 'utf-8'),
-            result = await new FileService().readFile("./profiles/propertybar.json", 'utf-8');//实例化CommonService调用getFileSync方法
+            result = await new FileService().readFile("./profiles/propertybar.json", 'utf-8');
         if (!result) return;//如果没有退出函数
 
         //添加总数据库属性

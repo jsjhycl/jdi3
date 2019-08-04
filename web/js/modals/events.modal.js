@@ -21,8 +21,8 @@ function EventsModal($modal, $element) {
     var CUSTOM_METHODS = [];//来源于自定义方法
     var QUERY_METHODS = [];//来源于数据查询配置
 
-    this._initCustomMethods = function () {
-        var result = new CommonService().getFileSync("/profile/custom_methods.json");//调用commonService中的getFileSync方法
+    this._initCustomMethods = async function () {
+        var result = await new FileService().readFile("/profile/custom_methods.json");
         CUSTOM_METHODS = result || [];//如果result有值就赋值否则赋值为空
     };
 

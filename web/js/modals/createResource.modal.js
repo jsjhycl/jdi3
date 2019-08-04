@@ -2,6 +2,7 @@
 //新建布局资源模态框
 function CreateResource() {
     this.$createResource = $("#create_resource_modal")
+    BaseModal.call(this, this.$createResource);
     this.$resoureRelId = this.$createResource.find('[name="model_resource_relId"]')
     this.data = []
     this.$resoureName = this.$createResource.find('[name="model_resource_name"]')
@@ -73,5 +74,8 @@ CreateResource.prototype = {
             that.$createResource.modal("hide");
             new Main().open();
         })
+    },
+    execute: function() {
+        this.basicEvents(true, this.initData);
     }
 }

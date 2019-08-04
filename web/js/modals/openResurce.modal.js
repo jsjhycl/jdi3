@@ -76,7 +76,7 @@ function OpenResource($openModal) {
                     var customId = Common.recurseObject(resource, 'basicInfo.contactId'),
                         templates = await new Service().query(resource['basicInfo.contactId'] || 'newResources', [{ col: 'customId', value: customId }]);
                         relTemplate = Array.isArray(templates) && templates[0];
-                    new Workspace().load(id, resource.name, "布局", relTemplate.customId, relTemplate);
+                    new Workspace().load(id, resource.name, "布局", relTemplate ? relTemplate.customId : '', relTemplate);
                     that.$openModal.modal("hide");
                     new Main().open();
                 } else {

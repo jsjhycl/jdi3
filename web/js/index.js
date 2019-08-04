@@ -61,7 +61,7 @@ function navbar() {
 
 	//新建表单资源
 	var createResource = new CreateResource();
-	createResource.initData(); //初始化新建布局表单
+	createResource.execute(); //初始化新建布局表单
 	createResource.bindEvents(); //绑定新建布局表单资源
 
 	//打开表单资源

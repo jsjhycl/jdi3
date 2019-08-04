@@ -689,7 +689,7 @@ Workspace.prototype = {
                     });
                     switch (item.type) {
                         case "img": //如果类型为img
-                            var src = "/lib/" + id + "/res/" + item.attach.src; //生成src
+                            var src = item.attach.src; //生成src
                             $node.attr("src", !item.attach ? "../public/images/demo.jpg" : (!item.attach.src ? "../public/images/demo.jpg" : src)); //如果item.attach不存在
                             break;
                         case "div": //如果类型为div

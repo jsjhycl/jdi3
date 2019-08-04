@@ -79,7 +79,6 @@ Service.prototype = {
             table: table,
             save: save || []
         }
-        console.log(config)
         return this.base(config, callBack);
     },
 

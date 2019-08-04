@@ -1,1 +1,1 @@
-{"db":"数据库1","table":"newResources","condition":[{"col":"name","value":"表单","isReg":true,"cate":"资源名称"}],"fields":[{"name":"资源名称","value":"name"},{"name":"编号","value":"customId"}]}
+{"db":"数据库1","table":"newResources","condition":[],"fields":[{"name":"资源名称","value":"name"},{"name":"编号","value":"customId"}]}

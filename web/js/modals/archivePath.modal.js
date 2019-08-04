@@ -27,22 +27,7 @@ function ArchivePathModal($modal, $element) {
         else $formGroup.hide();//否则隐藏表单编号
     };
 
-    //设置表单编号
-    this._setModelIdSelect = function ($modelIdSelect, modelId) {
-        if (!$modelIdSelect || $modelIdSelect.length <= 0) return;//如果表单编号或则表单id的长度小于零退出函数
-        new ProductService().list("布局", 40, function (result) {//实例化productServer中的list方法
-            Common.handleResult(result, function (data) {//调用Common中的HandleResult方法
-                var defaultOption = {name: "请选择表单编号", value: ""},//设置defaultOption
-                    options = Array.isArray(data) ? data.map(function (item) {//查看data是不是数组如果是遍历数组否则返回一个空数组
-                        return {name: item.name, value: item.id};
-                    }) : [];
-                Common.fillSelect($modelIdSelect, defaultOption, options, null, true);//调用Common中fillselect方法
-                if (modelId) {//如果modelId不存在
-                    $modelIdSelect.val(modelId);//设置值
-                }
-            });
-        });
-    };
+    
 
     this._resetData = function () {
         var that = this;
@@ -85,19 +70,13 @@ ArchivePathModal.prototype = {
                 }
             }
             Common.fillSelect(that.$archiveTable, {name: "请选择存档表格", value: ""}, tableOptions,data.table, true)//填充存档表格下拉选项
-            Common.fillSelect(that.$archiveField, {name:"请选择存档字段",value:""},fieldsoptions,data.field,true)//填充存档字段下拉选项
-            // ModalHelper.setTableSelect(false, that.$archiveTable, {name: "请选择存档表格", value: ""}, data.table, true);//调用_setTypeSelect
-            // ModalHelper.setFieldSelect(that.$archiveField, {name: "请选择存档字段", value: ""}, data.table, data.field, true);//调用_setTypeSelect
-            // that._setModelIdSelect(that.$archiveModelId, data.modelId);//调用_setTypeSelect
+            Common.fillSelect(that.$archiveField, {name:"请选择存档字段",value:""},fieldsoptions,data.field,true)//填充存档字段下拉选项  
         } else {
             //填充数据库下拉框
             that._setTypeSelect(that.$archiveType, null);//调用_setTypeSelect
             Common.fillSelect(that.$archiveDbName,{name:"请选择存档数据库",value:""},dbs,null,true)//填充存档数据库下拉选项
             Common.fillSelect(that.$archiveTable,{name:"请选择存档表",value:""},null,null,true)//填充存档表格下拉选项
             Common.fillSelect(that.$archiveField,{name:"请选择存档字段",value:""},null,null,true)//填充存档字段下拉选项
-            // ModalHelper.setTableSelect(false, that.$archiveTable, {name: "请选择存档表格", value: ""}, null, true);//调用_setTypeSelect
-            // ModalHelper.setFieldSelect(that.$archiveField, {name: "请选择存档字段", value: ""}, null, null, true);//调用_setTypeSelect
-            // that._setModelIdSelect(that.$archiveModelId, null);//调用_setTypeSelect
         }
     },
     saveData: function () {
@@ -171,7 +150,6 @@ ArchivePathModal.prototype = {
                     })
                 }
                 Common.fillSelect($select,{name:"请选择存档字段",value:""},fieldsoptions,null,true)
-            // ModalHelper.setFieldSelect(that.$archiveField, {name: "请选择存档字段", value: ""}, table, null, true);//调用ModalHelper.setFieldSelect
         });
     }
 };

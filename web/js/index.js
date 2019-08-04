@@ -1,9 +1,9 @@
 ﻿//初始化
-function init() {
+async function init() {
 	//筛选
 	new Filter('加载').set();
 	//初始化属性栏
-	new Propertybar($("#propertybar")).init(false, null);
+	await new Propertybar($("#propertybar")).init(false, null);
 
 	//初始化工作区
 	var $workspace = $("#workspace"); //获取工作区
@@ -756,13 +756,14 @@ function back(html) {
 }
 
 $(document).ready(function () {
-	init();
-	navbar();
-	controlbar();
-	toolbar();
-	propertybar();
-	workspace();
-	phone();
-	shortcut();
-	disableToolbarBtn();
+	init().then(() => {
+		navbar();
+		controlbar();
+		toolbar();
+		propertybar();
+		workspace();
+		phone();
+		shortcut();
+		disableToolbarBtn();
+	})
 });

@@ -5,10 +5,15 @@ function OpenTemplate($openModal) {
     BaseModal.call(this, $openModal);
     this.$openModal = $openModal;
     this.getQueryConfig = function() {
-        var config = jdi.fileApi.getProfile('dBTable0Config_custom.json'),
-            query = $.extend({}, config, { size: 6, page: 1 });
-        query['command'] = "query";
-        query['table'] = "newResources";
+        var config;
+        try {
+            config = jdi.fileApi.getProfile('dBTable0Config_custom.json');
+        } catch (err) {
+            config = {};
+        }
+        var query = $.extend({}, config, { size: 6, page: 1 });
+            query['command'] = "query";
+            query['table'] = "newResources";
         if (Array.isArray(query['condition'])) {
             query['condition'].forEach(con => {
                 con.isReg && (con.value = ('/' + con.value + '/'));
@@ -17,7 +22,7 @@ function OpenTemplate($openModal) {
             })
         }
         delete query['db'];
-        Array.isArray(query['fields']) ? query['fields'].push({ value: "customId" }) : (query['fields'] = [{ value: "customId" }])
+        Array.isArray(query['fields']) ? query['fields'].push({ value: "customId" }) : (query['fields'] = [{ name: "资源名称", value: "name" }])
         return query;
     };
     this.getTheadFields = function(fields) {

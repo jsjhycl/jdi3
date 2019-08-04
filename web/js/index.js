@@ -90,11 +90,7 @@ function navbar() {
 	// productModal.receive(); //绑定模态框事件
 	// productModal.open();
 
-	//数据库定义
-	var dbDefineModal = new DbDefineModal($("#dbDefineModal"));
-	dbDefineModal.execute();
-	dbDefineModal.bindEvents();
-
+	
 	//发布布局
 	var publishModal = new PublishModal($("#publishModal"));
 	publishModal.execute();
@@ -470,11 +466,7 @@ function propertybar() {
 	var sourceTabModal = new DataSourceTabModal($("#dataSource_db_tab_modal"), $("#property_dataSource_static"), $("#property_dataSource_db"))
 	sourceTabModal.execute();
 
-	//触发配置
-	// var eventsModal = new EventsModal($("#events_modal"), $("#property_events"));
-	// eventsModal.execute();
-	// eventsModal.bindEvents();
-
+	
 	//新的触发配置
 	var eventmodal = new NewEventsModal($("#events_modal"), $("#property_events"))
 	eventmodal.bindEvents();

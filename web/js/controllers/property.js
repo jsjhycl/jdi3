@@ -165,7 +165,7 @@ Property.prototype = {
     save: function ($control, $property) {
         if (!$control || $control.length <= 0) return;//如果$control不存则或则长度小于0退出函数
         if (!$property || $property.length <= 0) return;//如果$property不存则或则长度小于0退出函数
-
+        
         var that = this,
             isBody = $control.attr("id") === "workspace",//判断选中的元素是不是工作区如果是isbody设置为true否则设置为false
             id = isBody ? that.BODY : $control.attr("id"),//判断是不是工作区是的话给id这是为BODY如果不是获取该元素的id值

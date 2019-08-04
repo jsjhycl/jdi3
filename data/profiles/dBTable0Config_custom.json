@@ -1,5 +1,1 @@
-<<<<<<< HEAD
 {"db":"数据库1","table":"newResources","condition":[],"fields":[{"name":"资源名称","value":"name"},{"name":"编号","value":"customId"},{"name":"表单分类","value":"basicInfo.category"},{"name":"子分类","value":"basicInfo.subCategory"}]}
-=======
-{"db":"数据库1","table":"newResources","condition":[],"fields":[{"name":"资源名称","value":"name"},{"name":"编号","value":"customId"}]}
->>>>>>> 16bdc4f09078ee167285520bbc96ebc195680990

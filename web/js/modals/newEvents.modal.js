@@ -101,19 +101,17 @@ function NewEventsModal($modal, $element) {
     this.evetnsDesc = {};
     //获取客户自定义的事件
     this._initCustomMethods = async function () {
-        var result;
         try {
-            result = await new FileService().readFile("/profiles/custom_methods.json"); //调用commonService中的getFileSync方法
+            var result = await new FileService().readFile("/profiles/custom_methods.json"); //调用commonService中的getFileSync方法
+            this.METHODS = result || [];
         } catch(err) {
             return alert('获取配置文件错误！')
         }
-        this.METHODS = result || [];
     };
     //获取表格查询或则通用查询
     this._initQueryMethods = function () {
         var id = $("#property_id").val();
         if (!id) return;
-
         var query = new Property().getValue(id, "query");
         if (!DataType.isObject(query)) return;
 
@@ -808,34 +806,33 @@ function NewEventsModal($modal, $element) {
 }
 NewEventsModal.prototype = {
     initData: async function (data) {
+        
         var that = this;
-        that._resetData()
-        that._initCustomMethods();
-        that._initQueryMethods();
-        if (!Array.isArray(data)) { //如果data不是一个数组 添加一个默认值
-            data = that.data
-        }
-        var desc 
-        try {
-            desc = await new FileService().readFile("/profiles/events_desc.json")
-        } catch(err) {
-            return alert('获取配置文件错误！')
-        }
-        that.evetnsDesc = desc || {
-            triggerType: {}
-        }
-
-        $(this).propModifier3({
-            $source: $("#workspace"),
-            $element: $("#events_modal").find(".clickModal"),
-            $result: null,
-            data: data
+        that._resetData();
+        that._initCustomMethods().then(() => {
+            that._initQueryMethods();
+        }).then(async () => {
+            if (!Array.isArray(data)) { //如果data不是一个数组 添加一个默认值
+                data = that.data
+            }
+            try {
+                var desc  = await new FileService().readFile("/profiles/events_desc.json")
+                that.evetnsDesc = desc || {
+                    triggerType: {}
+                }
+                $(this).propModifier3({
+                    $source: $("#workspace"),
+                    $element: $("#events_modal").find(".clickModal"),
+                    $result: null,
+                    data: data
+                })
+                data.forEach(function (item) {
+                    that._addItem(item)
+                })
+            } catch(err) {
+                return alert('获取配置文件错误！')
+            }
         })
-
-        data.forEach(function (item) {
-            that._addItem(item)
-        })
-
     },
     saveData: function () {
         var id = $("#property_id").val();
@@ -875,7 +872,6 @@ NewEventsModal.prototype = {
                         notify.push(item)
                     }
                 })
-                console.log(notify)
             }
             if (trigger_type) {
                 result.push({
@@ -898,7 +894,7 @@ NewEventsModal.prototype = {
         })
         that.$element.val(JSON.stringify(result))
         var $workspace = $("#workspace"),//获取工作区
-         $control = $workspace.find("#" + id);//获取对应id的元素
+        $control = $workspace.find("#" + id);//获取对应id的元素
         new Property().save(id === "BODY" ? $workspace : $control, that.$element);//实例化property调用save方法
 
     },

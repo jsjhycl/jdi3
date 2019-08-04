@@ -506,7 +506,7 @@ function Workspace() {
                             $temp.get(0).outerHTML;
                         that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, 0)
                     })
-                })
+                }).catch(err => {})
             }
             if (subtype == "布局") {
                 id = basicInfo.autoCreate + basicInfo.area + basicInfo.feature + basicInfo.userGrade + basicInfo.contactId.replace(/\((.*)\)/img, "") + "ZZ" + basicInfo.autoCreate;
@@ -524,7 +524,7 @@ function Workspace() {
                         '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
                         $temp.get(0).outerHTML;
                     that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, 1)
-                })
+                }).catch(err => {})
             }
         } else{
             // 修改
@@ -593,7 +593,7 @@ Workspace.prototype = {
     load: function (id, name, subtype, customId, relTemplate) {
         if (!name || !subtype) return; //如果id或则name或type或subtype都为空退出函数
         var that = this,
-            url = subtype == "表单" ? "./resource/" : "./product/";
+            url = subtype === "表单" ? "./resource/" : id ? "./product/" : "./resource/";
 
         $.when(that.readFile(url + `${id||customId}` + "/setting.json"), that.readFile(url + `${id ||customId}` + "/property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
             that.init(id, name, subtype, customId, relTemplate); //调用init方法
@@ -664,7 +664,7 @@ Workspace.prototype = {
     loadPhone: function (id, customId, subtype) {
 
         var that = this;
-        var url = subtype == "表单" ? "./resource/" : "./product/";
+        var url = url = subtype === "表单" ? "./resource/" : id ? "./product/" : "./resource/";
         $.when(that.readFile(url + `${id||customId}` + "/phone_setting.json"), that.readFile(url + `${id ||customId}` + "/phone_property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
             var phoneSettingData = ret1 || {},
                 phonePropertyData = ret2 || {};

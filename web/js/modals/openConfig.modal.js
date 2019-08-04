@@ -34,9 +34,10 @@ function OpenConfigModal($modal, key) {
             html = "",
             id = condition.col,
             value = condition.value;
-            category = condition.cate || category
+        category = condition.cate || category
         if (isSelect) {
             var options = that.cate[category].slice(0);
+            !DataType.isObject(options[0]) && (options = options.map(el => { return { name: el.name || el.value || el, value: el.value || el.name || el } }));
             options.unshift({ name: '全部', value: '' });
             html += `
                     <label class="col-lg-3 control-label">${category}：</label>

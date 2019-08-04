@@ -70,7 +70,7 @@ CreateResource.prototype = {
                     subCategory = item;
                 }
             })
-            new Workspace().load(null, name, "表单", relid, subCategory)
+            new Workspace().load(null, name, "布局", relid, subCategory)
             that.$createResource.modal("hide");
             new Main().open();
         })

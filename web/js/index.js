@@ -86,9 +86,9 @@ function navbar() {
 	saveAsModal.bindEvents();
 
 	//产品
-	var productModal = new ProductModal();
-	productModal.receive(); //绑定模态框事件
-	productModal.open();
+	// var productModal = new ProductModal();
+	// productModal.receive(); //绑定模态框事件
+	// productModal.open();
 
 	
 	//发布布局

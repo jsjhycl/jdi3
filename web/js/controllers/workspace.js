@@ -334,6 +334,8 @@ function Workspace() {
         var tableData = null;
         if (subtype === "布局" && customId) { //如果type是产品或则是数据库定义subtype是布局且customid存在
             tableData = new Property().getDbProperty(customId, name); //实例化property调用getDbproperty
+            tableData = {...tableData,...new Property().getSaveDbProperty(customId, name)}
+            console.log(tableData)
         }
 
         var phoneData = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="ie=edge"><title>手机页面</title></head><body>' +
@@ -452,16 +454,19 @@ function Workspace() {
     }
     this._updateDb = async function (type, id, params) {
         var dbCollection = type == "布局" ? "newProducts" : "newResources";
-        return await new Service().update(dbCollection, [{ col: 'customId', value: id }], params)
+        return await new Service().update(dbCollection, [{
+            col: 'customId',
+            value: id
+        }], params)
     }
     this._setData = function (isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData) {
         if (!subtype) return; //如果id或则type或则subtype都不存在则退出函数
-        
+
         isPrompt = !!isPrompt; //对isPrompt进行取布尔值
 
         var that = this,
             property = {}
-            phone_property = {},
+        phone_property = {},
             USER = 'admin';
 
         for (var i in GLOBAL_PROPERTY) {
@@ -485,15 +490,35 @@ function Workspace() {
             basicInfo["subCategory"] = $('[name="template_subCategory"]:checked').val();
         }
 
-        var params = [{col: "name", value: name}];
-        params.push({ col: "basicInfo", value: { ...basicInfo } })
+        var params = [{
+            col: "name",
+            value: name
+        }];
+        params.push({
+            col: "basicInfo",
+            value: {
+                ...basicInfo
+            }
+        })
         // 新建
         if (!id) {
-            params = params.concat([{ col: "createTime", value: new Date().toFormatString(null, true) }, { col: "createor", value: USER }]);
+            params = params.concat([{
+                col: "createTime",
+                value: new Date().toFormatString(null, true)
+            }, {
+                col: "createor",
+                value: USER
+            }]);
             if (subtype == "表单") {
                 this._getMaxId(subtype).then(res => {
                     id = res;
-                    params.push({ col: '_id', value: id }, { col: 'customId', value: id });
+                    params.push({
+                        col: '_id',
+                        value: id
+                    }, {
+                        col: 'customId',
+                        value: id
+                    });
                     this._saveDb(subtype, params).then(res => {
                         var $temp = $('<div></div>');
                         $temp.css({
@@ -512,7 +537,13 @@ function Workspace() {
             }
             if (subtype == "布局") {
                 id = basicInfo.autoCreate + basicInfo.area + basicInfo.feature + basicInfo.userGrade + basicInfo.contactId.replace(/\((.*)\)/img, "") + "ZZ" + basicInfo.autoCreate;
-                params.push({ col: '_id', value: id }, { col: 'customId', value: id });
+                params.push({
+                    col: '_id',
+                    value: id
+                }, {
+                    col: 'customId',
+                    value: id
+                });
                 this._saveDb(subtype, params).then(res => {
                     var $temp = $('<div></div>');
                     $temp.css({
@@ -528,12 +559,21 @@ function Workspace() {
                     that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, 1)
                 }).catch(err => {})
             }
-        } else{
+        } else {
             var edit = (that.edit ? ";" : "") + USER + "," + new Date().toFormatString(null, true)
-            params.push({ col: "edit", value: USER + "," + edit });
+            params.push({
+                col: "edit",
+                value: USER + "," + edit
+            });
             // 修改
             var flag = subtype == "表单" ? 0 : 1;
-            params.push({ col: '_id', value: id }, { col: 'customId', value: id });
+            params.push({
+                col: '_id',
+                value: id
+            }, {
+                col: 'customId',
+                value: id
+            });
             this._updateDb(subtype, id, params).then(res => {
                 var $temp = $('<div></div>');
                 $temp.css({
@@ -581,7 +621,7 @@ Workspace.prototype = {
         that.$workspace.empty().attr(attrs); //将工作区置空并添加属性
         that.$phone.empty().parents("#phone_warp").hide();
         new Filter(subtype).set(); //实例化Filter并调用set方法
-        id ? $("#saveAs").show() : $("#saveAs").hide(); 
+        id ? $("#saveAs").show() : $("#saveAs").hide();
         $("#toolbar").css('right', "260px") //设置样式
         $("#toolbar").css('left', "140px") //设置样式
         GLOBAL_PROPERTY = {}; //全局属性值空
@@ -731,7 +771,7 @@ Workspace.prototype = {
         if (data) { //如果data为true
             //保存数据
             that._setData(isPrompt, id, subtype, flow, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData); //调用_setdata
-            
+
         }
     },
     clear: function () {

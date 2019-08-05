@@ -69,18 +69,34 @@
                 var id = this.id;
                 if (!id) return true;
 
-                tbody += "<tr>";
                 var property = $.extend(getProperty(id), {
                     id: id
                 });
+                
+                tbody += "<tr>";
                 cache.thead.forEach(function (item) {
                     var template = item.template || function (value) {
-                            return value;
-                        },
-                        value = that.recurseObject(property, item.key, cache.type);
+                        return value;
+                    },
+                    value = that.recurseObject(property, item.key, cache.type);
                     tbody += '<td>' + template(value[0] || "",value[1] || "") + '</td>';
                 });
                 tbody += "</tr>";
+                var saveDb = property.saveDb
+                if(saveDb){
+                
+                    saveDb.forEach((citem,index)=>{
+                        tbody += "<tr>";
+                        cache.thead.forEach(function (item) {
+                            var template = item.template || function (value) {
+                                    return value;
+                                },
+                                value = that.recurseSaveObject(property, item.key, index);
+                            tbody += '<td>' + template(value[0] || "",value[1] || "") + '</td>';
+                        });
+                        tbody += "</tr>";
+                    })
+                }
             });
             $tbody.empty().append(tbody);
         },
@@ -143,34 +159,6 @@
             if (key.indexOf(".") > -1) {
                 var temp = $.extend(true, {}, data),
                     keys = key.split(".");
-                // for (var i = 0; i < keys.length; i++) {
-                //     var ckey = keys[i],
-                //         cvalue = temp[ckey];
-                //         // if(data.db){
-                //         //     if (ckey =="dbName" ||ckey == "table" || ckey == "field" || ckey == "fieldSplit") {
-                //         //        console.log(ckey,data.db[ckey],this.getOptions(data,ckey))
-                //         //         temp = [data.db[ckey], this.getOptions(data, ckey)]
-                //         //     }
-                //         //     if(ckey == "isSave"){
-                //         //         temp = [!!data.db,""]
-                //         //     }
-                //         //     if(ckey=="desc"){
-                //         //         temp = [data.db[ckey],""]
-                //         //     }
-                //         // }else{
-                //         //     temp = ["",""]
-                //         // }
-                //     if(!cvalue){
-                //         console.log(ckey,cvalue,temp)
-                //         // temp = ""
-                //         // break
-                //     }else{
-                        
-                //         temp = cvalue;
-                //     }
-
-                    
-                // }
                 if(type=="setDbDesigner") return [];
                 var db = keys[0], ckey = keys[1];
                 if(!temp.db){
@@ -188,6 +176,29 @@
                 return temp;
             } else return [data[key],""];
         },
+        recurseSaveObject: function (data, key, index) {
+            if (!data) return;
+            if (!key) return;
+            if (key.indexOf(".") > -1) {
+                var temp = $.extend(true, {}, data),
+                    keys = key.split(".");
+                var db = keys[0], ckey = keys[1];
+                if(!temp.saveDb){
+                    temp = ["",this.getSaveOptions(data,ckey)]
+                }else{
+                    if(ckey=="dbName"||ckey == "table" || ckey == "field" || ckey == "fieldSplit"){
+                        if(data["saveDb"][index][ckey]){
+                            temp = [data["saveDb"][index][ckey], this.getSaveOptions(data,ckey, index)]
+                        }
+                    }else{
+                        temp = [data[db][ckey],""]
+                    }
+                }
+
+                return temp;
+            } else return [data[key],""];
+        },
+
         getOptions: function (data, ckey) {
             var dbName = (data.db && data.db.dbName) ||"",
                 table = (data.db && data.db.table) || "",
@@ -243,7 +254,64 @@
             }
 
             return options;
+        },
+        getSaveOptions: function (data, ckey,index) {
+           
+            var dbName = (data.saveDb[index] && data.saveDb[index].dbName) ||"",
+                table = (data.saveDb[index] && data.saveDb[index].table) || "",
+                field = (data.saveDb[index] && data.saveDb[index].field)|| "",
+                dbList = JSON.parse(localStorage.getItem("AllDbName")) || {},
+                options = [];
+            if (ckey == "dbName") {
+                Object.keys(dbList).forEach(function (item) {
+                    options.push({
+                        name: item,
+                        value: item
+                    })
+                })
+            }
+            if (ckey == "table") {
+                if(dbName){
+                    Object.keys(dbList[dbName]).forEach(function (item) {
+                        options.push({
+                            name: item,
+                            value: item
+                        })
+                    })
+                }
+            }
+            if (ckey == "field") {
+                if(dbName && table){
+                    var fields = dbList[dbName][table].tableDetail;
+                    fields.forEach(function (item) {
+                        options.push({
+                            name: item.cname,
+                            value: item.id
+                        })
+                    })
+                }
+            }
+            if (ckey == "fieldSplit") {
+                if(dbName&&table){
+                    var fields = dbList[dbName][table].tableDetail,
+                        fieldSplits = '';
+                    fields.forEach(function (item) {
+                        if (data.id == item.id) {
+                            fieldSplits = Number(item.fieldSplit)
+                        }
+                    })
+                    for (i = 1; i <= fieldSplits; i++) {
+                        options.push({
+                            name: "插入",
+                            value: String(i)
+                        })
+                    }
+                }
+            }
+
+            return options;
         }
+
     };
 
     $.fn.extend({

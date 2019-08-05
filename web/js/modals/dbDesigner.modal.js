@@ -37,7 +37,7 @@ DbDesignerModal.prototype = {
                     text: "编号",
                     key: "id",
                     template: function (value) {
-                        return '<input class="form-control" data-key="id" type="text" value="' + value + '" readonly>';
+                        return '<input class="form-control" data-key="id" style="width:80px" type="text" value="' + value + '" readonly>';
                     }
                 },
                 {
@@ -45,7 +45,7 @@ DbDesignerModal.prototype = {
                     text: "中文名",
                     key: "cname",
                     template: function (value) {
-                        return '<input class="form-control" data-key="cname" type="text" value="' + value + '" readonly>';
+                        return '<input class="form-control" data-key="cname" style="width:80px" type="text" value="' + value + '" readonly>';
                     }
                 }, {
                     name: "isSave",
@@ -75,7 +75,7 @@ DbDesignerModal.prototype = {
                     text: "表名称",
                     key: "db.table",
                     group: true,
-                    template: function (value,options) {
+                    template: function (value, options) {
                         var $select = $('<select data-key="table"></select>');
                         Common.fillSelect($select, {
                             name: "请选择表",
@@ -88,9 +88,12 @@ DbDesignerModal.prototype = {
                     text: "存入字段",
                     key: "db.field",
                     group: true,
-                    template: function (value,options) {
+                    template: function (value, options) {
                         var $select = $('<select data-key="selectField"></select>');
-                        Common.fillSelect($select, { name: "请选择字段", value: "" }, options, value, true);
+                        Common.fillSelect($select, {
+                            name: "请选择字段",
+                            value: ""
+                        }, options, value, true);
                         return $select.get(0).outerHTML;
                     }
                 },
@@ -99,12 +102,15 @@ DbDesignerModal.prototype = {
                     text: "字段分段",
                     key: "db.fieldSplit",
                     group: true,
-                    template: function (value,options) {
+                    template: function (value, options) {
                         var $select = $('<select data-key="selectFieldSplit"></select>')
-                        Common.fillSelect($select, { name: "请选择第几段", value: "" }, options, value, true)
+                        Common.fillSelect($select, {
+                            name: "请选择第几段",
+                            value: ""
+                        }, options, value, true)
                         return $select.get(0).outerHTML;
                     }
-                }, 
+                },
                 // {
                 //     name: "field",
                 //     text: "字段名称",
@@ -120,7 +126,15 @@ DbDesignerModal.prototype = {
                     key: "db.desc",
                     group: true,
                     template: function (value) {
-                        return '<input class="form-control" data-key="desc" type="text" value="' + value + '">';
+                        return '<input class="form-control" data-key="desc" type="text" style="width:80px" value="' + value + '">';
+                    }
+                }, {
+                    name: "operation",
+                    text: "操作",
+                    key: "db.op",
+                    group: true,
+                    template: function (value) {
+                        return '<button class="btn btn-sm  btn-primary" id="dbDesignerAdd">增加</button><button style="margin-left:3px" id="dbDesignerRemove" class="btn btn-sm  btn-danger">移除</button>'
                     }
                 }
             ],
@@ -131,21 +145,60 @@ DbDesignerModal.prototype = {
         var that = this,
             data = that.$dbDesigner.dbDesigner("getData"); //调用getData方法
         if (!Array.isArray(data)) return alert("无效的数据类型！"); //如果data不是数组退出函数提示
-        console.log(data)
-        var property = new Property(); //实例化property
-        data.forEach(function (item) { //遍历data
-            console.log(item,"保存")
-            if (!item.isSave) return true; //如果issave为false退出函数
-            property.setValue(item.id, "db", { //调用property的setValue方法
-                isSave: item.isSave,//是否入库
-                dbName:item.dbName,//存档数据库
-                table: item.table,//存档表格
+        var dbData = [], //存入db中的代码
+            repeatDbData = []; //存入重复的数据中
+        data.forEach(item => {
+            dbData.findIndex(function (citem) {
+                return citem.id == item.id
+            }) > -1 ? repeatDbData.push(item) : dbData.push(item);
+        })
+        console.log(dbData)
+        console.log(repeatDbData)
+        var property = new Property();
+        dbData.forEach(function (item) {
+            if (!item.isSave) return true;
+            property.setValue(item.id, "db", {
+                isSave: item.isSave, //是否入库
+                dbName: item.dbName, //存档数据库
+                table: item.table, //存档表格
                 field: item.selectField,
                 // selectField:item.selectField,
-                fieldSplit: item.selectFieldSplit,//新增加
+                fieldSplit: item.selectFieldSplit, //新增加
                 desc: item.desc,
-            });
-        });
+            })
+        })
+        var arr = [],id = ""
+        repeatDbData.forEach(function (item) {
+            id = item.id;
+            if (!property.getValue(item.id, "saveDb")) {
+                property.setValue(item.id, "saveDb", [])
+            }
+            arr.push({
+                isSave: item.isSave, //是否入库
+                dbName: item.dbName, //存档数据库
+                table: item.table, //存档表格
+                field: item.selectField,
+                // selectField:item.selectField,
+                fieldSplit: item.selectFieldSplit, //新增加
+                desc: item.desc,
+            })
+            
+        })
+        property.setValue(id, "saveDb", arr)
+        // var property = new Property(); //实例化property
+        // data.forEach(function (item) { //遍历data
+        //     console.log(item, "保存")
+        //     if (!item.isSave) return true; //如果issave为false退出函数
+        //     property.setValue(item.id, "db", { //调用property的setValue方法
+        //         isSave: item.isSave, //是否入库
+        //         dbName: item.dbName, //存档数据库
+        //         table: item.table, //存档表格
+        //         field: item.selectField,
+        //         // selectField:item.selectField,
+        //         fieldSplit: item.selectFieldSplit, //新增加
+        //         desc: item.desc,
+        //     });
+        // });
     },
     execute: function () {
         var that = this;
@@ -160,24 +213,38 @@ DbDesignerModal.prototype = {
                 AllDbName = JSON.parse(localStorage.getItem('AllDbName')),
                 objTableNames = Object.keys(AllDbName[key]),
                 arrTableNames = [];
-            objTableNames.forEach(function (item) { arrTableNames.push({ "name": item, "value": item }) })
-            Common.fillSelect($select, { name: "请选择表", value: "" }, arrTableNames, null, true)
+            objTableNames.forEach(function (item) {
+                arrTableNames.push({
+                    "name": item,
+                    "value": item
+                })
+            })
+            Common.fillSelect($select, {
+                name: "请选择表",
+                value: ""
+            }, arrTableNames, null, true)
         })
         //切换表格时
         that.$db.on("change" + that.NAME_SPACE, "[data-key='table']", function (event) {
             var $selectDbVal = $(event.target).parents("tr").find('[data-key="dbName"]').val(),
                 $select = $(event.target).parents("tr").find('[data-key="selectField"]')
-                key = $(this).val(),
+            key = $(this).val(),
                 AllDbName = JSON.parse(localStorage.getItem('AllDbName')),
                 objTableNames = AllDbName[$selectDbVal][key].tableDetail,
                 arrFieldsNames = [];
             objTableNames.forEach(function (item) {
-                arrFieldsNames.push({"name": item.cname, "value": item.id})
+                arrFieldsNames.push({
+                    "name": item.cname,
+                    "value": item.id
+                })
             })
-            Common.fillSelect($select, {name: "请选择字段", value: ""}, arrFieldsNames, null, true)
+            Common.fillSelect($select, {
+                name: "请选择字段",
+                value: ""
+            }, arrFieldsNames, null, true)
         })
         //切换字段
-        that.$db.on("change"+ that.NAME_SPACE, "[data-key='selectField']",function(event){
+        that.$db.on("change" + that.NAME_SPACE, "[data-key='selectField']", function (event) {
             var selectDbVal = $(event.target).parents("tr").find('[data-key="dbName"]').val(),
                 selectTableVal = $(event.target).parents("tr").find('[data-key="table"]').val(),
                 selectField = $(this).val(),
@@ -186,17 +253,58 @@ DbDesignerModal.prototype = {
                 selectValue = "",
                 fieldSplit = [];
             AllFields.forEach(function (item) {
-                
-                if(item.id == selectField){
+
+                if (item.id == selectField) {
                     selectValue = Number(item.fieldSplit)
                 }
             })
-            for(var i = 1; i <= selectValue; i++){
-                fieldSplit.push({name:"插入",value:i})
+            for (var i = 1; i <= selectValue; i++) {
+                fieldSplit.push({
+                    name: "插入",
+                    value: i
+                })
             }
             var $select = $(event.target).parents("tr").find('[data-key="selectFieldSplit"]')
-            Common.fillSelect($select,{name:"请选择第几段",value:""},fieldSplit,null,true)
+            Common.fillSelect($select, {
+                name: "请选择第几段",
+                value: ""
+            }, fieldSplit, null, true)
         })
+        //增加一段
+        that.$db.on("click" + that.NAME_SPACE, "#dbDesignerAdd", function (event) {
+            var target = $(this).parent("td").parent("tr"),
+                html = target.clone();
+            target.after(html)
+        })
+        //移除一段
+        that.$db.on("click" + that.NAME_SPACE, "#dbDesignerRemove", function (event) {
+            var target = $(this).parent("td").parent("tr"),
+                id = target.find('[data-key="id"]').val(),
+                isSave = target.find('[data-key="isSave"]').val(),
+                dbName = target.find('[data-key="id"]').val(),
+                table = target.find('[data-key="id"]').val(),
+                selectField = target.find('[data-key="selectField"]').val(),
+                selectFieldSplit = target.find('[data-key="selectFieldSplit"]').val(),
+                desc = target.find('[data-key="desc"]').val(),
+                property = GLOBAL_PROPERTY[id],
+                saveDb = property.saveDb,
+                db = property.db;
+            if(saveDb){
+                var isremove = false;
+                saveDb.forEach((item,index)=>{
+                    if(item.dbName==dbName && item.desc == desc && item.field == selectField && item.fieldSplit == selectFieldSplit && item.isSave == isSave && item.table == table){
+                        console.log(item,index)
+                    }
+                })
 
+            }else{
+                if(db){
+
+                }
+            }
+
+            target.remove()
+
+        })
     }
 };

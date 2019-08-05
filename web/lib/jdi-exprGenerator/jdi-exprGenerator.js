@@ -13,17 +13,17 @@
                     argsHtml = "",
                     target = $(".eg .eg-elem.current").data('id'),
                     args = this.getExprArgs(fnData.name, fnType, fnData.async, fnData.voluation, target);
-                
                 $functionArgs.show().next().hide();
                 $argExample.text(fnData.example || "");
                 
                 if (Array.isArray(fnData.args) && fnData.args.length > 0) {
                     fnData.args.forEach(function(arg, idx) {
+                        console.log((Array.isArray(args)) ? args[idx] : (arg.default == undefined ? "" : arg.default))
                         argsHtml += '<tr>' +
                                         '<td data-name="' + arg.cname + '">' + arg.cname + '</td>' +
                                         '<td data-convert="' + arg.type + '">' + arg.ctype + '</td>' +
                                         '<td>' +
-                                            '<input '+ (!!arg.readonly ? "disabled" : "") +' class="form-control" data-type="arg" type="text" name="value" value="'+ ((args && args[idx]) ? args[idx] : (arg.default == undefined ? "" : arg.default)) +'">' +
+                                            '<input '+ (!!arg.readonly ? "disabled" : "") +' class="form-control" data-type="arg" type="text" name="value" value="'+ ((Array.isArray(args)) ? args[idx] : (arg.default == undefined ? "" : arg.default)) +'" >' +
                                         '</td>' +
                                     '</tr>';
                     });
@@ -63,45 +63,45 @@
                 });
                 return result;
             },
-            effect: function (action, $trigger, isRemote) {
-                var $eg = $(".eg:visible"),
-                    $egFunction = $eg.find(".eg-function"),
-                    fWidth = $egFunction.width();
-                if (action === "open") {
-                    $egInsertFn.css("display", "block").animate({width: fWidth});
-                    // if (fWidth <= 0 && isRemote) {
-                    //     iWidth <= 0 ? $egContent.animate({width: cWidth - sWidth}) : '';
-                    //     $egInsertFn.find('.insert-args').empty();
-                    //     $egInsertFn.css("display", "none").width(0);
-                    //     $egFunction.css("display", "block").animate({width: sWidth});
-                    //     $('.eg .cpanel-body[data-type="remote"] .btn.active, .eg .cpanel-body[data-type="insert"] .btn.active').removeClass("active");
-                    //     $trigger.addClass("active");
-                    // } else if (iWidth <= 0 && !isRemote) {
-                    //   fWidth <= 0 ? $egContent.animate({width: cWidth - sWidth}) : '';
-                    //   $egInsertFn.find('.insert-args').empty();
-                    //   $egFunction.css("display", "none").width(0);
-                    //   $egInsertFn.css("display", "block").animate({width: sWidth});
-                    //   $('.eg .cpanel-body[data-type="remote"] .btn.active,.eg .cpanel-body[data-type="insert"] .btn.active').removeClass("active");
-                    //   $trigger.addClass("active");
-                    // } else {
-                    //   if ($trigger.hasClass("active")) {
-                    //     $egContent.animate({width: dWidth - sWidth});
-                    //       isRemote ? $egFunction.css("display", "none").animate({width: 0})
-                    //                : $egInsertFn.css("display", "none").animate({width: 0});
-                    //       $trigger.removeClass("active");
-                    //     } else {
-                    //         $egInsertFn.find('.insert-args').empty();
-                    //         $('.eg .cpanel-body[data-type="remote"] .btn.active,.eg .cpanel-body[data-type="insert"] .btn.active').removeClass("active")
-                    //         $trigger.addClass("active");
-                    //     }
-                    // }
-                } else {
-                    // $egContent.animate({width: dWidth - sWidth});
-                    // $egFunction.css("display", "none").animate({width: 0});
-                    // $egInsertFn.css("display", "none").animate({width: 0});
-                    // $trigger.removeClass("active");
-                }
-            },
+            // effect: function (action, $trigger, isRemote) {
+            //     var $eg = $(".eg:visible"),
+            //         $egFunction = $eg.find(".eg-function"),
+            //         fWidth = $egFunction.width();
+            //     if (action === "open") {
+            //         $egInsertFn.css("display", "block").animate({width: fWidth});
+            //         // if (fWidth <= 0 && isRemote) {
+            //         //     iWidth <= 0 ? $egContent.animate({width: cWidth - sWidth}) : '';
+            //         //     $egInsertFn.find('.insert-args').empty();
+            //         //     $egInsertFn.css("display", "none").width(0);
+            //         //     $egFunction.css("display", "block").animate({width: sWidth});
+            //         //     $('.eg .cpanel-body[data-type="remote"] .btn.active, .eg .cpanel-body[data-type="insert"] .btn.active').removeClass("active");
+            //         //     $trigger.addClass("active");
+            //         // } else if (iWidth <= 0 && !isRemote) {
+            //         //   fWidth <= 0 ? $egContent.animate({width: cWidth - sWidth}) : '';
+            //         //   $egInsertFn.find('.insert-args').empty();
+            //         //   $egFunction.css("display", "none").width(0);
+            //         //   $egInsertFn.css("display", "block").animate({width: sWidth});
+            //         //   $('.eg .cpanel-body[data-type="remote"] .btn.active,.eg .cpanel-body[data-type="insert"] .btn.active').removeClass("active");
+            //         //   $trigger.addClass("active");
+            //         // } else {
+            //         //   if ($trigger.hasClass("active")) {
+            //         //     $egContent.animate({width: dWidth - sWidth});
+            //         //       isRemote ? $egFunction.css("display", "none").animate({width: 0})
+            //         //                : $egInsertFn.css("display", "none").animate({width: 0});
+            //         //       $trigger.removeClass("active");
+            //         //     } else {
+            //         //         $egInsertFn.find('.insert-args').empty();
+            //         //         $('.eg .cpanel-body[data-type="remote"] .btn.active,.eg .cpanel-body[data-type="insert"] .btn.active').removeClass("active")
+            //         //         $trigger.addClass("active");
+            //         //     }
+            //         // }
+            //     } else {
+            //         // $egContent.animate({width: dWidth - sWidth});
+            //         // $egFunction.css("display", "none").animate({width: 0});
+            //         // $egInsertFn.css("display", "none").animate({width: 0});
+            //         // $trigger.removeClass("active");
+            //     }
+            // },
             convert: function (data, isInsert) {
                 var that = this,
                     result = "";
@@ -150,17 +150,22 @@
             getExprArgs(fnName, fnType, async, voluation, target) {
                 if (!fnName || !fnType || !target) return false;
     
-                var str = '';
+                var str = '',
+                    startIdx = 0;
                 if (fnType === '本地函数') {
-                    str = fnName + '\\("'+ target +'"(.+?)\\)'
+                    startIdx = 1;
+                    str = '(?<=' + fnName + '\\()"'+ target +'"(.+?)(?=\\))'
                 } else if (fnType === '远程函数') {
-                    str = "functions\\("+ '"'+ target + '"' + "," + '"'+ fnName + '"' + "," + async + "," + voluation + ",(.+?)\\)";
+                    startIdx = 4
+                    str = "(?<=functions\\()"+ '"'+ target + '"' + "," + '"'+ fnName + '"' + "," + async + "," + voluation + ",(.+?)(?=\\))";
                 }
                 var expr = $(".eg .eg-expr").val(),
                     argReg = new RegExp(str, 'g'),
                     args = expr.match(argReg);
-                if (args) {
-                    return args[0].match(/(\{[A-Z]+\})/g)
+                if (Array.isArray(args)) {
+                    return args[0].split(",").slice(startIdx).map(el => {
+                        return /^".+"$/.test(el) ? el.substring(1, el.length - 1) : el
+                    })
                 }
                 return false;
             },

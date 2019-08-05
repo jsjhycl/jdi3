@@ -17,32 +17,32 @@ function SubmitModal($modal, $submit) {
 SubmitModal.prototype = {
     initData: async function () {
         var that = this;
-        res = await new FileService().readFile('./profiles/dBTableConfig.json')
-        if (!DataType.isObject(res)) return;
-        var $templateDbName = that.$modalBody.find('#template_db'), //表单
-            $templateTableName = that.$modalBody.find('#template_table'),
-            $modelDbName = that.$modalBody.find("#model_db"),
-            $modelTableName = that.$modalBody.find("#model_table");
-        var templateDbOptions = [],
-            templateTableOptions = [],
-            modelDbOptions = [],
-            modelTableOptions = [];
-        Object.keys(res).forEach(item => {
-            templateDbOptions.push({name: item,value: item})
-            modelDbOptions.push({name: item,value: item})
-        })
-        Common.fillSelect($templateDbName, null, templateDbOptions, templateDbOptions[0].value)
-        Common.fillSelect($modelDbName, null, modelDbOptions, modelDbOptions[0].value)
+        // res = await new FileService().readFile('./profiles/dBTableConfig.json')
+        // if (!DataType.isObject(res)) return;
+        // var $templateDbName = that.$modalBody.find('#template_db'), //表单
+        //     $templateTableName = that.$modalBody.find('#template_table'),
+        //     $modelDbName = that.$modalBody.find("#model_db"),
+        //     $modelTableName = that.$modalBody.find("#model_table");
+        // var templateDbOptions = [],
+        //     templateTableOptions = [],
+        //     modelDbOptions = [],
+        //     modelTableOptions = [];
+        // Object.keys(res).forEach(item => {
+        //     templateDbOptions.push({name: item,value: item})
+        //     modelDbOptions.push({name: item,value: item})
+        // })
+        // Common.fillSelect($templateDbName, null, templateDbOptions, templateDbOptions[0].value)
+        // Common.fillSelect($modelDbName, null, modelDbOptions, modelDbOptions[0].value)
         
-        if (DataType.isObject(res[Object.keys(res)[0]])) {
-            templateTableOptions = Object.keys(res[Object.keys(res)[0]]).filter(i => res[Object.keys(res)[0]][i].key === 0)
-            templateTableOptions = templateTableOptions.map(i => { return { value: i, name: i } })
+        // if (DataType.isObject(res[Object.keys(res)[0]])) {
+        //     templateTableOptions = Object.keys(res[Object.keys(res)[0]]).filter(i => res[Object.keys(res)[0]][i].key === 0)
+        //     templateTableOptions = templateTableOptions.map(i => { return { value: i, name: i } })
 
-            modelTableOptions = Object.keys(res[Object.keys(res)[0]]).filter(i => res[Object.keys(res)[0]][i].key === 1)
-            modelTableOptions = modelTableOptions.map(i => { return { value: i, name: i } })
-        }
-        Common.fillSelect($templateTableName, null, templateTableOptions, templateTableOptions[0].value)
-        Common.fillSelect($modelTableName, null, modelTableOptions, modelTableOptions[0].value)
+        //     modelTableOptions = Object.keys(res[Object.keys(res)[0]]).filter(i => res[Object.keys(res)[0]][i].key === 1)
+        //     modelTableOptions = modelTableOptions.map(i => { return { value: i, name: i } })
+        // }
+        // Common.fillSelect($templateTableName, null, templateTableOptions, templateTableOptions[0].value)
+        // Common.fillSelect($modelTableName, null, modelTableOptions, modelTableOptions[0].value)
     },
     saveData: function () {
         new Workspace().save(true)

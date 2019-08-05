@@ -49,7 +49,7 @@ FileService.prototype = {
     writeFile: function (router, data, callBack) {
         if (!router) return alert("没有写入路径");
         let config = ["writeFile", router, data]
-        return this.base(config)
+        return this.base(config, callBack)
     },
     //检查路径是否存在
     exists: function (router, callBack) {

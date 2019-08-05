@@ -337,7 +337,6 @@
                 $egPage.find("input, canvas").each(function () {
                     var id = this.id,
                         item = temp[id];
-                    console.log($(this), id, item)
                     if (item) {
                         var styles = id === cid && !cache.hasSelf ? "eg-elem current" : "eg-elem",
                             $new = $('<a class="' + styles + '" data-id="' + id + '">' + id + '</a>');
@@ -375,6 +374,8 @@
             if (Array.isArray(functions)) {
                 this.renderToolBar(functions, systemFunction);
                 this.setToolBarData(functions[0]);
+            } else {
+                $eg.find(".eg-function").hide().end().find(".eg-content").css("width", "calc(100% - 250px)");
             }
         },
         renderToolBar: function(functions, systemFunction) {

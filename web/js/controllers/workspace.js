@@ -368,7 +368,6 @@ function Workspace() {
         var that = this;
         var property = {}
         phone_property = {};
-
         for (var i in GLOBAL_PROPERTY) {
             i.startsWith('phone_') ? phone_property[i] = GLOBAL_PROPERTY[i] : property[i] = GLOBAL_PROPERTY[i];
         }

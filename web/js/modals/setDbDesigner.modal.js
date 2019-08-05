@@ -4,13 +4,13 @@ function SetDbDesignerModal($modal) {
     this.$setDbDesigner = this.$modalBody.find("#setDbDesigner");
 
     this.$dbName = this.$modalBody.find('[data-type="dbName"]'), //获取数据库名输入框
-    this.$tableName = this.$modalBody.find('[data-type="tableName"]'), //获取表格名输入框
-    this.$tabeleDesc = this.$modalBody.find('[data-type="tableDesc"]'), //获取表格描述输入框
-    this.$reserveOne = this.$modalBody.find('[data-type="reserveOne"]'), //获取备用1输入框
-    this.$reserveTwo = this.$modalBody.find('[data-type="reserveTwo"]'), //获取备用2输入框
-    this.$reserveThere = this.$modalBody.find('[data-type="reserveThere"]'), //获取备用3输入框
-    this.$reserveFour = this.$modalBody.find('[data-type="reserveFour"]'), //获取备用4输入框
-    this.$reserveFive = this.$modalBody.find('[data-type="reserveFive"]'); //获取备用5输入框
+        this.$tableName = this.$modalBody.find('[data-type="tableName"]'), //获取表格名输入框
+        this.$tabeleDesc = this.$modalBody.find('[data-type="tableDesc"]'), //获取表格描述输入框
+        this.$reserveOne = this.$modalBody.find('[data-type="reserveOne"]'), //获取备用1输入框
+        this.$reserveTwo = this.$modalBody.find('[data-type="reserveTwo"]'), //获取备用2输入框
+        this.$reserveThere = this.$modalBody.find('[data-type="reserveThere"]'), //获取备用3输入框
+        this.$reserveFour = this.$modalBody.find('[data-type="reserveFour"]'), //获取备用4输入框
+        this.$reserveFive = this.$modalBody.find('[data-type="reserveFive"]'); //获取备用5输入框
 
     //向数据库添加目录总表
     // this._uploderDb = function (data) {
@@ -23,7 +23,7 @@ function SetDbDesignerModal($modal) {
     //     });
     // }
     this._uploderDb = function (data) {
-        return new FileService().writeFile('./profiles/table.json', 'UTF-8', data);
+        return new FileService().writeFile('./profiles/table.json', data, 'UTF-8' );
     }
     this._getTableValue = function () {
 
@@ -108,11 +108,11 @@ SetDbDesignerModal.prototype = {
             reserveFive = that.$reserveFive.val(),
             uploderTime = new Date(),
             localData = JSON.parse(localStorage.getItem("AllDbName")) || {},
-            tabledetail=[];
-            data.forEach(function(item){
-                if(!item.isSave) return true;
-                tabledetail.push(item)
-            })
+            tabledetail = [];
+        data.forEach(function (item) {
+            if (!item.isSave) return true;
+            tabledetail.push(item)
+        })
         if (!dbName || !tableName) return alert("数据库名和表名为必填选项")
         if (localData[dbName]) {
             localData[dbName][tableName] = {
@@ -148,6 +148,6 @@ SetDbDesignerModal.prototype = {
         that.basicEvents(null, that.initData, that.saveData, null); //绑定基础事件
     },
     bindEvents: function () {
-        
+
     }
 }

@@ -47,6 +47,7 @@
                 <ul class="dropdown-menu">
                     <li><a data-toggle="modal" href="#setDbDesignerModal" data-first-filter="db">数据库设计器</a></li>
                     <li><a data-toggle="modal" href="#dbDesignerModal" data-first-filter="db">配置本表数据</a></li>
+                    <li><a data-toggle="modal" href="#change_category_moda">修改保存分类选项</a></li>
                     <li><a id="viewer">元素编号查看器</a></li>
                     <li><a id="controlRuler">标尺查看器</a></li>
                 </ul>
@@ -378,20 +379,53 @@
         </div>
     </section>
     <section class="modal fade" id="resource_config_modal">
-            <div class="modal-dialog w800px">
-                <div class="modal-content">
-                    <header class="modal-header">
-                        <button class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">配置布局查询项</h4>
-                    </header>
-                    <section class="modal-body"></section>
-                    <footer class="modal-footer">
-                        <button class="btn btn-primary save">保存</button>
-                        <button class="btn btn-danger clear">删除</button>
-                    </footer>
-                </div>
+        <div class="modal-dialog w800px">
+            <div class="modal-content">
+                <header class="modal-header">
+                    <button class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">配置布局查询项</h4>
+                </header>
+                <section class="modal-body"></section>
+                <footer class="modal-footer">
+                    <button class="btn btn-primary save">保存</button>
+                    <button class="btn btn-danger clear">删除</button>
+                </footer>
             </div>
-        </section>
+        </div>
+    </section>
+
+    <!-- 修改表单/布局保存分类选项 -->
+    <section class="modal fade" id="change_category_moda">
+        <div class="modal-dialog w600px">
+            <div class="modal-content">
+                <header class="modal-header">
+                    <button class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">修改保存分类选项</h4>
+                </header>
+                <section class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">修改项：</label>
+                            <div class="col-lg-9">
+                                <select data-name="selectName" class="form-control"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">当前值：<br><button class="btn btn-default btn-sm add">新增</button></label>
+                            <div class="col-lg-9">
+                                <div class="row" data-name="setOption"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+                <footer class="modal-footer">
+                    <button class="btn btn-primary save">保存</button>
+                    <button class="btn btn-danger clear">删除</button>
+                </footer>
+            </div>
+        </div>
+    </section>
 
     <!--接收产品模态框-->
     <section class="modal fade" id="receive_product_modal">

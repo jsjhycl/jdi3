@@ -885,3 +885,26 @@ li {
     transform: rotate(180deg);
     -webkit-transform: rotate(180deg);
 }
+
+#change_category_moda .option-item {
+    position: relative;
+}
+#change_category_moda .add {
+    display: none;
+    margin-right: 11px;
+}
+#change_category_moda .delete {
+    position: absolute;
+    top: 8px;
+    right: -3px;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    color: #D44950;
+    font-size: 12px;
+    text-align: center;
+    border: 1px solid #D44950;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    cursor: pointer;
+}

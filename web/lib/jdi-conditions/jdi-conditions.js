@@ -135,7 +135,7 @@
                 }
 
                 var $expr = $(this);
-                new FileService().readFile("/profiles/global.json", function(data) {
+                new FileService().readFile("/profiles/global.json","UTF-8",function(data) {
                     if (!data) return;
                     buildArgs($expr, data, null);
                 });

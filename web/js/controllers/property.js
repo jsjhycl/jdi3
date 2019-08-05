@@ -88,7 +88,7 @@ function Property() {
             }
             if (ckey == "field") {
                 selectValue = data.field
-                if(dbName && table){
+                if(dbName && table && dbList[dbName][table]){
                     var fields = dbList[dbName][table].tableDetail;
                     fields.forEach(function (item) {
                         options.push({
@@ -100,7 +100,7 @@ function Property() {
             }
             if (ckey == "fieldSplit") {
 
-                if(dbName&&table){
+                if(dbName&&table&&dbList[dbName][table]){
                     var fields = dbList[dbName][table].tableDetail,
                         fieldSplits = '';
                     fields.forEach(function (item) {

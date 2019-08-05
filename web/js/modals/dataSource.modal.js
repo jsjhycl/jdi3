@@ -145,9 +145,11 @@ DataSourceTabModal.prototype = {
             $workspace = $("#workspace"),
             $control = $workspace.find("#" + id);
         staticData && this.$staticElement.val(staticData);
-        dbData && this.$dbElement.val(JSON.stringify(dbData));
         new Property().save(id === "BODY" ? $workspace : $control, that.$staticElement);
-        new Property().save(id === "BODY" ? $workspace : $control, that.$dbElement);
+        if (dbData && dbData.dbName && dbData.table) {
+            this.$dbElement.val(JSON.stringify(dbData));
+            new Property().save(id === "BODY" ? $workspace : $control, that.$dbElement);
+        }
     },
     clearData: function () {
         var that = this,

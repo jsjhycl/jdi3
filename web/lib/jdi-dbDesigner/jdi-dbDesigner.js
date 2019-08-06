@@ -6,6 +6,7 @@
         this.$elements = elements;
         this.options = options;
         this.type = type
+        this.dbList = null;
     }
 
     DbDesigner.prototype.constructor = DbDesigner;
@@ -22,6 +23,7 @@
                 }
             });
         },
+
         cacheData: function (element) {
             if (!element) return;
 
@@ -64,6 +66,7 @@
             var $tbody = $(element).find(".dbdesigner-table tbody");
             if ($tbody.length <= 0) return;
 
+            this.dbList = cache.dbList
             var tbody = "";
             cache.$elems.each(function (index) {
                 var id = this.id;
@@ -206,8 +209,8 @@
                 table = (data.db && data.db.table) || "",
                 field = (data.db && data.db.field) || "",
                 options = [];
-            new FileService().readFile("./profiles/table.json", 'utf-8').then(res => {
-                var dbList = res || {};
+            
+                var dbList = this.dbList;
                 if (ckey == "dbName") {
                     Object.keys(dbList).forEach(function (item) {
                         options.push({
@@ -218,11 +221,15 @@
                 }
                 if (ckey == "table") {
                     if (dbName) {
-                        var table = Object.keys(dbList[dbName]).filter(function(item){return item!=0&&item.key!=1;});
-                        console.log(table)
-                        table.forEach(function (item) {
+                        var arr = [];
+                        var table = Object.keys(dbList[dbName]).forEach(function(item){
+                            if(dbList[dbName][item]["key"] == undefined){
+                                arr.push(item)
+                            }
+                        })
+                        arr.forEach(function (item) {
                             options.push({
-                                name: item,
+                                name: dbList[dbName][item]["tableDesc"],
                                 value: item
                             })
                         })
@@ -258,7 +265,6 @@
                 }
 
                 return options;
-            });
         },
         getSaveOptions: function (data, ckey, index) {
 
@@ -266,9 +272,8 @@
                 table = (data.saveDb[index] && data.saveDb[index].table) || "",
                 field = (data.saveDb[index] && data.saveDb[index].field) || "",
                 options = [];
-            new FileService().readFile("./profiles/table.json", 'utf-8').then(res => {
-                var dbList = res || {};
-                console.log(dbList)
+                var dbList = this.dbList;
+                
                 dbList = dbList.filter(function(item){
                     return item.key!=1&&item.key!=0;
                 })
@@ -282,11 +287,15 @@
                 }
                 if (ckey == "table") {
                     if (dbName) { 
-                        var table = Object.keys(dbList[dbName]).filter(function(item){return item!=0&&item.key!=1;});
-                        console.log(table)
-                        table.forEach(function (item) {
+                        var arr = [];
+                        var table = Object.keys(dbList[dbName]).forEach(function(item){
+                            if(dbList[dbName][item]["key"] == undefined){
+                                arr.push(item)
+                            }
+                        })
+                        arr.forEach(function (item) {
                             options.push({
-                                name: item,
+                                name:  dbList[dbName][item]["tableDesc"],
                                 value: item
                             })
                         })
@@ -322,7 +331,6 @@
                 }
 
                 return options;
-            })
         }
 
     };

@@ -1,7 +1,6 @@
 function Property() {
     this.$propertybar = $("#propertybar");//获取属性栏
     this.BODY = "BODY";
-
     this._clearStyles = function () {
         var that = this;
         $("#workspace").find(".focus").removeClass("focus");//获取工作区所有类名为focus的元素并移除focus类名
@@ -63,9 +62,10 @@ function Property() {
        var  dbName = data.dbName,
             table = data.table,
             field = data.field,
-            dbList = JSON.parse(localStorage.getItem("AllDbName"))||{},
+            dbList = AllDbName,
             options = [],
             selectValue = "";
+            
             if (ckey == "dbName") {
                 selectValue = data.dbName
                 Object.keys(dbList).forEach(function (item) {
@@ -80,7 +80,7 @@ function Property() {
                 if(dbName){
                     Object.keys(dbList[dbName]).forEach(function (item) {
                         options.push({
-                            name: item,
+                            name: dbList[dbName][item]["tableDesc"],
                             value: item
                         })
                     })
@@ -127,9 +127,11 @@ function Property() {
         $("#property_relatedId").length <= 0 && $("#property_id").parents('tr').after('<tr data-second-filter="relatedId"><td><label for="property_relatedId">关联元素编号</label></td><td><input id="property_relatedId" type="text" data-datatype="String" data-attrorstyle="attribute"></td></tr>');
         
     }
+   
 }
 
 Property.prototype = {
+    
     /**
      * 加载属性
      * @param {*} $control 
@@ -139,9 +141,8 @@ Property.prototype = {
 
         var that = this;
         that._clearStyles();//调用_clearStyles
-
         that.setRelatedId($control);
-
+       
         var isBody = $control.attr("id") === "workspace";//获取当前控件的id如果是worksapce则给isbody赋值为true
         if (isBody ||//isBod为true时
             (!isBody &&//或则不止整个工作区时

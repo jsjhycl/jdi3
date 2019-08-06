@@ -2,18 +2,18 @@ function SetDbDesignerModal($modal) {
     BaseModal.call(this, $modal, null)
     this.Name_space = ".setDbDesigner";
     this.$setDbDesigner = this.$modalBody.find("#setDbDesigner");
-
-    this.$dbName = this.$modalBody.find('[data-type="dbName"]'), //获取数据库名输入框
-        this.$tableName = this.$modalBody.find('[data-type="tableName"]'), //获取表格名输入框
-        this.$tabeleDesc = this.$modalBody.find('[data-type="tableDesc"]'), //获取表格描述输入框
-        this.$reserveOne = this.$modalBody.find('[data-type="reserveOne"]'), //获取备用1输入框
-        this.$reserveTwo = this.$modalBody.find('[data-type="reserveTwo"]'), //获取备用2输入框
-        this.$reserveThere = this.$modalBody.find('[data-type="reserveThere"]'), //获取备用3输入框
-        this.$reserveFour = this.$modalBody.find('[data-type="reserveFour"]'), //获取备用4输入框
-        this.$reserveFive = this.$modalBody.find('[data-type="reserveFive"]'); //获取备用5输入框
+    this.NAME_SPACE = ".setdbDesigner"
+    this.$dbName = this.$modalBody.find('[data-type="dbName"]'); //获取数据库名输入框
+    this.$tableName = this.$modalBody.find('[data-type="tableName"]'); //获取表格名输入框
+    this.$tabeleDesc = this.$modalBody.find('[data-type="tableDesc"]'); //获取表格描述输入框
+    this.$reserveOne = this.$modalBody.find('[data-type="reserveOne"]'); //获取备用1输入框
+    this.$reserveTwo = this.$modalBody.find('[data-type="reserveTwo"]'); //获取备用2输入框
+    this.$reserveThere = this.$modalBody.find('[data-type="reserveThere"]'); //获取备用3输入框
+    this.$reserveFour = this.$modalBody.find('[data-type="reserveFour"]'); //获取备用4输入框
+    this.$reserveFive = this.$modalBody.find('[data-type="reserveFive"]'); //获取备用5输入框
     this._uploderDb = function (data) {
-        return new FileService().writeFile('./profiles/table.json', JSON.stringify(data),function(){
-            
+        return new FileService().writeFile('./profiles/table.json', JSON.stringify(data), function () {
+
         });
     }
     this._downloadDB = async function () {
@@ -38,16 +38,19 @@ function SetDbDesignerModal($modal) {
         this.$reserveFive.val("");
     }
     this.setDboptions = function () {
-        var that =this
+        var that = this
         new FileService().readFile("./profiles/table.json", 'utf-8').then(res => {
-                var AllDbName = res || {},
+            var AllDbName = res || {},
                 dbName = Object.keys(AllDbName);
-                var options = [];
-                dbName.forEach(item=>{
-                    options.push({name:item,value:item})
+            var options = [];
+            dbName.forEach(item => {
+                options.push({
+                    name: item,
+                    value: item
                 })
-                Common.fillSelect(that.$dbName,null,options,dbName[0])
             })
+            Common.fillSelect(that.$dbName, null, options, dbName[0])
+        })
 
     }
 
@@ -76,6 +79,22 @@ SetDbDesignerModal.prototype = {
                     key: "cname",
                     template: function (value) {
                         return '<input class="form-control" data-key="cname" type="text" value="' + value + '" readonly>';
+                    }
+                },
+                {
+                    name: "dataType",
+                    text: "数据类型",
+                    key: "dataType",
+                    template: function (value) {
+                        return `<select class="form-control" data-key="dataType"><option value="integer">整型</option><option value="float">浮点型</option><option value="string">字符型</option><option value="Date">日期型</option></select>`
+                    }
+                },
+                {
+                    name: "dataLength",
+                    text: "数据长度",
+                    key: "dataLength",
+                    template: function (value) {
+                        return `<input class="form-control"  data-key="dataLength" type="text" value="${value}" readonly></input>`
                     }
                 },
                 {
@@ -117,7 +136,6 @@ SetDbDesignerModal.prototype = {
             uploderTime = new Date(),
             localData = await new FileService().readFile("./profiles/table.json", 'utf-8') || {},
             tabledetail = [];
-            console.log(localData)
         data.forEach(function (item) {
             if (!item.isSave) return true;
             tabledetail.push(item)
@@ -156,6 +174,13 @@ SetDbDesignerModal.prototype = {
         that.basicEvents(null, that.initData, that.saveData, null); //绑定基础事件
     },
     bindEvents: function () {
-
+        var that = this;
+        that.$modalBody.on("change" + that.NAME_SPACE, "[data-key='dataType']", function (event) {
+            var type = $(this).val()
+            var $tr = $($(this).parents("tr")),
+                $dataLength = $tr.find('[data-key="dataLength"]');
+            type=="string" ? $dataLength.removeAttr("readonly") : ($dataLength.attr("readonly",true) && $dataLength.val(""))
+            
+        })
     }
 }

@@ -5,7 +5,7 @@
  */
 function DbDesignerModal($modal) {
     BaseModal.call(this, $modal, null); //绑定基础弹窗
-
+    this.AllDbName = {}
 
     this.NAME_SPACE = ".dbDesigner"
 
@@ -17,11 +17,12 @@ function DbDesignerModal($modal) {
 }
 
 DbDesignerModal.prototype = {
-    initData: function () {
+    initData: async function () {
         var that = this;
 
-        var dbList = JSON.parse(localStorage.getItem("AllDbName")) || {}
-        var dbNames = []
+        var dbList = await new FileService().readFile("./profiles/table.json", 'utf-8') || {},
+         dbNames = [];
+         that.AllDbName = dbList;
         Object.keys(dbList).forEach(function (item) {
             dbNames.push({
                 "name": item,
@@ -152,8 +153,6 @@ DbDesignerModal.prototype = {
                 return citem.id == item.id
             }) > -1 ? repeatDbData.push(item) : dbData.push(item);
         })
-        console.log(dbData)
-        console.log(repeatDbData)
         var property = new Property();
         dbData.forEach(function (item) {
             if (!item.isSave) return true;
@@ -210,10 +209,17 @@ DbDesignerModal.prototype = {
         that.$db.on("change" + that.NAME_SPACE, "[data-key='dbName']", function (event) {
             var $select = $(event.target).parents("tr").find('[data-key="table"]'),
                 key = $(this).val(),
-                AllDbName = JSON.parse(localStorage.getItem('AllDbName')),
+                AllDbName = that.AllDbName||{},
                 objTableNames = Object.keys(AllDbName[key]),
-                arrTableNames = [];
-            objTableNames.forEach(function (item) {
+                arrTableNames = [],
+                arr = [];
+                
+            objTableNames.forEach(item=>{
+                if(AllDbName[key][item]["key"] == undefined){
+                    arr.push(item)
+                }
+            })
+            arr.forEach(function (item) {
                 arrTableNames.push({
                     "name": item,
                     "value": item
@@ -229,7 +235,7 @@ DbDesignerModal.prototype = {
             var $selectDbVal = $(event.target).parents("tr").find('[data-key="dbName"]').val(),
                 $select = $(event.target).parents("tr").find('[data-key="selectField"]')
             key = $(this).val(),
-                AllDbName = JSON.parse(localStorage.getItem('AllDbName')),
+                AllDbName = that.AllDbName||{},
                 objTableNames = AllDbName[$selectDbVal][key].tableDetail,
                 arrFieldsNames = [];
             objTableNames.forEach(function (item) {
@@ -248,7 +254,7 @@ DbDesignerModal.prototype = {
             var selectDbVal = $(event.target).parents("tr").find('[data-key="dbName"]').val(),
                 selectTableVal = $(event.target).parents("tr").find('[data-key="table"]').val(),
                 selectField = $(this).val(),
-                localData = JSON.parse(localStorage.getItem('AllDbName')),
+                localData = that.AllDbName||{},
                 AllFields = localData[selectDbVal][selectTableVal].tableDetail,
                 selectValue = "",
                 fieldSplit = [];

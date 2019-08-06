@@ -23,7 +23,12 @@ function SetDbDesignerModal($modal) {
     //     });
     // }
     this._uploderDb = function (data) {
-        return new FileService().writeFile('./profiles/table.json', data, 'UTF-8' );
+        return new FileService().writeFile('./profiles/table.json', JSON.stringify(data),function(){
+            console.log("保存成功")
+        });
+    }
+    this._downloadDB = async function () {
+        return await new FileService().readFile("./profiles/table.json", 'utf-8')
     }
     this._getTableValue = function () {
 
@@ -43,11 +48,25 @@ function SetDbDesignerModal($modal) {
         this.$reserveFour.val("");
         this.$reserveFive.val("");
     }
+    this.setDboptions = function () {
+        var that =this
+        new FileService().readFile("./profiles/table.json", 'utf-8').then(res => {
+                var AllDbName = res || {},
+                dbName = Object.keys(AllDbName);
+                var options = [];
+                dbName.forEach(item=>{
+                    options.push({name:item,value:item})
+                })
+                Common.fillSelect(that.$dbName,null,options,dbName[0])
+            })
+
+    }
 
 }
 SetDbDesignerModal.prototype = {
     initData: function () {
         var that = this;
+        that.setDboptions()
         //设置默认的表名
         that._setDefaultTableName()
         //渲染表格
@@ -95,7 +114,7 @@ SetDbDesignerModal.prototype = {
             type: "setDbDesigner"
         })
     },
-    saveData: function () {
+    saveData: async function () {
         var that = this,
             data = that.$setDbDesigner.dbDesigner("getData"),
             dbName = that.$dbName.val(),
@@ -107,8 +126,9 @@ SetDbDesignerModal.prototype = {
             reserveFour = that.$reserveFour.val(),
             reserveFive = that.$reserveFive.val(),
             uploderTime = new Date(),
-            localData = JSON.parse(localStorage.getItem("AllDbName")) || {},
+            localData = await new FileService().readFile("./profiles/table.json", 'utf-8') || {},
             tabledetail = [];
+            console.log(localData)
         data.forEach(function (item) {
             if (!item.isSave) return true;
             tabledetail.push(item)
@@ -139,8 +159,8 @@ SetDbDesignerModal.prototype = {
                 }
             }
         }
-        localStorage.setItem("AllDbName", JSON.stringify(localData))
-        that._uploderDb(JSON.stringify(localData))
+        console.log(localData)
+        that._uploderDb(localData)
         this._clearData()
     },
     execute: function () {

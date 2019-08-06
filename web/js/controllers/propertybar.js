@@ -1,7 +1,7 @@
 function Propertybar($container) {
     this.$container = $container;
     this.NAME_SPACE = ".propertybar";
-
+    this.AllDbName = []
     this.renderIcon = function(icon, belong) {
         if (!icon) return;
         var html = '';
@@ -24,6 +24,7 @@ Propertybar.prototype = {
         var that = this,
             AllDbName = await new FileService().readFile("./profiles/table.json", 'utf-8'),
             result = await new FileService().readFile("./profiles/propertybar.json", 'utf-8');
+            that.AllDbName = AllDbName;
         if (!result) return;//如果没有退出函数
 
         //添加总数据库属性
@@ -133,10 +134,17 @@ Propertybar.prototype = {
                 key= $(this).val()||"",
                 options = [],
                 tableNames = [],
-                AllDbName = JSON.parse(localStorage.getItem('AllDbName'));
-                console.log(AllDbName,$(this))
+                // AllDbName = JSON.parse(localStorage.getItem('AllDbName'));
+                AllDbName = that.AllDbName,
                 tableNames = Object.keys(AllDbName[key]);
-                tableNames.forEach(function(item){
+                var Arr = []
+                tableNames.forEach(item=>{
+                    console.log(AllDbName[key][item]["key"])
+                    if(AllDbName[key][item]["key"] == undefined){
+                        Arr.push(item)
+                    }
+                })
+                Arr.forEach(function(item){
                     options.push({name:item,value:item})
                 })
                 Common.fillSelect($select,{name:"请选择表",value:""},options,null,true)  
@@ -146,8 +154,9 @@ Propertybar.prototype = {
                 tableName = $(this).val(),
                 options = [],
                 dbName = $("#property_db_dbName").val(),
-                AllDbName = JSON.parse(localStorage.getItem('AllDbName')),
+                AllDbName = that.AllDbName,
                 fieldsArr = AllDbName[dbName][tableName].tableDetail;
+                
                 fieldsArr.forEach(function(item){
                     options.push({name:item.cname,value:item.id})
                 })
@@ -160,7 +169,7 @@ Propertybar.prototype = {
                 fieldName =$(this).val(),
                 options = [],
                 fieldSplit = "",
-                AllDbName = JSON.parse(localStorage.getItem("AllDbName")),
+                AllDbName = that.AllDbName,
                 fieldsArr = AllDbName[dbName][tableName].tableDetail;
                 fieldsArr.forEach(function(item){
                     if(item.id == fieldName){

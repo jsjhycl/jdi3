@@ -421,7 +421,9 @@ function Workspace() {
                     if (isPrompt) { //如果ispromt是真值的话提示保存成功
                         alert("保存成功！");
                     }
-                    isPrompt && window.location.reload(true)
+                    new Propertybar($("#propertybar")).init(false,null);
+                    // new OpenTemplate().init();
+                    // new OpenResource().init();
                 }).fail(function () {
                     if (isPrompt) { //如果ispromt是真值的话提示保存失败
                         alert("保存失败！");
@@ -602,7 +604,7 @@ function Workspace() {
 }
 
 Workspace.prototype = {
-    init: function (id, name, subtype, customId, relTemplate, edit) {
+    init: async function (id, name, subtype, customId, relTemplate, edit) {
         if (!name || !subtype) return; //如果id和name和type和subtype不存在退出函数
 
         var that = this,
@@ -629,6 +631,16 @@ Workspace.prototype = {
         GLOBAL_PROPERTY = {}; //全局属性值空
         LAST_SELECTED_ID = null; // 最后一次被选中的元素id
         LAST_POSITION = {}; // 选中元素的初始位置
+        var db = await new FileService().readFile("./profiles/table.json","utf-8")
+        for( dbName in  db){
+            for( table in db[dbName]){
+                if(db[dbName][table]["key"]==0||db[dbName][table]["key"]==1){
+                    delete db[dbName][table]
+                }
+                
+            }
+        }
+        AllDbName = db;
     },
     load: function (id, name, subtype, customId, relTemplate, edit) {
         if (!name || !subtype) return; //如果id或则name或type或subtype都为空退出函数

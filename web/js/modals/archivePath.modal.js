@@ -42,9 +42,7 @@ function ArchivePathModal($modal, $element) {
 ArchivePathModal.prototype = {
     initData: function (data) {
         var that = this,
-            dbs = [],
-            AllDbName = JSON.parse(localStorage.getItem("AllDbName"))||{};//获取数据库配置信息
-            
+            dbs = [];//获取数据库配置信息
             Object.keys(AllDbName).forEach(function(item){//生成数据库数组
                 dbs.push({name:item,value:item})
             })
@@ -128,7 +126,6 @@ ArchivePathModal.prototype = {
            
             var dbName = $(this).val(),//获取存档数据库名
                 tableOptions = [],//声明变量下拉表格选项
-                AllDbName = JSON.parse(localStorage.getItem("AllDbName"))||{},//获取现在的数据库
                 $select = $("#archivePath_modal").find('[data-key="table"]');//获取table下拉框
             if(dbName){
                 Object.keys(AllDbName[dbName]).forEach(function(item){
@@ -140,7 +137,6 @@ ArchivePathModal.prototype = {
 
         that.$archiveTable.change(function () {//当存单表格值发生变化
             var dbName = $("#archivePath_modal").find('[data-key="dbName"]').val(),
-                AllDbName = JSON.parse(localStorage.getItem("AllDbName"))||{},
                 table =$(this).val(),
                 fieldsoptions = [],
                 $select = $("#archivePath_modal").find('[data-key="field"]');

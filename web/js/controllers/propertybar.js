@@ -26,7 +26,6 @@ Propertybar.prototype = {
             result = await new FileService().readFile("./profiles/propertybar.json", 'utf-8');
             that.AllDbName = AllDbName;
         if (!result) return;//如果没有退出函数
-
         //添加总数据库属性
             var dbArr = result[6]['items'][1]["items"];
             if(AllDbName){

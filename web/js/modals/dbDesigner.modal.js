@@ -139,7 +139,8 @@ DbDesignerModal.prototype = {
                     }
                 }
             ],
-            getProperty: new Property().getProperty //把property的getproperty方法赋值给getProperty
+            getProperty: new Property().getProperty,
+            dbList:dbList //把property的getproperty方法赋值给getProperty
         });
     },
     saveData: function () {
@@ -210,7 +211,7 @@ DbDesignerModal.prototype = {
             var $select = $(event.target).parents("tr").find('[data-key="table"]'),
                 key = $(this).val(),
                 AllDbName = that.AllDbName||{},
-                objTableNames = Object.keys(AllDbName[key]),
+                objTableNames = Object.keys(AllDbName[key]||{}),
                 arrTableNames = [],
                 arr = [];
                 
@@ -221,7 +222,7 @@ DbDesignerModal.prototype = {
             })
             arr.forEach(function (item) {
                 arrTableNames.push({
-                    "name": item,
+                    "name": AllDbName[key][item]["tableDesc"],
                     "value": item
                 })
             })

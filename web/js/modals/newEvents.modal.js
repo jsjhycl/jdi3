@@ -343,8 +343,7 @@ function NewEventsModal($modal, $element) {
     }
     //填充下拉抄送数据库，抄送表，抄送列，抄送字段
     this.fillCopySend = function (type, dbName, table, field, fieldSplit) {
-        var AllDbName = JSON.parse(localStorage.getItem("AllDbName")) || {},
-            dbNames = [],
+        var dbNames = [],
             tables = [],
             fields = [],
             fieldSplits = []
@@ -1174,7 +1173,6 @@ NewEventsModal.prototype = {
         that.$modal.on("change", '[data-key="dbName"]', function () {
             var $tableSelect = $($(this).parents("tr")[0]).find('[data-key ="table"]'),
                 dbName = $(this).val(),
-                AllDbName = JSON.parse(localStorage.getItem("AllDbName")) || {},
                 tableOptions = [];
             if (dbName) {
                 Object.keys(AllDbName[dbName]).forEach(function (item) {
@@ -1194,7 +1192,6 @@ NewEventsModal.prototype = {
             var $fieldSelect = $($(this).parents("tr")[0]).find('[data-key="field"]'),
                 table = $(this).val(),
                 dbName = $($(this).parents("tr")[0]).find('[data-key="dbName"]').val(),
-                AllDbName = JSON.parse(localStorage.getItem("AllDbName")) || {},
                 fieldOptions = [];
             if (dbName && table) {
                 AllDbName[dbName][table].tableDetail.forEach(function (item) {
@@ -1216,8 +1213,7 @@ NewEventsModal.prototype = {
                 table = $($(this).parents("tr")[0]).find('[data-key="table"]').val(),
                 field = $($(this).parents("tr")[0]).find('[data-key="field"]').val(),
                 fieldSplit = "",
-                fieldSplitOptions = [],
-                AllDbName = JSON.parse(localStorage.getItem("AllDbName")) || {};
+                fieldSplitOptions = [];
             if (dbName && table && field) {
                 AllDbName[dbName][table].tableDetail.forEach(function (item) {
                     if (item.id == field) {

@@ -137,6 +137,9 @@ ChangeCategoryModal.prototype = {
             if (!that.cates[cate][idx]) { that.cates[cate][idx] = type ? { name: "", value: "" } : val };
             option_name && (that.cates[cate][idx][option_name] = val);
         })
+        that.$modal.on("click"+that.NAME_SPACE,".cancel",function(){
+            that.$modal.modal("hide");//模态框隐藏
+        })
     },
 
     execute: function() {

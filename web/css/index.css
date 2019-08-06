@@ -865,8 +865,8 @@ li {
 .icon-right-arrow,
 .icon-up-left-arrow,
 .icon-bottom-right-arrow {
-    width: 25px;
-    height: 17px;
+    width: 30px;
+    height: 15px;
 }
 .icon-left-arrow,
 .icon-bottom-right-arrow {
@@ -877,8 +877,8 @@ li {
 .icon-bottom-arrow,
 .icon-bottom-left-arrow,
 .icon-up-right-arrow {
-    width: 17px;
-    height: 25px;
+    width: 15px;
+    height: 30px;
 }
 .icon-bottom-arrow,
 .icon-up-right-arrow {

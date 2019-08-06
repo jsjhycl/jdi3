@@ -16,18 +16,19 @@ function Control() {
         arrow: '<canvas data-type="arrow"></canvas>'
     };
     this.getArrowConfig =  function(subtype, w, h) {
-        var result = { dots: [], rotate: 0 };
+        var result = { dots: [], rotate: 0 },
+            triangle = 45;
         switch(subtype) {
             case 'left-arrow':
                 result.rotate = 180;
             case 'right-arrow':
                 result.dots = [
-                    [0, h / 3 * 1],
-                    [w * 0.618, h / 3 * 1],
-                    [w * 0.618, 0],
+                    [0, h / 3],
+                    [w - triangle, h / 3],
+                    [w - triangle, 0],
                     [w, h / 2],
-                    [w * 0.618, h],
-                    [w * 0.618, h / 3 * 2],
+                    [w - triangle, h],
+                    [w - triangle, h / 3 * 2],
                     [0, h / 3 * 2]
                 ];
                 break;
@@ -36,11 +37,11 @@ function Control() {
             case 'up-arrow':
                 result.dots = [
                     [w / 3 * 1, h],
-                    [w / 3 * 1, h * 0.382],
-                    [0, h * 0.382],
+                    [w / 3 * 1, triangle],
+                    [0, triangle],
                     [w / 2, 0],
-                    [w, h * 0.382],
-                    [w / 3 * 2, h * 0.382],
+                    [w, triangle],
+                    [w / 3 * 2, triangle],
                     [w / 3 * 2, h],
                 ]
                 break;
@@ -49,11 +50,11 @@ function Control() {
             case "up-left-arrow":
                 result.dots = [
                     [0, h / 3],
-                    [w * 0.618, h / 3],
-                    [w * 0.618, 0],
+                    [w - triangle, h / 3],
+                    [w - triangle, 0],
                     [w, h / 2],
-                    [w * 0.618, h],
-                    [w * 0.618, h / 3 * 2],
+                    [w - triangle, h],
+                    [w - triangle, h / 3 * 2],
                     [h / 3, h / 3 * 2],
                     [h / 3, h],
                     [0, h]
@@ -64,11 +65,11 @@ function Control() {
             case "bottom-left-arrow":
                 result.dots = [
                     [w / 3, h],
-                    [w / 3, h * 0.382],
-                    [0, h * 0.382],
+                    [w / 3, triangle],
+                    [0, triangle],
                     [w / 2, 0],
-                    [w, h * 0.382],
-                    [w / 3 * 2, h * 0.382],
+                    [w, triangle],
+                    [w / 3 * 2, triangle],
                     [w / 3 * 2, h - w / 3],
                     [w, h - w / 3],
                     [w, h]

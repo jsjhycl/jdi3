@@ -483,7 +483,9 @@ function Workspace() {
             basicInfo["userGrade"] = $('[name="model_userGrade"]').val();
             basicInfo["area"] = $('[name="model_area"]').val();
             basicInfo["autoCreate"] = $('[name="model_autoCreate"]').val();
-            basicInfo["contactId"] = this.$workspace.attr('data-concat') || (id && id.slice(id.length - 6, id.length - 3)) || "";
+            basicInfo["spare1"] = $('[name = "model_spare1"]').val();
+            basicInfo["spare2"] = $('[name = "model_spare2"]').val();
+            basicInfo["contactId"] = this.$workspace.attr('data-concat') || (id && id.slice(id.length - 3, id.length )) || "";
         } else {
             name = $('[name="template_name"]').val() || this.$workspace.attr('data-name');
             basicInfo["category"] = $('[name="template_category"]').val();
@@ -536,7 +538,8 @@ function Workspace() {
                 }).catch(err => {})
             }
             if (subtype == "布局") {
-                id = basicInfo.autoCreate + basicInfo.area + basicInfo.feature + basicInfo.userGrade + basicInfo.contactId.replace(/\((.*)\)/img, "") + "ZZ" + basicInfo.autoCreate;
+                console.log(basicInfo.area)
+                id = basicInfo.autoCreate +  basicInfo.userGrade + basicInfo.feature + basicInfo.category + basicInfo.area  + "00" + basicInfo.contactId.replace(/\((.*)\)/img, "")  ;
                 params.push({
                     col: '_id',
                     value: id

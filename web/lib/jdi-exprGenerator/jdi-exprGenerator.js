@@ -18,7 +18,6 @@
                 
                 if (Array.isArray(fnData.args) && fnData.args.length > 0) {
                     fnData.args.forEach(function(arg, idx) {
-                        console.log((Array.isArray(args)) ? args[idx] : (arg.default == undefined ? "" : arg.default))
                         argsHtml += '<tr>' +
                                         '<td data-name="' + arg.cname + '">' + arg.cname + '</td>' +
                                         '<td data-convert="' + arg.type + '">' + arg.ctype + '</td>' +
@@ -587,6 +586,8 @@
             // 选择一级函数分类
             $(document).on("click" + EVENT_NAMESPACE, ".eg .cpanel .fn-types-item", {element: element}, function (event) {
                 event.stopPropagation();
+                var $eg = $('.eg:visible');
+                if ($eg.find(".eg-system-list").is(":visible")) $eg.find(".fn-system-more").click();
                 var type = $(this).data('type'),
                     cache = $.data(element, CACHE_KEY);
                     fnsData = cache.functions.filter(function(el) { return el.title == type });
@@ -744,6 +745,7 @@
                     var newFn = FunctionUtil.getSystemFnOrder(cache.systemFunction);
                     new FileService().writeFile('system_functions.json', JSON.stringify(newFn));
                     $(".fn-container").slideDown('fast');
+                    $(".fn-types .fn-types-item").first().click();
                 } else {
                     $(this).parents('.fn-system').find(".fn-system-item").addClass("canDel");
                     $list.show().prev().hide();

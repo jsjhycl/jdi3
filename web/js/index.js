@@ -134,7 +134,6 @@ function navbar() {
             var id = $("#workspace").attr("data-id"); //获取工作区id
             if (!id) return;
             new Workspace().save(false).then(() => {
-                console.log(1111);
                 var subtype = $("#workspace").attr("data-subtype");
                 subtype = subtype == "布局" ? 1 : 0;
                 var href = jdi.fileApi.getConfigUrl().serverUrl + "/home/model?customId=" + id + "&type=" + subtype + "&isPreview=preview"; //拼接路径

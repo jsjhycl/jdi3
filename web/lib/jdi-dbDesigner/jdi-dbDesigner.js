@@ -82,7 +82,6 @@
                             return value;
                         },
                         value = that.recurseObject(property, item.key, cache.type);
-                        console.log(value)
                     tbody += '<td>' + template(value[0] || "", value[1] || "") + '</td>';
                 });
                 tbody += "</tr>";
@@ -212,7 +211,6 @@
                 options = [];
             
                 var dbList = this.dbList;
-                console.log(this.dbList)
                 if (ckey == "dbName") {
                     Object.keys(dbList).forEach(function (item) {
                         options.push({
@@ -222,7 +220,6 @@
                     })
                 }
                 if (ckey == "table") {
-                    console.log("table")
                     if (dbName) {
                         var arr = [];
                         var table = Object.keys(dbList[dbName]).forEach(function(item){
@@ -237,7 +234,6 @@
                             })
                         })
                     }
-                    console.log(options)
                 }
                 if (ckey == "field") {
                     if (dbName && table) {

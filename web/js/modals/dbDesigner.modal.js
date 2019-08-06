@@ -8,7 +8,7 @@ function DbDesignerModal($modal) {
     this.AllDbName = {}
 
     this.NAME_SPACE = ".dbDesigner"
-
+    
     this.$dbDesigner = this.$modalBody.find("#dbDesigner"); //获取数据库设计器
 
     this.$db = $("#dbDesignerModal")
@@ -29,7 +29,6 @@ DbDesignerModal.prototype = {
                 "value": item
             })
         })
-        // new Db().getTables(false, function (tables) {console.log(tables)})
         that.$dbDesigner.dbDesigner({ //调用jquery的扩展方法
             disabled: false,
             $elems: $("#workspace").find(":input"),
@@ -187,7 +186,6 @@ DbDesignerModal.prototype = {
         property.setValue(id, "saveDb", arr)
         // var property = new Property(); //实例化property
         // data.forEach(function (item) { //遍历data
-        //     console.log(item, "保存")
         //     if (!item.isSave) return true; //如果issave为false退出函数
         //     property.setValue(item.id, "db", { //调用property的setValue方法
         //         isSave: item.isSave, //是否入库
@@ -285,31 +283,7 @@ DbDesignerModal.prototype = {
         })
         //移除一段
         that.$db.on("click" + that.NAME_SPACE, "#dbDesignerRemove", function (event) {
-            var target = $(this).parent("td").parent("tr"),
-                id = target.find('[data-key="id"]').val(),
-                isSave = target.find('[data-key="isSave"]').val(),
-                dbName = target.find('[data-key="id"]').val(),
-                table = target.find('[data-key="id"]').val(),
-                selectField = target.find('[data-key="selectField"]').val(),
-                selectFieldSplit = target.find('[data-key="selectFieldSplit"]').val(),
-                desc = target.find('[data-key="desc"]').val(),
-                property = GLOBAL_PROPERTY[id],
-                saveDb = property.saveDb,
-                db = property.db;
-            if(saveDb){
-                var isremove = false;
-                saveDb.forEach((item,index)=>{
-                    if(item.dbName==dbName && item.desc == desc && item.field == selectField && item.fieldSplit == selectFieldSplit && item.isSave == isSave && item.table == table){
-                        console.log(item,index)
-                    }
-                })
-
-            }else{
-                if(db){
-
-                }
-            }
-
+            var target = $(this).parent("td").parent("tr");
             target.remove()
 
         })

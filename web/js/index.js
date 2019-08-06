@@ -132,11 +132,14 @@ function navbar() {
 	(function preview() {
 		$("#preview").click(function () { //绑定事件
             var id = $("#workspace").attr("data-id"); //获取工作区id
-			if (!id) return;
-			var subtype = $("#workspace").attr("data-subtype");
-			subtype = subtype == "布局" ? 1 : 0;
-			var href = jdi.fileApi.getConfigUrl().serverUrl + "/home/model?customId=" + id + "&type=" + subtype + "&isPreview=preview"; //拼接路径
-			require('electron').shell.openExternal(href); //使用electron打开默认浏览器
+            if (!id) return;
+            new Workspace().save(false).then(() => {
+                console.log(1111);
+                var subtype = $("#workspace").attr("data-subtype");
+                subtype = subtype == "布局" ? 1 : 0;
+                var href = jdi.fileApi.getConfigUrl().serverUrl + "/home/model?customId=" + id + "&type=" + subtype + "&isPreview=preview"; //拼接路径
+                require('electron').shell.openExternal(href); //使用electron打开默认浏览器
+            });
 		});
 	})();
 

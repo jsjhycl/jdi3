@@ -467,7 +467,8 @@
                 width = cache.width || 1300,
                 height = cache.height || ($(window).height() - top * 2),
                 sWidth = $eg.find(".eg-sidebar").width(),
-                rHeight = $eg.find(".eg-result").height();
+                rHeight = $eg.find(".eg-result").height(),
+                pageWidth = $eg.find(".eg-page").width();
             $eg.css("z-index", zIndex);
             $eg.find(".eg-dialog").css({
                 "top": top,
@@ -475,10 +476,12 @@
                 "width": width,
                 "height": height
             });
+            console.log(pageWidth);
             // $eg.find(".eg-content").width(width - sWidth * 2);
             $eg.find(".eg-content,.eg-sidebar,.eg-toolbar,.eg-result,.eg-function,.eg-insertFn").css("z-index", zIndex + 1);
             $eg.find(".eg-close").css("z-index", zIndex + 2);
             $eg.find(".eg-toolbar").css("bottom", rHeight);
+            $eg.find(".eg-dialog").width(pageWidth + sWidth * 2)
             // $eg.find(".eg-function,.eg-insertFn").width(sWidth);
             $eg.fadeIn();
             if (cache.onOpen) {
@@ -730,8 +733,11 @@
             // 依赖  插件
             (function() {
                 $(".eg:visible .eg-dialog").resizable({
-                    handles: 'e'
+                    handles: 'all'
                 });
+
+                $(".eg:visible .eg-dialog").draggable();
+
             })();
             
             // 切换配置函数

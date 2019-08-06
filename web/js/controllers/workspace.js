@@ -421,7 +421,7 @@ function Workspace() {
                     if (isPrompt) { //如果ispromt是真值的话提示保存成功
                         alert("保存成功！");
                     }
-                    window.location.reload(true)
+                    isPrompt && window.location.reload(true)
                 }).fail(function () {
                     if (isPrompt) { //如果ispromt是真值的话提示保存失败
                         alert("保存失败！");
@@ -544,7 +544,7 @@ function Workspace() {
                     col: 'customId',
                     value: id
                 });
-                this._saveDb(subtype, params).then(res => {
+                return this._saveDb(subtype, params).then(res => {
                     var $temp = $('<div></div>');
                     $temp.css({
                         "position": "absolute",
@@ -556,7 +556,7 @@ function Workspace() {
                     modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
                         '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
                         $temp.get(0).outerHTML;
-                    that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, 1)
+                    return that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, 1)
                 }).catch(err => {})
             }
         } else {
@@ -574,7 +574,7 @@ function Workspace() {
                 col: 'customId',
                 value: id
             });
-            this._updateDb(subtype, id, params).then(res => {
+            return this._updateDb(subtype, id, params).then(res => {
                 var $temp = $('<div></div>');
                 $temp.css({
                     "position": "absolute",
@@ -586,11 +586,10 @@ function Workspace() {
                 modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
                     '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
                     $temp.get(0).outerHTML;
-                that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, flag)
+                return that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, flag)
             });
         }
     };
-
     this._sameNameValidate = function () {
         var arrs = new Property().getArrayByKey("cname"), //实例化property调用getArrayBykey方法
             isRepeat = arrs.isRepeat(); //调用数组的扩展函数isRepeat
@@ -770,7 +769,7 @@ Workspace.prototype = {
 
         if (data) { //如果data为true
             //保存数据
-            that._setData(isPrompt, id, subtype, flow, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData); //调用_setdata
+            return that._setData(isPrompt, id, subtype, flow, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData); //调用_setdata
 
         }
     },

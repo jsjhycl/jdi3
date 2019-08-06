@@ -17,7 +17,7 @@ function CreateResource() {
                 return value === fitem.basicInfo.subCategory;
             }).map(function (mitem) {
                 return {
-                    name: `${mitem.name}__${mitem.customId}`,
+                    name: `${mitem.name}(${mitem.customId})`,
                     value: mitem.customId
                 }
             });
@@ -48,7 +48,7 @@ CreateResource.prototype = {
             var value = $(this).val();
             if (value) {
                 var text = $(this).find("option:selected").text();
-                that.$resoureName.val(text);
+                that.$resoureName.val(text.replace(/\((.*)\)/img, ""));
             } else {
                 that.$resoureName.val("");
             }

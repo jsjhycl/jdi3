@@ -134,12 +134,10 @@ Propertybar.prototype = {
                 key= $(this).val()||"",
                 options = [],
                 tableNames = [],
-                // AllDbName = JSON.parse(localStorage.getItem('AllDbName'));
                 AllDbName = that.AllDbName,
                 tableNames = Object.keys(AllDbName[key]);
                 var Arr = []
                 tableNames.forEach(item=>{
-                    console.log(AllDbName[key][item]["key"])
                     if(AllDbName[key][item]["key"] == undefined){
                         Arr.push(item)
                     }

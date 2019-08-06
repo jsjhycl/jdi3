@@ -90,7 +90,8 @@ SubmitModal.prototype = {
                             that.$modalBody.find("#model_subCategory").val(basicInfo.subCategory)
                             that.$modalBody.find("#model_userGrade").val(basicInfo.userGrade)
                             that.$modalBody.find("#model_autoCreate").val(basicInfo.autoCreate)
-                            
+                            that.$modalBody.find("#model_spare1").val(basicInfo.spare1||"0")
+                            that.$modalBody.find("#model_spare2").val(basicInfo.spare2||"0")
                         }
                     })
                 }

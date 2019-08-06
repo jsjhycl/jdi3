@@ -159,7 +159,6 @@ SetDbDesignerModal.prototype = {
                 }
             }
         }
-        console.log(localData)
         that._uploderDb(localData)
         this._clearData()
     },

@@ -5,6 +5,7 @@
     function Conditions(elements, options) {
         this.$elements = elements;
         this.options = options;
+        this.AllDbName = null;
     }
 
     Conditions.prototype.constructor = Conditions;
@@ -15,9 +16,11 @@
             return that.$elements.each(function () {
                 var cache = that.cacheData(this);
                 if (!cache.disabled) {
-                    that.renderDOM(this);
-                    that.setData(this);
-                    that.bindEvents(this);
+                    that.getDbData().then(() => {
+                        that.renderDOM(this);
+                        that.setData(this);
+                        that.bindEvents(this);
+                    });
                 }
             });
         },
@@ -32,6 +35,10 @@
             $(element).off(EVENT_NAMESPACE);
             $.data(element, CACHE_KEY, cache);
             return cache;
+        },
+        getDbData: async function() {
+            var data = await new FileService().readFile("./profiles/table.json");
+            if (DataType.isObject(data)) this.AllDbName = data;
         },
         renderDOM: function (element) {
             var cache = $.data(element, CACHE_KEY),
@@ -160,9 +167,9 @@
                     type = data.type;
                     value = data.value;
                 }
-                if(dbName&&table){
-                    var AllDbName = JSON.parse(localStorage.getItem("AllDbName"))||{};
-                    AllDbName[dbName][table].tableDetail.forEach(function(item){
+                if(dbName && table && that.AllDbName[dbName] && that.AllDbName[dbName][table]){
+                    
+                    that.AllDbName[dbName][table].tableDetail.forEach(function(item){
                         fieldOptions.push({name:item.cname,value:item.id})
                     })
                 }

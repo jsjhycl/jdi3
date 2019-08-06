@@ -132,7 +132,7 @@ function navbar() {
 	(function preview() {
 		$("#preview").click(function () { //绑定事件
             var id = $("#workspace").attr("data-id"); //获取工作区id
-            if (!id) return;
+            if (!id) return alert("未保存！");
             new Workspace().save(false).then(() => {
                 var subtype = $("#workspace").attr("data-subtype");
                 subtype = subtype == "布局" ? 1 : 0;

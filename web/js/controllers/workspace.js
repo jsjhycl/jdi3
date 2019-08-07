@@ -422,6 +422,8 @@ function Workspace() {
                         alert("保存成功！");
                     }
                     new Propertybar($("#propertybar")).init(false,null);
+                    // $("#workspace").empty()
+                    // $("#name").empty()
                     // new OpenTemplate().init();
                     // new OpenResource().init();
                 }).fail(function () {
@@ -579,7 +581,10 @@ function Workspace() {
                 col: 'customId',
                 value: id
             });
-            return this._updateDb(subtype, id, params).then(res => {
+            var fn = /\([1-9]+\)$/.test(id) ? this._saveDb : this._updateDb,
+                args = /\([1-9]+\)$/.test(id) ? [subtype, params] : [subtype, id, params];
+
+            return (fn)(...args).then(res => {
                 var $temp = $('<div></div>');
                 $temp.css({
                     "position": "absolute",
@@ -614,7 +619,7 @@ Workspace.prototype = {
                 'data-id': id,
                 "data-name": name,
                 "data-subtype": subtype,
-                "data-concat": customId || (id && id.slice(id.length - 6, id.length - 3)) || ""
+                "data-concat": customId || (id && id.slice(7, 10)) || ""
             };
         that.edit = edit;
         id && (text += '<span class="text-danger">' + "(" + id + ")" + '</span>'); //赋值

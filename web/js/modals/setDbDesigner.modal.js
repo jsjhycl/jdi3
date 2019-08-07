@@ -179,6 +179,7 @@ SetDbDesignerModal.prototype = {
         var bingoData = {
             database:dbName,
             table:tableName,
+            description:tableDesc,
             columns:bingocolumns 
         }
         

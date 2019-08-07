@@ -804,7 +804,7 @@ function NewEventsModal($modal, $element) {
 }
 NewEventsModal.prototype = {
     initData: async function (data) {
-        
+                
         var that = this;
         that._resetData();
         that._initCustomMethods().then(() => {

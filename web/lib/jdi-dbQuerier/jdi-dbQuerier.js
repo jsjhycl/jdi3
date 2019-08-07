@@ -44,15 +44,15 @@
                         '<label class="col-lg-2 control-label">查询表格：</label>' +
                         '<div class="col-lg-9"><select class="form-control querier-table"></select></div>' +
                     '</div>',
-                querierTimeHtml = '<div class="form-group">' +
-                                        '<label class="col-lg-2 control-label">查询日期：</label>' +
-                                        '<div class="col-lg-3"><select class="form-control querier-date"><option value="">默认</select></div>' +
+                querierRate = '<div class="form-group">' +
+                                        '<label class="col-lg-2 control-label">查询频率/秒：</label>' +
+                                        '<div class="col-lg-3"><input class="form-control" data-name="query_time" placeHolder="根据查询频率进行数据查询" /></div>' +
                                     '</div>',
                 conditionsHtml = '<div class="form-group">' +
                     '<label class="col-lg-2 control-label">查询条件：</label>' +
                     '<div class="col-lg-9 querier-conditions"></div>' +
                     '</div>';
-            $(element).empty().append(tableHtml + querierTimeHtml + that.renderFields(element) + conditionsHtml).addClass("form-horizontal querier");
+            $(element).empty().append(tableHtml + querierRate + that.renderFields(element) + conditionsHtml).addClass("form-horizontal querier");
         },
         renderFields: function (element) {
             var cache = $.data(element, CACHE_KEY),
@@ -81,18 +81,20 @@
                 $querierTable = $(element).find(".querier-table"),
                 $querierFields = $(element).find(".querier-fields"),
                 $querierConditions = $(element).find(".querier-conditions"),
+                $queryTime = $(element).find('[data-name="query_time"]'),
                 fieldMode = cache.fieldMode,
                 data = cache.data;
             if (fieldMode === "single") {
                 $querierFields = $(element).find(".querier-fields-show,.querier-fields-real");
             }
 
-            var dbName, table, fields, conditions;
+            var dbName, table, fields, conditions, queryTime;
             if (DataType.isObject(data)) {
                 dbName = data.dbName;
                 table = data.table;
                 fields = data.fields;
-                conditions = data.conditions;
+                conditions = data.conditions,
+                queryTime = data.queryTime
             }
             var AllDbName = await new FileService().readFile("/profiles/table.json"),
                 dbOptions = [],
@@ -110,7 +112,7 @@
                 if(table){
                     AllDbName[dbName][table].tableDetail.forEach(function(item){
                         fieldsoptions.push({name:item.cname,value:item.id})
-                    })
+                    });
                 }
             }
             Common.fillSelect($querierTable,{name:"请选择表",value:""},tableOptions,table,true)
@@ -121,6 +123,7 @@
                 table: table,
                 data: conditions
             });
+            $queryTime.val(queryTime || "");
         },
         setFields: function ($fieldsDiv, fieldMode, fields, data) {
             if (!$fieldsDiv || $fieldsDiv.length <= 0) return;
@@ -315,6 +318,7 @@
                 $querierEndTime = $(elements[0]).find(".querier-endtime"),
                 format = $querierStartTime.data('format') || '',
                 now = new Date().toFormatString(format || 'yyyy/mm/dd', false, true),
+                queryTime = $(elements[0]).find('[data-name="query_time"]').val() || "",
                 fields;
             //获取字段数据
             if (cache.fieldMode === "single") {
@@ -335,7 +339,8 @@
                 table: $querier.find(".querier-table").val(),
                 querierTime: $querierStartTime.length > 0 ? { starttime: $querierStartTime.val() || now, endtime: $querierEndTime.val() || now } : {},
                 fields: fields,
-                conditions: $querier.find(".querier-conditions").conditions("getData")
+                conditions: $querier.find(".querier-conditions").conditions("getData"),
+                queryTime: queryTime
             };
         }
     };

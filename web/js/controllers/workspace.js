@@ -335,7 +335,6 @@ function Workspace() {
         if (subtype === "布局" && customId) { //如果type是产品或则是数据库定义subtype是布局且customid存在
             tableData = new Property().getDbProperty(customId, name); //实例化property调用getDbproperty
             tableData = {...tableData,...new Property().getSaveDbProperty(customId, name)}
-            console.log(tableData)
         }
 
         var phoneData = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="ie=edge"><title>手机页面</title></head><body>' +
@@ -608,29 +607,52 @@ function Workspace() {
                 });
                 // 修改
                 var flag = subtype == "表单" ? 0 : 1;
-                params.push({
-                    col: '_id',
-                    value: id
-                }, {
-                    col: 'customId',
-                    value: id
-                });
+                var  dbCollection = subtype == "布局" ? "newProducts" : "newResources";
+                new Service().remove(dbCollection,[{col:"customId",value:id}])
+                if(subtype=="表单"){
+                    this._getMaxId(subtype).then(res=>{
+                        id = res;
+                        params.push({
+                            col: '_id',
+                            value: id
+                        }, {
+                            col: 'customId',
+                            value: id
+                        });
+                        return this._saveDb(subtype, params).then(res => {
+                            var $temp = $('<div></div>');
+                            $temp.css({
+                                "position": "absolute",
+                                "width": settingData.width,
+                                "height": settingData.height,
+                                "background-color": settingData.bgColor,
+                                "overflow": "hidden"
+                            }).append(modelData); //插入到html中
+                            modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
+                                '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
+                                $temp.get(0).outerHTML;
+                            return that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, flag)
+                        });
+                    })
+                }else{
+                    id = basicInfo.autoCreate +  basicInfo.userGrade + basicInfo.feature + basicInfo.category + basicInfo.area  + "00" + basicInfo.contactId.replace(/\((.*)\)/img, "");
+                    params.push({ col: '_id',value: id }, {col: 'customId',value: id});
+                    return this._saveDb(subtype, params).then(res => {
+                        var $temp = $('<div></div>');
+                        $temp.css({
+                            "position": "absolute",
+                            "width": settingData.width,
+                            "height": settingData.height,
+                            "background-color": settingData.bgColor,
+                            "overflow": "hidden"
+                        }).append(modelData); //插入到html中
+                        modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
+                            '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
+                            $temp.get(0).outerHTML;
+                        return that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, flag)
+                    });
+                }
                 
-    
-                return this._updateDb(subtype, id, params).then(res => {
-                    var $temp = $('<div></div>');
-                    $temp.css({
-                        "position": "absolute",
-                        "width": settingData.width,
-                        "height": settingData.height,
-                        "background-color": settingData.bgColor,
-                        "overflow": "hidden"
-                    }).append(modelData); //插入到html中
-                    modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
-                        '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
-                        $temp.get(0).outerHTML;
-                    return that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, flag)
-                });
             }
         }
     };

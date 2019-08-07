@@ -170,6 +170,7 @@ SetDbDesignerModal.prototype = {
             var obj = {
                 name:item.id,
                 type:item.type,
+                cname:item.cname
             }
             if(item.type=="string"){obj.maxlength=item.maxlength}
             bingocolumns.push(obj)

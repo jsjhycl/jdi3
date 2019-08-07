@@ -127,7 +127,11 @@ function NewEventsModal($modal, $element) {
         this.METHODS.push({
             name: name,
             value: value
-        })
+        });
+        this.METHODS.push({
+            name: '定时查询',
+            value: 'timeQuery'
+        });
     };
     //清空数据
     this._resetData = function () {
@@ -437,6 +441,30 @@ function NewEventsModal($modal, $element) {
         return str;
 
     }
+    this.renderTimeQuery = function(timeQuery) {
+
+        var queryTable = "";
+            id = $("#property_id").val(),
+            query = new Property().getValue(id, 'query');
+        console.log(query)
+        if (DataType.isObject(query)) {
+            if (query.db.type === "common") {
+                queryTable = "通用查询"
+            } else if (query.db.type === "table") {
+                queryTable = "表格查询"
+            }
+        }
+
+        return  `<div style="margin: 0 20px 20px 0; display: inline-block;">
+                        <span>查询频率/秒</span>
+                        <input style="display: inline-block;width:100px;margin-left:10px;" type="text" data-category="queryTime" class="form-control" data-key="" value="${timeQuery && timeQuery || ""}">
+                </div>
+                <div style="margin: 0 20px 20px 0; display: inline-block;">
+                        <span>查询方法</span>
+                        <input style="display: inline-block;width:100px;margin-left:10px;" type="text" disabled data-category="queryTable" class="form-control" data-key="" value="${queryTable}">
+                </div>
+                `
+    }
     //渲染数据抄送
     this.renderCopySend = function (copysend) {
         if (!DataType.isArray(copysend)) return "";
@@ -510,6 +538,7 @@ function NewEventsModal($modal, $element) {
     }
     //增加一条事件配置
     this._addItem = function (item) {
+        console.log('item: ', item.subscribe.timeQuery)
         var that = this,
             $str = $(`<tr class="tr">
             <td style="width: 50px">
@@ -586,18 +615,17 @@ function NewEventsModal($modal, $element) {
                                     <th class="text-center">数据类型</th>
                                     <th class="text-center">运算符</th>
                                 </tr>
-                                
                             </thead>
                             <tbody>
                                 ${that.renderCopySend(item.subscribe.copySend)}
-                               
                             </tbody>
-
                         </table>
                     </div>
                 </div>
+                <div class="timeQuery" ${item.subscribe.timeQuery?"":'style="display:none"'}>
+                    ${that.renderTimeQuery(item.subscribe.timeQuery, item.query)}
+                </div>
             </td>
-            
         </tr>`);
         that.$tbody.append($str)
     }
@@ -622,7 +650,6 @@ function NewEventsModal($modal, $element) {
         } else {
             return null;
         }
-
     }
     //获取客户自定义的方法
     this.getCustomMethods = function (triggerMethods) {
@@ -800,7 +827,6 @@ function NewEventsModal($modal, $element) {
         }
         return str
     }
-
 }
 NewEventsModal.prototype = {
     initData: async function (data) {
@@ -846,7 +872,8 @@ NewEventsModal.prototype = {
                 copySend = null,
                 property = null,
                 notify = null,
-                query = null;
+                query = null,
+                timeQuery = null;
             if (that.judgeCheckMehods("commonQuery", $(this).find(".triggerMethods:checked"))) {
                 query = []
                 query.push("commonQuery")
@@ -871,6 +898,9 @@ NewEventsModal.prototype = {
                     }
                 })
             }
+            if (that.judgeCheckMehods("timeQuery", $(this).find(".triggerMethods:checked"))) {
+                timeQuery = $(this).find('[data-category="queryTime"]').val()
+            }
             if (trigger_type) {
                 result.push({
                     publish: {
@@ -884,7 +914,8 @@ NewEventsModal.prototype = {
                         copySend: copySend,
                         property: property,
                         notify: notify,
-                        query: query
+                        query: query,
+                        timeQuery: timeQuery
                     }
                 })
             }
@@ -894,7 +925,6 @@ NewEventsModal.prototype = {
         var $workspace = $("#workspace"),//获取工作区
         $control = $workspace.find("#" + id);//获取对应id的元素
         new Property().save(id === "BODY" ? $workspace : $control, that.$element);//实例化property调用save方法
-
     },
     clearData: function () {
         var that = this,
@@ -964,8 +994,9 @@ NewEventsModal.prototype = {
             var value = $(this).val(),
                 check = $(this).prop("checked"),
                 $copySendTable = $(this).parents("tr").find(".copySend"),
-                $changeProperty = $(this).parents("tr").find(".changeProperty");
-            $notify = $(this).parents("tr").find(".notify")
+                $changeProperty = $(this).parents("tr").find(".changeProperty"),
+                $notify = $(this).parents("tr").find(".notify");
+                $timeQuery = $(this).parents("tr").find(".timeQuery");
             if (value == "changeProperty") {
                 check ? $changeProperty.show() : $changeProperty.hide()
             }
@@ -974,6 +1005,9 @@ NewEventsModal.prototype = {
             }
             if (value == "notify") {
                 check ? $notify.show() : $notify.hide()
+            }
+            if (value == "timeQuery") {
+                check ? $timeQuery.show() : $timeQuery.hide()
             }
         })
         //增加属性改变栏
@@ -1276,7 +1310,7 @@ NewEventsModal.prototype = {
                     body: that.evetnsDesc.triggerType[value],
                 }
             that.renderDescribeTable(data)
-        })
+        });
 
     },
     execute: function () {

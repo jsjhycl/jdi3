@@ -908,3 +908,22 @@ li {
     -webkit-border-radius: 50%;
     cursor: pointer;
 }
+
+#change_router_modal .add,
+#change_router_modal .del {
+    margin-top: 8px;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    color: #D44950;
+    font-size: 12px;
+    text-align: center;
+    border: 1px solid #D44950;
+    border-radius: 50%;
+    cursor: pointer;
+    -webkit-border-radius: 50%;
+}
+#change_router_modal .add {
+    color: #41B883;
+    border: 1px solid #41B883;
+}

@@ -577,7 +577,6 @@ function Workspace() {
                     }).catch(err => {})
                 }
                 if (subtype == "布局") {
-                    console.log(basicInfo.area)
                     id = basicInfo.autoCreate +  basicInfo.userGrade + basicInfo.feature + basicInfo.category + basicInfo.area  + "00" + basicInfo.contactId.replace(/\((.*)\)/img, "")  ;
                     params.push({
                         col: '_id',

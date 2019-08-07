@@ -125,7 +125,6 @@ OpenConfigModal.prototype = {
             fields;
         
         Object.keys(data).forEach(i => dbSelect.push({ name: i, value: i }));
-
         tableSelect = customData["db"]
                     ? Object.keys(data[customData["db"]]).map(el => { if (data[customData["db"]][el].key === this.key) return { name: el, value: el } })
                     : Object.keys(data[dbSelect[0].value]).map(el => { if (data[dbSelect[0].value][el].key === this.key) return { name: el, value: el } })

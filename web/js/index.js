@@ -63,6 +63,10 @@ function navbar() {
     var changeCategoryModal = new ChangeCategoryModal($("#change_category_moda"));
     changeCategoryModal.execute();
 
+    // 修改路由文件
+    var ChangeRouterModal = new ChangeRouter($("#change_router_modal"));
+    ChangeRouterModal.execute();
+
 	//另存为
 	var saveAsModal = new SaveAsModal($("#saveAsModal"));
 	saveAsModal.execute();
@@ -90,8 +94,6 @@ function navbar() {
 	//插入函数
 	var insertFnModal = new InsertFnModal($("#insertFunctionModal"));
 	insertFnModal.execute();
-
-    
 
 	//提交
 	var submitModal = new SubmitModal($("#submitModal"), $("#submit"));

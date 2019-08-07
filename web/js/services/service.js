@@ -1,5 +1,6 @@
 function Service() {
     this.baseUrl = "/dbApi/dbOperate";
+    this.routerTable = "router"
     this.createTableURL = "/dataApi/api/dataportal/createtable"
 }
 Service.prototype = {
@@ -58,6 +59,17 @@ Service.prototype = {
 
         return this.base(config, callBack);
     },
+    // pageList: async function(table, condition, fields, page, size) {
+    //     var that = this;
+    //     try {
+    //         var all = await that.queryCount(table, condition);
+    //             querys = await that.query(table, condition, fields, page, size);
+    //         querys.count = all.length;
+    //         return querys;
+    //     } catch (err) {
+    //         throw ('pageList err: ', err)
+    //     }
+    // },
     insert: function (table, save, callBack) {
         if (!table) return alert("插入表名不存在")
         let config = {
@@ -94,6 +106,25 @@ Service.prototype = {
             value: customId
         }], callBack);
     },
+
+    getRouter: function(callBack) {
+        return this.query(this.routerTable, [], [], null, null, callBack);
+    },
+    
+    removeRouters: function(callBack) {
+        let config = {
+            command: "remove",
+            table: this.routerTable,
+            condition: [],
+        }
+        return this.base(config, callBack);
+    },
+
+    addRouter: function(save, callBack) {
+        if (!save || !Array.isArray(save)) return;
+        return this.insert(this.routerTable, save, callBack)
+    },
+
     createTable: function (data) {
         var that = this;
         return new Promise(function (resolve, reject) {

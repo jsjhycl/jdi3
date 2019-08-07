@@ -283,18 +283,22 @@ Control.prototype = {
         
         // 清空画布
         ctx.clearRect(0, 0, w, h);
+        ctx.lineWidth = 1;
         // 旋转
         this.rotateCenter(ctx, config.rotate, w, h)
         // 画坐标
         var dots = config.dots;
         dots.forEach(function(item, idx) {
-            if (idx === 0) return ctx.moveTo(item[0], item[1]);
-            ctx.lineTo(item[0], item[1]);
-            idx === dots.length - 1 && ctx.lineTo(dots[0][0], dots[0][1]);
+            if (idx === 0) return ctx.moveTo(...item);
+            ctx.lineTo(...item);
+            idx === dots.length - 1 && ctx.lineTo(...dots[0]);
         });
         // 线条色
-        ctx.strokeStyle = "#ccc";
+        ctx.strokeStyle = "#CCC";
         ctx.stroke();
+        ctx.fillStyle = "#FFF"
+        ctx.fill();
+        ctx.save();
     },
     setDrawControl: function(type, subtype, w, h, callback) {
         var that = this,

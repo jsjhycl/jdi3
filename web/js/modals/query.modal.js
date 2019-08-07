@@ -26,7 +26,8 @@ DbQueryModal.prototype = {
                 dbName:data.dbName,
                 table: data.table,
                 fields: data.fields,
-                conditions: data.conditions
+                conditions: data.conditions,
+                queryTime: data.queryTime
             };
             var type = data.type || "";
             if (type) {
@@ -49,7 +50,8 @@ DbQueryModal.prototype = {
                 dbName: result.dbName,
                 table: result.table,
                 fields: result.fields,
-                conditions: result.conditions
+                conditions: result.conditions,
+                queryTime: result.queryTime
             },
             $workspace = $("#workspace"),
             $control = $workspace.find("#" + id);

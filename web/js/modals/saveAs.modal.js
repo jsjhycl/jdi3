@@ -39,9 +39,11 @@ SaveAsModal.prototype = {
     },
     saveData: function () {
         var that = this;
-        isFinsh = that.$isFinalName.prop("checked");
+        var isFinsh = that.$isFinalName.prop("checked");
+        var saveAs = true
+
         if (isFinsh) {
-            new Workspace().save(true, false, isFinsh)
+            new Workspace().save(true, false, isFinsh,saveAs)
         } else {
             var $workspace = $("#workspace"),
                 id = $workspace.attr("data-id"),
@@ -50,7 +52,7 @@ SaveAsModal.prototype = {
             var table = subtype == "表单" ? "newResources" : "newProducts";
             that.getLastSaveId(table, id).then(res => {
                 var count = res.length;
-                new Workspace().save(true, `${id}(${count})`)
+                new Workspace().save(true, `${id}(${count})`,isFinsh,saveAs)
             });
         }
     },

@@ -53,7 +53,6 @@ function SetDbDesignerModal($modal) {
         })
 
     }
-
 }
 SetDbDesignerModal.prototype = {
     initData: function () {
@@ -82,19 +81,19 @@ SetDbDesignerModal.prototype = {
                     }
                 },
                 {
-                    name: "dataType",
+                    name: "type",
                     text: "数据类型",
-                    key: "dataType",
+                    key: "type",
                     template: function (value) {
-                        return `<select class="form-control" data-key="dataType"><option value="integer">整型</option><option value="float">浮点型</option><option value="string">字符型</option><option value="Date">日期型</option></select>`
+                        return `<select class="form-control" data-key="type"><option value="int">整型</option><option value="float">浮点型</option><option value="string">字符型</option><option value="time">日期型</option><option value="datatime">时间型</option></select>`
                     }
                 },
                 {
-                    name: "dataLength",
+                    name: "maxlength",
                     text: "数据长度",
-                    key: "dataLength",
+                    key: "maxlength",
                     template: function (value) {
-                        return `<input class="form-control"  data-key="dataLength" type="text" value="${value}" readonly></input>`
+                        return `<input class="form-control"  data-key="maxlength" type="text" value="${value}" readonly></input>`
                     }
                 },
                 {
@@ -166,19 +165,41 @@ SetDbDesignerModal.prototype = {
                 }
             }
         }
-        that._uploderDb(localData)
-        this._clearData()
+        var bingocolumns = []
+        tabledetail.forEach(function(item){
+            var obj = {
+                name:item.id,
+                type:item.type,
+                cname:item.cname
+            }
+            if(item.type=="string"){obj.maxlength=item.maxlength}
+            bingocolumns.push(obj)
+        })
+    
+        var bingoData = {
+            database:dbName,
+            table:tableName,
+            description:tableDesc,
+            columns:bingocolumns 
+        }
+        
+       new Service().createTable(bingoData).then(res=>{
+           this._clearData()
+           that._uploderDb(localData)
+       })
+        
     },
+
     execute: function () {
         var that = this;
         that.basicEvents(null, that.initData, that.saveData, null); //绑定基础事件
     },
     bindEvents: function () {
         var that = this;
-        that.$modalBody.on("change" + that.NAME_SPACE, "[data-key='dataType']", function (event) {
+        that.$modalBody.on("change" + that.NAME_SPACE, "[data-key='type']", function (event) {
             var type = $(this).val()
             var $tr = $($(this).parents("tr")),
-                $dataLength = $tr.find('[data-key="dataLength"]');
+                $dataLength = $tr.find('[data-key="maxlength"]');
             type=="string" ? $dataLength.removeAttr("readonly") : ($dataLength.attr("readonly",true) && $dataLength.val(""))
             
         })

@@ -9,7 +9,7 @@ function ChangeRouter($modal) {
                     <td><input type="text" class="form-control" data-name="origin" value="${data.origin || ""}" /></td>
                     <td><input type="text" class="form-control" data-name="path"  value="${data.path || ""}" /></td>
                     <td><input type="text" class="form-control" data-name="target"  value="${data.target || ""}" /></td>
-                    <td><button class="btn btn-danger del">删除</button></td>
+                    <td><span class="del">X</span></td>
                 </tr>`
         isAppend && this.$tbody.append(html);
         return html;
@@ -40,19 +40,24 @@ ChangeRouter.prototype = {
         })
     },
 
-    saveData: function() {
-        var save = [];
-        var save = this.$tbody.find("tr").map(function() {
-            var $tr = $(this);
-            return $tr.find('input').map(function() {
-                var $input = $(this);
-                return {
-                    col: $input.data('name'),
-                    value: $input.val()
-                }
-            });
+    saveData: async function() {
+        var save = [],
+            service = new Service();
+        await service.removeRouters();
+        this.$tbody.find("tr").each(function() {
+            var $tr = $(this),
+                arr = $tr.find('input').map(function() {
+                    var $input = $(this);
+                    return {
+                        col: $input.data('name'),
+                        value: $input.val()
+                    }
+                }).get();
+            save.push(service.addRouter(arr));
         });
-        console.log(save);
+        Promise.all(save).then(() => {
+            console.log(arguments);
+        })
     },
 
     bindEvents: function() {
@@ -61,9 +66,7 @@ ChangeRouter.prototype = {
             that.renderTr({}, true);
         });
         that.$modal.on('click' + that.NAME_SPACE, ".del", function() {
-            var $parent = $(this).parents('tr'),
-                result = window.confirm("确定删除该路由配置？");
-            result && $parent.remove();
+            $(this).parents('tr').remove();
         });
     },
 

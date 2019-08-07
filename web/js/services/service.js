@@ -1,6 +1,7 @@
 function Service() {
     this.baseUrl = "/dbApi/dbOperate";
     this.routerTable = "router"
+    this.createTableURL = "/dataApi/api/dataportal/createtable"
 }
 Service.prototype = {
     base: function (data, callBack) {
@@ -20,7 +21,7 @@ Service.prototype = {
                             callBack && callBack(rst.result);
                             resolve(rst.result);
                         } else {
-                            if (data.indexOf('key') > -1 && data.indexOf('insertDocument') > -1 ) {
+                            if (data.indexOf('key') > -1 && data.indexOf('insertDocument') > -1) {
                                 alert(failedMsg + '当前编号已存在！');
                             } else {
                                 alert(failedMsg + JSON.stringify(data, null, 2));
@@ -36,7 +37,6 @@ Service.prototype = {
             })
         })
     },
-
     queryCount: function (table, condition) {
         if (!table) return alert('查询表名不存在！');
         let config = {
@@ -46,7 +46,6 @@ Service.prototype = {
         };
         return this.base(config);
     },
-
     query: function (table, condition, fields, page, size, callBack) {
         if (!table) return alert('查询表名不存在！');
         let config = {
@@ -71,7 +70,7 @@ Service.prototype = {
     //         throw ('pageList err: ', err)
     //     }
     // },
-    insert: function(table, save, callBack) {
+    insert: function (table, save, callBack) {
         if (!table) return alert("插入表名不存在")
         let config = {
             command: "insert",
@@ -101,22 +100,56 @@ Service.prototype = {
         }
         return this.base(config, callBack);
     },
-
-    removeByCustomId: function(table, customId, callBack) {
-        return this.remove(table, [{col: 'customId', value: customId}], callBack);
+    removeByCustomId: function (table, customId, callBack) {
+        return this.remove(table, [{
+            col: 'customId',
+            value: customId
+        }], callBack);
     },
 
     getRouter: function(callBack) {
         return this.query(this.routerTable, [], [], null, null, callBack);
     },
     
-    removeRouter: function(condition, callBack) {
-        if (!condition || !Array.isArray(condition)) return;
-        return this.remove(this.routerTable, condition, callBack)
+    removeRouters: function(callBack) {
+        let config = {
+            command: "remove",
+            table: this.routerTable,
+            condition: [],
+        }
+        return this.base(config, callBack);
     },
 
     addRouter: function(save, callBack) {
         if (!save || !Array.isArray(save)) return;
         return this.insert(this.routerTable, save, callBack)
     },
+
+    createTable: function (data) {
+        var that = this;
+        return new Promise(function (resolve, reject) {
+            $.cajax({
+                url: that.createTableURL,
+                type: "POST",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: "json",
+                success:rst=>{
+                    var failedMsg = "操作失败！\n消息：";
+                    if (DataType.isObject(rst)) {
+                        var data = rst.errmsg;
+                        if (rst.errno === 0) {
+                            resolve(rst);
+                        } else {
+                            alert(failedMsg + JSON.stringify(data, null, 2));
+                        }
+                    } else {
+                        alert(failedMsg + "服务器数据获取异常！")
+                        reject("服务器数据获取异常！");
+                    };
+                },
+                error:err=>reject(err)
+            })
+        })
+    }
 }

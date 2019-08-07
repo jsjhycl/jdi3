@@ -421,9 +421,16 @@ function Workspace() {
                     if (isPrompt) { //如果ispromt是真值的话提示保存成功
                         alert("保存成功！");
                     }
-                    new Propertybar($("#propertybar")).init(false,null);
-                    // new OpenTemplate().init();
-                    // new OpenResource().init();
+                    // new Propertybar($("#propertybar")).init(false,null);
+                    $("#workspace").empty()
+                    $("#workspace").css({"width": "0px", "height": "0px", "background-color": "rgb(242, 242, 242)"})
+                    $("#workspace").attr("data-id","")
+                    $("#workspace").attr("data-name","")
+                    $("#workspace").attr("data-subtype","")
+                    $("#workspace").attr("data-concat","")
+                    $("#workspace").attr("data-reltemplate","")
+                    $("#name").empty()
+                    new Filter(subtype).set()
                 }).fail(function () {
                     if (isPrompt) { //如果ispromt是真值的话提示保存失败
                         alert("保存失败！");
@@ -461,95 +468,25 @@ function Workspace() {
             value: id
         }], params)
     }
-    this._setData = function (isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData) {
+    this._setData = function (isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData,saveAs) {
+        var that = this;
         if (!subtype) return; //如果id或则type或则subtype都不存在则退出函数
-
-        isPrompt = !!isPrompt; //对isPrompt进行取布尔值
-
-        var that = this,
-            property = {}
-        phone_property = {},
-            USER = 'admin';
-
-        for (var i in GLOBAL_PROPERTY) {
-            i.startsWith('phone_') ? phone_property[i] = GLOBAL_PROPERTY[i] : property[i] = GLOBAL_PROPERTY[i];
-        }
-        var name = "",
-            basicInfo = {};
-        //保存基本信息数据
-        if ($("#submit_model_tab").is(":visible")) {
-            name = $('[name="model_name"]').val() || this.$workspace.attr('data-name');
-            basicInfo["category"] = $('[name="model_category"]').val();
-            basicInfo["subCategory"] = $('[name="model_subCategory"]').val();
-            basicInfo["feature"] = $('[name="model_feature"]').val();
-            basicInfo["userGrade"] = $('[name="model_userGrade"]').val();
-            basicInfo["area"] = $('[name="model_area"]').val();
-            basicInfo["autoCreate"] = $('[name="model_autoCreate"]').val();
-            basicInfo["spare1"] = $('[name = "model_spare1"]').val();
-            basicInfo["spare2"] = $('[name = "model_spare2"]').val();
-            basicInfo["contactId"] = this.$workspace.attr('data-concat') || (id && id.slice(id.length - 3, id.length )) || "";
-        } else {
-            name = $('[name="template_name"]').val() || this.$workspace.attr('data-name');
-            basicInfo["category"] = $('[name="template_category"]').val();
-            basicInfo["subCategory"] = $('[name="template_subCategory"]:checked').val();
-        }
-
-        var params = [{
-            col: "name",
-            value: name
-        }];
-        params.push({
-            col: "basicInfo",
-            value: {
-                ...basicInfo
-            }
-        })
-        // 新建
-        if (!id) {
-            params = params.concat([{
-                col: "createTime",
-                value: new Date().toFormatString(null, true)
-            }, {
-                col: "createor",
-                value: USER
-            }]);
-            if (subtype == "表单") {
-                this._getMaxId(subtype).then(res => {
-                    id = res;
-                    params.push({
-                        col: '_id',
-                        value: id
-                    }, {
-                        col: 'customId',
-                        value: id
-                    });
-                    this._saveDb(subtype, params).then(res => {
-                        var $temp = $('<div></div>');
-                        $temp.css({
-                            "position": "absolute",
-                            "width": settingData.width,
-                            "height": settingData.height,
-                            "background-color": settingData.bgColor,
-                            "overflow": "hidden"
-                        }).append(modelData); //插入到html中
-                        modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
-                            '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
-                            $temp.get(0).outerHTML;
-                        that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, 0)
-                    })
-                }).catch(err => {})
-            }
-            if (subtype == "布局") {
-                console.log(basicInfo.area)
-                id = basicInfo.autoCreate +  basicInfo.userGrade + basicInfo.feature + basicInfo.category + basicInfo.area  + "00" + basicInfo.contactId.replace(/\((.*)\)/img, "")  ;
-                params.push({
-                    col: '_id',
-                    value: id
-                }, {
-                    col: 'customId',
-                    value: id
-                });
-                return this._saveDb(subtype, params).then(res => {
+        if(saveAs){
+            var flag = subtype == "表单" ? 0 : 1,
+                queryid = id.replace(/\((.*)\)/img, ""),
+                dbCollection = subtype == "布局" ? "newProducts" : "newResources";
+            new Service().query(dbCollection,[{col:"customId",value:queryid}]).then(res=>{
+                if(res.length < 1) return alert("获取数据错误,请检查原文件是否已经删除");
+                    var data = res[0];
+                    var params = [
+                        {col: "name", value: data.name},
+                        {col: "createor", value:"admin"},
+                        {col: "createTime",value:new Date().toFormatString(null, true)},
+                        {col: "_id", value: id},
+                        {col: "customId", value:id},
+                        {col: "basicInfo",value:data.basicInfo }
+                    ];
+                    this._saveDb(subtype,params)
                     var $temp = $('<div></div>');
                     $temp.css({
                         "position": "absolute",
@@ -561,42 +498,140 @@ function Workspace() {
                     modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
                         '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
                         $temp.get(0).outerHTML;
-                    return that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, 1)
-                }).catch(err => {})
+                    return that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, flag)    
+            })
+
+        }else{
+            isPrompt = !!isPrompt; //对isPrompt进行取布尔值
+    
+            var property = {}
+            phone_property = {},
+                USER = 'admin';
+    
+            for (var i in GLOBAL_PROPERTY) {
+                i.startsWith('phone_') ? phone_property[i] = GLOBAL_PROPERTY[i] : property[i] = GLOBAL_PROPERTY[i];
             }
-        } else {
-            var edit = (that.edit ? ";" : "") + USER + "," + new Date().toFormatString(null, true)
+            var name = "",
+                basicInfo = {};
+            //保存基本信息数据
+            if ($("#submit_model_tab").is(":visible")) {
+                name = $('[name="model_name"]').val() || this.$workspace.attr('data-name');
+                basicInfo["category"] = $('[name="model_category"]').val();
+                basicInfo["subCategory"] = $('[name="model_subCategory"]').val();
+                basicInfo["feature"] = $('[name="model_feature"]').val();
+                basicInfo["userGrade"] = $('[name="model_userGrade"]').val();
+                basicInfo["area"] = $('[name="model_area"]').val();
+                basicInfo["autoCreate"] = $('[name="model_autoCreate"]').val();
+                basicInfo["spare1"] = $('[name = "model_spare1"]').val();
+                basicInfo["spare2"] = $('[name = "model_spare2"]').val();
+                basicInfo["contactId"] = this.$workspace.attr('data-concat') || (id && id.slice(id.length - 3, id.length )) || "";
+            } else {
+                name = $('[name="template_name"]').val() || this.$workspace.attr('data-name');
+                basicInfo["category"] = $('[name="template_category"]').val();
+                basicInfo["subCategory"] = $('[name="template_subCategory"]:checked').val();
+            }
+    
+            var params = [{
+                col: "name",
+                value: name
+            }];
             params.push({
-                col: "edit",
-                value: USER + "," + edit
-            });
-            // 修改
-            var flag = subtype == "表单" ? 0 : 1;
-            params.push({
-                col: '_id',
-                value: id
-            }, {
-                col: 'customId',
-                value: id
-            });
-
-            var fn = /\([1-9]+\)$/.test(id) ? this._saveDb : this._updateDb,
-                args = /\([1-9]+\)$/.test(id) ? [subtype, params] : [subtype, id, params];
-
-            return (fn)(...args).then(res => {
-                var $temp = $('<div></div>');
-                $temp.css({
-                    "position": "absolute",
-                    "width": settingData.width,
-                    "height": settingData.height,
-                    "background-color": settingData.bgColor,
-                    "overflow": "hidden"
-                }).append(modelData); //插入到html中
-                modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
-                    '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
-                    $temp.get(0).outerHTML;
-                return that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, flag)
-            });
+                col: "basicInfo",
+                value: {
+                    ...basicInfo
+                }
+            })
+            // 新建
+            if (!id) {
+                params = params.concat([{
+                    col: "createTime",
+                    value: new Date().toFormatString(null, true)
+                }, {
+                    col: "createor",
+                    value: USER
+                }]);
+                if (subtype == "表单") {
+                    this._getMaxId(subtype).then(res => {
+                        id = res;
+                        params.push({
+                            col: '_id',
+                            value: id
+                        }, {
+                            col: 'customId',
+                            value: id
+                        });
+                        this._saveDb(subtype, params).then(res => {
+                            var $temp = $('<div></div>');
+                            $temp.css({
+                                "position": "absolute",
+                                "width": settingData.width,
+                                "height": settingData.height,
+                                "background-color": settingData.bgColor,
+                                "overflow": "hidden"
+                            }).append(modelData); //插入到html中
+                            modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
+                                '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
+                                $temp.get(0).outerHTML;
+                            that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, 0)
+                        })
+                    }).catch(err => {})
+                }
+                if (subtype == "布局") {
+                    id = basicInfo.autoCreate +  basicInfo.userGrade + basicInfo.feature + basicInfo.category + basicInfo.area  + "00" + basicInfo.contactId.replace(/\((.*)\)/img, "")  ;
+                    params.push({
+                        col: '_id',
+                        value: id
+                    }, {
+                        col: 'customId',
+                        value: id
+                    });
+                    return this._saveDb(subtype, params).then(res => {
+                        var $temp = $('<div></div>');
+                        $temp.css({
+                            "position": "absolute",
+                            "width": settingData.width,
+                            "height": settingData.height,
+                            "background-color": settingData.bgColor,
+                            "overflow": "hidden"
+                        }).append(modelData); //插入到html中
+                        modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
+                            '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
+                            $temp.get(0).outerHTML;
+                        return that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, 1)
+                    }).catch(err => {})
+                }
+            } else {
+                var edit = (that.edit ? ";" : "") + USER + "," + new Date().toFormatString(null, true)
+                params.push({
+                    col: "edit",
+                    value: USER + "," + edit
+                });
+                // 修改
+                var flag = subtype == "表单" ? 0 : 1;
+                params.push({
+                    col: '_id',
+                    value: id
+                }, {
+                    col: 'customId',
+                    value: id
+                });
+                
+    
+                return this._updateDb(subtype, id, params).then(res => {
+                    var $temp = $('<div></div>');
+                    $temp.css({
+                        "position": "absolute",
+                        "width": settingData.width,
+                        "height": settingData.height,
+                        "background-color": settingData.bgColor,
+                        "overflow": "hidden"
+                    }).append(modelData); //插入到html中
+                    modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
+                        '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
+                        $temp.get(0).outerHTML;
+                    return that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, flag)
+                });
+            }
         }
     };
     this._sameNameValidate = function () {
@@ -618,7 +653,7 @@ Workspace.prototype = {
                 'data-id': id,
                 "data-name": name,
                 "data-subtype": subtype,
-                "data-concat": customId || (id && id.slice(id.length - 6, id.length - 3)) || ""
+                "data-concat": customId || (id && id.slice(7, 10)) || ""
             };
         that.edit = edit;
         id && (text += '<span class="text-danger">' + "(" + id + ")" + '</span>'); //赋值
@@ -766,7 +801,7 @@ Workspace.prototype = {
      * @param {*} saveAs //另存
      * @param {*} isFinsh 是否是最后流程99
      */
-    save: function (isPrompt, saveAsId, isFinsh) {
+    save: function (isPrompt, saveAsId, isFinsh,saveAs) {
         var that = this,
             isValidate = that._sameNameValidate(); //调用_sameNameValidate
         if (!isValidate) return; //如果isValidate退出函数
@@ -788,7 +823,7 @@ Workspace.prototype = {
 
         if (data) { //如果data为true
             //保存数据
-            return that._setData(isPrompt, id, subtype, flow, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData); //调用_setdata
+            return that._setData(isPrompt, id, subtype, flow, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData,saveAs); //调用_setdata
 
         }
     },

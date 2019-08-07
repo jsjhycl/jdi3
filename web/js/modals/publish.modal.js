@@ -11,6 +11,9 @@ PublishModal.prototype = {
     initData: function () {
         var that = this;
         var param = {type:1,isAll:true}
+        // new Service().query("newProducts",[{"col":"status",value:""}],["customId","name","status"]).then(data=>{
+        //     con
+        // })
         new NewService().getProducts(function(data){
             if(!Array.isArray(data))return;
                 var html = '';

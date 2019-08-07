@@ -18,7 +18,7 @@ PublishModal.prototype = {
                 if(item.status != -1){
                     html += `<tr data-id="${item.customId}">
                     <td>${item.name}</td>
-                    <td>${item.status === 10?"已发布":"未发布"}</td>
+                    <td>${item.status == "10"?"已发布":"未发布"}</td>
                     <td class="text-center"><a class="btn btn-default btn-sm publish">发布</a> <a class="btn btn-danger btn-sm remove">删除</a></td>
                 </tr>`
                 }

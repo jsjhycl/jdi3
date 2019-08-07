@@ -127,7 +127,11 @@ function NewEventsModal($modal, $element) {
         this.METHODS.push({
             name: name,
             value: value
-        })
+        });
+        this.METHODS.push({
+            name: '定时查询',
+            value: 'timeQuery'
+        });
     };
     //清空数据
     this._resetData = function () {
@@ -649,7 +653,7 @@ function NewEventsModal($modal, $element) {
     }
     //获取客户自定义的方法
     this.getCustomMethods = function (triggerMethods) {
-        var customs = ["save", "upload", "login", "checkAll", "cancelAll", "saveHTML", "timeQuery"],
+        var customs = ["save", "upload", "login", "checkAll", "cancelAll", "saveHTML"],
             result = [];
         triggerMethods.each(function () {
             var value = $(this).val();

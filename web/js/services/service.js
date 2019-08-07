@@ -1,5 +1,6 @@
 function Service() {
     this.baseUrl = "/dbApi/dbOperate";
+    this.routerTable = "router"
 }
 Service.prototype = {
     base: function (data, callBack) {
@@ -59,7 +60,6 @@ Service.prototype = {
 
         return this.base(config, callBack);
     },
-
     // pageList: async function(table, condition, fields, page, size) {
     //     var that = this;
     //     try {
@@ -71,7 +71,6 @@ Service.prototype = {
     //         throw ('pageList err: ', err)
     //     }
     // },
-
     insert: function(table, save, callBack) {
         if (!table) return alert("插入表名不存在")
         let config = {
@@ -105,5 +104,19 @@ Service.prototype = {
 
     removeByCustomId: function(table, customId, callBack) {
         return this.remove(table, [{col: 'customId', value: customId}], callBack);
+    },
+
+    getRouter: function(callBack) {
+        return this.query(this.routerTable, [], [], null, null, callBack);
+    },
+    
+    removeRouter: function(condition, callBack) {
+        if (!condition || !Array.isArray(condition)) return;
+        return this.remove(this.routerTable, condition, callBack)
+    },
+
+    addRouter: function(save, callBack) {
+        if (!save || !Array.isArray(save)) return;
+        return this.insert(this.routerTable, save, callBack)
     },
 }

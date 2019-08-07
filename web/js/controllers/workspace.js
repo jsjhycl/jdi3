@@ -579,7 +579,11 @@ function Workspace() {
                 col: 'customId',
                 value: id
             });
-            return this._updateDb(subtype, id, params).then(res => {
+
+            var fn = /\([1-9]+\)$/.test(id) ? this._saveDb : this._updateDb,
+                args = /\([1-9]+\)$/.test(id) ? [subtype, params] : [subtype, id, params];
+
+            return (fn)(...args).then(res => {
                 var $temp = $('<div></div>');
                 $temp.css({
                     "position": "absolute",

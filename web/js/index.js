@@ -404,7 +404,7 @@ function propertybar() {
 				console.log(err);
 				alert("表达式生成器参数数据生成失败！");
 			});
-		});
+        });
 	})();
 
 	//静态数据源配置

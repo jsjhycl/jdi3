@@ -9,7 +9,7 @@ var AccessControl = (function () {
          */
         executeControlType: function (controlType) {
             var $elems = $('[data-target="#dataSource_static_modal"],[data-target="#dataSource_db_modal"]');//获取页面中静态数据源，数据库数据源
-            if (controlType === "文本输入框" || controlType === "下拉列表") {//判断控件类型是不是文本输入框或则下拉列表
+            if (controlType === "文本输入框" || controlType === "下拉列表" || controlType === "树形控件") {//判断控件类型是不是文本输入框或则下拉列表
                 $elems.prop("disabled", false);//如果是给静态数据源，和数据库数据源的disabled(禁止点击事件)为false
             } else {
                 $elems.prop("disabled", true);//如果不是的话则给静态数据源，合适数据库数据源的disabled(禁止点击事件)为true

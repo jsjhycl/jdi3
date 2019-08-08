@@ -129,13 +129,6 @@
                         $source: $("#workspace"),
                         $result: $expr.next(),
                         toolbar: [
-                            {title: "类型转换", type: "cast", data: {"数字": "数字", "字符": "字符"}, style: "cpanel-type"},
-                            {
-                                title: "算术运算符",
-                                type: "normal",
-                                data: {"+": "+", "-": "-", "*": "*", "/": "/"},
-                                style: "cpanel-operator"
-                            },
                             {title: "全局变量", type: "normal", data: global, style: "cpanel-global"}
                         ]
                     });

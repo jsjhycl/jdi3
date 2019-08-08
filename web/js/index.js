@@ -346,7 +346,7 @@ function propertybar() {
 					// 	data: {"+": "+", "-": "-", "*": "*", "/": "/"},
 					// 	style: "cpanel-operator"
 					// },
-					// {title: "全局变量", type: "normal", data: global, style: "cpanel-global"},
+					{title: "全局变量", type: "normal", data: global, style: "cpanel-global"},
 					// {title: "本地函数", type: "local", data: localFunction, style: "cpanel-local"},
 					// {title: "远程函数", type: "remote", data: remoteFunction, style: "cpanel-remote"}
 				],

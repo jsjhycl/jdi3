@@ -118,12 +118,13 @@ CreateResource.prototype = {
                         if(res.ok==1&&res.n==1){
                             new Workspace().load( id, name, "布局", contactId , relTemplate, that.USER, true);
                             that.$createResource.modal("hide")
+                            $("#workspace").css({"width":"0px","height":"0px"}) 
                             new Main().open()
                         }
                     })
 
 
-                })  
+                }) 
         })
     },
     execute: function() {

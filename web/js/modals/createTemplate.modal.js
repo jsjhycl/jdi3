@@ -55,6 +55,7 @@ CreateTemplate.prototype = {
                     if(res.ok==1&&res.n==1){
                         new Workspace().init( id, name, "表单", null, null, that.USER);
                         that.$modal.modal("hide")
+                        $("#workspace").css({"width":"0px","height":"0px"})
                         new Main().open()
                     }
                 })

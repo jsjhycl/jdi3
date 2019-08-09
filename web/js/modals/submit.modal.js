@@ -75,7 +75,7 @@ SubmitModal.prototype = {
         })
     },
     saveData: function () {
-        new Workspace().save(true)
+        // new Workspace().save(true)
     },
     execute: function () {
         var that = this;
@@ -143,16 +143,20 @@ SubmitModal.prototype = {
                 data = that.data;
             if(type=="表单"){
                 if(!that.$resourceName.val()) return alert("表单名为必填选项")
-                id = data.customId;
+                id = data.customId.slice(1,data.customId.length);
                 condition = [
+                    {col:"_id",value:that.$resourceCategory.val()+id},
                     {col: "name", value: that.$resourceName.val()},
+                    {col:"customId",value:that.$resourceCategory.val()+id},
+                    {col: "createTime", value:data.createTime},
+                    {col: "createor", value:data.createor},
                     {col: "basicInfo", value:{
                         category: that.$resourceCategory.val(),
                         subCategory: that.$modal.find('[name="Changetemplate_subCategory"]:checked').val()
                     }},
                     {col: "edit", value:data.edit +";"+ that.USER+","+new Date().toFormatString(null, true)}
                 ]
-                new Workspace().save(true,null,id,condition,that.$resourceName.val())
+                new Workspace().save(true,null,that.$resourceCategory.val()+id,condition,that.$resourceName.val())
             }
             if(type=="布局"){
                 console.log(data)
@@ -174,7 +178,8 @@ SubmitModal.prototype = {
                     {col: "_id", value: id},
                     {col: "name", value: that.$modalName.val()},
                     {col: "customId", value: id},
-                    {col: "createTime", value: new Date().toFormatString(null, true)},
+                    {col: "createor", value: data.createor},
+                    {col: "createTime", value: data.createTime},
                     {col: "edit", value: data.edit + ";" + that.USER+","+new Date().toFormatString(null, true)},
                     {col: "basicInfo", value:{
                         category: category,

@@ -10,7 +10,8 @@ function CreateTemplate() {
             maxId = "";
         var res = await new Service().query(this.dbCollection, null, ["customId"]);
         res.forEach(item => {
-            var numberId = NumberHelper.nameToId(item.customId.replace(/\((.*)\)/img, ""))
+            var customId = item.customId.slice(1,item.customId.length)
+            var numberId = NumberHelper.nameToId(customId.replace(/\((.*)\)/img, ""))
             arr.push(numberId)
         })
         if (arr.length > 0) {
@@ -18,7 +19,7 @@ function CreateTemplate() {
         } else {
             maxId = -1
         }
-        return NumberHelper.idToName(maxId + 1, 3);
+        return NumberHelper.idToName(maxId + 1, 2);
     }
     this._saveDb = async function (type, params) {
         var dbCollection = type == "布局" ? "newProducts" : "newResources";
@@ -36,13 +37,12 @@ CreateTemplate.prototype = {
                 category = $('[name="template_category"]').val(),
                 subCategory =$('[name="template_subCategory"]:checked').val();
             if(!name && !category && !subCategory) return alert("表单资源不能为空");
-            console.log(name)
             that._getMaxId().then(res=>{
                 var id = res,
                 params = [
-                    {col: "_id", value: id},
+                    {col: "_id", value: category+id},
                     {col: "name", value: name},
-                    {col: "customId", value: id},
+                    {col: "customId", value: category+id},
                     {col: "createTime", value:new Date().toFormatString(null, true)},
                     {col: "createor", value:that.USER},
                     {col: "basicInfo", value:{
@@ -53,7 +53,7 @@ CreateTemplate.prototype = {
                 ]
                 new Service().insert(that.dbCollection,params).then(res=>{
                     if(res.ok==1&&res.n==1){
-                        new Workspace().init( id, name, "表单", null, null, that.USER);
+                        new Workspace().init( category+id, name, "表单", null, null, that.USER);
                         that.$modal.modal("hide")
                         $("#workspace").css({"width":"0px","height":"0px"})
                         new Main().open()

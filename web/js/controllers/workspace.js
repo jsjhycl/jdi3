@@ -628,7 +628,7 @@ Workspace.prototype = {
             })
             var data = that._getData(saveId, name, type, contactId)
             if(data){
-               return that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
+                that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
             }
 
         }
@@ -644,7 +644,7 @@ Workspace.prototype = {
                     that.inserDb(dbCollection,changeData)//插入新的数据
                     var data = that._getData(saveId, name, type, contactId)
                     if(data){
-                       return that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
+                        that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
                     }
                     //设置新的属性
                     that.$workspace.attr({"data-id":changeId,"data-name":changeName})
@@ -654,22 +654,30 @@ Workspace.prototype = {
                 })
             }
             if(type=="表单"){//修改表单信息时不需要更新
-                var condition = [{col:"customId",value:changeId}],
+                saveId = changeId;
+                var queryCondition = [{col:"customId",value:changeId}],
                     data = that._getData(saveId, name, type, contactId)
-                that.updataDb(dbCollection,condition,changeData)
-                if(data){
-                  return  that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
-                }
-                that.$workspace.attr({"data-name":changeName})
-                var text = changeName+'<span class="text-danger">' + "(" + changeId + ")" + '</span>'
-                $("#name").empty().append(text)
+                that.queryDb(dbCollection,queryCondition).then( res=>{
+                    if(res.length>0) return alert(`表单ID（${changeId}）以存在`)
+                    var condition = [{col:"customId",value:id}]
+                    that.removeDb(dbCollection,condition)
+                    that.removeFile(`/resource/${id}`)
+                    that.inserDb(dbCollection,changeData)
+                    if(data){
+                         that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
+                    }
+                    that.$workspace.attr({"data-id":changeId,"data-name":changeName})
+                    var text = changeName+'<span class="text-danger">' + "(" + changeId + ")" + '</span>'
+                    $("#name").empty().append(text)
+
+                })   
             }
             //移除原来的数据 文件夹
         }
         if(!saveAsId && !changeId && !changeData){
             var data = that._getData(saveId, name, type, contactId)
             if(data){
-              return  that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
+                that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
             }
         }
 

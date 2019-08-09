@@ -45,7 +45,7 @@ DbDesignerModal.prototype = {
                     text: "中文名",
                     key: "cname",
                     template: function (value) {
-                        return '<input class="form-control" data-key="cname" style="width:80px" type="text" value="' + value + '" readonly>';
+                        return '<input class="form-control" data-key="cname" style="width:90px" type="text" value="' + value + '" readonly>';
                     }
                 }, {
                     name: "isSave",
@@ -126,7 +126,7 @@ DbDesignerModal.prototype = {
                     key: "db.desc",
                     group: true,
                     template: function (value) {
-                        return '<input class="form-control" data-key="desc" type="text" style="width:80px" value="' + value + '">';
+                        return '<input class="form-control" data-key="desc" type="text" style="width:90px" value="' + value + '">';
                     }
                 }, {
                     name: "operation",

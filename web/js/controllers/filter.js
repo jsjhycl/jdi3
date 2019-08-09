@@ -22,7 +22,7 @@ function Filter(subtype) {
         },   
         "布局": {
             zero:[],
-            first: ["save", "submit","recall", "basic", "validate", "expression", "dataSource", "events", "query", "db"],
+            first: ["save", "submit","recall", "basic", "validate", "expression", "dataSource", "events", "query", "db", "page"],
             second: []
         },
         "发布": {zero:[],first: [], second: []}

@@ -46,6 +46,7 @@
                                 '</td>' +
                             '</tr>'
                 $argsTbody.empty().append(argsHtml);
+                FunctionUtil.effect("open");
             },
             getArgsTbody: function () {
                 var result = [],
@@ -62,45 +63,25 @@
                 });
                 return result;
             },
-            // effect: function (action, $trigger, isRemote) {
-            //     var $eg = $(".eg:visible"),
-            //         $egFunction = $eg.find(".eg-function"),
-            //         fWidth = $egFunction.width();
-            //     if (action === "open") {
-            //         $egInsertFn.css("display", "block").animate({width: fWidth});
-            //         // if (fWidth <= 0 && isRemote) {
-            //         //     iWidth <= 0 ? $egContent.animate({width: cWidth - sWidth}) : '';
-            //         //     $egInsertFn.find('.insert-args').empty();
-            //         //     $egInsertFn.css("display", "none").width(0);
-            //         //     $egFunction.css("display", "block").animate({width: sWidth});
-            //         //     $('.eg .cpanel-body[data-type="remote"] .btn.active, .eg .cpanel-body[data-type="insert"] .btn.active').removeClass("active");
-            //         //     $trigger.addClass("active");
-            //         // } else if (iWidth <= 0 && !isRemote) {
-            //         //   fWidth <= 0 ? $egContent.animate({width: cWidth - sWidth}) : '';
-            //         //   $egInsertFn.find('.insert-args').empty();
-            //         //   $egFunction.css("display", "none").width(0);
-            //         //   $egInsertFn.css("display", "block").animate({width: sWidth});
-            //         //   $('.eg .cpanel-body[data-type="remote"] .btn.active,.eg .cpanel-body[data-type="insert"] .btn.active').removeClass("active");
-            //         //   $trigger.addClass("active");
-            //         // } else {
-            //         //   if ($trigger.hasClass("active")) {
-            //         //     $egContent.animate({width: dWidth - sWidth});
-            //         //       isRemote ? $egFunction.css("display", "none").animate({width: 0})
-            //         //                : $egInsertFn.css("display", "none").animate({width: 0});
-            //         //       $trigger.removeClass("active");
-            //         //     } else {
-            //         //         $egInsertFn.find('.insert-args').empty();
-            //         //         $('.eg .cpanel-body[data-type="remote"] .btn.active,.eg .cpanel-body[data-type="insert"] .btn.active').removeClass("active")
-            //         //         $trigger.addClass("active");
-            //         //     }
-            //         // }
-            //     } else {
-            //         // $egContent.animate({width: dWidth - sWidth});
-            //         // $egFunction.css("display", "none").animate({width: 0});
-            //         // $egInsertFn.css("display", "none").animate({width: 0});
-            //         // $trigger.removeClass("active");
-            //     }
-            // },
+            effect: function (action) {
+                var $eg = $(".eg:visible"),
+                    $egDialog = $eg.find(".eg-dialog"),
+                    $egContent = $eg.find(".eg-content"),
+                    $egSidebar = $eg.find(".eg-sidebar"),
+                    $egFunction = $eg.find(".eg-function"),
+                    dWidth = $egDialog.width(),
+                    cWidth = $egContent.width(),
+                    sWidth = $egSidebar.width();
+                if (action === "open") {
+                    if ($egFunction.is(":hidden")) {
+                        $egFunction.show();
+                        $egContent.animate({width: cWidth - sWidth});
+                    }
+                } else if (action === "close") {
+                    $egContent.animate({width: dWidth - sWidth});
+                    $egFunction.hide();
+                }
+            },
             convert: function (data, isInsert) {
                 var that = this,
                     result = "";
@@ -307,7 +288,6 @@
             $(".eg .eg-dialog .eg-page .eg-elem.selected").removeClass("selected");
             $(".eg .eg-dialog .eg-sidebar .eg-toolbar .btn.active").removeClass("active");
             $(".eg .eg-dialog .eg-function .function-args :text.active").removeClass("active");
-
             $(".fn-system-item.selected, .fn-types-item.selected, .fn-item.selected").removeClass('selected');
         },
         setData: function (element) {
@@ -374,10 +354,45 @@
                     }
                 }
             }
+
+            //填充工具栏数据
+            if (toolbar && toolbar.length > 0) {
+                var html = "";
+                for (var i = 0; i < toolbar.length; i++) {
+                    var item = toolbar[i],
+                        title = item.title,
+                        type = item.type,
+                        data = item.data,
+                        style = item.style ? " " + item.style : "",
+                        cpanel = '<div class="cpanel' + style + '" data-title="' + title + '">' +
+                            '<header class="cpanel-header">' +
+                            '<h4 class="cpanel-title">' + title + '</h4>' +
+                            '</header>' +
+                            '<div class="cpanel-body" data-type="' + type + '">';
+                    // if (type === "remote") {
+                    //     data.forEach(function (ditem) {
+                    //         cpanel += '<button class="btn btn-default" data-profile=\'' + JSON.stringify(ditem) + '\'>' + ditem.desc + '</button>';
+                    //     });
+                    // } else if (type === "insert") {
+                    //   data.forEach(function (iitem) {
+                    //     cpanel += '<button class="btn btn-default" data-insertFn=\'' + JSON.stringify(iitem) + '\'>' + iitem.desc + '</button>';
+                    // });
+                    // } else {
+                    for (var key in data) {
+                        var value = data[key];
+                        cpanel += '<button data-type="toolbar_btn" class="btn btn-default" value="' + value + '">' + key + '</button>';
+                    }
+                    // }
+                    cpanel += "</div></div>";
+                    html += cpanel;
+                }
+                $eg.find(".eg-toolbar").append(html);
+            }
             //填充工具栏数据
             if (Array.isArray(functions)) {
                 this.renderToolBar(functions, systemFunction);
                 this.setToolBarData(functions[0]);
+                $eg.find(".eg-function").show().end().find(".eg-content").css("width", "calc(100% - 500px)");
             } else {
                 $eg.find(".eg-function").hide().end().find(".eg-content").css("width", "calc(100% - 250px)");
             }
@@ -389,7 +404,7 @@
                     titles += '<div class="fn-types-item btn btn-default '+ (idx === 0 ? "selected" : "") +'" data-type="'+ el.title +'">'+ el.title +'</div>'
                 })
             };
-    
+
             var systemFn = "";
             if (Array.isArray(systemFunction)) {
                 systemFunction.sort(function(a, b){ return a.index > b.index})
@@ -427,7 +442,7 @@
                                     '</section></div></div>' +
                                 '</div>'
                                 
-            $(".eg").find(".eg-toolbar").empty().append(html);
+            $(".eg").find(".eg-toolbar").append(html);
         },
         setToolBarData: function(fnsData) {
             if (Object.prototype.toString.call(fnsData) !== '[object Object]') return;
@@ -479,7 +494,7 @@
             $eg.find(".eg-content,.eg-sidebar,.eg-toolbar,.eg-result,.eg-function,.eg-insertFn").css("z-index", zIndex + 1);
             $eg.find(".eg-close").css("z-index", zIndex + 2);
             $eg.find(".eg-toolbar").css("bottom", rHeight);
-            $eg.find(".eg-dialog").width(pageWidth  * .75 + sWidth * 2)
+            $eg.find(".eg-dialog").width(pageWidth  * .75 + sWidth * 2);
             $eg.fadeIn();
             if (cache.onOpen) {
                 cache.onOpen();
@@ -517,31 +532,44 @@
                 }
                 FunctionUtil.setElemSelected();
             });
-            //类型转换click事件
-            $(document).on("click" + EVENT_NAMESPACE, ".eg .cpanel-type .cpanel-body .btn", function (event) {
+            //全局变量
+            $(document).on("click" + EVENT_NAMESPACE, '.eg .cpanel-body [data-type="toolbar_btn"].btn', {element: element}, function (event) {
                 event.stopPropagation();
-                var $this = $(this),
-                    $typeCpanel = $(".eg:visible .cpanel-type"),
-                    $operatorCpanel = $(".eg:visible .cpanel-operator");
-                $typeCpanel.find(".btn.active").not(this).removeClass("active");
-                $this.toggleClass("active");
-                if ($this.hasClass("active")) {
-                    var value = $this.val();
-                    if (value === "数字") {
-                        $operatorCpanel.find(".btn").show();
-                    } else {
-                        $operatorCpanel.find(".btn").hide();
-                        $operatorCpanel.find('.btn[value="+"]').show();
-                    }
-                } else {
-                    $operatorCpanel.find(".btn").show();
+                var $eg = $(".eg:visible"),
+                    $egExpr = $eg.find(".eg-expr"),
+                    value = $(this).val();
+                //2017/9/16演示前添加的特殊处理
+                var text = $(this).text();
+                if (text.indexOf("时间控件") > -1) {
+                    var id = $("#property_id").val();
+                    value = value.replace("{ID}", id);
                 }
+                
+
+                var $list = $('.eg .eg-function').find(".eg-system-list");
+                    cache = $.data(element, CACHE_KEY);
+                console.log($list.is(":visible"))
+                if ($list.is(":visible")) {
+                    
+                    FunctionUtil.setSystemStatus(true);
+                    $(this).find(".fn-system .fn-system-item").first().click();
+                    $list.hide().prev().show();
+                    var newFn = FunctionUtil.getSystemFnOrder(cache.systemFunction);
+                    new FileService().writeFile('system_functions.json', JSON.stringify(newFn));
+                }
+                FunctionUtil.effect("close");
+                that.setExpr($egExpr, $egExpr.get(0), $egExpr.val(), value);
             });
-           
             //表达式元素input事件
             $(document).on("input" + EVENT_NAMESPACE, ".eg .eg-expr, .eg [data-type='arg']", {element: element}, function (event) {
                 event.stopPropagation();               
                 FunctionUtil.setElemSelected();
+            });
+            
+            //面板切换
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .cpanel .cpanel-header", function (event) {
+                event.stopPropagation();
+                $(this).next().slideToggle();
             });
 
             //保存
@@ -757,6 +785,8 @@
                     that.clearStyle();
                     $(".fn-container").slideUp('fast');
                 }
+
+                $(".eg .eg-function").is(":hidden") && FunctionUtil.effect("open")
             });
 
             // 移除系统函数

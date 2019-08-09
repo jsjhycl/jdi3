@@ -206,6 +206,17 @@ function ContextMenu() {
         var $workspace = $("#workspace"); //获取工作区
         $workspace.addClass("focus"); //工作区添加foucs类名
         new Property().load($workspace); //属性重新加载worksapce
+        $workspace.jresizable({
+			mode: "single",
+			multi: event.ctrlKey,
+			color: "red", // czp修改了颜色
+			onStart: function () {
+				$workspace.selectable("disable");
+			},
+			onStop: function () {
+				$workspace.selectable("enable");
+			}
+		});
     }
 
     // 复制当前行

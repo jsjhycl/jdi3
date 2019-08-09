@@ -531,6 +531,8 @@ function workspace() {
 
 	//jresizable
 	$workspace.on("click", ".workspace-node", function (event) {
+		$workspace.jresizable("destroy");
+		$workspace.removeClass("focus");
 		$("#delete").css('color', 'red');
 		$("#phone_content").find(".workspace-node").jresizable("destroy");
 		event.stopPropagation();
@@ -578,6 +580,8 @@ function workspace() {
 			$workspace.find(".ui-selected").removeClass("ui-selected");
 			new Property().clearDOM();
 			$workspace.find(".workspace-node").jresizable("destroy");
+			$workspace.jresizable("destroy");
+			$workspace.removeClass("focus");
 		}
 		$(".jcontextmenu:visible").hide();
 	});

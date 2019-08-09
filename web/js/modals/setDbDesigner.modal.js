@@ -139,7 +139,7 @@ SetDbDesignerModal.prototype = {
             if (!item.isSave) return true;
             tabledetail.push(item)
         })
-        if (!dbName || !tableName) return alert("数据库名和表名为必填选项")
+        if (!dbName || !tableName || !tableDesc) return alert("数据库名和表名,表注解为必填选项")
         if (localData[dbName]) {
             localData[dbName][tableName] = {
                 "tableDesc": tableDesc,

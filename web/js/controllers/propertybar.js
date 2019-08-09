@@ -142,7 +142,8 @@ Propertybar.prototype = {
                     }
                 })
                 Arr.forEach(function(item){
-                    options.push({name:item,value:item})
+                    
+                    options.push({name:AllDbName[key][item]["tableDesc"],value:item})
                 })
                 Common.fillSelect($select,{name:"请选择表",value:""},options,null,true)  
         })

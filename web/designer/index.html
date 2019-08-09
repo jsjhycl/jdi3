@@ -55,7 +55,8 @@
             </li>
             <li><a class="item" id="saveAs" data-first-filter="save" data-toggle="modal"
                     href="#saveAsModal">另存为...</a></a></li>
-            <li><a class="item" id="submit" data-first-filter="submit">保存</a></li>
+            <li><a class="item" id="submit" >保存</a></li>
+            <li><a class="item" id="changeID">修改</a></li>
             <li><a class="item" id="delete" data-zero-filter="delete" style="display: none">删除</a></li>
             <li><a class="item" id="recall" data-first-filter="recall" style="display: none">重新调用表单</a></li>
             <li><a class="item" id="preview" data-zero-filter="preview" style="display: none" target="_blank">预览</a>
@@ -255,18 +256,34 @@
             <div class="modal-content">
                 <header class="modal-header">
                     <button class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">新建表单资源</h4>
+                    <h4 class="modal-title">新建表单</h4>
                 </header>
                 <section class="modal-body">
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="create_template_resource_tab">
                             <form class="form-horizontal" id="template_resource_form">
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <label class="col-lg-3 control-label" for="template_resource_name">资源名称：</label>
                                     <div class="col-lg-7">
                                         <input class="form-control" id="template_resource_name" type="text"
                                             name="template_resource_name">
                                     </div>
+                                </div> -->
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3" for="template_name">表单名称</label>
+                                    <div class="col-lg-7">
+                                        <input class="form-control" id="template_name" type="text" name="template_name">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3" for="template_category">表单分类</label>
+                                    <div class="col-lg-7">
+                                        <select class="form-control" id="template_category" name="template_category"></select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3" for="template_subCategory">表单子分类</label>
+                                    <div class="checkbox " id="template_subCategory"></div>
                                 </div>
                             </form>
                         </div>
@@ -285,7 +302,7 @@
             <div class="modal-content">
                 <header class="modal-header">
                     <button class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">新建布局资源</h4>
+                    <h4 class="modal-title">新建布局</h4>
                 </header>
                 <section class="modal-body">
 
@@ -293,7 +310,7 @@
                         <div>
                             <form class="form-horizontal" id="model_resource_form">
                                 <div class="form-group">
-                                    <label class="col-lg-3 control-label" for="model_resource_subCategory">资源分类：</label>
+                                    <label class="col-lg-3 control-label" for="model_resource_subCategory">表单分类：</label>
                                     <div class="col-lg-7">
                                         <div class="checkbox" id="model_resource_subCategory"></div>
                                     </div>
@@ -306,10 +323,61 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-3 control-label" for="model_resource_name">资源名称：</label>
+                                    <label class="col-lg-3 control-label" for="model_resource_name">布局名称：</label>
                                     <div class="col-lg-7">
                                         <input class="form-control" id="model_resource_name" type="text"
                                             name="model_resource_name">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3" for="model_feature">特性:</label>
+                                    <div class="col-lg-7">
+                                        <select class="form-control" id="model_feature" name="model_feature"></select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3" for="model_category">分类</label>
+                                    <div class="col-lg-7">
+                                        <select class="form-control" id="model_category" name="model_category"></select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3" for="model_area">区域</label>
+                                    <div class="col-lg-7">
+                                        <select class="form-control" id="model_area" name="model_area"></select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3" for="model_subCategory">子分类</label>
+                                    <div class="col-lg-7">
+                                        <input class="form-control" id="model_subCategory" type="text" name="model_subCategory"
+                                        readonly="readonly">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3" for="model_subCategory">备用1</label>
+                                    <div class="col-lg-7">
+                                        <input class="form-control" id="model_spare1" type="text" name="model_spare1"
+                                            readonly="readonly">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3" for="model_subCategory">备用2</label>
+                                    <div class="col-lg-7">
+                                        <input class="form-control" id="model_spare2" type="text" name="model_spare2"
+                                            readonly="readonly">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3" for="model_userGrade">用户级别</label>
+                                    <div class="col-lg-7">
+                                        <select class="form-control" id="model_userGrade" name="model_userGrade"></select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3" for="model_autoCreate">自动分表</label>
+                                    <div class="col-lg-7">
+                                        <select class="form-control" id="model_autoCreate" name="model_autoCreate"></select>
                                     </div>
                                 </div>
                             </form>
@@ -945,76 +1013,76 @@
     </section>
 
     <!--提交模态框-->
-    <section class="modal fade" id="submitModal">
+    <section class="modal fade" id="changeId">
         <div class="modal-dialog">
             <div class="modal-content">
                 <header class="modal-header">
                     <button class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">保存</h4>
+                    <h4 class="modal-title">修改信息</h4>
                 </header>
                 <section class="modal-body">
                     <ul class="nav nav-tabs">
                         <li><a data-toggle="tab" href="#submit_template_tab">表单</a></li>
                         <li><a data-toggle="tab" href="#submit_model_tab">布局</a></li>
                     </ul>
-                    <ul class="list-group">
+                    <!-- <ul class="list-group">
                         <li class="list-group-item">名称：<span id="resource_name"></span></li>
                         <li class="list-group-item">描述：<span id="resource_desc"></span></li>
-                    </ul>
+                    </ul> -->
                     <div class="tab-content">
                         <div class="tab-pane fade" id="submit_template_tab">
                             <div class="form-group">
-                                <label class="control-label" for="template_name">表单名称</label>
-                                <input class="form-control" id="template_name" type="text" name="template_name">
+                                <label class="control-label" for="Changetemplate_name">表单名称</label>
+                                <input class="form-control" id="Changetemplate_name" type="text" name="template_name">
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="template_category">表单分类</label>
-                                <select class="form-control" id="template_category" name="template_category"></select>
+                                <label class="control-label" for="Changetemplate_category">表单分类</label>
+                                <select class="form-control" id="Changetemplate_category" name="template_category"></select>
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="template_subCategory">表单子分类</label>
-                                <div class="checkbox" id="template_subCategory"></div>
+                                <label class="control-label" for="Changetemplate_subCategory">表单子分类</label>
+                                <div class="checkbox" id="Changetemplate_subCategory" name="template_subCategory"></div>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="submit_model_tab">
                             <div class="form-group">
-                                <label class="control-label" for="model_name">名称</label>
-                                <input class="form-control" id="model_name" type="text" name="model_name">
+                                <label class="control-label" for="Changemodel_name">名称</label>
+                                <input class="form-control" id="Changemodel_name" type="text" name="model_name">
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="model_feature">特性</label>
-                                <select class="form-control" id="model_feature" name="model_feature"></select>
+                                <label class="control-label" for="Changemodel_feature">特性</label>
+                                <select class="form-control" id="Changemodel_feature" name="model_feature"></select>
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="model_category">分类</label>
-                                <select class="form-control" id="model_category" name="model_category"></select>
+                                <label class="control-label" for="Changemodel_category">分类</label>
+                                <select class="form-control" id="Changemodel_category" name="model_category"></select>
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="model_area">区域</label>
-                                <select class="form-control" id="model_area" name="model_area"></select>
+                                <label class="control-label" for="Changemodel_area">区域</label>
+                                <select class="form-control" id="Changemodel_area" name="model_area"></select>
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="model_subCategory">子分类</label>
-                                <input class="form-control" id="model_subCategory" type="text" name="model_subCategory"
+                                <label class="control-label" for="Changemodel_subCategory">子分类</label>
+                                <input class="form-control" id="Changemodel_subCategory" type="text" name="model_subCategory"
                                     readonly="readonly">
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="model_subCategory">备用1</label>
-                                <input class="form-control" id="model_spare1" type="text" name="model_spare1"
+                                <label class="control-label" for="Changemodel_spare1">备用1</label>
+                                <input class="form-control" id="Changemodel_spare1" type="text" name="model_spare1"
                                     readonly="readonly">
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="model_subCategory">备用2</label>
-                                <input class="form-control" id="model_spare2" type="text" name="model_spare2"
+                                <label class="control-label" for="Changemodel_spare2">备用2</label>
+                                <input class="form-control" id="Changemodel_spare2" type="text" name="model_spare2"
                                     readonly="readonly">
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="model_userGrade">用户级别</label>
-                                <select class="form-control" id="model_userGrade" name="model_userGrade"></select>
+                                <label class="control-label" for="Changemodel_userGrade">用户级别</label>
+                                <select class="form-control" id="Changemodel_userGrade" name="model_userGrade"></select>
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="model_autoCreate">自动分表</label>
-                                <select class="form-control" id="model_autoCreate" name="model_autoCreate"></select>
+                                <label class="control-label" for="Changemodel_autoCreate">自动分表</label>
+                                <select class="form-control" id="Changemodel_autoCreate" name="model_autoCreate"></select>
                             </div>
                         </div>
                     </div>
@@ -1025,6 +1093,8 @@
             </div>
         </div>
     </section>
+
+
 
     <section class="modal fade" id="copySendModal">
         <div class="modal-dialog w1300px">

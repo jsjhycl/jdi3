@@ -48,7 +48,8 @@ var Common = (function () {
 			Common.fillRadio($("#model_resource_subCategory"), "model_resource_subCategory", data); //调用Common的fillRadio的资源分类
 			//表单资源提交表单
 			Common.fillSelect($('[name="template_category"]'), null, result["表单分类"], null, true); //填充表单分类下拉框
-			Common.fillRadio($("#template_subCategory"), "template_subCategory", data); //填充表单分类的单选框
+            Common.fillRadio($("#template_subCategory"), "template_subCategory", data); //填充表单分类的单选框
+            Common.fillRadio($("#Changetemplate_subCategory"), "Changetemplate_subCategory", data); //填充表单分类的单选框            
 			//布局资源提交表单
 			Common.fillSelect($('[name="model_category"]'), null, result["布局分类"], null, true); //填充布局分类的下拉框
 			Common.fillSelect($('[name="model_userGrade"]'), null, result["布局用户级别"], null, true); //填充用户级别的下拉框

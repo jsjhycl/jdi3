@@ -30,8 +30,8 @@ SaveAsModal.prototype = {
         var $workspace = $("#workspace"),
             id = $workspace.attr("data-id");
             id = id.replace(/\((.*)\)/img, "");
-        var subtype = $workspace.attr("data-subtype");
-        var table = subtype == "表单" ? "newResources" : "newProducts";
+        var type = $workspace.attr("data-type");
+        var table = type == "表单" ? "newResources" : "newProducts";
         that.getLastSaveId(table, id).then(res => {
             var count = res.length;
             that.$saveAsName.val(`${id}(${count})`)
@@ -40,19 +40,18 @@ SaveAsModal.prototype = {
     saveData: function () {
         var that = this;
         var isFinsh = that.$isFinalName.prop("checked");
-        var saveAs = true
-
+        var $workspace = $("#workspace"),
+            id = $workspace.attr("data-id"),
+            type = $workspace.attr("data-type"),
+            id = id.replace(/\((.*)\)/img, "");
         if (isFinsh) {
-            new Workspace().save(true, false, isFinsh,saveAs)
+            new Workspace().save(true, `${id}(99)`,null)
         } else {
-            var $workspace = $("#workspace"),
-                id = $workspace.attr("data-id"),
-                subtype = $workspace.attr("data-subtype"),
-                id = id.replace(/\((.*)\)/img, "");
-            var table = subtype == "表单" ? "newResources" : "newProducts";
+            var table = type == "表单" ? "newResources" : "newProducts";
+            console.log()
             that.getLastSaveId(table, id).then(res => {
                 var count = res.length;
-                new Workspace().save(true, `${id}(${count})`,isFinsh,saveAs)
+                new Workspace().save(true, `${id}(${count})`,null)
             });
         }
     },

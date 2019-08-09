@@ -96,9 +96,15 @@ function navbar() {
 	insertFnModal.execute();
 
 	//提交
-	var submitModal = new SubmitModal($("#submitModal"), $("#submit"));
+	var submitModal = new SubmitModal($("#changeId"), $("#submit"));
 	submitModal.execute();
 	submitModal.bindEvents();
+
+	(function save(){
+		$("#submit").click(function(){
+			new Workspace().save(true,null,null)
+		})
+	})();
 
 	//删除
 	(function remove() {
@@ -106,14 +112,23 @@ function navbar() {
 			new Control().remove();
 		});
 	})();
-
+	(function changeID(){
+		$("#changeID").click(function(){
+			if($("#workspace").attr('data-type')){
+				$("#changeId").modal("show")
+			}else{
+				alert("请打开资源")
+			}
+		})
+	})();
+	
 	//重新调用表单
 	(function recall() {
 		$("#recall").click(function () {
 			var $workspace = $("#workspace"), //获取工作区
 				id = $workspace.attr("data-id"), //获取工作区的data-id
 				name = $workspace.attr("data-name"), //获取工作区data-name
-                subtype = $workspace.attr("data-subtype");
+                subtype = $workspace.attr("data-type");
 			if (id && subtype === "布局") { //判断是否type等于资源subtype等于布局id存在
 				var result = confirm("确定要重新调用表单吗？"); //确认是否
 				if (!result) return;
@@ -135,7 +150,7 @@ function navbar() {
 		$("#preview").click(function () { //绑定事件
             var id = $("#workspace").attr("data-id"); //获取工作区id
             if (!id) return alert("未保存！");
-			var subtype = $("#workspace").attr("data-subtype");
+			var subtype = $("#workspace").attr("data-type");
 			subtype = subtype == "布局" ? 1 : 0;
 			var href = jdi.fileApi.getConfigUrl().serverUrl + "/home/model?customId=" + id + "&type=" + subtype + "&isPreview=preview"; //拼接路径
 			require('electron').shell.openExternal(href); //使用electron打开默认浏览器

@@ -628,7 +628,7 @@ Workspace.prototype = {
             })
             var data = that._getData(saveId, name, type, contactId)
             if(data){
-                that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
+               return that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
             }
 
         }
@@ -644,7 +644,7 @@ Workspace.prototype = {
                     that.inserDb(dbCollection,changeData)//插入新的数据
                     var data = that._getData(saveId, name, type, contactId)
                     if(data){
-                        that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
+                       return that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
                     }
                     //设置新的属性
                     that.$workspace.attr({"data-id":changeId,"data-name":changeName})
@@ -658,7 +658,7 @@ Workspace.prototype = {
                     data = that._getData(saveId, name, type, contactId)
                 that.updataDb(dbCollection,condition,changeData)
                 if(data){
-                    that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
+                  return  that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
                 }
                 that.$workspace.attr({"data-name":changeName})
                 var text = changeName+'<span class="text-danger">' + "(" + changeId + ")" + '</span>'
@@ -669,11 +669,9 @@ Workspace.prototype = {
         if(!saveAsId && !changeId && !changeData){
             var data = that._getData(saveId, name, type, contactId)
             if(data){
-                that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
+              return  that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
             }
         }
 
     }
-
-
 }

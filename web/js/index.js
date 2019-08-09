@@ -148,14 +148,13 @@ function navbar() {
 	//预览
 	(function preview() {
 		$("#preview").click(function () { //绑定事件
-            var id = $("#workspace").attr("data-id"); //获取工作区id
-            if (!id) return alert("未保存！");
-			var subtype = $("#workspace").attr("data-type");
-			subtype = subtype == "布局" ? 1 : 0;
-			var href = jdi.fileApi.getConfigUrl().serverUrl + "/home/model?customId=" + id + "&type=" + subtype + "&isPreview=preview"; //拼接路径
-			require('electron').shell.openExternal(href); //使用electron打开默认浏览器
-            // new Workspace().save(false).then(() => {
-            // });
+            new Workspace().save(false,null,null,null,null)
+				var id = $("#workspace").attr("data-id"); //获取工作区id
+				if (!id) return alert("未保存！");
+				var subtype = $("#workspace").attr("data-type");
+				subtype = subtype == "布局" ? 1 : 0;
+				var href = jdi.fileApi.getConfigUrl().serverUrl + "/home/model?customId=" + id + "&type=" + subtype + "&isPreview=preview"; //拼接路径
+				require('electron').shell.openExternal(href); //使用electron打开默认浏览器   
 		});
 	})();
 

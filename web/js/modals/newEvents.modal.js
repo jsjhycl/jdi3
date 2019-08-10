@@ -4,8 +4,7 @@ function NewEventsModal($modal, $element) {
     this.$tbody = this.$modalBody.find(".table .events_tbbody");
     //怎加一条配置
     this.addItem = this.$modalBody.find(".addAll");
-    this.TRIGGER_TYPE = [
-        {
+    this.TRIGGER_TYPE = [{
             name: "加载",
             value: 'load'
         },
@@ -34,8 +33,7 @@ function NewEventsModal($modal, $element) {
             value: "focusout"
         }
     ];
-    this.Font_FAMILY = [
-        {
+    this.Font_FAMILY = [{
             name: "无",
             value: ""
         },
@@ -56,8 +54,7 @@ function NewEventsModal($modal, $element) {
             value: "serif"
         }
     ];
-    this.FONT_SIZE = [
-        {
+    this.FONT_SIZE = [{
             name: "无",
             value: ""
         },
@@ -104,7 +101,7 @@ function NewEventsModal($modal, $element) {
         try {
             var result = await new FileService().readFile("/profiles/custom_methods.json"); //调用commonService中的getFileSync方法
             this.METHODS = result || [];
-        } catch(err) {
+        } catch (err) {
             return alert('获取配置文件错误！')
         }
     };
@@ -360,7 +357,7 @@ function NewEventsModal($modal, $element) {
         if (dbName) {
             Object.keys(AllDbName[dbName]).forEach(function (item) {
                 tables.push({
-                    name: item,
+                    name: AllDbName[dbName][item].tableDesc,
                     value: item
                 })
             })
@@ -390,13 +387,13 @@ function NewEventsModal($modal, $element) {
         if (type == "table") {
             str = `<option value="">请选择抄送表格</option>`
             tables.forEach(function (item) {
-                str += `<option value="${item.value}" ${ table==item.value? "selected" : ""}>${item.name}(${item.name})</option>`
+                str += `<option value="${item.value}" ${ table==item.value? "selected" : ""}>${item.name}(${item.value})</option>`
             })
         }
         if (type == "field") {
             str = `<option value="">请选择抄送字段</option>`
             fields.forEach(function (item) {
-                str += `<option value="${item.value}" ${ field==item.value? "selected" : ""}>${item.name}(${item.name})</option>`
+                str += `<option value="${item.value}" ${ field==item.value? "selected" : ""}>${item.name}(${item.value})</option>`
             })
         }
         if (type == "fieldSplit") {
@@ -410,13 +407,14 @@ function NewEventsModal($modal, $element) {
     }
     this.renderCopySendCondition = function (conditions, dbName, table, field) {
         if (!DataType.isArray(conditions)) return "";
+        console.log(conditions)
         var that = this,
             str = "";
         conditions.forEach(function (item) {
             str += ` <tr class="copySendCondition">
             <td>
-                <select class="form-control" data-key="copySendConditionField">
-                    ${that.fillCopySend("field",dbName,table,field,null)}
+                <select class="form-control" data-key="copySendConditionField" >
+                    ${that.fillCopySend("field",dbName,table,item.field,null)}
                 </select>
             </td>
             <td>
@@ -441,12 +439,11 @@ function NewEventsModal($modal, $element) {
         return str;
 
     }
-    this.renderTimeQuery = function(timeQuery) {
+    this.renderTimeQuery = function (timeQuery) {
 
         var queryTable = "";
-            id = $("#property_id").val(),
+        id = $("#property_id").val(),
             query = new Property().getValue(id, 'query');
-        console.log(query)
         if (DataType.isObject(query)) {
             if (query.db.type === "common") {
                 queryTable = "通用查询"
@@ -455,7 +452,7 @@ function NewEventsModal($modal, $element) {
             }
         }
 
-        return  `<div style="margin: 0 20px 20px 0; display: inline-block;">
+        return `<div style="margin: 0 20px 20px 0; display: inline-block;">
                         <span>查询频率/秒</span>
                         <input style="display: inline-block;width:100px;margin-left:10px;" type="text" data-category="queryTime" class="form-control" data-key="" value="${timeQuery && timeQuery || ""}">
                 </div>
@@ -477,32 +474,13 @@ function NewEventsModal($modal, $element) {
                 <button class="btn btn-danger btn-sm removeCopySend">删除</button>
             </td>
             <td>
-                <input type="text" data-category="copySend" class="form-control" value="${item.field}" data-type="copySendElement">
-            </td>
-            <td>
-                <select class="form-control" data-key="state" data-type="copySendState">
-                    <option value="1" ${item.state==1?"selected":""}>启用</option>
-                    <option value="0" ${item.state==0?"selected":""}>禁用</option>
-                </select>
-            </td>
-            <td>
                 <select class="form-control" data-key="dbName" data-type="copySendDbName">
                     ${that.fillCopySend("dbName",item.dbName,null,null,null)}
                 </select>
             </td>
             <td>
-                <select class="form-control" data-key="table" data-type="copySendTable">
+                <select class="form-control" data-key="table" data-type="copySendTable" >
                     ${that.fillCopySend("table",item.dbName,item.table,null,null)}
-                </select>
-            </td>
-            <td>
-                <select class="form-control" data-key="field" data-type="copySendField">
-                    ${that.fillCopySend("field",item.dbName,item.table,item.field,null)}
-                </select>
-            </td>
-            <td>
-                <select class="form-control" data-key="fieldSplit" data-type="copySendFieldSplit">
-                    ${that.fillCopySend("fieldSplit",item.dbName,item.table,item.field,item.fieldSplit)}
                 </select>
             </td>
             <td>
@@ -522,23 +500,73 @@ function NewEventsModal($modal, $element) {
                 </table>
             </td>
             <td>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>元素</th>
+                            <th>状态</th>
+                            <th>抄送列</th>
+                            <th>抄送字段</th>
+                            <th>数据类型</th>
+                            <th>运算符</th>
+                            <th><button class="btn btn-primary btn-sm addCopy">添加</button></th>
+                        </tr>
+                    </thead>
+                    <thbody>
+                        ${that.renderCopySendFields(item.fields,item.dbName,item.table)}
+                    </thbody>
+                </table>
+            </td>   
+        </tr>`
+        })
+        return str;
+    }
+    this.renderCopySendFields = function (fields,dbName,table) {
+        console.log(fields)
+        if (!DataType.isArray(fields)) return;
+        var that = this,
+            str = '';
+        fields.forEach(function (item) {
+            str += `<tr class="copySendFieldTr">
+            <td>
+                <input type="text" data-category="copySend" class="form-control" value="${item.element}" data-type="copySendElement">
+            </td>
+            <td>
+                <select class="form-control" data-key="state" data-type="copySendState">
+                    <option value="1" ${item.state==1?"selected":""}>启用</option>
+                    <option value="0" ${item.state==0?"selected":""}>禁用</option>
+                </select>
+            </td>
+            <td>
+                <select class="form-control" data-key="field" data-type="copySendField" value="${item.field}">
+                    ${that.fillCopySend("field",dbName,table,item.field,null)}
+                </select>
+            </td>
+            <td>
+                <select class="form-control" data-key="fieldSplit" data-type="copySendFieldSplit" value="${item.fieldSplit}">
+                    ${that.fillCopySend("fieldSplit",dbName,table,item.field,item.fieldSplit)}
+                </select>
+            </td>
+            
+            <td>
                 <select class="form-control" data-key="copy_value_type">
                     ${that.copySendTypeOptions(item.value?item.value.type:"")}
                 </select>
             </td>
             <td>
                 <select class="form-control" data-key="copy_value_operator" >
-                      ${that.copyValueTypeOptions(3,item.value?item.value.type:null,item.value?item.value.operator:null)}              
+                    ${that.copyValueTypeOptions(3,item.value?item.value.type:null,item.value?item.value.operator:null)}              
                 </select>
             </td>
-            
+            <td>
+                <button class="btn btn-danger btn-sm removeCopy">删除</button>
+            </td>
         </tr>`
         })
         return str;
     }
     //增加一条事件配置
     this._addItem = function (item) {
-        console.log('item: ', item.subscribe.timeQuery)
         var that = this,
             $str = $(`<tr class="tr">
             <td style="width: 50px">
@@ -605,15 +633,12 @@ function NewEventsModal($modal, $element) {
                             <thead>
                                 <tr>
                                     <th ><button class="btn btn-primary btn-sm addCopySend">添加</button></th>
-                                    <th style="width:70px" class="text-center">元素</th>
-                                    <th style="width:80px" class="text-center">抄送状态</th>
-                                    <th style="width:100px" class="text-center">抄送数据库</th>
-                                    <th class="text-center">抄送表</th>
-                                    <th class="text-center">抄送列</th>
-                                    <th class="text-center">抄送字段</th>
-                                    <th class="text-center">抄送行</th>
-                                    <th class="text-center">数据类型</th>
-                                    <th class="text-center">运算符</th>
+                                    <th class="text-center"> 抄送数据库</th>
+                                    <th class="text-center"> 抄送表格</th>
+                                    <th class="text-center"> 条件配置</th>
+                                    <th class="text-center"> 抄送</th>
+
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -696,23 +721,36 @@ function NewEventsModal($modal, $element) {
             copySends = [];
         $copySends.each(function () {
             var copysend = {};
-            copysend.element = $(this).find('[data-type="copySendElement"]').val(),
-                copysend.state = $(this).find('[data-type="copySendState"]').val();
             copysend.dbName = $(this).find('[data-type="copySendDbName"]').val();
             copysend.table = $(this).find('[data-type="copySendTable"]').val();
-            copysend.field = $(this).find('[data-type="copySendField"]').val();
-            copysend.fieldSplit = Number($(this).find('[data-type="copySendFieldSplit"]').val());
-            copysend.value = null;
-            var type = $(this).find('[data-type="copy_value_type"]').val(),
-                operator = $(this).find('[data-type="copy_value_operator"]').val();
-            if (type && operator) {
-                copysend.value.type = type;
-                copysend.value.operator = operator;
-            }
+
             copysend.conditions = that.getCopySendCondition($(this).find(".copySendCondition"))
+
+            copysend.fields = that.getCopySendFields($(this).find(".copySendFieldTr"))
+
+
             copySends.push(copysend)
         })
         return copySends;
+    }
+    //获取抄送字段
+    this.getCopySendFields = function ($copySendFields) {
+        var that = this;
+        var $tr = $copySendFields,
+            fields = [];
+        $tr.each(function () {
+            var field = {};
+            field.element = $(this).find('[data-type="copySendElement"]').val();
+            field.state = $(this).find('[data-type="copySendState"]').val();
+            field.field = $(this).find('[data-type="copySendField"]').val();
+            field.fieldSplit = Number($(this).find('[data-type="copySendFieldSplit"]').val());
+            field.value = {
+                type: $(this).find('[data-key="copy_value_type"]').val(),
+                operator: $(this).find('[data-key="copy_value_operator"]').val()
+            }
+            fields.push(field)
+        })
+        return fields;
     }
     //获取改变属性
     this.getChangeProperty = function ($propertys) {
@@ -830,7 +868,7 @@ function NewEventsModal($modal, $element) {
 }
 NewEventsModal.prototype = {
     initData: async function (data) {
-                
+
         var that = this;
         that._resetData();
         that._initCustomMethods().then(() => {
@@ -840,7 +878,7 @@ NewEventsModal.prototype = {
                 data = that.data
             }
             try {
-                var desc  = await new FileService().readFile("/profiles/events_desc.json")
+                var desc = await new FileService().readFile("/profiles/events_desc.json")
                 that.evetnsDesc = desc || {
                     triggerType: {}
                 }
@@ -853,7 +891,7 @@ NewEventsModal.prototype = {
                 data.forEach(function (item) {
                     that._addItem(item)
                 })
-            } catch(err) {
+            } catch (err) {
                 return alert('获取配置文件错误！')
             }
         })
@@ -921,13 +959,14 @@ NewEventsModal.prototype = {
             }
 
         })
-        that.$element.val(JSON.stringify(result))
-        var $workspace = $("#workspace"),//获取工作区
-        $control = $workspace.find("#" + id);//获取对应id的元素
-        new Property().save(id === "BODY" ? $workspace : $control, that.$element);//实例化property调用save方法
+        result.length>0?that.$element.val(JSON.stringify(result)):that.$element.val("");
+        
+        var $workspace = $("#workspace"), //获取工作区
+            $control = $workspace.find("#" + id); //获取对应id的元素
+        new Property().save(id === "BODY" ? $workspace : $control, that.$element); //实例化property调用save方法
     },
     clearData: function () {
-        var that = this,
+        var that = this;
             id = $("#property_id").val(); //获取编号id
         if (!id) { //如果编号id不存在
             that.$modal.modal("hide"); //弹窗关闭
@@ -938,7 +977,7 @@ NewEventsModal.prototype = {
             that._resetData(); //调用_resetData
             that.$element.val(""); //将$element设置为空
             new Property().remove(id, "events"); //调用property的remove方法
-            that.$modal.modal("hide"); //弹窗隐藏
+        that.$modal.modal("hide"); //弹窗隐藏
         }
     },
     bindEvents: function () {
@@ -996,7 +1035,7 @@ NewEventsModal.prototype = {
                 $copySendTable = $(this).parents("tr").find(".copySend"),
                 $changeProperty = $(this).parents("tr").find(".changeProperty"),
                 $notify = $(this).parents("tr").find(".notify");
-                $timeQuery = $(this).parents("tr").find(".timeQuery");
+            $timeQuery = $(this).parents("tr").find(".timeQuery");
             if (value == "changeProperty") {
                 check ? $changeProperty.show() : $changeProperty.hide()
             }
@@ -1076,7 +1115,7 @@ NewEventsModal.prototype = {
                     </select>
                 </td>
                 <td>
-                    <input class="form-control" data-key="copySendConditionValue" type="text">
+                    <input class="form-control" data-category="data" data-key="copySendConditionValue" type="text">
                 </td>
                 <td>
                     <button class="btn btn-danger btn-sm removeCopyLine">删除</button>
@@ -1097,15 +1136,6 @@ NewEventsModal.prototype = {
                     <button class="btn btn-danger btn-sm removeCopySend">删除</button>
                 </td>
                 <td>
-                    <input type="text" data-category="copySend" class="form-control" data-type="copySendElement">
-                </td>
-                <td>
-                    <select class="form-control" data-key="state" data-type="copySendState">
-                        <option value="1">启用</option>
-                        <option value="0">禁用</option>
-                    </select>
-                </td>
-                <td>
                     <select class="form-control" data-key="dbName" data-type="copySendDbName">
                         ${that.fillCopySend("dbName",null,null,null,null)}
                     </select>
@@ -1113,16 +1143,6 @@ NewEventsModal.prototype = {
                 <td>
                     <select class="form-control" data-key="table" data-type="copySendTable">
                         <option value="" selected="">请选择抄送表</option>
-                    </select>
-                </td>
-                <td>
-                    <select class="form-control" data-key="field" data-type="copySendField">
-                        <option value="" selected="">请选择抄送列</option>
-                    </select>
-                </td>
-                <td>
-                    <select class="form-control" data-key="fieldSplit" data-type="copySendFieldSplit">
-                        <option value="" selected="">请选择抄送字段</option>
                     </select>
                 </td>
                 <td>
@@ -1137,14 +1157,14 @@ NewEventsModal.prototype = {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr class="copySendCondition">
                                 <td>
-                                    <select class="form-control" data-key="field">
+                                    <select class="form-control"  data-key="copySendConditionField">
                                         <option value="">请选择字段</option>
                                     </select>
                                 </td>
                                 <td>
-                                    <select class="form-control" data-key="operator">
+                                    <select class="form-control" data-key="copySendConditionOperator">
                                         <option value="" selected="">请选择操作符</option>
                                         <option value="=">等于</option>
                                         <option value="<>">不等于</option>
@@ -1156,7 +1176,7 @@ NewEventsModal.prototype = {
                                     </select>
                                 </td>
                                 <td>
-                                    <select class="form-control" data-key="type">
+                                    <select class="form-control" data-key="copySendConditionType">
                                         <option value="" selected="">请选择类型</option>
                                         <option value="String">字符串</option>
                                         <option value="Number">数字</option>
@@ -1165,7 +1185,7 @@ NewEventsModal.prototype = {
                                     </select>
                                 </td>
                                 <td>
-                                    <input class="form-control" data-key="value" type="text">
+                                    <input class="form-control"  data-key="copySendConditionValue" data-category="data" data-key="value" type="text">
                                 </td>
                                 <td>
                                     <button class="btn btn-danger btn-sm removeCopyLine">删除</button>
@@ -1175,25 +1195,63 @@ NewEventsModal.prototype = {
                     </table>
                 </td>
                 <td>
-                    <select class="form-control" data-key="copy_value_type">
-                        <option value="" selected="">数据类型</option>
-                        <option value="String">字符串</option>
-                        <option value="Number">数字</option>
-                        <option value="Element">元素</option>
-                        <option value="QueryString">查询字符串</option>
-                    </select>
-                </td>
-                <td>
-                    <select class="form-control" data-key="copy_value_operator">
-                        <option value="" selected="">运算符</option>
-                        <option value="=">赋值</option>
-                        <option value="+">自增</option>
-                        <option value="-">自减</option>
-                        <option value="*">自乘</option>
-                        <option value="/">自除</option>
-                    </select>
-                </td>
-                
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>元素</th>
+                                <th>状态</th>
+                                <th>抄送列</th>
+                                <th>抄送字段</th>
+                                <th>数据类型</th>
+                                <th>运算符</th>
+                                <th><button class="btn btn-primary btn-sm addCopy">添加</button></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="copySendFieldTr">
+                                <td>
+                                    <input type="text" data-category="copySend" class="form-control" data-type="copySendElement">
+                                </td>
+                                <td>
+                                    <select class="form-control" data-key="state" data-type="copySendState">
+                                        <option value="1">启用</option>
+                                        <option value="0">禁用</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control" data-key="field" data-type="copySendField">
+                                        <option value="" selected="">请选择抄送列</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control" data-key="fieldSplit" data-type="copySendFieldSplit">
+                                        <option value="" selected="">请选择抄送字段</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control" data-key="copy_value_type">
+                                        <option value="" selected="">数据类型</option>
+                                        <option value="String">字符串</option>
+                                        <option value="Number">数字</option>
+                                        <option value="Element">元素</option>
+                                        <option value="QueryString">查询字符串</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control" data-key="copy_value_operator">
+                                        <option value="" selected="">运算符</option>
+                                        <option value="=">赋值</option>
+                                        <option value="+">自增</option>
+                                        <option value="-">自减</option>
+                                        <option value="*">自乘</option>
+                                        <option value="/">自除</option>
+                                    </select>
+                                </td>
+                                <td><button class="btn btn-danger btn-sm removeCopy">删除</button></td>
+                                </tr>
+                        </tbody>
+                    </table>
+                </td>   
             </tr>`;
             $tbody.append(str)
         })
@@ -1223,6 +1281,7 @@ NewEventsModal.prototype = {
         //抄送表
         that.$modal.on("change", '[data-key="table"]', function () {
             var $fieldSelect = $($(this).parents("tr")[0]).find('[data-key="field"]'),
+                $conditionsField =  $($(this).parents("tr")[0]).find('[data-key="copySendConditionField"]')
                 table = $(this).val(),
                 dbName = $($(this).parents("tr")[0]).find('[data-key="dbName"]').val(),
                 fieldOptions = [];
@@ -1235,6 +1294,10 @@ NewEventsModal.prototype = {
                 })
             }
             Common.fillSelect($fieldSelect, {
+                name: "请选择字段",
+                value: ""
+            }, fieldOptions, null, true)
+            Common.fillSelect($conditionsField, {
                 name: "请选择字段",
                 value: ""
             }, fieldOptions, null, true)
@@ -1285,7 +1348,6 @@ NewEventsModal.prototype = {
                 val = isWrap ? "{" + id + "}" : $(this).data("id"),
                 isExist = originVal.isExist(null, val),
                 isAdd = !!$target.data('apply');
-            console.log(isExist);
 
             if ($(this).hasClass("applied") && isExist) {
                 $target.val(originVal.join().replace(new RegExp(val + '[,]*', 'g'), ""));
@@ -1303,7 +1365,6 @@ NewEventsModal.prototype = {
         });
         //点击触发类型加载描述
         that.$modal.on("click", '[data-desc="triggerType"]', function () {
-            console.log($(this).data())
             var value = $(this).val(),
                 data = {
                     head: that.evetnsDesc.triggerType.head,
@@ -1311,6 +1372,67 @@ NewEventsModal.prototype = {
                 }
             that.renderDescribeTable(data)
         });
+        that.$modal.on("click", ".addCopy", function () {
+            var $tbody = $($(this).parents("table")[0]).find("tbody").eq(0),
+                str = `<tr class= "copySendFieldTr">
+                <td>
+                    <input type="text" data-category="copySend" class="form-control" data-type="copySendElement">
+                </td>
+                <td>
+                    <select class="form-control" data-key="state" data-type="copySendState">
+                        <option value="1">启用</option>
+                        <option value="0">禁用</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control" data-key="field" data-type="copySendField">
+                        ${that.fillCopySend("field",$($(this).parents("tr")[1]).find('[data-key="dbName"]').val(),$($(this).parents("tr")[1]).find('[data-key="table"]').val())}
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control" data-key="fieldSplit" data-type="copySendFieldSplit">
+
+                       
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control" data-key="copy_value_type">
+                        <option value="" selected="">数据类型</option>
+                        <option value="String">字符串</option>
+                        <option value="Number">数字</option>
+                        <option value="Element">元素</option>
+                        <option value="QueryString">查询字符串</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control" data-key="copy_value_operator">
+                        <option value="" selected="">运算符</option>
+                        <option value="=">赋值</option>
+                        <option value="+">自增</option>
+                        <option value="-">自减</option>
+                        <option value="*">自乘</option>
+                        <option value="/">自除</option>
+                    </select>
+                </td>
+                <td><button class="btn btn-danger btn-sm removeCopy">删除</button></td>
+                </tr>`;
+            $tbody.append(str)
+        })
+        that.$modal.on("click", ".removeCopy", function () {
+            var $tr = $(this).parents("tr")[0];
+            that._removeItem($tr)
+        })
+        // that.$modal.on("click", '.copyLine [data-key="type"]', function(){
+        //     var $target = $(this).parent().next().children('[data-key ="value"]')
+        //     if($(this).val()=="Element"){
+        //         $target.attr({"data-category":"data"})
+        //     }else{
+        //         console.log($target.val(""))
+        //         $target.val("")
+        //         $target.removeAttr("data-category")
+        //     }
+        // })
+       
 
     },
     execute: function () {

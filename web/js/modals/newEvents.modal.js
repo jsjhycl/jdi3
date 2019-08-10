@@ -282,7 +282,7 @@ function NewEventsModal($modal, $element) {
                  <input class="form-control" data-category="conditions" data-wrap="true" data-key="rightValue" type="text" value="${item.rightValue}">
              </td>
              <td>
-                 <button class="btn btn-danger btn-sm removeTriggerCondition">删除</button>
+                <span class="del removeTriggerCondition" style="padding:0px">×</span> 
              </td>
          </tr>`
         })
@@ -306,7 +306,7 @@ function NewEventsModal($modal, $element) {
         propertys.forEach(function (item) {
             str += `<tr class="changePropertyTr">
             <td>
-                <button class="btn btn-danger btn-sm removeChangeProperty">删除</button>
+                 <span class="del removeChangeProperty" style="padding:0px">×</span> 
             </td>
             <td>
                 <input type="text" data-category="property" class="form-control" data-type="id" data-name="id" value="${item.id}">
@@ -431,7 +431,7 @@ function NewEventsModal($modal, $element) {
                 <input class="form-control" data-category="copySend_conditions" data-key="copySendConditionValue" type="text" value="${item.value}">
             </td>
             <td>
-                <button class="btn btn-danger btn-sm removeCopyLine">删除</button>
+                <span class="del removeCopyLine" style="padding:0px">×</span> 
             </td>
         </tr>`
 
@@ -471,7 +471,7 @@ function NewEventsModal($modal, $element) {
         copysend.forEach(function (item) {
             str += ` <tr class="copySendTr">
             <td>
-                <button class="btn btn-danger btn-sm removeCopySend">删除</button>
+                <span class="del removeCopySend" style="padding:0px">×</span> 
             </td>
             <td>
                 <select class="form-control" data-key="dbName" data-type="copySendDbName">
@@ -491,7 +491,7 @@ function NewEventsModal($modal, $element) {
                             <th>操作符</th>
                             <th>类型</th>
                             <th style="width:80px">数据</th>
-                            <th><button class="btn btn-primary btn-sm addCopySendLine">添加</button></th>
+                            <th><span class="add addCopySendLine" style="padding:0px">+</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -509,7 +509,7 @@ function NewEventsModal($modal, $element) {
                             <th>抄送字段</th>
                             <th>数据类型</th>
                             <th>运算符</th>
-                            <th><button class="btn btn-primary btn-sm addCopy">添加</button></th>
+                            <th><span class="add addCopy" style="padding:0px">+</span></th>
                         </tr>
                     </thead>
                     <thbody>
@@ -559,7 +559,7 @@ function NewEventsModal($modal, $element) {
                 </select>
             </td>
             <td>
-                <button class="btn btn-danger btn-sm removeCopy">删除</button>
+                <span class="del removeCopy" style="padding:0px">×</span> 
             </td>
         </tr>`
         })
@@ -570,7 +570,7 @@ function NewEventsModal($modal, $element) {
         var that = this,
             $str = $(`<tr class="tr">
             <td style="width: 50px">
-                <button class="btn btn-danger btn-sm removeAll">删除</button>
+                <span class="del removeAll" style="padding:0px">×</span> 
             </td>
             <td style="width: 140px">
                 ${that.triggerTypeOptions(item.publish.type,that.triggerName++)}
@@ -585,7 +585,7 @@ function NewEventsModal($modal, $element) {
                             <th class="text-center">操作符</th>
                             <th class="text-center">右值类型</th>
                             <th class="text-center">右数值</th>
-                            <th><button class="btn btn-primary btn-sm addTriggerCondition">添加</button></th>
+                            <th><span class="add addTriggerCondition" style="padding:0px">+</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -610,7 +610,7 @@ function NewEventsModal($modal, $element) {
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th><button class="btn btn-primary btn-sm addChangeProperty">添加</button></th>
+                                    <th><span class="add addChangeProperty" style="padding:0px">+</span></th>
                                     <th class="text-center">元素</th>
                                     <th class="text-center">字体</th>
                                     <th class="text-center">尺寸</th>
@@ -632,7 +632,7 @@ function NewEventsModal($modal, $element) {
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th ><button class="btn btn-primary btn-sm addCopySend">添加</button></th>
+                                    <th ><span class="add addCopySend" style="padding:0px">+</span></th>
                                     <th class="text-center"> 抄送数据库</th>
                                     <th class="text-center"> 抄送表格</th>
                                     <th class="text-center"> 条件配置</th>
@@ -1023,7 +1023,7 @@ NewEventsModal.prototype = {
                         <input class="form-control" data-category="conditions" data-wrap="true" data-key="rightValue" type="text">
                     </td>
                     <td>
-                        <button class="btn btn-danger btn-sm removeTriggerCondition">删除</button>
+                        <span class="del removeTriggerCondition" style="padding:0px">×</span>
                     </td>
                 </tr>`
             $tbody.append(str)
@@ -1054,7 +1054,7 @@ NewEventsModal.prototype = {
             var $tbody = $($(this).parents("table")[0]).find("tbody"),
                 str = `<tr  class="changePropertyTr">
                 <td>
-                    <button class="btn btn-danger btn-sm removeChangeProperty">删除</button>
+                    <span class="del removeChangeProperty" style="padding:0px">×</span>                 
                 </td>
                <td>
                    <input type="text" data-category="property" class="form-control" data-type="id" data-name="id">
@@ -1118,7 +1118,7 @@ NewEventsModal.prototype = {
                     <input class="form-control" data-category="data" data-key="copySendConditionValue" type="text">
                 </td>
                 <td>
-                    <button class="btn btn-danger btn-sm removeCopyLine">删除</button>
+                    <span class="del removeCopyLine" style="padding:0px">×</span>                 
                 </td>
             </tr>`;
             $tbody.append(str);
@@ -1133,7 +1133,7 @@ NewEventsModal.prototype = {
             var $tbody = $($(this).parents("table")[0]).find("tbody").eq(0),
                 str = ` <tr class="copySendTr">
                 <td>
-                    <button class="btn btn-danger btn-sm removeCopySend">删除</button>
+                     <span class="del removeCopySend" style="padding:0px">×</span>                 
                 </td>
                 <td>
                     <select class="form-control" data-key="dbName" data-type="copySendDbName">
@@ -1153,7 +1153,7 @@ NewEventsModal.prototype = {
                                 <th>操作符</th>
                                 <th>类型</th>
                                 <th style="wisth:80px">数据</th>
-                                <th><button class="btn btn-primary btn-sm addCopySendLine">添加</button></th>
+                                <th><span class="add addCopySendLine" style="padding:0px">+</span></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1188,7 +1188,7 @@ NewEventsModal.prototype = {
                                     <input class="form-control"  data-key="copySendConditionValue" data-category="data" data-key="value" type="text">
                                 </td>
                                 <td>
-                                    <button class="btn btn-danger btn-sm removeCopyLine">删除</button>
+                                    <span class="del removeCopyLine" style="padding:0px">×</span>                 
                                 </td>
                             </tr>
                         </tbody>
@@ -1204,7 +1204,7 @@ NewEventsModal.prototype = {
                                 <th>抄送字段</th>
                                 <th>数据类型</th>
                                 <th>运算符</th>
-                                <th><button class="btn btn-primary btn-sm addCopy">添加</button></th>
+                                <th><span class="add addCopy" style="padding:0px">+</span></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1247,7 +1247,9 @@ NewEventsModal.prototype = {
                                         <option value="/">自除</option>
                                     </select>
                                 </td>
-                                <td><button class="btn btn-danger btn-sm removeCopy">删除</button></td>
+                                <td>
+                                    <span class="del removeCopy" style="padding:0px">×</span> 
+                                </td>
                                 </tr>
                         </tbody>
                     </table>
@@ -1414,7 +1416,9 @@ NewEventsModal.prototype = {
                         <option value="/">自除</option>
                     </select>
                 </td>
-                <td><button class="btn btn-danger btn-sm removeCopy">删除</button></td>
+                <td>
+                    <span class="del removeCopy" style="padding:0px">×</span> 
+                </td>
                 </tr>`;
             $tbody.append(str)
         })

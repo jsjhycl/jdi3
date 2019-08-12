@@ -12,12 +12,20 @@
                     $argExample = $(".eg .eg-function .function-example"),
                     argsHtml = "",
                     target = $(".eg .eg-elem.current").data('id'),
-                    args = this.getExprArgs(fnData.name, fnType, fnData.async, fnData.voluation, target);
+                    args = this.getExprArgs(fnData.name, fnType, fnData.async, fnData.voluation, target),
+                    renderData = Array.prototype.concat([], fnData.args);
                 $functionArgs.show().next().hide();
                 $argExample.text(fnData.example || "");
                 
                 if (Array.isArray(fnData.args) && fnData.args.length > 0) {
-                    fnData.args.forEach(function(arg, idx) {
+                    if (Array.isArray(args)&& args.length > fnData.args.length){
+                        var discount = args.length - fnData.args.length;
+                        while (discount > 0) {
+                            renderData.push(fnData.args[fnData.args.length - 1]);
+                            discount --;
+                        }
+                    }
+                    renderData.forEach(function(arg, idx) {
                         argsHtml += '<tr>' +
                                         '<td data-name="' + arg.cname + '">' + arg.cname + '</td>' +
                                         '<td data-convert="' + arg.type + '">' + arg.ctype + '</td>' +
@@ -522,7 +530,7 @@
                     isActive = $(this).hasClass('selected');
                 
                 if ($arg.length > 0) {
-                    $arg.val($arg.val() === value ? "" : value)
+                    $arg.val($arg.val() === value ? "" : value).trigger("input");
                 } else {
                     if(expr.indexOf(value) > -1) {
                         $egExpr.val(expr.replace(new RegExp(value, "g"), ""));

@@ -130,18 +130,14 @@
 
             var that = this;
             //PS：此处存在依赖问题，待优化……
-            $(element).on("click" + EVENT_NAMESPACE, '[data-key="isSave"]', {
-                element: element
-            }, function (event) {
+            $(element).on("click" + EVENT_NAMESPACE, '[data-key="isSave"]', {element: element}, function (event) {
                 var current = event.data.element,
                     key = $(this).attr("data-key"),
                     $tr = $(this).parents("tr"),
                     isChecked = $(this).is(":checked");
                 that.setDefaultData(current, key, $tr, isChecked);
             });
-            $(element).on("click" + EVENT_NAMESPACE, "thead th .check-all", {
-                element: element
-            }, function (event) {
+            $(element).on("click" + EVENT_NAMESPACE, "thead th .check-all", {element: element}, function (event) {
                 var current = event.data.element,
                     index = $(this).parent("th").index(),
                     isChecked = $(this).is(":checked");

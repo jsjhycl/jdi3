@@ -255,7 +255,6 @@ Property.prototype = {
     // },
 
     getDbProperty :function(defaultName, defaultDesc){
-        console.log(defaultName, defaultDesc)
         var result = {};
         for(var id in GLOBAL_PROPERTY){
             var property = GLOBAL_PROPERTY[id],
@@ -358,7 +357,6 @@ Property.prototype = {
             try {
                 GLOBAL_PROPERTY[id][key].push(value)
             } catch (error) {
-                console.log("当前的数据结构有问题")
                 GLOBAL_PROPERTY[id][key] = []
             }
         }

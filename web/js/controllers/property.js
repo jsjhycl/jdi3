@@ -222,43 +222,44 @@ Property.prototype = {
      * @param {*} defaultName 默认的表名称
      * @param {*} defaultDesc 默认的字段描述
      */
-    getDbProperty: function (defaultName, defaultDesc) {
-        var result = {};//声明一个空对象
-        for (var id in GLOBAL_PROPERTY) {//遍历GLOBAL_PROPERTY
-            var property = GLOBAL_PROPERTY[id],//获取对应id的属性
-                db = property.db;//获取对应id下的property属性的db属性
-            if (db && !!db.isSave) {//判断db属性是否存在且db下面的isSave属性为真
-                var table = db.table;//获取对应的存入表名称
-                if (table) {//如果表存在
-                    var field = db.field,//字段名称
-                        fieldSplit = db.fieldSplit,//字段分段
-                        desc = db.desc;//字段描述
-                        dbName = db.dbName
-                    if (result.hasOwnProperty(table)) {//result对象中是存在table这个属性
-                        var fields = result[table]["fields"];
-                        if (!Array.isArray(fields)) {//如果fields不是一个数组
-                            fields = [];//给字段名称设置一个空数组
-                        }
-                        fields.push({id:id,dbName:dbName, name: field, desc: desc, type: "String", fieldSplit: fieldSplit});//向fields中添加一条对象
-                    } else {//reslut中不存在这个table
-                        result[table] = {//新增加一个table属性
-                            desc: defaultName === table ? defaultDesc : table,//如果defalutname等于table则使用defaultDesc否则table
-                            fields: []
-                        };
-                        result[table].fields.push({id:id,dbName:dbName, name: field, desc: desc, type: "String", fieldSplit: fieldSplit});//向fields中添加一条对象
-                    }
-                }
+    // getDbProperty: function (defaultName, defaultDesc) {
+    //     var result = {};//声明一个空对象
+    //     for (var id in GLOBAL_PROPERTY) {//遍历GLOBAL_PROPERTY
+    //         var property = GLOBAL_PROPERTY[id],//获取对应id的属性
+    //             db = property.db;//获取对应id下的property属性的db属性
+    //         if (db && !!db.isSave) {//判断db属性是否存在且db下面的isSave属性为真
+    //             var table = db.table;//获取对应的存入表名称
+    //             if (table) {//如果表存在
+    //                 var field = db.field,//字段名称
+    //                     fieldSplit = db.fieldSplit,//字段分段
+    //                     desc = db.desc;//字段描述
+    //                     dbName = db.dbName
+    //                 if (result.hasOwnProperty(table)) {//result对象中是存在table这个属性
+    //                     var fields = result[table]["fields"];
+    //                     if (!Array.isArray(fields)) {//如果fields不是一个数组
+    //                         fields = [];//给字段名称设置一个空数组
+    //                     }
+    //                     fields.push({id:id,dbName:dbName, name: field, desc: desc, type: "String", fieldSplit: fieldSplit});//向fields中添加一条对象
+    //                 } else {//reslut中不存在这个table
+    //                     result[table] = {//新增加一个table属性
+    //                         desc: defaultName === table ? defaultDesc : table,//如果defalutname等于table则使用defaultDesc否则table
+    //                         fields: []
+    //                     };
+    //                     result[table].fields.push({id:id,dbName:dbName, name: field, desc: desc, type: "String", fieldSplit: fieldSplit});//向fields中添加一条对象
+    //                 }
+    //             }
                 
-            }
-        }
-        return result;//返回对象
-    },
+    //         }
+    //     }
+    //     return result;//返回对象
+    // },
 
-    getSaveDbProperty :function(defaultName, defaultDesc){
+    getDbProperty :function(defaultName, defaultDesc){
+        console.log(defaultName, defaultDesc)
         var result = {};
         for(var id in GLOBAL_PROPERTY){
             var property = GLOBAL_PROPERTY[id],
-            saveDb = property.saveDb;
+            saveDb = property.db;
             if(DataType.isArray(saveDb)){
                 saveDb.forEach(db=>{
                     if (db && !!db.isSave) {//判断db属性是否存在且db下面的isSave属性为真
@@ -346,6 +347,20 @@ Property.prototype = {
             }
         } else {//如果key中不存在. 
             GLOBAL_PROPERTY[id][key] = value;//直接在全局属性中添加
+        }
+    },
+    //向数组中
+    pushValue:function( id, key, value){
+        if(!id) return;
+        if(!GLOBAL_PROPERTY[id][key]){
+            GLOBAL_PROPERTY[id][key]=[value]
+        }else{
+            try {
+                GLOBAL_PROPERTY[id][key].push(value)
+            } catch (error) {
+                console.log("当前的数据结构有问题")
+                GLOBAL_PROPERTY[id][key] = []
+            }
         }
     },
     /**

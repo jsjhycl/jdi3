@@ -909,7 +909,11 @@ li {
     cursor: pointer;
 }
 
+#events_modal .add,
 #change_router_modal .add,
+#events_modal .del,
+#dbDesignerModal .add,
+#dbDesignerModal .del,
 #change_router_modal .del {
     margin-top: 8px;
     display: inline-block;
@@ -923,7 +927,18 @@ li {
     cursor: pointer;
     -webkit-border-radius: 50%;
 }
+#events_modal .add,
+#dbDesignerModal .add,
 #change_router_modal .add {
     color: #41B883;
     border: 1px solid #41B883;
+}
+
+#dbDesignerModal1 .table tr th{
+    text-align: center;
+    white-space: nowrap;
+}
+#dbDesignerModal1 .table tr th .checkall{
+    vertical-align: sub;
+    margin-left: 7px;
 }

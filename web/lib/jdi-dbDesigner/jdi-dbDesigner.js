@@ -5,8 +5,8 @@
     function DbDesigner(elements, options, type) {
         this.$elements = elements;
         this.options = options;
-        this.type = type
-        this.dbList = null;
+        this.type = type;
+        this.dbList = null
     }
 
     DbDesigner.prototype.constructor = DbDesigner;
@@ -68,39 +68,61 @@
 
             this.dbList = cache.dbList
             var tbody = "";
-            cache.$elems.each(function (index) {
-                var id = this.id;
-                if (!id) return true;
-
-                var property = $.extend(getProperty(id), {
-                    id: id
+            if(cache.type=="setDbDesigner"){
+                cache.$elems.each(function (index) {
+                    var id = this.id;
+                    if (!id) return true;
+                    var property = $.extend(getProperty(id), {
+                        id: id
+                    });
+                    tbody += "<tr>";
+                    cache.thead.forEach(function (item) {
+                        var template = item.template || function (value) {
+                                return value;
+                            },
+                            value = that.recurseObject(property, item.key, cache.type);
+                        tbody += '<td>' + template(value[0] || "", value[1] || "") + '</td>';
+                    });
+                    tbody += "</tr>";
                 });
-
-                tbody += "<tr>";
-                cache.thead.forEach(function (item) {
-                    var template = item.template || function (value) {
-                            return value;
-                        },
-                        value = that.recurseObject(property, item.key, cache.type);
-                    tbody += '<td>' + template(value[0] || "", value[1] || "") + '</td>';
-                });
-                tbody += "</tr>";
-                var saveDb = property.saveDb
-                if (saveDb) {
-
-                    saveDb.forEach((citem, index) => {
-                        tbody += "<tr>";
-                        cache.thead.forEach(function (item) {
-                            var template = item.template || function (value) {
+            }
+            if(cache.type=="dbDesigner"){
+                var propertys= []
+                cache.$elems.each(function(index){
+                   var id = this.id;
+                   if(!id) return true;
+                    var property = $.extend(getProperty(id),{id:id})
+                    propertys.push(property)
+               })
+               propertys.forEach(item=>{
+                   
+                   if(item.db && item.db.length>0){
+                       item.db.forEach((jitem,index)=>{
+                        tbody +="<tr>";
+                        cache.thead.forEach(function (citem) {
+                            var template = citem.template || function (value) {
                                     return value;
                                 },
-                                value = that.recurseSaveObject(property, item.key, index);
+                                value = that.recurseSaveObject(item, citem.key, index);
+                            tbody += '<td>' + template(value[0] || "", value[1] || "") + '</td>';
+                        });
+                        tbody += "</tr>"; 
+                       })
+                   }else{
+                        tbody +="<tr>";
+                        cache.thead.forEach(function (citem) {
+                            var template = citem.template || function (value) {
+                                    return value;
+                                },
+                                value = that.recurseObject(item, citem.key, cache.type);
                             tbody += '<td>' + template(value[0] || "", value[1] || "") + '</td>';
                         });
                         tbody += "</tr>";
-                    })
-                }
-            });
+                   }
+               })
+
+            }
+           
             $tbody.empty().append(tbody);
         },
         bindEvents: function (element) {
@@ -188,15 +210,15 @@
                     keys = key.split(".");
                 var db = keys[0],
                     ckey = keys[1];
-                if (!temp.saveDb) {
+                if (!temp.db) {
                     temp = ["", this.getSaveOptions(data, ckey)]
                 } else {
                     if (ckey == "dbName" || ckey == "table" || ckey == "field" || ckey == "fieldSplit") {
-                        if (data["saveDb"][index][ckey]) {
-                            temp = [data["saveDb"][index][ckey], this.getSaveOptions(data, ckey, index)]
+                        if (data["db"][index][ckey]) {
+                            temp = [data["db"][index][ckey], this.getSaveOptions(data, ckey, index)]
                         }
                     } else {
-                        temp = [data[db][ckey], ""]
+                        temp = [data[db][index][ckey], ""]
                     }
                 }
 
@@ -268,15 +290,11 @@
         },
         getSaveOptions: function (data, ckey, index) {
 
-            var dbName = (data.saveDb[index] && data.saveDb[index].dbName) || "",
-                table = (data.saveDb[index] && data.saveDb[index].table) || "",
-                field = (data.saveDb[index] && data.saveDb[index].field) || "",
+            var dbName = (data.db[index] && data.db[index].dbName) || "",
+                table = (data.db[index] && data.db[index].table) || "",
+                field = (data.db[index] && data.db[index].field) || "",
                 options = [];
-                var dbList = this.dbList;
-                
-                dbList = dbList.filter(function(item){
-                    return item.key!=1&&item.key!=0;
-                })
+                var dbList = this.dbList;    
                 if (ckey == "dbName") {
                     Object.keys(dbList).forEach(function (item) {
                         options.push({

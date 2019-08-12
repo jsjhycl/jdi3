@@ -134,69 +134,34 @@ DbDesignerModal.prototype = {
                     key: "db.op",
                     group: true,
                     template: function (value) {
-                        return '<button class="btn btn-sm  btn-primary" id="dbDesignerAdd">增加</button><button style="margin-left:3px" id="dbDesignerRemove" class="btn btn-sm  btn-danger">移除</button>'
+                        return '<span id="dbDesignerAdd" class="add">+</span><span style="margin-left:10px" class="del" id="dbDesignerRemove" class="del">×</span>'
                     }
                 }
             ],
             getProperty: new Property().getProperty,
-            dbList:dbList //把property的getproperty方法赋值给getProperty
+            dbList:dbList, //把property的getproperty方法赋值给getProperty
+            type:"dbDesigner"
         });
     },
     saveData: function () {
         var that = this,
             data = that.$dbDesigner.dbDesigner("getData"); //调用getData方法
         if (!Array.isArray(data)) return alert("无效的数据类型！"); //如果data不是数组退出函数提示
-        var dbData = [], //存入db中的代码
-            repeatDbData = []; //存入重复的数据中
-        data.forEach(item => {
-            dbData.findIndex(function (citem) {
-                return citem.id == item.id
-            }) > -1 ? repeatDbData.push(item) : dbData.push(item);
-        })
         var property = new Property();
-        dbData.forEach(function (item) {
-            if (!item.isSave) return true;
-            property.setValue(item.id, "db", {
-                isSave: item.isSave, //是否入库
-                dbName: item.dbName, //存档数据库
-                table: item.table, //存档表格
-                field: item.selectField,
-                // selectField:item.selectField,
-                fieldSplit: item.selectFieldSplit, //新增加
-                desc: item.desc,
+            data.forEach(item=>{
+                property.setValue(item.id,"db",[])
             })
-        })
-        var arr = [],id = ""
-        repeatDbData.forEach(function (item) {
-            id = item.id;
-            if (!property.getValue(item.id, "saveDb")) {
-                property.setValue(item.id, "saveDb", [])
-            }
-            arr.push({
-                isSave: item.isSave, //是否入库
-                dbName: item.dbName, //存档数据库
-                table: item.table, //存档表格
-                field: item.selectField,
-                // selectField:item.selectField,
-                fieldSplit: item.selectFieldSplit, //新增加
-                desc: item.desc,
+            data.forEach(function(item){
+                if(!item.isSave) return true;
+                property.pushValue(item.id,"db",{
+                    isSave: item.isSave,//是否入库
+                    dbName:item.dbName,//存档数据库
+                    table: item.table,//存档表格
+                    field: item.selectField,
+                    fieldSplit: item.selectFieldSplit,//新增加
+                    desc: item.desc,
+                })
             })
-            
-        })
-        property.setValue(id, "saveDb", arr)
-        // var property = new Property(); //实例化property
-        // data.forEach(function (item) { //遍历data
-        //     if (!item.isSave) return true; //如果issave为false退出函数
-        //     property.setValue(item.id, "db", { //调用property的setValue方法
-        //         isSave: item.isSave, //是否入库
-        //         dbName: item.dbName, //存档数据库
-        //         table: item.table, //存档表格
-        //         field: item.selectField,
-        //         // selectField:item.selectField,
-        //         fieldSplit: item.selectFieldSplit, //新增加
-        //         desc: item.desc,
-        //     });
-        // });
     },
     execute: function () {
         var that = this;
@@ -283,8 +248,25 @@ DbDesignerModal.prototype = {
         })
         //移除一段
         that.$db.on("click" + that.NAME_SPACE, "#dbDesignerRemove", function (event) {
-            var target = $(this).parent("td").parent("tr");
-            target.remove()
+            var $table = $("#dbDesigner"),
+                $ids = $table.find('[data-key="id"]'), 
+                ids = [],
+                value = $(this).parents("tr").find('[data-key="id"]').val();
+            $ids.each(function(){
+                ids.push($(this).val())
+            })
+            console.log(value)
+            var num=0;
+            ids.forEach(function(item){
+                if(item==value){
+                    num++
+                }
+            })
+            console.log(num)
+            if(num>1){
+                var target = $(this).parent("td").parent("tr");
+                target.remove()
+            }
 
         })
     }

@@ -347,7 +347,6 @@ function Workspace() {
 
         if(type=="布局"){
             tableData = new Property().getDbProperty(contactId,name)
-            tableData = {...tableData,...new Property().getSaveDbProperty(contactId,name)}
         }
 
         var hiddenInput = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +

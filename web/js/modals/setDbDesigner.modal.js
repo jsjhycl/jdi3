@@ -20,7 +20,6 @@ function SetDbDesignerModal($modal) {
         return await new FileService().readFile("./profiles/table.json", 'utf-8')
     }
     this._getTableValue = function () {
-
         return $("#name .text-danger").text().replace(/\(|\)/g, "")
     }
     this._setDefaultTableName = function () {
@@ -40,6 +39,7 @@ function SetDbDesignerModal($modal) {
     this.setDboptions = function () {
         var that = this
         new FileService().readFile("./profiles/table.json", 'utf-8').then(res => {
+            this.localData = res;
             var AllDbName = res || {},
                 dbName = Object.keys(AllDbName);
             var options = [];
@@ -53,6 +53,7 @@ function SetDbDesignerModal($modal) {
         })
 
     }
+    this.localData = null
 }
 SetDbDesignerModal.prototype = {
     initData: function () {
@@ -85,7 +86,7 @@ SetDbDesignerModal.prototype = {
                     text: "数据类型",
                     key: "type",
                     template: function (value) {
-                        return `<select class="form-control" data-key="type"><option value="int">整型</option><option value="float">浮点型</option><option value="string">字符型</option><option value="time">日期型</option><option value="datatime">时间型</option></select>`
+                        return `<select class="form-control" data-key="type"><option value="string">字符型</option><option value="int">整型</option><option value="float">浮点型</option><option value="time">日期型</option><option value="datatime">时间型</option></select>`
                     }
                 },
                 {
@@ -93,7 +94,7 @@ SetDbDesignerModal.prototype = {
                     text: "数据长度",
                     key: "maxlength",
                     template: function (value) {
-                        return `<input class="form-control"  data-key="maxlength" type="text" value="${value}" readonly></input>`
+                        return `<input class="form-control"  data-key="maxlength" type="text" value="${value||50}"></input>`
                     }
                 },
                 {
@@ -113,7 +114,7 @@ SetDbDesignerModal.prototype = {
                     key: "db.fieldSplit",
                     group: true,
                     template: function (value) {
-                        return '<input class="form-control" data-key="fieldSplit" type="text" value="' + value + '">'
+                        return '<input class="form-control" data-key="fieldSplit"  type="text" value="' + value + '">'
                     }
                 }
             ],
@@ -133,7 +134,7 @@ SetDbDesignerModal.prototype = {
             reserveFour = that.$reserveFour.val(),
             reserveFive = that.$reserveFive.val(),
             uploderTime = new Date(),
-            localData = await new FileService().readFile("./profiles/table.json", 'utf-8') || {},
+            localData = that.localData || {},
             tabledetail = [];
         data.forEach(function (item) {
             if (!item.isSave) return true;
@@ -182,12 +183,26 @@ SetDbDesignerModal.prototype = {
             description:tableDesc,
             columns:bingocolumns 
         }
-        
-       new Service().createTable(bingoData).then(res=>{
-           this._clearData()
-           that._uploderDb(localData)
-       })
-        
+        var flag = false;
+        tabledetail.forEach(function(item){
+            if(/^[A-Za-z0-9]+$/.test(item.cname)){
+                return flag = true;
+            }
+        })
+        if(flag){
+            var sure = window.confirm("你还有元素未设置中文名，是否确认保存？")
+            if(sure){
+                new Service().createTable(bingoData).then(res=>{
+                    this._clearData()
+                    that._uploderDb(localData)
+                })
+            }
+        }else{
+            new Service().createTable(bingoData).then(res=>{
+                this._clearData()
+                that._uploderDb(localData)
+            })
+        }    
     },
 
     execute: function () {
@@ -200,7 +215,7 @@ SetDbDesignerModal.prototype = {
             var type = $(this).val()
             var $tr = $($(this).parents("tr")),
                 $dataLength = $tr.find('[data-key="maxlength"]');
-            type=="string" ? $dataLength.removeAttr("readonly") : ($dataLength.attr("readonly",true) && $dataLength.val(""))
+            type=="string" ? ($dataLength.removeAttr("readonly"),$dataLength.val(50)) : ($dataLength.attr("readonly",true) && $dataLength.val(""))
             
         })
     }

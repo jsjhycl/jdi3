@@ -503,11 +503,10 @@ function NewEventsModal($modal, $element) {
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>元素</th>
-                            <th>状态</th>
-                            <th>抄送列</th>
+                            <th>抄送列</th> 
                             <th>抄送字段</th>
                             <th>数据类型</th>
+                            <th>元素</th>
                             <th>运算符</th>
                             <th><span class="add addCopy" style="padding:0px">+</span></th>
                         </tr>
@@ -529,15 +528,6 @@ function NewEventsModal($modal, $element) {
         fields.forEach(function (item) {
             str += `<tr class="copySendFieldTr">
             <td>
-                <input type="text" data-category="copySend" class="form-control" value="${item.element}" data-type="copySendElement">
-            </td>
-            <td>
-                <select class="form-control" data-key="state" data-type="copySendState">
-                    <option value="1" ${item.state==1?"selected":""}>启用</option>
-                    <option value="0" ${item.state==0?"selected":""}>禁用</option>
-                </select>
-            </td>
-            <td>
                 <select class="form-control" data-key="field" data-type="copySendField" value="${item.field}">
                     ${that.fillCopySend("field",dbName,table,item.field,null)}
                 </select>
@@ -547,12 +537,15 @@ function NewEventsModal($modal, $element) {
                     ${that.fillCopySend("fieldSplit",dbName,table,item.field,item.fieldSplit)}
                 </select>
             </td>
-            
             <td>
                 <select class="form-control" data-key="copy_value_type">
                     ${that.copySendTypeOptions(item.value?item.value.type:"")}
                 </select>
             </td>
+            <td>
+                <input type="text" data-category="copySend" class="form-control" value="${item.element}" data-type="copySendElement">
+            </td>
+            
             <td>
                 <select class="form-control" data-key="copy_value_operator" >
                     ${that.copyValueTypeOptions(3,item.value?item.value.type:null,item.value?item.value.operator:null)}              
@@ -1198,26 +1191,16 @@ NewEventsModal.prototype = {
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>元素</th>
-                                <th>状态</th>
                                 <th>抄送列</th>
                                 <th>抄送字段</th>
                                 <th>数据类型</th>
+                                <th>元素</th>
                                 <th>运算符</th>
                                 <th><span class="add addCopy" style="padding:0px">+</span></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr class="copySendFieldTr">
-                                <td>
-                                    <input type="text" data-category="copySend" class="form-control" data-type="copySendElement">
-                                </td>
-                                <td>
-                                    <select class="form-control" data-key="state" data-type="copySendState">
-                                        <option value="1">启用</option>
-                                        <option value="0">禁用</option>
-                                    </select>
-                                </td>
                                 <td>
                                     <select class="form-control" data-key="field" data-type="copySendField">
                                         <option value="" selected="">请选择抄送列</option>
@@ -1228,18 +1211,20 @@ NewEventsModal.prototype = {
                                         <option value="" selected="">请选择抄送字段</option>
                                     </select>
                                 </td>
+                                
                                 <td>
                                     <select class="form-control" data-key="copy_value_type">
-                                        <option value="" selected="">数据类型</option>
+                                        <option value="Element">元素</option>
                                         <option value="String">字符串</option>
                                         <option value="Number">数字</option>
-                                        <option value="Element">元素</option>
                                         <option value="QueryString">查询字符串</option>
                                     </select>
                                 </td>
                                 <td>
+                                    <input type="text" data-category="copySend" class="form-control" data-type="copySendElement">
+                                </td>
+                                <td>
                                     <select class="form-control" data-key="copy_value_operator">
-                                        <option value="" selected="">运算符</option>
                                         <option value="=">赋值</option>
                                         <option value="+">自增</option>
                                         <option value="-">自减</option>
@@ -1377,15 +1362,7 @@ NewEventsModal.prototype = {
         that.$modal.on("click", ".addCopy", function () {
             var $tbody = $($(this).parents("table")[0]).find("tbody").eq(0),
                 str = `<tr class= "copySendFieldTr">
-                <td>
-                    <input type="text" data-category="copySend" class="form-control" data-type="copySendElement">
-                </td>
-                <td>
-                    <select class="form-control" data-key="state" data-type="copySendState">
-                        <option value="1">启用</option>
-                        <option value="0">禁用</option>
-                    </select>
-                </td>
+               
                 <td>
                     <select class="form-control" data-key="field" data-type="copySendField">
                         ${that.fillCopySend("field",$($(this).parents("tr")[1]).find('[data-key="dbName"]').val(),$($(this).parents("tr")[1]).find('[data-key="table"]').val())}
@@ -1397,18 +1374,20 @@ NewEventsModal.prototype = {
                        
                     </select>
                 </td>
+
                 <td>
                     <select class="form-control" data-key="copy_value_type">
-                        <option value="" selected="">数据类型</option>
+                        <option value="Element">元素</option>   
                         <option value="String">字符串</option>
                         <option value="Number">数字</option>
-                        <option value="Element">元素</option>
                         <option value="QueryString">查询字符串</option>
                     </select>
                 </td>
                 <td>
+                    <input type="text" data-category="copySend" class="form-control" data-type="copySendElement">
+                </td>
+                <td>
                     <select class="form-control" data-key="copy_value_operator">
-                        <option value="" selected="">运算符</option>
                         <option value="=">赋值</option>
                         <option value="+">自增</option>
                         <option value="-">自减</option>

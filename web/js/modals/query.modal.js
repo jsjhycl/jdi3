@@ -23,7 +23,7 @@ DbQueryModal.prototype = {
         var queryData = null;
         if (DataType.isObject(data)) {
             queryData = {
-                dbName:data.dbName,
+                dbName: data.dbName,
                 table: data.table,
                 fields: data.fields,
                 conditions: data.conditions,

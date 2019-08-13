@@ -59,7 +59,7 @@
                 fieldMode = cache.fieldMode;
             if (fieldMode === "multi") {
                 return '<div class="form-group">' +
-                    '<label class="col-lg-2 control-label">查询字段：</label>' +
+                    '<label class="col-lg-2 control-label">查询字段：<input class="check-all" type="checkbox"></label>' +
                     '<div class="col-lg-10 querier-fields" data-name="querier_fields"></div>' +
                     '</div>';
             } else {
@@ -265,6 +265,10 @@
                 }
                 that.setQuerierDate($(element).find(".querier-date").parent(), tableAutoCreate);
             });
+            $(element).on("click" + EVENT_NAMESPACE, ".check-all", {element:element}, function () {
+                var checkAll = $(this).is(":checked")
+                $(this).parents(".form-group").find("input").prop("checked",checkAll)
+            })
         }
     };
 

@@ -597,9 +597,11 @@ Workspace.prototype = {
         });
     },
     save:function(isPrompt, saveAsId, changeId, changeData,changeName){
-        var that = this,
-            isValidate = that._sameNameValidate(); //调用_sameNameValidate
-        if (!isValidate) return;
+        var that = this;
+        if(isPrompt){
+            var isValidate = that._sameNameValidate(); //调用_sameNameValidate
+            if (!isValidate) return;
+        }
         var saveId = null;
         var id = that.$workspace.attr("data-id"), //获取工作区data-id
             name = that.$workspace.attr("data-name"), //获取工作区data-name

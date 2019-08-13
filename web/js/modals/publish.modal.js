@@ -10,7 +10,7 @@ function PublishModal($modal) {
 PublishModal.prototype = {
     initData: function () {
         var that = this;
-        
+        new Workspace().save(false)
         new Service().query("newProducts", null, ["customId", "name", "status"]).then(data => {
             if (!Array.isArray(data)) return;
             var html = "";

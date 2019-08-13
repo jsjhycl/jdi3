@@ -407,7 +407,6 @@ function NewEventsModal($modal, $element) {
     }
     this.renderCopySendCondition = function (conditions, dbName, table, field) {
         if (!DataType.isArray(conditions)) return "";
-        console.log(conditions)
         var that = this,
             str = "";
         conditions.forEach(function (item) {
@@ -521,7 +520,6 @@ function NewEventsModal($modal, $element) {
         return str;
     }
     this.renderCopySendFields = function (fields,dbName,table) {
-        console.log(fields)
         if (!DataType.isArray(fields)) return;
         var that = this,
             str = '';
@@ -1255,7 +1253,7 @@ NewEventsModal.prototype = {
             if (dbName) {
                 Object.keys(AllDbName[dbName]).forEach(function (item) {
                     tableOptions.push({
-                        name: item,
+                        name: AllDbName[dbName][item]["tableDesc"],
                         value: item
                     })
                 })
@@ -1410,7 +1408,6 @@ NewEventsModal.prototype = {
         //     if($(this).val()=="Element"){
         //         $target.attr({"data-category":"data"})
         //     }else{
-        //         console.log($target.val(""))
         //         $target.val("")
         //         $target.removeAttr("data-category")
         //     }

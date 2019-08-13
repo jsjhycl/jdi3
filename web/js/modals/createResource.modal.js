@@ -42,8 +42,10 @@ CreateResource.prototype = {
         console.log(12)
         var that = this;
         //查询表单中的布局
+        that.$createResource.find("#model_resource_name").val("")
         that.$createResource.find("#model_spare1").val(0)
         that.$createResource.find("#model_spare2").val(0)
+        that.$createResource.find("#model_area").val("B")
         var dbCollection = "newResources";
         new Service().query(dbCollection,null,null).then(res=>{
             if(!Array.isArray(res)) return;

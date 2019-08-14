@@ -138,6 +138,8 @@
                 that.setDefaultData(current, key, $tr, isChecked);
             });
             $(element).on("click" + EVENT_NAMESPACE, "thead th .check-all", {element: element}, function (event) {
+                var cache = $.data(element, CACHE_KEY);
+                if(cache.type=="dbDesigner")return;
                 var current = event.data.element,
                     index = $(this).parent("th").index(),
                     isChecked = $(this).is(":checked");
@@ -167,7 +169,7 @@
                     cname = $tr.find('[data-key="cname"]').val();
                 $tr.find('[data-key="table"]').val();
                 $tr.find('[data-key="dbName"]').val()
-                $tr.find('[data-key="field"]').val(id);
+                $tr.find('[data-key="field"]').val();
                 $tr.find('[data-key="desc"]').val(cname);
             } else {
                 $tr.find(selectors).prop("disabled", true);

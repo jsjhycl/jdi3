@@ -106,6 +106,26 @@ function navbar() {
 		})
 	})();
 
+	(function(){
+		$("#openSetDB").click(function(){
+			var cnames = new Property().getArrayByKey("cname"),
+			flag = false;
+			cnames.splice(cnames.indexOf("BODY"),1)
+			cnames.forEach(function(item){
+				if(/^[A-Za-z]+$/.test(item)){
+					return flag = true;
+				}
+			})
+			if(flag){
+				var sure = window.confirm("你还有元素没有配置中文名,是否确认配置数据库？")
+				if(!sure) return;
+				$("#setDbDesignerModal").modal("show")
+			}else{
+				$("#setDbDesignerModal").modal("show")
+			}
+		})
+	})();
+
 	//删除
 	(function remove() {
 		$("#delete").click(function () {

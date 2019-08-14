@@ -12,23 +12,23 @@ function DbDesignerModal($modal) {
     this.$dbDesigner = this.$modalBody.find("#dbDesigner"); //获取数据库设计器
 
     this.$db = $("#dbDesignerModal")
-    this.setData = function(rowIndex,columnIndex,key,type){
-        var that = this;
-        var $tbody = that.$db.find(".dbdesigner tbody");
-        var $tr = $tbody.find("tr")
-        $tr.each(function(index,item){
-            if(index>columnIndex){
-                if(!$(this).find('[data-key="isSave"]').is(":checked")){                 
-                    $(this).find(`td:eq(${rowIndex}) select`).val(key).trigger("change")
-                    if(type=="field"){
-                        var value = $(this).find('[data-key="id"]').val()
-                        $(this).find(`td:eq(${rowIndex}) select`).val(value).trigger("change")
-                    }
-                }
+    // this.setData = function(rowIndex,columnIndex,key,type){
+    //     var that = this;
+    //     var $tbody = that.$db.find(".dbdesigner tbody");
+    //     var $tr = $tbody.find("tr")
+    //     $tr.each(function(index,item){
+    //         if(index>columnIndex){
+    //             if(!$(this).find('[data-key="isSave"]').is(":checked")){                 
+    //                 $(this).find(`td:eq(${rowIndex}) select`).val(key).trigger("change")
+    //                 if(type=="field"){
+    //                     var value = $(this).find('[data-key="id"]').val()
+    //                     $(this).find(`td:eq(${rowIndex}) select`).val(value).trigger("change")
+    //                 }
+    //             }
 
-            }
-        })
-    }
+    //         }
+    //     })
+    // }
 }
 
 DbDesignerModal.prototype = {
@@ -46,7 +46,7 @@ DbDesignerModal.prototype = {
         })
         that.$dbDesigner.dbDesigner({ //调用jquery的扩展方法
             disabled: false,
-            $elems: $("#workspace").find(":input"),
+            $elems: $("#workspace").find("input:not(:button)"),
             thead: [{
                     name: "id",
                     text: "编号",
@@ -211,7 +211,7 @@ DbDesignerModal.prototype = {
 
             var rowIndex = $(this).parent('td').index(),
                 columnIndex = $(this).parents('tr').index();
-            that.setData(rowIndex,columnIndex,key)
+            // that.setData(rowIndex,columnIndex,key)
         })
 
         
@@ -236,7 +236,7 @@ DbDesignerModal.prototype = {
             var rowIndex = $(this).parent('td').index(),
                 columnIndex = $(this).parents('tr').index();
 
-            that.setData(rowIndex,columnIndex,key)
+            // that.setData(rowIndex,columnIndex,key)
         })
         //切换字段
         that.$db.on("change" + that.NAME_SPACE, "[data-key='selectField']", function (event) {
@@ -268,7 +268,7 @@ DbDesignerModal.prototype = {
             var rowIndex = $(this).parent('td').index(),
                 columnIndex = $(this).parents('tr').index();
 
-            that.setData(rowIndex,columnIndex,selectField,"field")
+            // that.setData(rowIndex,columnIndex,selectField,"field")
         })
         //增加一段
         that.$db.on("click" + that.NAME_SPACE, "#dbDesignerAdd", function (event) {
@@ -296,6 +296,39 @@ DbDesignerModal.prototype = {
                 target.remove()
             }
 
+        })
+        that.$db.on("click" + that.NAME_SPACE, "[data-key='isSave']", function(evetn){
+            var id = $("#workspace").attr("data-id"),//工作区的id
+                table = $.extend(that.AllDbName,{}),//所有的tablejson
+                dbnames = Object.keys(table);//所有的数据库
+            var $tr = $(this).parents("tr"),//点击的当前行
+                $dbName = $tr.find('[data-key="dbName"]'),//数据库名
+                $table = $tr.find('[data-key="table"]'),//表明
+                $field = $tr.find('[data-key="selectField"]'),//字段名
+                $id = $tr.find('[data-key="id"]');//编号
+            if($(this).is(":checked")){
+                dbnames.forEach(function(item){
+                    if(table[item][id]){
+                        $dbName.val(item).trigger("change")
+                        $table.val(id).trigger("change")
+                        $field.val($id.val()).trigger("change")
+                    }
+                })
+            }else{
+                $dbName.val("")
+                $table.val("")
+                $field.val("")
+            }
+        })
+        that.$db.on("click"+that.NAME_SPACE,"thead th .check-all",function(){
+            var rowIndex = $(this).parent('th').index();
+            var $tbody = that.$db.find(".dbdesigner tbody");
+            var $tr = $tbody.find("tr");
+            var isChecked = $(this).is(":checked")
+                $tr.each(function(){
+                    var $checkbox = $(this).find(`td:eq(${rowIndex}) :checkbox`);
+                    $checkbox.prop("checked",!isChecked).trigger("click")
+                })  
         })
     }
 };

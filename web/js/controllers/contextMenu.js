@@ -207,16 +207,49 @@ function ContextMenu() {
         $workspace.addClass("focus"); //工作区添加foucs类名
         new Property().load($workspace); //属性重新加载worksapce
         $workspace.jresizable({
-			mode: "single",
-			multi: event.ctrlKey,
-			color: "red", // czp修改了颜色
-			onStart: function () {
-				$workspace.selectable("disable");
-			},
-			onStop: function () {
-				$workspace.selectable("enable");
-			}
-		});
+            mode: "single",
+            multi: event.ctrlKey,
+            color: "red", // czp修改了颜色
+            onStart: function () {
+                $workspace.selectable("disable");
+            },
+            onStop: function () {
+                $workspace.selectable("enable");
+            }
+        });
+    }
+
+    /**
+     * 页面自适应宽高
+     */
+    this.pageAuto = function () {
+        var $workspace = $("#workspace");
+        var $childs = $workspace.children();
+        if ($childs.length <= 0) return;
+        var top = parseFloat($childs.eq(0).css("top")),
+            left = parseFloat($childs.eq(0).css("left")),
+            width = parseFloat($childs.eq(0).outerWidth()),
+            height = parseFloat($childs.eq(0).outerHeight());
+        $childs.each(function (index, element) {
+            var childTop = parseFloat($(element).css("top")),
+                childLeft = parseFloat($(element).css("left"));
+            top = childTop < top ? childTop : top;
+            left = childLeft < left ? childLeft : left;
+            width = (parseFloat($(element).outerWidth()) + childLeft) > width ? (parseFloat($(element).outerWidth()) + childLeft) : width;
+            height = (parseFloat($(element).outerHeight()) + childTop) > height ? (parseFloat($(element).outerHeight()) + childTop) : height;
+        })
+        $childs.each(function () {
+            $(this).css({
+                top: parseFloat($(this).css("top")) - top,
+                left: parseFloat($(this).css("left")) - left
+            })
+        })
+        $workspace.css({
+            top: top,
+            left: left,
+            width: width - left,
+            height: height - top
+        })
     }
 
     // 复制当前行
@@ -315,16 +348,16 @@ function ContextMenu() {
     }
 
     // 手机元素关联工作区元素
-    this.relateWorkspace = function($el) {
+    this.relateWorkspace = function ($el) {
         var $origin = $("#workspace").find("input.focus"),
             $target = $("#phone_content").find(".resizable input");
-        
+
         if ($origin.length === 1 && $target.attr('id') === $el.attr('id')) {
             var origin_id = $origin.attr('id');
             $("#property_relatedId").val(origin_id);
             var property = new Property();
             property.setValue($el.attr('id'), "relatedId", origin_id);
-            property.getValue($el.attr('id'), "relatedId") === origin_id && alert('关联元素'+ origin_id +'成功')
+            property.getValue($el.attr('id'), "relatedId") === origin_id && alert('关联元素' + origin_id + '成功')
         }
     }
 }
@@ -394,6 +427,13 @@ ContextMenu.prototype = {
                             handler: function () {
                                 that.selectPage();
                             }
+                        },
+                        {
+                            type: "menuitem",
+                            text: "页面自适应",
+                            handler: function () {
+                                that.pageAuto();
+                            }
                         }
                     ]
                 });
@@ -460,6 +500,13 @@ ContextMenu.prototype = {
                             handler: function () {
                                 that.selectPage();
                             }
+                        },
+                        {
+                            type: "menuitem",
+                            text: "页面自适应",
+                            handler: function () {
+                                that.pageAuto();
+                            }
                         }
                     ]
                 });
@@ -521,6 +568,13 @@ ContextMenu.prototype = {
                             }
                         },
                         {
+                            type: "menuitem",
+                            text: "页面自适应",
+                            handler: function () {
+                                that.pageAuto();
+                            }
+                        },
+                        {
                             type: "separator"
                         },
                         {
@@ -552,7 +606,7 @@ ContextMenu.prototype = {
                                 that.relateWorkspace(elem);
                             }
                         }
-                        
+
                     ]
                 });
         }

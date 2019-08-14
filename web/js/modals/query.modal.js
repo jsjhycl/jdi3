@@ -27,7 +27,8 @@ DbQueryModal.prototype = {
                 table: data.table,
                 fields: data.fields,
                 conditions: data.conditions,
-                queryTime: data.queryTime
+                queryTime: data.queryTime,
+                renderTable: data.renderTable
             };
             var type = data.type || "";
             if (type) {
@@ -36,7 +37,8 @@ DbQueryModal.prototype = {
         }
         that.$querier.dbQuerier({
             fieldMode: "multi",
-            data: queryData
+            data: queryData,
+            renderTable: true,
         });
     },
     saveData: function () {
@@ -51,7 +53,8 @@ DbQueryModal.prototype = {
                 table: result.table,
                 fields: result.fields,
                 conditions: result.conditions,
-                queryTime: result.queryTime
+                queryTime: result.queryTime,
+                renderTable: result.renderTable
             },
             $workspace = $("#workspace"),
             $control = $workspace.find("#" + id);

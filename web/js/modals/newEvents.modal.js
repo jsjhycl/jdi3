@@ -158,6 +158,18 @@ function NewEventsModal($modal, $element) {
         })
         return str
     }
+    this.renderExprMethod = function(exprMethods, $node) {
+        if (!Array.isArray(exprMethods)) return "";
+        var html = "";
+        exprMethods.forEach(item => {
+            html += `<div>
+                        <input type="checkbox" checked value='${JSON.stringify(item.expression)}' class="exprMethods">
+                        <span>${item.fnName}</span>
+                    </div>`
+        });
+        $node && $node.before(html);
+        return html;
+    }
     //生成字体和尺寸 type = family字体  type = size
     this.productFont = function (type, select) {
         var str = ""
@@ -588,6 +600,7 @@ function NewEventsModal($modal, $element) {
 
             <td class="methods" style="width: 90px">
                 ${this.productMethods(item.subscribe)}
+                ${this.renderExprMethod(item.subscribe.exprMethods)}
                 <span class="buildExpression">自定义方法</span>
             </td>
 
@@ -861,7 +874,6 @@ function NewEventsModal($modal, $element) {
 }
 NewEventsModal.prototype = {
     initData: async function (data) {
-
         var that = this;
         that._resetData();
         that._initCustomMethods().then(() => {
@@ -900,6 +912,8 @@ NewEventsModal.prototype = {
                 trigger_data = null,
                 trigger_conditions = that.getTriggerConditions($(this).find('.trigger_conditions')),
                 trigger_custom_methods = that.getCustomMethods($(this).find(".triggerMethods:checked")),
+                $exprMethods = $(this).find(".exprMethods:checked"),
+                exprMethods = [],
                 copySend = null,
                 property = null,
                 notify = null,
@@ -927,11 +941,18 @@ NewEventsModal.prototype = {
                     if (item) {
                         notify.push(item)
                     }
-                })
+                });
             }
             if (that.judgeCheckMehods("timeQuery", $(this).find(".triggerMethods:checked"))) {
                 timeQuery = $(this).find('[data-category="queryTime"]').val()
-            }
+            };
+            $exprMethods.each(function() {
+                exprMethods.push({
+                    fnName: $(this).next('span').text(),
+                    expression: $(this).val()
+                })
+            });
+            
             if (trigger_type) {
                 result.push({
                     publish: {
@@ -946,7 +967,8 @@ NewEventsModal.prototype = {
                         property: property,
                         notify: notify,
                         query: query,
-                        timeQuery: timeQuery
+                        timeQuery: timeQuery,
+                        exprMethods: exprMethods
                     }
                 })
             }
@@ -1427,7 +1449,11 @@ NewEventsModal.prototype = {
                 $this.exprGenerator({
                     $source: $("#workspace"),
                     // $result: $("#property_expression"),
-                    // $result 需存在
+                    $resultFunction: function(fnName, expression) {
+                        if (!fnName || !expression) return;
+                        that.renderExprMethod([{ fnName, expression }], $this);
+                    },
+                    replaceResult: true,
                     hasBrace: true,
                     toolbar: [
                         {title: "全局变量", type: "normal", data: global, style: "cpanel-global"},
@@ -1454,8 +1480,6 @@ NewEventsModal.prototype = {
                         console.log(id, "清除");
                         var id = $("#property_id").val();
                         if (id) {
-                            
-                            // new Property().remove(id, "expression");
                         }
                     }
                 });

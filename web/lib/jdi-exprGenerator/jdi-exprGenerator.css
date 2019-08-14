@@ -452,6 +452,9 @@
 .eg .eg-function .eg-system-list {
     display: none;
 }
+.eg .eg-function .btn.btn-default.btn-sm {
+    padding: 0 4px;
+}
 .cfooter {
     padding: 10px 0;
     text-align: center;

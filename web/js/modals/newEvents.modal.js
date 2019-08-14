@@ -130,6 +130,7 @@ function NewEventsModal($modal, $element) {
             value: 'timeQuery'
         });
     };
+
     //清空数据
     this._resetData = function () {
         this.$tbody.empty();
@@ -587,6 +588,7 @@ function NewEventsModal($modal, $element) {
 
             <td class="methods" style="width: 90px">
                 ${this.productMethods(item.subscribe)}
+                <span class="buildExpression">自定义方法</span>
             </td>
 
             <td class="condition">
@@ -1403,15 +1405,66 @@ NewEventsModal.prototype = {
             var $tr = $(this).parents("tr")[0];
             that._removeItem($tr)
         })
-        // that.$modal.on("click", '.copyLine [data-key="type"]', function(){
-        //     var $target = $(this).parent().next().children('[data-key ="value"]')
-        //     if($(this).val()=="Element"){
-        //         $target.attr({"data-category":"data"})
-        //     }else{
-        //         $target.val("")
-        //         $target.removeAttr("data-category")
-        //     }
-        // })
+        that.$modal.on('click', ".buildExpression", function() {
+            var $this = $(this),
+                fileService = new FileService();
+            $.when(fileService.readFile("/profiles/global.json", "UTF-8"),
+            fileService.readFile("/profiles/local_functions.json", "UTF-8"),
+            fileService.readFile("/profiles/remote_functions.json", "UTF-8"),
+            fileService.readFile("/profiles/system_functions.json", "UTF-8")).done(function (result1, result2, result3, result4) {
+				if (!result1 || !result2 || !result3 || !result4) return;
+				var staticGlobal = result1,
+					localFunction = result2,
+					remoteFunction = result3,
+                    systemFunction = result4,
+                    global = {};
+                if (DataType.isObject(staticGlobal)) { //如果
+                    for (var key in staticGlobal) {
+                        var value = staticGlobal[key];
+                        global[value + "(静态)"] = "GLOBAL." + key;
+                    }
+                }
+                $this.exprGenerator({
+                    $source: $("#workspace"),
+                    // $result: $("#property_expression"),
+                    // $result 需存在
+                    hasBrace: true,
+                    toolbar: [
+                        {title: "全局变量", type: "normal", data: global, style: "cpanel-global"},
+                    ],
+                    functions: [{
+                            data: localFunction,
+                            title: "本地函数"
+                        },
+                        {
+                            data: remoteFunction,
+                            title: "远程函数"
+                        }
+                    ],
+                    systemFunction: systemFunction,
+                    onSetProperty: function (expr) {
+                        console.log(id, "保存");
+                        var id = $("#property_id").val();
+                        if (id) {
+                            
+                            // new Property().setValue(id, "expression", expr);
+                        }
+                    },
+                    onClearProperty: function () {
+                        console.log(id, "清除");
+                        var id = $("#property_id").val();
+                        if (id) {
+                            
+                            // new Property().remove(id, "expression");
+                        }
+                    }
+                });
+                    
+			}).fail(function (err) {
+				console.log(err);
+				alert("自定义方法配置窗口生成失败！");
+			});
+        })
        
 
     },

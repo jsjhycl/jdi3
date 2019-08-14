@@ -942,3 +942,7 @@ li {
     vertical-align: sub;
     margin-left: 7px;
 }
+.buildExpression {
+    font-size: 12px;
+    text-decoration: underline;
+}

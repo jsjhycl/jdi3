@@ -12,8 +12,23 @@ function DbDesignerModal($modal) {
     this.$dbDesigner = this.$modalBody.find("#dbDesigner"); //获取数据库设计器
 
     this.$db = $("#dbDesignerModal")
+    this.setData = function(rowIndex,columnIndex,key,type){
+        var that = this;
+        var $tbody = that.$db.find(".dbdesigner tbody");
+        var $tr = $tbody.find("tr")
+        $tr.each(function(index,item){
+            if(index>columnIndex){
+                if(!$(this).find('[data-key="isSave"]').is(":checked")){                 
+                    $(this).find(`td:eq(${rowIndex}) select`).val(key).trigger("change")
+                    if(type=="field"){
+                        var value = $(this).find('[data-key="id"]').val()
+                        $(this).find(`td:eq(${rowIndex}) select`).val(value).trigger("change")
+                    }
+                }
 
-
+            }
+        })
+    }
 }
 
 DbDesignerModal.prototype = {
@@ -193,7 +208,13 @@ DbDesignerModal.prototype = {
                 name: "请选择表",
                 value: ""
             }, arrTableNames, null, true)
+
+            var rowIndex = $(this).parent('td').index(),
+                columnIndex = $(this).parents('tr').index();
+            that.setData(rowIndex,columnIndex,key)
         })
+
+        
         //切换表格时
         that.$db.on("change" + that.NAME_SPACE, "[data-key='table']", function (event) {
             var $selectDbVal = $(event.target).parents("tr").find('[data-key="dbName"]').val(),
@@ -212,6 +233,10 @@ DbDesignerModal.prototype = {
                 name: "请选择字段",
                 value: ""
             }, arrFieldsNames, null, true)
+            var rowIndex = $(this).parent('td').index(),
+                columnIndex = $(this).parents('tr').index();
+
+            that.setData(rowIndex,columnIndex,key)
         })
         //切换字段
         that.$db.on("change" + that.NAME_SPACE, "[data-key='selectField']", function (event) {
@@ -239,6 +264,11 @@ DbDesignerModal.prototype = {
                 name: "请选择第几段",
                 value: ""
             }, fieldSplit, null, true)
+
+            var rowIndex = $(this).parent('td').index(),
+                columnIndex = $(this).parents('tr').index();
+
+            that.setData(rowIndex,columnIndex,selectField,"field")
         })
         //增加一段
         that.$db.on("click" + that.NAME_SPACE, "#dbDesignerAdd", function (event) {
@@ -255,14 +285,12 @@ DbDesignerModal.prototype = {
             $ids.each(function(){
                 ids.push($(this).val())
             })
-            console.log(value)
             var num=0;
             ids.forEach(function(item){
                 if(item==value){
                     num++
                 }
             })
-            console.log(num)
             if(num>1){
                 var target = $(this).parent("td").parent("tr");
                 target.remove()

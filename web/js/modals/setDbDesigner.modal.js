@@ -1,5 +1,5 @@
 function SetDbDesignerModal($modal) {
-    this.$modal = $modal;//赋值
+    this.$modal = $modal; //赋值
     this.$modalBody = $modal.find(".modal-body");
 
     this.Name_space = ".setDbDesigner";
@@ -169,41 +169,43 @@ SetDbDesignerModal.prototype = {
             }
         }
         var bingocolumns = []
-        tabledetail.forEach(function(item){
+        tabledetail.forEach(function (item) {
             var obj = {
-                name:item.id,
-                type:item.type,
-                cname:item.cname
+                name: item.id,
+                type: item.type,
+                cname: item.cname
             }
-            if(item.type=="string"){obj.maxlength=item.maxlength}
+            if (item.type == "string") {
+                obj.maxlength = item.maxlength
+            }
             bingocolumns.push(obj)
         })
-    
+
         var bingoData = {
-            database:dbName,
-            table:tableName,
-            description:tableDesc,
-            columns:bingocolumns 
-        }        
-            new Service().createTable(bingoData).then(res=>{
-                this._clearData()
-                that._uploderDb(localData)
-            })
+            database: dbName,
+            table: tableName,
+            description: tableDesc,
+            columns: bingocolumns
+        }
+        new Service().createTable(bingoData).then(res => {
+            this._clearData()
+            that._uploderDb(localData)
+        })
     },
 
     execute: function () {
         var that = this;
-        that.$modal.on("show.bs.modal",function(){
+        that.$modal.on("show.bs.modal", function () {
             that.initData()
         })
-        that.$modal.find(".modal-header .close").on("click",function(){
+        that.$modal.find(".modal-header .close").on("click", function () {
             that.$modal.modal("hide")
         })
-        that.$modal.find(".modal-footer .save").on("click",function(){
+        that.$modal.find(".modal-footer .save").on("click", function () {
             that.saveData()
             that.$modal.modal("hide")
         })
-        
+
         // that.basicEvents(null, that.initData, that.saveData, null); //绑定基础事件
     },
     bindEvents: function () {
@@ -212,8 +214,8 @@ SetDbDesignerModal.prototype = {
             var type = $(this).val()
             var $tr = $($(this).parents("tr")),
                 $dataLength = $tr.find('[data-key="maxlength"]');
-            type=="string" ? ($dataLength.removeAttr("readonly"),$dataLength.val(50)) : ($dataLength.attr("readonly",true) && $dataLength.val(""))
-            
+            type == "string" ? ($dataLength.removeAttr("readonly"), $dataLength.val(50)) : ($dataLength.attr("readonly", true) && $dataLength.val(""))
+
         })
     }
 }

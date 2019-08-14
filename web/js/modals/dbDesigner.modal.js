@@ -157,6 +157,12 @@ DbDesignerModal.prototype = {
             dbList:dbList, //把property的getproperty方法赋值给getProperty
             type:"dbDesigner"
         });
+        var $addtr = that.$dbDesigner.find("tbody .addtr")
+        $addtr.each(function(){
+            $(this).find('[data-key="id"]').css("display","none")
+            $(this).find('[data-key="cname"]').css("display","none")
+            // $(this).find('[data-key="isSave"]').css("display","none")
+        })
     },
     saveData: function () {
         var that = this,
@@ -274,6 +280,11 @@ DbDesignerModal.prototype = {
         that.$db.on("click" + that.NAME_SPACE, "#dbDesignerAdd", function (event) {
             var target = $(this).parent("td").parent("tr"),
                 html = target.clone();
+                html = $.extend(html,{})
+                html.addClass("addtr")
+                $(html).find('[data-key="id"]').css("display","none")
+                $(html).find('[data-key="cname"]').css("display","none")
+                // $(html).find('[data-key="isSave"]').css("display","none")
             target.after(html)
         })
         //移除一段

@@ -1,5 +1,7 @@
 function SetDbDesignerModal($modal) {
-    BaseModal.call(this, $modal, null)
+    this.$modal = $modal;//赋值
+    this.$modalBody = $modal.find(".modal-body");
+
     this.Name_space = ".setDbDesigner";
     this.$setDbDesigner = this.$modalBody.find("#setDbDesigner");
     this.NAME_SPACE = ".setdbDesigner"
@@ -64,7 +66,7 @@ SetDbDesignerModal.prototype = {
         //渲染表格
         that.$setDbDesigner.dbDesigner({
             disabled: false,
-            $elems: $("#workspace").find(":input"),
+            $elems: $("#workspace").find("input:not(:button)"),
             thead: [{
                     name: "id",
                     text: "编号",
@@ -182,32 +184,27 @@ SetDbDesignerModal.prototype = {
             table:tableName,
             description:tableDesc,
             columns:bingocolumns 
-        }
-        var flag = false;
-        tabledetail.forEach(function(item){
-            if(/^[A-Za-z0-9]+$/.test(item.cname)){
-                return flag = true;
-            }
-        })
-        if(flag){
-            var sure = window.confirm("你还有元素未设置中文名，是否确认保存？")
-            if(sure){
-                new Service().createTable(bingoData).then(res=>{
-                    this._clearData()
-                    that._uploderDb(localData)
-                })
-            }
-        }else{
+        }        
             new Service().createTable(bingoData).then(res=>{
                 this._clearData()
                 that._uploderDb(localData)
             })
-        }    
     },
 
     execute: function () {
         var that = this;
-        that.basicEvents(null, that.initData, that.saveData, null); //绑定基础事件
+        that.$modal.on("show.bs.modal",function(){
+            that.initData()
+        })
+        that.$modal.find(".modal-header .close").on("click",function(){
+            that.$modal.modal("hide")
+        })
+        that.$modal.find(".modal-footer .save").on("click",function(){
+            that.saveData()
+            that.$modal.modal("hide")
+        })
+        
+        // that.basicEvents(null, that.initData, that.saveData, null); //绑定基础事件
     },
     bindEvents: function () {
         var that = this;

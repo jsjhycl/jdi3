@@ -5,13 +5,15 @@
     function DbQuerier(elements, options) {
         this.$elements = elements;
         this.options = options;
+        this.AllDbName = {};
     }
 
     DbQuerier.prototype.constructor = DbQuerier;
 
     DbQuerier.prototype = {
-        init: function () {
+        init: async function () {
             var that = this;
+            that.AllDbName = await new FileService().readFile("/profiles/table.json")
             return that.$elements.each(function () {
                 var cache = that.cacheData(this);
                 if (!cache.disabled) {
@@ -74,7 +76,7 @@
             }
         },
         //设置数据
-        setData: async function (element) {
+        setData:  function (element) {
             var that = this,
                 cache = $.data(element, CACHE_KEY),
                 $querierDbName = $(element).find(".querier-dbName"),
@@ -96,18 +98,17 @@
                 conditions = data.conditions,
                 queryTime = data.queryTime
             }
-            var AllDbName = await new FileService().readFile("/profiles/table.json"),
+            var AllDbName = that.AllDbName,
                 dbOptions = [],
                 tableOptions = [],
                 fieldsoptions = [];
-            
             Object.keys(AllDbName).forEach(function(item){
                 dbOptions.push({name:item,value:item})
             })
             Common.fillSelect($querierDbName,{name:"请选择数据库",value:""},dbOptions,dbName,true)
             if(dbName){
                 Object.keys(AllDbName[dbName]).forEach(function(item){
-                    (AllDbName[dbName][item].key !== 0 && AllDbName[dbName][item].key !== 1) && tableOptions.push({name:item,value:item})
+                    (AllDbName[dbName][item].key !== 0 && AllDbName[dbName][item].key !== 1) && tableOptions.push({name:AllDbName[dbName][item]["tableDesc"],value:item})
                 })
                 if(table){
                     AllDbName[dbName][table].tableDetail.forEach(function(item){
@@ -213,25 +214,24 @@
             $(element).on("change"+ EVENT_NAMESPACE, ".querier-dbName",{element:element}, async function(event){
                 event.stopPropagation();
                 var dbName = $(this).val(),
-                AllDbName = await new FileService().readFile("/profiles/table.json"),
+                AllDbName = that.AllDbName,
                 tableOptions = [],
                 $querierTable = $(element).find(".querier-table");
                 if(dbName){
                    Object.keys(AllDbName[dbName]).forEach(function(item){
-                    (AllDbName[dbName][item].key !== 0 && AllDbName[dbName][item].key !== 1) && tableOptions.push({name:item,value:item})
+                    (AllDbName[dbName][item].key !== 0 && AllDbName[dbName][item].key !== 1) && tableOptions.push({name:AllDbName[dbName][item]["tableDesc"],value:item})
                    }) 
                 }
                 Common.fillSelect($querierTable,{name:"请选择表",value:""},tableOptions,null,true)
             })
             $(element).on("change" + EVENT_NAMESPACE, ".querier-table", {element: element}, async function (event) {
                 event.stopPropagation();
-
                 var table = $(this).val(),
                     celement = event.data.element,
                     cache = $.data(celement, CACHE_KEY),
                     $querierFields = $(celement).find(".querier-fields"),
                     $querierConditions = $(celement).find(".querier-conditions"),
-                    AllDbName = await new FileService().readFile("/profiles/table.json"),
+                    AllDbName = that.AllDbName,
                     fieldMode = cache.fieldMode,
                     data = cache.data,
                     fieldsoptions = [],

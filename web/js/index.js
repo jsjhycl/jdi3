@@ -110,6 +110,7 @@ function navbar() {
 		$("#openSetDB").click(function(){
 			var cnames = new Property().getArrayByKey("cname"),
 			flag = false;
+			cnames.splice(cnames.indexOf("BODY"),1)
 			cnames.forEach(function(item){
 				if(/^[A-Za-z]+$/.test(item)){
 					return flag = true;

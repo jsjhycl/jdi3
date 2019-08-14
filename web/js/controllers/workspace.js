@@ -272,6 +272,7 @@ function Workspace() {
                 cname = $this.attr("name"),
                 cval = $this.val(),
                 type = $this.attr("data-type"),
+                subtype = $this.data("subtype"),
                 position = $this.position(),
                 item = {
                     id: cid,
@@ -303,7 +304,7 @@ function Workspace() {
                     break
             }
             settingData.items.push(item);
-            html += new Control().renderHtml(id, item, type)
+            html += new Control().renderHtml(id, item, subtype)
         })
         //生成phonesettingData
         phoneSettingData = {

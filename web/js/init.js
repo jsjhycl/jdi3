@@ -51,6 +51,7 @@ Loader.prototype = {
                 that.LIB_PATH + "/jdi-propModifier/jdi-propModifier3.js",
                 that.LIB_PATH + "/jdi-conditions/jdi-conditions.js",
                 that.LIB_PATH + "/jdi-dbQuerier/jdi-dbQuerier.js",
+                that.LIB_PATH + "/jdi-dbQuerier/jdi-dbQuerier2.js",
                 that.LIB_PATH + "/jdi-dbDesigner/jdi-dbDesigner.js",
                 that.LIB_PATH + "/jdi-numViewer/jdi-numViewer.js",
                 that.LIB_PATH + "/datetimepicker/jquery.datetimepicker.js",

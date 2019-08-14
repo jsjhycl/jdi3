@@ -34,3 +34,10 @@
     margin-left: 5px;
     width: 78%;
 }
+
+.querier .queryConfig {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 10001;
+}

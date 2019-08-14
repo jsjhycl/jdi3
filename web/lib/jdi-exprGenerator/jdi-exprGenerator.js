@@ -26,9 +26,10 @@
                         }
                     }
                     renderData.forEach(function(arg, idx) {
+                        var typeHtml = arg.type === "Query" ? ('<button data-config="Query" class="btn btn-default btn-sm">'+ arg.ctype +'</button>') : arg.ctype;
                         argsHtml += '<tr>' +
                                         '<td data-name="' + arg.cname + '">' + arg.cname + '</td>' +
-                                        '<td data-convert="' + arg.type + '">' + arg.ctype + '</td>' +
+                                        '<td data-convert="' + arg.type + '">' + typeHtml + '</td>' +
                                         '<td>' +
                                             '<input '+ (!!arg.readonly ? "disabled" : "") +' class="form-control" data-type="arg" type="text" name="value" value="'+ ((Array.isArray(args)) ? args[idx] : (arg.default == undefined ? "" : arg.default)) +'" >' +
                                         '</td>' +
@@ -126,7 +127,8 @@
                     args = args || $eg.find('[data-type="arg"]').map(function() {
                         return $(this).val()
                     }).get().join(','),
-                    matches = (expr + ',' + args).match(/[^{]+(?=})/img);
+                    matches = (expr + ',' + args).match(/[^{]([A-Z]+)(?=})/img);
+                
                 $eg.find(".eg-elem.selected").removeClass("selected");
                 if (matches) {
                     var selector = matches.map(function (item) {
@@ -584,21 +586,38 @@
             $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-save", {element: element}, function (event) {
                 event.stopPropagation();
                 var $eg = $(".eg"),
+                    expr = $eg.find(".eg-expr").val(),
                     cache = $.data(event.data.element, CACHE_KEY),
-                    $result = cache.$result;
-                if (!$result || $result.length <= 0) return;
+                    $result = cache.$result,
+                    $resultFunction = cache.$resultFunction;
+                if (!$result || $result.length <= 0) {
+                    
+                    if ($resultFunction && expr) {
+                        var fnName = '';
+                        if (expr.startsWith('functions')) {
+                            var args = expr.match(/(?<=functions\()(.+?)(?=\))/);
+                            args && args[0] && (fnName = args[0].split(',')[1]);
+                            fnName && (fnName = fnName.replace(/"/g, ""));
+                        }  else {
+                            var fnNames = expr.match(/([A-Za-z.]+)(?=\(.*\))/);
+                            Array.isArray(fnNames) && (fnName = fnNames[0]);
+                        }
+                        $resultFunction.call(null, fnName, expr);
+                    }
+                    $eg.fadeOut();
+                } else {
+                    var hasBrace = cache.hasBrace;
+                    if (!hasBrace) {
+                        $result.attr("data-expr", expr);
+                        expr = expr.replace(/[{}]/g, "");
+                    }
+                    $result.is(":input") ? $result.val(expr) : $result.text(expr);
+                    $eg.fadeOut();
+                    if (cache.onSetProperty) {
+                        cache.onSetProperty.call(null, expr);
+                    }
+                };
 
-                var hasBrace = cache.hasBrace,
-                    expr = $eg.find(".eg-expr").val();
-                if (!hasBrace) {
-                    $result.attr("data-expr", expr);
-                    expr = expr.replace(/[{}]/g, "");
-                }
-                $result.is(":input") ? $result.val(expr) : $result.text(expr);
-                $eg.fadeOut();
-                if (cache.onSetProperty) {
-                    cache.onSetProperty.call(null, expr);
-                }
             });
             //清除
             $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-clear", {element: element}, function (event) {
@@ -709,9 +728,11 @@
             });
 
             //保存函数配置
-            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-function .function-save", function (event) {
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-function .function-save", {element: element}, function (event) {
                 event.stopPropagation();
-                var $eg = $(".eg:visible"),
+                var cache = $.data(element, CACHE_KEY),
+                    replaceResult = !!cache.replaceResult,
+                    $eg = $(".eg:visible"),
                     $egExpr = $eg.find(".eg-expr")
                     target = $eg.find('.eg-elem.current').data('id'),
                     fnType = $eg.find(".fn-item.selected").data('type') || $eg.find(".fn-system-item.selected").data('type'),
@@ -739,7 +760,7 @@
                 } else if (fnType === "系统函数") {
                     result = fnName + "("+ args +")"
                 }
-                that.setExpr($egExpr, $egExpr.get(0), $egExpr.val(), result);
+                that.setExpr($egExpr, $egExpr.get(0), $egExpr.val(), result, replaceResult);
                 $(".eg .eg-function [data-type='arg'].active").removeClass("active");
             });
 
@@ -815,8 +836,25 @@
                 $clone.addClass("canDel").removeClass("canAdd").insertBefore($target.find(".fn-system-more"));
                 remove && $(".eg .eg-system-list").find('[data-cname="'+ remove +'"]').addClass("canAdd");
             });
+
+            $(document).on("click" + EVENT_NAMESPACE, '.eg .eg-function [data-config="Query"]', {element: element}, function (event) {
+                var $this = $(this),
+                    $input = $this.parent('td').next('td').find('input'),
+                    val = $input.val(),
+                    data = null;
+                try{
+                    data = JSON.parse(val);
+                }catch(err) {
+                }
+                // 生成新的查询属性弹窗
+                $(this).dbQuerier2({
+                    $target: $input,
+                    data: data || {}
+                })
+            });
+            
         },
-        setExpr: function ($elem, elem, expr, value) {
+        setExpr: function ($elem, elem, expr, value, replaceExpr) {
             if (!$elem || $elem.length <= 0 || !elem) return;
 
             var position = 0;
@@ -830,7 +868,7 @@
                 }
             }
             var result = expr.slice(0, position) + value + expr.substring(position);
-            $elem.val(result);
+            !replaceExpr ? $elem.val(result) : $elem.val(value);
         }
     };
 
@@ -847,7 +885,7 @@
     $.fn.exprGenerator.defaults = {
         disabled: false,
         top: 20,//eg对话框上偏移量
-        zIndex: 9999,//eg对话框z-index值
+        zIndex: 1050,//eg对话框z-index值
         width: null,//eg对话框宽度
         height: null,//eg对话框高度
         multi: false,//多选模式

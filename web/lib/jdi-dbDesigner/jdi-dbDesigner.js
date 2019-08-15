@@ -107,18 +107,18 @@
                                     },
                                     value = that.recurseSaveObject(item, citem.key, index);
     
-                                tbody += `<td rowspan="${(cindex<2)?item.db.length:""}"> ${template(value[0] || "", value[1] || "")}  </td>`
+                                tbody += `<td rowspan="${(cindex<2)?item.db.length:1}"> ${template(value[0] || "", value[1] || "")}  </td>`
                         });
                         tbody += "</tr>"; 
                        })
                    }else{
                         tbody +="<tr>";
-                        cache.thead.forEach(function (citem) {
+                        cache.thead.forEach(function (citem,index) {
                             var template = citem.template || function (value) {
                                     return value;
                                 },
                                 value = that.recurseObject(item, citem.key, cache.type);
-                            tbody += '<td>' + template(value[0] || "", value[1] || "") + '</td>';
+                            tbody += `<td rowspan="${(index<2)?1:""}" > ${template(value[0] || "", value[1] || "")}   </td>`;
                         });
                         tbody += "</tr>";
                    }

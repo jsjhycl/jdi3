@@ -1,5 +1,6 @@
 ﻿body {
     margin: 86px 260px 0 140px;
+    overflow: hidden;
 }
 
 hr {
@@ -292,10 +293,11 @@ li {
 }
 
 #designer {
+    padding: 0 10px 20px 10px;
     width: 100%;
     background-color: white;
-    margin-left: 21px;
-    /* overflow: auto; */
+    /* margin-left: 21px; */
+    overflow: auto;
 }
 
 /*按钮栏*/

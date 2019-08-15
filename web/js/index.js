@@ -12,6 +12,10 @@ async function init() {
 		"height": $("#height").val(),
 		"background-color": $("#bgColor").val()
     });
+    $("#designer").css({
+        "height":$(window).height() - $(".navbar-fixed-top").height() - $("#toolbar").height(),
+        "width":$(window).width() - $("#controlbar").width() - $("#propertybar").width()
+    })
     
 	new FileService().readFile("./profiles/category.json", "UTF-8", function(result){
 		if (DataType.isObject(result)) { //判断result是否为对象

@@ -98,24 +98,27 @@
                    
                    if(item.db && item.db.length>0){
                        item.db.forEach((jitem,index)=>{
-                        tbody +="<tr>";
-                        cache.thead.forEach(function (citem) {
-                            var template = citem.template || function (value) {
-                                    return value;
-                                },
-                                value = that.recurseSaveObject(item, citem.key, index);
-                            tbody += '<td>' + template(value[0] || "", value[1] || "") + '</td>';
+                           
+                        tbody +=`<tr class="${index>0 ? "addtr":""}">`;
+                        cache.thead.forEach(function (citem,cindex) {
+                            
+                                var template = citem.template || function (value) {
+                                        return value;
+                                    },
+                                    value = that.recurseSaveObject(item, citem.key, index);
+    
+                                tbody += `<td rowspan="${(cindex<2)?item.db.length:1}"> ${template(value[0] || "", value[1] || "")}  </td>`
                         });
                         tbody += "</tr>"; 
                        })
                    }else{
                         tbody +="<tr>";
-                        cache.thead.forEach(function (citem) {
+                        cache.thead.forEach(function (citem,index) {
                             var template = citem.template || function (value) {
                                     return value;
                                 },
                                 value = that.recurseObject(item, citem.key, cache.type);
-                            tbody += '<td>' + template(value[0] || "", value[1] || "") + '</td>';
+                            tbody += `<td rowspan="${(index<2)?1:""}" > ${template(value[0] || "", value[1] || "")}   </td>`;
                         });
                         tbody += "</tr>";
                    }

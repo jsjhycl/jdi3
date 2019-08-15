@@ -949,3 +949,17 @@ li {
     font-size: 12px;
     text-decoration: underline;
 }
+#dbDesigner table tbody .addtr td:nth-child(1),
+#dbDesigner table tbody .addtr td:nth-child(2){
+    display: none
+}
+#dbDesigner table tbody .del,
+#dbDesigner table tbody .addtr .add{
+    display: none;
+}
+#dbDesigner table tbody .addtr .del{
+    display: block
+}
+#dbDesigner table tbody td{
+    vertical-align: middle;
+}

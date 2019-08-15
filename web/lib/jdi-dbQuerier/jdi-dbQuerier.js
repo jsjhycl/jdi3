@@ -160,6 +160,11 @@
                         '<input type="' + type + '" name="' + name + '" value="' + item.value + '">' +
                         item.name + '</label>';
                 });
+                if(fieldMode=="multi"){
+                    html +='<label class="checkbox-inline">' +
+                    '<input type="' + "checkbox" + '" name="' + name + '" value="' + "*" + '">' +
+                    "全部字段*" + '</label>'
+                }
                 $(this).append(html);
             });
 

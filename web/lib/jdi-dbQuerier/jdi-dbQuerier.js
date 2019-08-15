@@ -61,7 +61,6 @@
                     '<label class="col-lg-2 control-label">查询条件：</label>' +
                     '<div class="col-lg-9 querier-conditions"></div>' +
                     '</div>';
-            console.log('renderTable:', renderTable)
             $(element).empty().append(tableHtml + querierRate + renderTable + that.renderFields(element) + conditionsHtml).addClass("form-horizontal querier");
         },
         renderFields: function (element) {
@@ -159,6 +158,11 @@
                         '<input type="' + type + '" name="' + name + '" value="' + item.value + '">' +
                         item.name + '</label>';
                 });
+                if(fieldMode=="multi"){
+                    html +='<label class="checkbox-inline">' +
+                    '<input type="' + "checkbox" + '" name="' + name + '" value="' + "*" + '">' +
+                    "全部字段*" + '</label>'
+                }
                 $(this).append(html);
             });
 

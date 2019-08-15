@@ -10,6 +10,9 @@ li {
     list-style: none;
 }
 
+.text-left {
+    text-align: left!important;
+}
 /* 标尺的css */
 #ruler {
     position: relative;

@@ -17,6 +17,21 @@ var TableHelper = (function () {
                 '<button class="btn btn-default btn-sm ' + btnStyle + '">' + btnText + '</button>' +
                 '<input class="form-control" data-key="' + key + '" type="text">' +
                 '</td>';
+        },
+        getRowAndCol: function($table) {
+            if (!$table || $table.length <= 0) return;
+            var $trs = $table.find('tr')
+                col = 0,
+                row = $trs.length;
+            $trs.each(function() {
+                var $tds = $(this).find("td"),
+                    num = 0;
+                $tds.each(function() {
+                    num += $(this).attr('colspan') * 1 || 1;
+                })
+                num > col && (col = num);
+            });
+            return { row, col }
         }
     };
 })();

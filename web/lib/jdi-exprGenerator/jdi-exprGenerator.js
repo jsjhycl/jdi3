@@ -275,6 +275,8 @@
                             '<tbody></tbody>' +
                             '</table>' +
                             '</div>' +
+                            '<div class="query-config-content">' +
+                            '</div>' +
                             '<footer class="cfooter">' +
                             '<button class="btn btn-primary function-save">保存</button>' +
                             '<button class="btn btn-danger function-clear">清除</button>' +
@@ -849,7 +851,8 @@
                 // 生成新的查询属性弹窗
                 $(this).dbQuerier2({
                     $target: $input,
-                    data: data || {}
+                    data: data || {},
+                    $content: $('.eg:visible .query-config-content')
                 })
             });
             

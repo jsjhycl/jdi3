@@ -41,3 +41,19 @@
     left: 10px;
     z-index: 10001;
 }
+.querier .text-left {
+    text-align: left!important;
+}
+.queryConfig .form-group {
+    margin: 5px 15px!important;
+}
+.queryConfig footer {
+    padding-bottom: 15px;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+}
+.queryConfig footer .db_save,
+.queryConfig footer .db_clear {
+    padding: 2px 4px !important;
+    font-size: 12px !important;
+}

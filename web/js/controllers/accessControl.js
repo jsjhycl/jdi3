@@ -101,6 +101,37 @@ var AccessControl = (function () {
             if (type === "布局") {
                 $('#dataSource_db_tab_modal').modal('show');
             }
+        },
+
+        executePagePersent: function($control) {
+            let $table = $control.parents('table');
+            if (!$table || $table.length <= 0) return;
+            let id = $control.attr('id'),
+                { row, col } = TableHelper.getRowAndCol($table),
+                property = new Property();
+                rowPersent = property.getValue(id, 'page.rowPersent'),
+                colPersent = property.getValue(id, 'page.colPersent');
+            if (PAGE_PERSENT.length <= 0) {
+                for(let i = 0; i < row; i ++) {
+                    PAGE_PERSENT.push([]);
+                    for (let j = 0; j < col; j ++) {
+                        PAGE_PERSENT[i][j] = []
+                    }
+                }
+                $table.find('tr').each(function() {
+                    var $tr = $(this),
+                        trIdx = $tr.index();
+                    $tr.find('td').each(function() {
+                        var $td = $(this),
+                            tdIdx = $td.index(),
+                            inputId = $td.find('input').attr('id'),
+                            rowPer = property.getValue(inputId, 'page.rowPersent'),
+                            colPer = property.getValue(inputId, 'page.colPersent');
+                        PAGE_PERSENT[trIdx][tdIdx] = [Number(rowPer), Number(colPer)];
+                    })
+                });
+            }
+            
         }
     };
 })();

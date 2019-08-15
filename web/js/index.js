@@ -328,7 +328,84 @@ function propertybar() {
 					if (id) {
 						var $workspace = $("#workspace");
 						$container = id.startsWith('phone_') ? $("#phone_content") : $workspace;
-						new Property().save(id === "BODY" ? $workspace : $container.find("#" + id), $(event.target)); //执行保存
+                        new Property().save(id === "BODY" ? $workspace : $container.find("#" + id), $(event.target)); //执行保存
+                        if (this.id === "property_page_rowPersent") {
+                            var $target = $("#" + id),
+                                $table = $target.parents("table");
+                            if (!$table || $table.length <= 0) return;
+                            var val = $target.val(),
+                                $td = $target.parent('td'),
+                                colspan = Number($td.attr('colspan')) || 1,
+                                rowspan = Number($td.attr('rowspan')) || 1,
+                                tdIdx = $td.index(),
+                                trIdx = $target.parents('tr').index();
+
+                        }
+                        if (this.id === "property_page_colPersent") {
+
+                        }
+                        // if (this.id === "property_page_rowPersent") {
+                        //     var $target = $("#" + id),
+                        //         $table = $target.parents("table");
+                        //     if (!$table || $table.length <= 0) return;
+                        //     var tdRow = $target.parent('td').attr('rowspan') || 1,
+                        //         property = new Property(),
+                        //         $td = $target.parent('td'),
+                        //         tdIndex = $td.index(),
+                        //         tdColspan = $td.attr('colspan') || 1,
+                        //         $tr = $target.parents('tr'),
+                        //         nextTdInputId = [$td.next().find('input').attr('id')],
+                        //         rowSum = 0,
+                        //         remain = 0,
+                        //         prevRow = $td.prevAll("td").map(function() {
+                        //             var inputId = $(this).find('input').attr("id");
+                        //             return property.getValue(inputId, 'page.rowPersent')
+                        //         }).get();
+                        //         prevRow.length > 0 && (rowSum = prevRow.reduce((sum, item) => sum + Number(item)));
+                        //         var $prevTr = $tr.prev();
+                        //         tdColspan += $prevTr.find('td').eq(tdIndex).attr('colspan') * 1 || 1;
+                        //         while ($prevTr && $prevTr.length > 0 && $prevTr.find('td').eq(tdIndex).attr('colspan') > 1 && $prevTr.find('td').eq(tdIndex).attr('colspan') <= tdColspan) {
+                        //             var prevInputId = $prevTr.find('td').eq(tdIndex).find('input').attr('id');
+                        //             rowSum += property.getValue(prevInputId, 'page.rowPersent');
+                        //             $prevTr = $prevTr.prev();
+                        //             tdColspan += $prevTr.find('td').eq(tdIndex).attr('colspan') || 1;
+                        //         }
+                        //         !Number.isNaN(rowSum) && (remain = 100 - rowSum - $(this).val());
+                        //         var $nextTr = $tr.next();
+                        //         while (tdRow > 1) {
+                        //             var $nextTd = $nextTr.find('td').first(),
+                        //                 nextId = $nextTd.find('input').attr('id')
+                        //             nextTdInputId.push(nextId);
+                        //             $nextTr = $nextTr.next()
+                        //             tdRow -= $nextTd.attr('rowspan');
+                        //         }
+                        //         nextTdInputId.forEach(i => {
+                        //             i && (remain > 0) && property.setValue(i, 'page.rowPersent', remain)
+                        //         });
+                                
+                        // }
+                        // if (this.id === "property_page_colPersent") {
+                        //     var $table = $("#" + id).parents("table");
+                        //     if (!$table || $table.length <= 0) return;
+                        //     var $target = $("#" + id),
+                        //         property = new Property(),
+                        //         { col } = TableHelper.getRowAndCol($table);
+                        //         $td = $target.parent('td'),
+                        //         $tr = $td.parent(),
+                        //         $prevTr = $tr.prev();
+                        //         tdIndex = $td.index(),
+                        //         tdColspan = $td.attr('colspan'),
+                        //         remain = 0,
+                        //         prevCol = [];
+
+                        //     while($prevTr && $prevTr.length > 0) {
+                        //         var tdStartIdx = 0;
+                        //         while(tdIndex <= $prevTr.find('td').eq(tdStartIdx).attr('colspan'))
+                        //         var $prevTd = $prevTr.find('td').eq(tdStartIdx),
+                        //             // prevTdColspan = 
+                        //     }
+                        // }
+
 					}
 					//2017/09/08优化
 					if (this.id === "property_controlType" && event.type === "change") { //如果是控件类型
@@ -343,7 +420,7 @@ function propertybar() {
 						var controlType = event.currentTarget.value;
 						id && controlType === "上传控件" && AccessControl.setUploadEvent();
 						id && controlType === "下拉列表" && AccessControl.showDataSourceTab();
-					}
+                    }
 				});
 			})(item);
 		}

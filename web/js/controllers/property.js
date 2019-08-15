@@ -123,11 +123,8 @@ function Property() {
 
     this.setRelatedId = function($control) {
         if (!$control || !$control.attr('id').startsWith('phone_')) return;
-        
         $("#property_relatedId").length <= 0 && $("#property_id").parents('tr').after('<tr data-second-filter="relatedId"><td><label for="property_relatedId">关联元素编号</label></td><td><input id="property_relatedId" type="text" data-datatype="String" data-attrorstyle="attribute"></td></tr>');
-        
     }
-   
 }
 
 Property.prototype = {
@@ -156,6 +153,7 @@ Property.prototype = {
         ) {
             that._traverseProperty($control);//调用_traverseProperty
             AccessControl.executeControlType($("#property_controlType").val());//获取该元素的文本类型然后给数据源属性判断是否可以点击
+            // AccessControl.executePagePersent($control)
         }
     },
     /**

@@ -279,33 +279,39 @@ DbDesignerModal.prototype = {
         //增加一段
         that.$db.on("click" + that.NAME_SPACE, "#dbDesignerAdd", function (event) {
             var target = $(this).parent("td").parent("tr"),
-                html = target.clone();
-                html = $.extend(html,{})
+                html = target.clone(),
+                html = $.extend(html,{});
                 html.addClass("addtr")
+                
                 $(html).find('[data-key="id"]').css("display","none")
                 $(html).find('[data-key="cname"]').css("display","none")
                 // $(html).find('[data-key="isSave"]').css("display","none")
             target.after(html)
+            var rowspan = Number($(this).parents('tr').find('td').eq(0).attr("rowspan"));
+            var dataId = $(this).parents("tr").find('[data-key="id"]').val();
+            var ids = $("#dbDesigner tbody tr td").find('[data-key="id"]')
+            ids.each(function(){
+                if($(this).val() == dataId){
+                    $(this).parents('tr').find('td').eq(0).attr("rowspan",rowspan+1)
+                    $(this).parents('tr').find('td').eq(1).attr("rowspan",rowspan+1)
+                }
+            })    
         })
         //移除一段
         that.$db.on("click" + that.NAME_SPACE, "#dbDesignerRemove", function (event) {
-            var $table = $("#dbDesigner"),
-                $ids = $table.find('[data-key="id"]'), 
-                ids = [],
-                value = $(this).parents("tr").find('[data-key="id"]').val();
-            $ids.each(function(){
-                ids.push($(this).val())
-            })
-            var num=0;
-            ids.forEach(function(item){
-                if(item==value){
-                    num++
-                }
-            })
-            if(num>1){
+           
                 var target = $(this).parent("td").parent("tr");
                 target.remove()
-            }
+                var rowspan = Number($(this).parents('tr').find('td').eq(0).attr("rowspan"));
+                var dataId = $(this).parents("tr").find('[data-key="id"]').val();
+                var ids = $("#dbDesigner tbody tr td").find('[data-key="id"]')
+                ids.each(function(){
+                    if($(this).val() == dataId){
+                        $(this).parents('tr').find('td').eq(0).attr("rowspan",rowspan-1)
+                        $(this).parents('tr').find('td').eq(1).attr("rowspan",rowspan-1)
+                    }
+                }) 
+            
 
         })
         that.$db.on("click" + that.NAME_SPACE, "[data-key='isSave']", function(evetn){

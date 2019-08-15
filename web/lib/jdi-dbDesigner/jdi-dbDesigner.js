@@ -107,7 +107,7 @@
                                     },
                                     value = that.recurseSaveObject(item, citem.key, index);
     
-                                tbody += `<td > ${template(value[0] || "", value[1] || "")}  </td>`
+                                tbody += `<td rowspan="${(cindex<2)?item.db.length:""}"> ${template(value[0] || "", value[1] || "")}  </td>`
                         });
                         tbody += "</tr>"; 
                        })

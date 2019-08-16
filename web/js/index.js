@@ -12,10 +12,6 @@ async function init() {
 		"height": $("#height").val(),
 		"background-color": $("#bgColor").val()
     });
-    $("#designer").css({
-        "height":$(window).height() - $(".navbar-fixed-top").height() - $("#toolbar").height(),
-        "width":$(window).width() - $("#controlbar").width() - $("#propertybar").width()
-    })
     
 	new FileService().readFile("./profiles/category.json", "UTF-8", function(result){
 		if (DataType.isObject(result)) { //判断result是否为对象
@@ -305,6 +301,19 @@ function controlbar() {
 	})();
 }
 
+// 中心区
+function designer(){
+    $("#designer").css({
+        "height":$(window).height() - $(".navbar-fixed-top").height() - $("#toolbar").height(),
+        "width":$(window).width() - $("#controlbar").width() - $("#propertybar").width()
+    })
+    $(window).resize(function(){
+        $("#designer").css({
+            "height":$(window).height() - $(".navbar-fixed-top").height() - $("#toolbar").height(),
+            "width":$(window).width() - $("#controlbar").width() - $("#propertybar").width()
+        })  
+    })
+}
 
 //属性栏
 function propertybar() {
@@ -870,7 +879,8 @@ function back(html) {
 $(document).ready(function () {
 	init().then(() => {
 		navbar();
-		controlbar();
+        controlbar();
+        designer();
 		toolbar();
 		propertybar();
 		workspace();

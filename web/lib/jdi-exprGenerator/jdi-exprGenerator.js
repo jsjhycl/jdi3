@@ -12,8 +12,9 @@
                     $argExample = $(".eg .eg-function .function-example"),
                     argsHtml = "",
                     target = $(".eg .eg-elem.current").data('id'),
-                    args = this.getExprArgs(fnData.name, fnType, fnData.async, fnData.voluation, target),
-                    renderData = Array.prototype.concat([], fnData.args);
+                    renderData = Array.prototype.concat([], fnData.args),
+                    args = this.getExprArgs(fnData.name, fnType, fnData.async, fnData.voluation, target, renderData);
+                console.log(args)
                 $functionArgs.show().next().hide();
                 $argExample.text(fnData.example || "");
                 
@@ -31,8 +32,7 @@
                                         '<td data-name="' + arg.cname + '">' + arg.cname + '</td>' +
                                         '<td data-convert="' + arg.type + '">' + typeHtml + '</td>' +
                                         '<td>' +
-                                            '<input '+ (!!arg.readonly ? "disabled" : "") +' class="form-control" data-type="arg" type="text" name="value" value="'+ ((Array.isArray(args)) ? args[idx] : (arg.default == undefined ? "" : arg.default)) +'" >' +
-                                        '</td>' +
+                                            `<input ${(!!arg.readonly ? "disabled" : "")} class="form-control" data-type="arg" type="text" name="value" value='${((Array.isArray(args)) ? args[idx] || "" : (arg.default == undefined ? "" : arg.default))}'>` +                                        '</td>' +
                                     '</tr>';
                     });
                     fnData.args[fnData.args.length - 1].auto ? $argsTbody.parent().addClass("manyArgs-table") : $argsTbody.parent().removeClass("manyArgs-table");
@@ -143,18 +143,21 @@
                 var str = '',
                     startIdx = 0;
                 if (fnType === '本地函数') {
-                    startIdx = 1;
-                    str = '(?<=' + fnName + '\\()"'+ target +'"(.+?)(?=\\))'
+                    startIdx = 0;
+                    str = '(?<=' + fnName + '\\("'+ target +'",)(.+?)(?=\\))'
                 } else if (fnType === '远程函数') {
                     startIdx = 4
-                    str = "(?<=functions\\()"+ '"'+ target + '"' + "," + '"'+ fnName + '"' + "," + async + "," + voluation + ",(.+?)(?=\\))";
+                    str = "(?<=functions\\("+ '"'+ target + '")' + "," + '"'+ fnName + '"' + "," + async + "," + voluation + ",(.+?)(?=\\))";
                 }
                 var expr = $(".eg .eg-expr").val(),
                     argReg = new RegExp(str, 'g'),
                     args = expr.match(argReg);
+                    
                 if (Array.isArray(args)) {
-                    return args[0].split(",").slice(startIdx).map(el => {
-                        return /^".+"$/.test(el) ? el.substring(1, el.length - 1) : el
+                    return args[0].split(/,(?=[{\w\d]+)/).slice(startIdx).map(el => {
+                        var val = /^".+"$/.test(el) ? el.substring(1, el.length - 1) : el;
+                        val.endsWith(',') && (val = val.slice(0, val.length - 1));
+                        return  /^[A-Z]{4,6}$/.test(val) ? `{${val}}` : val
                     })
                 }
                 return false;
@@ -357,7 +360,7 @@
                 }
                 if (expr) {
                     $eg.find(".eg-expr").val(expr);
-                    var matches = expr.match(/[^{]+(?=})/g);
+                    var matches = expr.match(/[^{]([A-Z]+)(?=})/g);
                     if (matches) {
                         var selector = matches.map(function (item) {
                             return '[data-id="' + item + '"]';
@@ -746,7 +749,11 @@
                     var convert = $(this).parent().prev().data('convert'),
                         val = $(this).val();
                     if (/\{(.+?)\}/.test(val)) {
-                        return val
+                        if (convert === 'ElementNoWrap') {
+                            return val.replace(/[\{\}]/g, "")
+                        } else {
+                            return val
+                        }
                     } else if (convert === 'String') {
                         return '"' + val + '"'
                     } else {

@@ -9,12 +9,12 @@
                 if(!Object.prototype.toString.call(fnData) === '[object Object]') return
                 var $functionArgs = $(".eg .eg-function .eg-function-args"),
                     $argsTbody = $(".eg .function-table tbody"),
+                    $queryConfig = $functionArgs.find(".query-config-content"),
                     $argExample = $(".eg .eg-function .function-example"),
                     argsHtml = "",
                     target = $(".eg .eg-elem.current").data('id'),
                     renderData = Array.prototype.concat([], fnData.args),
                     args = this.getExprArgs(fnData.name, fnType, fnData.async, fnData.voluation, target, renderData);
-                console.log(args)
                 $functionArgs.show().next().hide();
                 $argExample.text(fnData.example || "");
                 
@@ -55,6 +55,7 @@
                                 '</td>' +
                             '</tr>'
                 $argsTbody.empty().append(argsHtml);
+                $queryConfig.empty();
                 FunctionUtil.effect("open");
             },
             getArgsTbody: function () {
@@ -849,18 +850,22 @@
             $(document).on("click" + EVENT_NAMESPACE, '.eg .eg-function [data-config="Query"]', {element: element}, function (event) {
                 var $this = $(this),
                     $input = $this.parent('td').next('td').find('input'),
+                    $content = $('.eg:visible .query-config-content'),
                     val = $input.val(),
                     data = null;
                 try{
                     data = JSON.parse(val);
                 }catch(err) {
                 }
+                $content.is(":empty")
+                    ? $(this).dbQuerier2({
+                            $target: $input,
+                            data: data || {},
+                            $content: $content,
+                        })
+                    : $content.empty()
                 // 生成新的查询属性弹窗
-                $(this).dbQuerier2({
-                    $target: $input,
-                    data: data || {},
-                    $content: $('.eg:visible .query-config-content')
-                })
+                
             });
             
         },

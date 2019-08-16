@@ -18,14 +18,14 @@ Ruler.prototype = {
             rv = $("#ruler_vertical");//获取垂直标尺
         rh.html("");//给水平标尺中的html元素设置为空
         rv.html("");//给垂直水平标尺中的元素设置为空
-        $ruler.css('width', $ruler_width)//给标尺设置宽度
-        $ruler.css('height', $ruler_height)//给表次设置高度
-        for (var i = 0; i < $ruler_width; i += 1) {//遍历小于标尺宽度的所有元素
+        // $ruler.css('width', $ruler_width)//给标尺设置宽度
+        // $ruler.css('height', $ruler_height)//给表次设置高度
+        for (var i = 0; i < 10000; i += 1) {//遍历小于标尺宽度的所有元素
             if (i % 50 === 0) {//如果这个数能被五十整除
                 $('<span class="n">' + i + '</span>').css("left", i + 2).appendTo(rh)//把生成的html添加到水平标尺中
             }
         }
-        for (var i = 0; i < $ruler_height; i += 1) {//遍历小于标尺高度的所欲数
+        for (var i = 0; i < 10000; i += 1) {//遍历小于标尺高度的所欲数
             if (i % 50 === 0) {//如果这个数能被五十整除
                 $('<span class="n">' + i + '</span>').css("top", i + 2).appendTo(rv)//把生成的html添加到水平标尺中
             }

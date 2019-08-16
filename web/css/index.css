@@ -18,6 +18,8 @@ li {
 #ruler {
     position: relative;
     margin: auto;
+    width: 10000px;
+    height: 10000px;
 }
 
 .ruler_horizontal,
@@ -293,7 +295,7 @@ li {
 }
 
 #designer {
-    padding: 0 10px 20px 10px;
+    padding: 0 10px 20px 20px;
     width: 100%;
     background-color: white;
     /* margin-left: 21px; */

@@ -288,12 +288,6 @@
             if (cache.onResize) {
                 cache.onResize.call(event.data.target, resizeData.width, resizeData.height);
             }
-            // $("#designer").scrollLeft(event.pageX - $("#designer").outerWidth())
-            // $("#designer").scrollTop(event.pageY - $("#designer").outerHeight())
-            // if (event.pageY - 10 > $("#designer").outerHeight())
-            //     $(".resizable").css("margin-right", 40);
-            // if (event.pageX - 10 > $("#designer").outerWidth())
-            //     $(".resizable").css("margin-bottom", 40);
         },
         applyResize: function (event) {
             var resizeData = event.data;

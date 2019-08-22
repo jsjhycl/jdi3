@@ -389,7 +389,9 @@ li {
 .icon.icon-fx-view {
     background-position: -228px 0;
 }
-
+.icon.icon-cname-view {
+    background-position: -290px 0;
+}
 .icon.icon-phone {
     background-position: -245px 0;
 }

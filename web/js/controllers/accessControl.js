@@ -107,102 +107,138 @@ var AccessControl = (function () {
             let $table = $control.parents('table');
             if (!$table || $table.length <= 0) return;
             let id = $control.attr('id'),
-                trIdx = $control.parents('tr').index(),
-                { row, col } = TableHelper.getRowAndCol($table),
+                { row } = TableHelper.getRowAndCol($table),
+                location = $control.parent().attr('location'),
+                rowMap = location.split(':')[0],
+                currColStart = rowMap.split('-')[0] * 1,
+                currRowStart = rowMap.split('-')[1] * 1,
                 property = new Property();
                 rowPersent = property.getValue(id, 'page.rowPersent'),
-                colPersent = property.getValue(id, 'page.colPersent'),
-                property = new Property();
+                colPersent = property.getValue(id, 'page.colPersent');
             if (rowPersent && colPersent) return;
             // 横百分比未设置
 
             PAGE_PERSENT = [];
-            // if (PAGE_PERSENT.length <= 0) {
-            for(let i = 0; i < row; i ++) {
+            
+            for(let i = 0; i <= row; i ++) {
                 PAGE_PERSENT.push([]);
-                // for (let j = 0; j < col; j ++) {
-                //     PAGE_PERSENT[i][j]
+                // for(let j = 0; j <= col; j ++) {
+                //     PAGE_PERSENT[i][j] = {}
                 // }
             }
 
             // 抽象table表格
+            // $table.find('tr').each(function() {
+            //     var $tr = $(this),
+            //         trIdx = $tr.index();
+            //     $tr.find('td').each(function() {
+            //         var $td = $(this),
+            //             tdIdx = $td.index(),
+            //             colspan = Number($td.attr('colspan')) || 1,
+            //             rowspan = Number($td.attr('rowspan')) || 1,
+            //             inputId = $td.find('input').attr('id'),
+            //             rowPer = property.getValue(inputId, 'page.rowPersent'),
+            //             colPer = property.getValue(inputId, 'page.colPersent');
+            //         // if (rowPer || colPer) {
+            //             for (let i = 0; i < rowspan; i ++) {
+            //                 for (let j = 0; j < colspan; j ++) {
+            //                     // if (rowPer) {
+            //                         var averageRowPer = rowPer / colspan,
+            //                             averageColPer = colPer / rowspan;
+            //                         if (!DataType.isObject(PAGE_PERSENT[trIdx + i][tdIdx + j])) {
+            //                             // PAGE_PERSENT[trIdx + i][tdIdx + j] = { row: averageRowPer, id: inputId }
+            //                             PAGE_PERSENT[trIdx + i][tdIdx + j] = { id: inputId }
+            //                             rowPer && !PAGE_PERSENT[trIdx + i][tdIdx + j].row && (PAGE_PERSENT[trIdx + i][tdIdx + j].row = averageRowPer)
+            //                             colPer && !PAGE_PERSENT[trIdx + i][tdIdx + j].col && (PAGE_PERSENT[trIdx + i][tdIdx + j].col = averageColPer)
+            //                         } else {
+            //                             let curr = 0;
+            //                             while( curr < col && (trIdx + i < row) && DataType.isObject(PAGE_PERSENT[trIdx + i][curr])) {
+            //                                 curr ++;
+            //                             };
+            //                             curr >= col && curr -1
+            //                             !DataType.isObject(PAGE_PERSENT[trIdx + i][curr]) && (PAGE_PERSENT[trIdx + i][curr] = { id: inputId })
+            //                             // PAGE_PERSENT[trIdx + i][curr] = { id: inputId }
+            //                             rowPer && !PAGE_PERSENT[trIdx + i][curr].row && (PAGE_PERSENT[trIdx + i][curr].row = averageRowPer)
+            //                             colPer && !PAGE_PERSENT[trIdx + i][curr].col && (PAGE_PERSENT[trIdx + i][curr].col = averageColPer)
+            //                         }
+            //                     // }
+            //                 }   
+            //             }
+            //         // }
+            //     })
+            // });
+
             $table.find('tr').each(function() {
-                var $tr = $(this),
+                let $tr = $(this),
                     trIdx = $tr.index();
-                $tr.find('td').each(function() {
-                    var $td = $(this),
-                        tdIdx = $td.index(),
+                $tr.find('td input').each(function() {
+                    let $td = $(this).parent('td'),
+                        location = $td.attr('location'),
+                        inputId = $(this).attr('id');
+                    if (!location) return;
+                    let rowPer = property.getValue(inputId, 'page.rowPersent'),
+                        colPer = property.getValue(inputId, 'page.colPersent'),
                         colspan = Number($td.attr('colspan')) || 1,
                         rowspan = Number($td.attr('rowspan')) || 1,
-                        inputId = $td.find('input').attr('id'),
-                        rowPer = property.getValue(inputId, 'page.rowPersent'),
-                        colPer = property.getValue(inputId, 'page.colPersent');
-                    // if (rowPer || colPer) {
-                        for (let i = 0; i < rowspan; i ++) {
-                            for (let j = 0; j < colspan; j ++) {
-                                // if (rowPer) {
-                                    var averageRowPer = rowPer / colspan,
-                                        averageColPer = colPer / rowspan;
-                                    if (!DataType.isObject(PAGE_PERSENT[trIdx + i][tdIdx + j])) {
-                                        // PAGE_PERSENT[trIdx + i][tdIdx + j] = { row: averageRowPer, id: inputId }
-                                        PAGE_PERSENT[trIdx + i][tdIdx + j] = { id: inputId }
-                                        rowPer && !PAGE_PERSENT[trIdx + i][tdIdx + j].row && (PAGE_PERSENT[trIdx + i][tdIdx + j].row = averageRowPer)
-                                        colPer && !PAGE_PERSENT[trIdx + i][tdIdx + j].col && (PAGE_PERSENT[trIdx + i][tdIdx + j].col = averageColPer)
-                                    } else {
-                                        let curr = 0;
-                                        while( curr < col && (trIdx + i < row) && DataType.isObject(PAGE_PERSENT[trIdx + i][curr])) {
-                                            curr ++;
-                                        };
-                                        curr >= col && curr -1
-                                        !DataType.isObject(PAGE_PERSENT[trIdx + i][curr]) && (PAGE_PERSENT[trIdx + i][curr] = { id: inputId })
-                                        // PAGE_PERSENT[trIdx + i][curr] = { id: inputId }
-                                        rowPer && !PAGE_PERSENT[trIdx + i][curr].row && (PAGE_PERSENT[trIdx + i][curr].row = averageRowPer)
-                                        colPer && !PAGE_PERSENT[trIdx + i][curr].col && (PAGE_PERSENT[trIdx + i][curr].col = averageColPer)
-                                    }
-                                // }
-                            }   
-                        }
-                    // }
+                        rowMap = location.split(':')[0],
+                        colMap = location.split(':')[1],
+                        colStart = rowMap.split('-')[0] * 1,
+                        rowStart = rowMap.split('-')[1] * 1,
+                        colEnd = colMap.split('-')[0] * 1,
+                        rowEnd = colMap.split('-')[1] * 1;
+                    for (let i = rowStart; i <= rowEnd; i ++) {
+                        for (let j = colStart; j <= colEnd; j ++) {
+                            let averageRowPer = rowPer / colspan,
+                                averageColPer = colPer / rowspan;
+                            PAGE_PERSENT[i][j] = { id: inputId };
+                            rowPer && (PAGE_PERSENT[i][j].row = averageRowPer)
+                            colPer && (PAGE_PERSENT[i][j].col = averageColPer)
+                        }   
+                    }
                 })
             });
-            // console.log(PAGE_PERSENT, rowPersent, colPersent)
+            
             if (!rowPersent) {
-                var { width } = _calcPrev(id, trIdx);
-                property.setValue(id, 'page.rowPersent', width)
+                var { width } = _calcPrev(id, currRowStart, currColStart);
+                width > 0 && property.setValue(id, 'page.rowPersent', width)
             }
 
             // 纵百分比未设置
             if (!colPersent) {
-                var { height } = _calcPrev(id, trIdx);
-                property.setValue(id, 'page.colPersent', height)
+                var { height } = _calcPrev(id, currRowStart, currColStart);
+                height > 0 && property.setValue(id, 'page.colPersent', height)
             }
 
-            function _calcPrev(id, trIndex){
-                if (!PAGE_PERSENT[trIndex]) return {};
-                let sumH = 0,
-                    sumW = 0,
-                    trIndexCopy = trIndex,
-                    colIdx = PAGE_PERSENT[trIndex].findIndex(cell => {
-                        return (cell && cell.id) === id
-                    });
+            function _calcPrev(id, rowIdx, colIdx){
                 
-                while(trIndexCopy > 0) {
-                    trIndexCopy --;
-                    sumH += PAGE_PERSENT[trIndexCopy][colIdx] && PAGE_PERSENT[trIndexCopy][colIdx].col || 0;
+                let sumH = 0,
+                    sumW = 0;
+                PAGE_PERSENT.forEach(tr => {
+                    if (tr[colIdx] && tr[colIdx].id !== id) {
+                        sumH += tr && tr[colIdx].col || 0
+                    }
+                })
+          
+                if (PAGE_PERSENT[rowIdx]) {
+                    PAGE_PERSENT[rowIdx].forEach(td => {
+                        if (td && td.id !== id) {
+                            sumW += td && td.row || 0;
+                        }
+                    })
                 }
-                while(colIdx > 0) {
-                    colIdx --;
-                    sumW += PAGE_PERSENT[trIndex][colIdx] && PAGE_PERSENT[trIndex][colIdx].row || 0;
-                }
+                
                 sumH = 100 - sumH;
                 sumW = 100 - sumW;
                 sumH = (sumH >= 100 || sumH < 0) ? "" : sumH;
                 sumW = (sumW >= 100 || sumW < 0) ? "" : sumW;
+
                 return {
-                    height: sumH,
-                    width: sumW
+                    height: Math.round(sumH),
+                    width: Math.round(sumW)
                 }
             }
+
+
         },
     };
 })();

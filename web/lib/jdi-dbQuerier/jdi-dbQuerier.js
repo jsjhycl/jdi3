@@ -165,9 +165,9 @@
                         item.name + '</label>';
                 });
                 if(fieldMode=="multi"){
-                    html +='<label class="checkbox-inline">' +
-                    '<input type="' + "checkbox" + '" name="' + name + '" value="' + "*" + '">' +
-                    "全部字段*" + '</label>'
+                    // html +='<label class="checkbox-inline">' +
+                    // '<input class="all" type="' + "checkbox" + '" name="' + name + '" value="' + "*" + '">' +
+                    // "全部字段*" + '</label>'
                 }
                 $(this).append(html);
             });
@@ -295,7 +295,7 @@
             });
             $(element).on("click" + EVENT_NAMESPACE, ".check-all", {element:element}, function () {
                 var checkAll = $(this).is(":checked")
-                $(this).parents(".form-group").find("input").prop("checked",checkAll)
+                $(this).parents(".form-group").find("input").not($('.all')).prop("checked",checkAll)
             })
         }
     };

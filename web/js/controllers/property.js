@@ -457,5 +457,17 @@ Property.prototype = {
             }
         }
         return result;//返回这个对象
+    },
+    //获取中文名的元素
+    getArrayByCname:function(cname){
+        if(!cname) return null;
+        var result =[];
+        for(var id in GLOBAL_PROPERTY){
+            var property = GLOBAL_PROPERTY[id];
+            if(property.cname == cname){
+                result.push(id)
+            }
+        }
+        return result;
     }
 };

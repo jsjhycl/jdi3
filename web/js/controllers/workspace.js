@@ -1,4 +1,3 @@
-
 var WorkspaceUtil = {
     /**
      * 
@@ -75,6 +74,13 @@ var WorkspaceUtil = {
     numViewer: function () { //元素查看函数检查函数
         this.switchWorkspace('numViewer', null, false, null, null);
     },
+    sameCnameViewer: function ($dom) {
+        this.setMask();
+        var that = this;
+        view = 'sameCname';
+        var $domCopy = DomHelper.copy($dom);
+        that.switchWorkspace(view, $domCopy, false, null, null)
+    },
 
     /**
      * 输入框转为btn
@@ -122,6 +128,14 @@ var WorkspaceUtil = {
                 case 'numViewer': //如果为元素查看器
                     $span.addClass('check-fn-node').html(id); //添加类名并在里面添加id
                     break;
+                case 'sameCname':
+                    var cnames = new Property().getArrayByKey('cname'),
+                        cname = new Property().getValue(id,"cname");
+                    if(cnames.indexOf(cname) != cnames.lastIndexOf(cname)){
+                        $span.addClass('check-fn-node').html(cname)
+                    }else{
+                        $span.addClass('check-fn-node')
+                    }      
             }
             $temp.replaceWith($span) //把$tmp中的替换成$span
         })
@@ -214,23 +228,23 @@ function Workspace() {
     this.USER = null;
     this.edit = null;
     //查询数据库
-    this.queryDb = function(dbCollection, condition){
-        return new Service().query(dbCollection,condition)
+    this.queryDb = function (dbCollection, condition) {
+        return new Service().query(dbCollection, condition)
     }
     //插入数据库
-    this.inserDb = function(dbCollection, data){
+    this.inserDb = function (dbCollection, data) {
         return new Service().insert(dbCollection, data)
     }
     //更新数据库
-    this.updataDb = function(dbCollection,condition,data){
-        return new Service().update(dbCollection,condition,data)
+    this.updataDb = function (dbCollection, condition, data) {
+        return new Service().update(dbCollection, condition, data)
     }
     //移除数据库
-    this.removeDb = function(dbCollection,condition){
-        return new Service().remove(dbCollection,condition)
+    this.removeDb = function (dbCollection, condition) {
+        return new Service().remove(dbCollection, condition)
     }
     //移除文件
-    this.removeFile = function(Router){
+    this.removeFile = function (Router) {
         return new FileService().rmdir(Router)
     }
     //读取文件
@@ -256,7 +270,8 @@ function Workspace() {
 
         that.$workspace.click();
         that.$workspace.find(".focus").removeClass(".focus");
-        var settingData, modelData, tableData, phoneData, phoneSettingData, html="", phoneHtml="";
+        var settingData, modelData, tableData, phoneData, phoneSettingData, html = "",
+            phoneHtml = "";
         //生成settingData数据
         settingData = {
             width: that.$workspace.width(),
@@ -308,10 +323,10 @@ function Workspace() {
         })
         //生成phonesettingData
         phoneSettingData = {
-            items :[]
+            items: []
         }
         that.$phone.click()
-        that.$phone.find(".workspace-node").each( function () {
+        that.$phone.find(".workspace-node").each(function () {
             var $this = $(this),
                 cid = $this.attr('id'),
                 type = $this.attr("data-type"),
@@ -325,20 +340,20 @@ function Workspace() {
                     rect: {
                         width: parseFloat($this.css("width")),
                         height: parseFloat($this.css("height")),
-                        left:left,
-                        top:top,
-                        zIndex:$this.zIndex
+                        left: left,
+                        top: top,
+                        zIndex: $this.zIndex
                     }
                 };
             switch (type) {
-                case "img" :
+                case "img":
                     item.attach = {
-                        src : $(this).attr('src')
+                        src: $(this).attr('src')
                     }
                     break;
                 case "div":
                     item.attach = {
-                        html:$this.html
+                        html: $this.html
                     }
                     break;
             }
@@ -346,30 +361,30 @@ function Workspace() {
             phoneSettingData.items.push(item)
         })
 
-        if(type=="布局"){
-            tableData = new Property().getDbProperty(contactId,name)
+        if (type == "布局") {
+            tableData = new Property().getDbProperty(contactId, name)
         }
 
         var hiddenInput = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
             '<input id="modelName" type="hidden" name="modelName" value="' + name + '">';
         phoneData = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="ie=edge"><title>手机页面</title></head><body>' +
-                    hiddenInput +
-                '<input id="modelType" type="hidden" name="modelType" value="' + id + '">' +
-                '<div style="position: relative">' +
-                    phoneHtml +
-                '</div></body></html>';
+            hiddenInput +
+            '<input id="modelType" type="hidden" name="modelType" value="' + id + '">' +
+            '<div style="position: relative">' +
+            phoneHtml +
+            '</div></body></html>';
 
         var $temp = $('<div></div>');
-            $temp.css({
-                "position": "absolute",
-                "width": settingData.width,
-                "height": settingData.height,
-                "background-color": settingData.bgColor,
-                "overflow": "hidden"
-            }).append(html); //插入到html中
+        $temp.css({
+            "position": "absolute",
+            "width": settingData.width,
+            "height": settingData.height,
+            "background-color": settingData.bgColor,
+            "overflow": "hidden"
+        }).append(html); //插入到html中
         modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
-                '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
-                $temp.get(0).outerHTML;
+            '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
+            $temp.get(0).outerHTML;
         return {
             settingData: settingData,
             modelData: modelData,
@@ -377,9 +392,9 @@ function Workspace() {
             phoneData: phoneData,
             phoneSettingData: phoneSettingData
         }
-        
+
     }
-    this._setData = function(isPrompt, id, type, settingData, modelData, tableData, phoneData, phoneSettingData){
+    this._setData = function (isPrompt, id, type, settingData, modelData, tableData, phoneData, phoneSettingData) {
         var that = this,
             property = {},
             phone_property = {};
@@ -451,19 +466,19 @@ function Workspace() {
     };
 }
 Workspace.prototype = {
-    init: async function(id ,name, type, contactId, relTemplate, edit){
-        if(!id || !name || !type) return;
+    init: async function (id, name, type, contactId, relTemplate, edit) {
+        if (!id || !name || !type) return;
         var that = this,
-            text = name+'<span class="text-danger">' + "(" + id + ")" + '</span>',
+            text = name + '<span class="text-danger">' + "(" + id + ")" + '</span>',
             attrs = {
                 'data-id': id,
                 "data-name": name,
                 "data-type": type,
                 "data-contactId": contactId,
-                "data-relTemplate":""
+                "data-relTemplate": ""
             };
         that.edit = edit;
-        if(type=="布局" && DataType.isObject(relTemplate)){
+        if (type == "布局" && DataType.isObject(relTemplate)) {
             attrs["data-relTemplate"] = JSON.stringify(relTemplate)
         }
         $("#name").empty().append(text);
@@ -477,27 +492,27 @@ Workspace.prototype = {
         LAST_SELECTED_ID = null; // 最后一次被选中的元素id
         LAST_POSITION = {}; // 选中元素的初始位置
         PAGE_PERSENT = [];
-        var db = await new FileService().readFile("./profiles/table.json","utf-8")
-        for( dbName in  db){
-            for( table in db[dbName]){
-                if(db[dbName][table]["key"]==0||db[dbName][table]["key"]==1){
+        var db = await new FileService().readFile("./profiles/table.json", "utf-8")
+        for (dbName in db) {
+            for (table in db[dbName]) {
+                if (db[dbName][table]["key"] == 0 || db[dbName][table]["key"] == 1) {
                     delete db[dbName][table]
                 }
-                
+
             }
         }
         AllDbName = db;
-        that.save(false,null,null)
+        that.save(false, null, null)
     },
-    load:function(id, name, type, contactId, relTemplate, edit, isCreate){
-        if(!id||!type||!name)return;
+    load: function (id, name, type, contactId, relTemplate, edit, isCreate) {
+        if (!id || !type || !name) return;
         var that = this,
-            url = type === "表单" ? `./resource/${id}` : (isCreate ?  `./resource/${contactId}` :`./product/${id}`);
+            url = type === "表单" ? `./resource/${id}` : (isCreate ? `./resource/${contactId}` : `./product/${id}`);
         $.when(that.readFile(url + "/setting.json"), that.readFile(url + "/property.json")).done(function (ret1, ret2) {
             that.init(id, name, type, contactId, relTemplate, edit);
             var settingData = ret1,
                 propertyData = ret2;
-            var control = new Control(),    
+            var control = new Control(),
                 contextMenu = new ContextMenu();
 
             for (var i = 0; i < settingData.items.length; i++) { //遍历小于settingData.items.length的数
@@ -552,13 +567,13 @@ Workspace.prototype = {
             });
             new Ruler().drawCoordinates()
         }).fail(function () { //如果失败
-            that.init(id, name, type, contactId, relTemplate,that.USER); //调用init方法
+            that.init(id, name, type, contactId, relTemplate, that.USER); //调用init方法
         });
     },
-    loadPhone:function (id, contactId, type, isCreate) {
+    loadPhone: function (id, contactId, type, isCreate) {
         var that = this;
-        var  url = type === "表单" ? `./resource/${id}` : (isCreate ?  `./resource/${contactId}` :`./product/${id}`);
-        $.when(that.readFile(url  + "/phone_setting.json"), that.readFile(url  + "/phone_property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
+        var url = type === "表单" ? `./resource/${id}` : (isCreate ? `./resource/${contactId}` : `./product/${id}`);
+        $.when(that.readFile(url + "/phone_setting.json"), that.readFile(url + "/phone_property.json")).done(function (ret1, ret2) { //调用函数_getAjax获取json
             var phoneSettingData = ret1 || {},
                 phonePropertyData = ret2 || {};
             var control = new Control(), //实例化Control
@@ -598,9 +613,9 @@ Workspace.prototype = {
         }).fail(function (err) { //如果失败
         });
     },
-    save:function(isPrompt, saveAsId, changeId, changeData,changeName){
+    save: function (isPrompt, saveAsId, changeId, changeData, changeName) {
         var that = this;
-        if(isPrompt){
+        if (isPrompt) {
             var isValidate = that._sameNameValidate(); //调用_sameNameValidate
             if (!isValidate) return;
         }
@@ -608,78 +623,119 @@ Workspace.prototype = {
         var id = that.$workspace.attr("data-id"), //获取工作区data-id
             name = that.$workspace.attr("data-name"), //获取工作区data-name
             type = that.$workspace.attr("data-type")
-            contactId = that.$workspace.attr("contactId"); //获取工作区data-subtype
-            saveId = id,
-            dbCollection = type=="表单"? "newResources": "newProducts";
-       
-        if(saveAsId){ 
+        contactId = that.$workspace.attr("contactId"); //获取工作区data-subtype
+        saveId = id,
+            dbCollection = type == "表单" ? "newResources" : "newProducts";
+
+        if (saveAsId) {
             saveId = saveAsId
-            var condition = [{col:"customId",value:id}]
+            var condition = [{
+                col: "customId",
+                value: id
+            }]
             //查询原来的信息 插入新的
-            this.queryDb(dbCollection,condition).then(res=>{
+            this.queryDb(dbCollection, condition).then(res => {
                 var data = res[0];
-                var params = [
-                    {col:"_id",value:saveAsId},
-                    {col:"customId",value:saveAsId},
-                    {col:"name",value:data.name},
-                    {col:"edit",value:that.USER+","+new Date().toFormatString(null, true)},
-                    {col:"createTime",value:new Date().toFormatString(null, true)},
-                    {col:"createor",value:that.USER},
-                    {col:"basicInfo",value:data.basicInfo}
+                var params = [{
+                        col: "_id",
+                        value: saveAsId
+                    },
+                    {
+                        col: "customId",
+                        value: saveAsId
+                    },
+                    {
+                        col: "name",
+                        value: data.name
+                    },
+                    {
+                        col: "edit",
+                        value: that.USER + "," + new Date().toFormatString(null, true)
+                    },
+                    {
+                        col: "createTime",
+                        value: new Date().toFormatString(null, true)
+                    },
+                    {
+                        col: "createor",
+                        value: that.USER
+                    },
+                    {
+                        col: "basicInfo",
+                        value: data.basicInfo
+                    }
                 ]
-                this.inserDb(dbCollection,params)
+                this.inserDb(dbCollection, params)
             })
             var data = that._getData(saveId, name, type, contactId)
-            if(data){
+            if (data) {
                 that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
             }
 
         }
-        if(changeId){ 
-            if(type == "布局"){
+        if (changeId) {
+            if (type == "布局") {
                 saveId = changeId;
-                var queryCondition = [{col:"customId",value:changeId}]
-                that.queryDb(dbCollection,queryCondition).then(res=>{//查询新的id是否存在
-                    if(res.length>0) return alert(`布局ID（${changeId}）以存在`);
-                    var condition = [{col:"customId",value:id}]
-                    that.removeDb(dbCollection,condition)//移除原来的id
-                    that.removeFile(`/product/${id}`)//移除文件
-                    that.inserDb(dbCollection,changeData)//插入新的数据
+                var queryCondition = [{
+                    col: "customId",
+                    value: changeId
+                }]
+                that.queryDb(dbCollection, queryCondition).then(res => { //查询新的id是否存在
+                    if (res.length > 0) return alert(`布局ID（${changeId}）以存在`);
+                    var condition = [{
+                        col: "customId",
+                        value: id
+                    }]
+                    that.removeDb(dbCollection, condition) //移除原来的id
+                    that.removeFile(`/product/${id}`) //移除文件
+                    that.inserDb(dbCollection, changeData) //插入新的数据
                     var data = that._getData(saveId, name, type, contactId)
-                    if(data){
+                    if (data) {
                         that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
                     }
                     //设置新的属性
-                    that.$workspace.attr({"data-id":changeId,"data-name":changeName})
+                    that.$workspace.attr({
+                        "data-id": changeId,
+                        "data-name": changeName
+                    })
                     //设置新的名字
-                    var  text = changeName+'<span class="text-danger">' + "(" + changeId + ")" + '</span>'
+                    var text = changeName + '<span class="text-danger">' + "(" + changeId + ")" + '</span>'
                     $("#name").empty().append(text)
                 })
             }
-            if(type=="表单"){//修改表单信息时不需要更新
+            if (type == "表单") { //修改表单信息时不需要更新
                 saveId = changeId;
-                var queryCondition = [{col:"customId",value:changeId}],
+                var queryCondition = [{
+                        col: "customId",
+                        value: changeId
+                    }],
                     data = that._getData(saveId, name, type, contactId)
-                that.queryDb(dbCollection,queryCondition).then( res=>{
-                    if(res.length>0) return alert(`表单ID（${changeId}）以存在`)
-                    var condition = [{col:"customId",value:id}]
-                    that.removeDb(dbCollection,condition)
+                that.queryDb(dbCollection, queryCondition).then(res => {
+                    if (res.length > 0) return alert(`表单ID（${changeId}）以存在`)
+                    var condition = [{
+                        col: "customId",
+                        value: id
+                    }]
+                    that.removeDb(dbCollection, condition)
                     that.removeFile(`/resource/${id}`)
-                    that.inserDb(dbCollection,changeData)
-                    if(data){
-                         that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
+                    that.inserDb(dbCollection, changeData)
+                    if (data) {
+                        that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
                     }
-                    that.$workspace.attr({"data-id":changeId,"data-name":changeName})
-                    var text = changeName+'<span class="text-danger">' + "(" + changeId + ")" + '</span>'
+                    that.$workspace.attr({
+                        "data-id": changeId,
+                        "data-name": changeName
+                    })
+                    var text = changeName + '<span class="text-danger">' + "(" + changeId + ")" + '</span>'
                     $("#name").empty().append(text)
 
-                })   
+                })
             }
             //移除原来的数据 文件夹
         }
-        if(!saveAsId && !changeId && !changeData){
+        if (!saveAsId && !changeId && !changeData) {
             var data = that._getData(saveId, name, type, contactId)
-            if(data){
+            if (data) {
                 that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
             }
         }

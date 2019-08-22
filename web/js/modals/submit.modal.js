@@ -31,7 +31,6 @@ function SubmitModal($modal, $submit) {
         return new Service().query(dbCollection,condition)
     }
     this.setData = function(data,type){
-        console.log("shje")
         if(type == "表单"){
             this.$resourceName.val(this.data.name)
             this.$resourceCategory.val(this.data.basicInfo.category)
@@ -159,7 +158,6 @@ SubmitModal.prototype = {
                 new Workspace().save(true,null,that.$resourceCategory.val()+id,condition,that.$resourceName.val())
             }
             if(type=="布局"){
-                console.log(data)
                 if(!that.$modalName.val()) return alert("布局名为必填选项");
                 var autoCreate = that.$modalAutoCreate.val(),
                     userGrade  = that.$modalUserGrade.val(),

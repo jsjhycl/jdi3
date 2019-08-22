@@ -261,6 +261,15 @@ function toolbar() {
             case "show-phone":
                 $("#phone_warp").toggle();
                 break;
+            case "showSameCname"://查看相同中文名
+                if($target.hasClass('is_using')) {
+                    WorkspaceUtil.resetView(true);
+                }else{
+                    WorkspaceUtil.resetView(true);
+                    WorkspaceUtil.sameCnameViewer($target);
+                    $target.addClass('is_using')
+                }
+                
         }
     });
 }

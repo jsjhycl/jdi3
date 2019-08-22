@@ -28,9 +28,11 @@
 .eg .eg-dialog .eg-content {
     width: calc(100% - 500px);
 }
-.eg .eg-dialog .eg-sidebar,
-.eg .eg-dialog .eg-function {
+.eg .eg-dialog .eg-sidebar {
     width: 250px;
+}
+.eg .eg-dialog .eg-function {
+    width: 300px;
 }
 /*内容区域样式*/
 .eg .eg-dialog .eg-content {
@@ -204,8 +206,7 @@
     /* width: 0; */
 }
 
-.eg .eg-dialog .eg-function .form-group,
-.eg .eg-dialog .eg-insertFn .form-group {
+.eg .eg-dialog .eg-function .form-group {
     margin: 15px;
 }
 
@@ -245,7 +246,8 @@
 }
 .eg .eg-expr.active,
 .eg .eg-dialog .eg-function .table tbody td input.active,
-.eg .eg-dialog .eg-insertFn .table tbody td input.active {
+.eg .eg-dialog .eg-insertFn .table tbody td input.active,
+.eg .queryConfig input.active{
     border: 1px solid red;
 }
 

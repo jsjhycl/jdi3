@@ -44,6 +44,9 @@
 .querier .text-left {
     text-align: left!important;
 }
+.queryConfig .query-title {
+    margin: 0 15px;
+}
 .queryConfig .form-group {
     margin: 5px 15px!important;
 }

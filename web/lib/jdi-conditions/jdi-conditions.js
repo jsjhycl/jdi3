@@ -270,6 +270,7 @@
                 $(this).find('[data-key]').each(function () {
                     var key = $(this).attr("data-key");
                     obj[key] = $(this).val();
+                    console.log(obj, obj[key])
                 });
                 result.push(obj);
             });
@@ -300,6 +301,7 @@
                     return true;
                 });
             }
+            console.log(result)
             return result;
         }
     };

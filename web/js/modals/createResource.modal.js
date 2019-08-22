@@ -39,7 +39,6 @@ function CreateResource() {
 }
 CreateResource.prototype = {
     initData: function () {
-        console.log(12)
         var that = this;
         //查询表单中的布局
         that.$createResource.find("#model_resource_name").val("")

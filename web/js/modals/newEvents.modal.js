@@ -301,7 +301,7 @@ function NewEventsModal($modal, $element) {
         })
         return str;
     }
-    //渲染属性改变
+    //渲染属性改变栏
     this.renderProperty = function (property) {
         if (!DataType.isObject(property)) return "";
         var ids = Object.keys(property),
@@ -341,14 +341,14 @@ function NewEventsModal($modal, $element) {
                 <input type="text" class="form-control" data-type="style" data-name="backgroundColor" value="${item.backgroundColor||''}">
             </td>
             <td>
-                <input type="checkbox" data-type="style" data-name="visibility" ${item.visibility?"checked":""}>
+                <input type="checkbox" class="form-control" data-type="style" data-name="visibility" ${item.visibility?"checked":""}>
             </td>
             <td>
-                <input type="checkbox" data-type="attribute" data-name="disabled" ${item.disabled?"checked":""}>
+                <input type="checkbox" class="form-control" data-type="attribute" data-name="disabled" ${item.disabled?"checked":""}>
 
             </td>
             <td>
-                <input type="checkbox" data-type="attribute" data-name="readonly" ${item.readonly?"checked":""}>
+                <input type="checkbox" class="form-control" data-type="attribute" data-name="readonly" ${item.readonly?"checked":""}>
             </td>
         </tr>`
         })
@@ -1091,14 +1091,14 @@ NewEventsModal.prototype = {
                    <input type="text" class="form-control" data-type="style" data-name="backgroundColor">
                </td>
                <td>
-                   <input type="checkbox" data-type="style" data-name="visibility">
+                   <input type="checkbox" class="form-control" data-type="style" data-name="visibility" checked>
                </td>
                <td>
-                   <input type="checkbox" data-type="attribute" data-name="disabled">
+                   <input type="checkbox" class="form-control" data-type="attribute" data-name="disabled">
 
                </td>
                <td>
-                   <input type="checkbox" data-type="attribute" data-name="readonly">
+                   <input type="checkbox" class="form-control" data-type="attribute" data-name="readonly">
                </td>
            </tr>`;
             $tbody.append(str)
@@ -1381,6 +1381,7 @@ NewEventsModal.prototype = {
                 }
             that.renderDescribeTable(data)
         });
+        //添加抄送行
         that.$modal.on("click", ".addCopy", function () {
             var $tbody = $($(this).parents("table")[0]).find("tbody").eq(0),
                 str = `<tr class= "copySendFieldTr">

@@ -89,7 +89,9 @@
                 "z-index": $(element).css("z-index"),
                 "width": $(element).outerWidth() + 2 * edge,
                 "height": $(element).outerHeight() + 2 * edge,
-                "border": edge + "px solid " + color
+                "border": edge + "px solid " + color,
+                "margin-bottom": "40px",
+                "margin-right": "40px"
             });
             $(element).wrap($resizable);
             $(element).addClass("resizable-node").css({
@@ -230,14 +232,14 @@
             // s event.pageY < offset.top + height && event.pageY > offset.top + height - edge
             // w event.pageX > offset.left && event.pageX < offset.left + edge
             // e event.pageX < offset.left + width && event.pageX > offset.left + width - edge
-            if (Math.abs(event.pageY - offset.top) <= edge ) {
+            if (Math.abs(event.pageY - offset.top) <= edge) {
                 direction += "n";
-            } else if (Math.abs(event.pageY - (offset.top + height)) <= edge ) {
+            } else if (Math.abs(event.pageY - (offset.top + height)) <= edge) {
                 direction += "s";
             }
-            if (Math.abs(event.pageX - offset.left) <= edge ) {
+            if (Math.abs(event.pageX - offset.left) <= edge) {
                 direction += "w";
-            } else if (Math.abs(event.pageX - (offset.left + width)) <= edge ) {
+            } else if (Math.abs(event.pageX - (offset.left + width)) <= edge) {
                 direction += "e";
             }
             var handles = $.fn.jresizable.defaults.handles.split(",");

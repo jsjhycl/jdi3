@@ -42,18 +42,16 @@
             var that = this,
                 cache = $.data(element, CACHE_KEY),
                 data = cache.data,
+                $content = cache.$content,
                 html = `
-                <section class="modal fade queryConfig">
-                    <div class="modal-dialog w800px">
-                        <div class="modal-content">
-                            <header class="modal-header">
-                                <button class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title">数据库查询配置</h4>
-                            </header>
-                            <section class="modal-body">
+                <section class="queryConfig">
+                    <div>
+                        <div>
+                            <h4 class="modal-title">数据库查询配置</h4>
+                            <section class="">
                                 <div class="form-horizontal">
                                     <div class="form-group">
-                                        <label class="col-lg-2 control-label">查询类型：</label>
+                                        <label class="col-sm-12 text-left control-label">查询类型：</label>
                                         <div class="col-lg-9">
                                             <select class="form-control" data-key="type">
                                                 <option value="">请选择类型</option>
@@ -65,21 +63,23 @@
                                 </div>
                                 <div class="querier-content"></div>
                             </section>
-                            <footer class="modal-footer">
-                                <button class="btn btn-primary db_save">保存</button>
-                                <button class="btn btn-danger db_clear">清除</button>
+                            <footer class="">
+                                <button class="btn btn-primary btn-sm db_save">保存</button>
+                                <button class="btn btn-danger btn-sm db_clear">清除</button>
                             </footer>
                         </div>
                     </div>
                 </section>
                 `;
-            $('body').find('.queryConfig').remove().end().append(html);
+            
+            $content.find('.queryConfig').remove().end().append(html);
             $(".queryConfig").find(".querier-content").dbQuerier({
                 fieldMode: "multi",
                 data: data || {},
-                noTimeQuery: true
+                noTimeQuery: true,
+                isSm: true,
             })
-            $(".queryConfig").modal('show');
+            $(".queryConfig").show();
         },
 
         //绑定事件
@@ -92,7 +92,7 @@
                     var data = $(".queryConfig").find(".querier-content").dbQuerier("getData");
                     $target.val(JSON.stringify(data))
                 };
-                $(".queryConfig").modal('hide');
+                $(".queryConfig").hide();
             });
             $(document).on("click" + EVENT_NAMESPACE, ".queryConfig .db_clear", {element:element}, function () {
                 var result = confirm("确定要清除数据库查询配置数据吗？");

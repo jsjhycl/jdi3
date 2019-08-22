@@ -301,6 +301,19 @@ function controlbar() {
 	})();
 }
 
+// 中心区
+function designer(){
+    $("#designer").css({
+        "height":$(window).height() - $(".navbar-fixed-top").height() - $("#toolbar").height(),
+        "width":$(window).width() - $("#controlbar").width() - $("#propertybar").width()
+    })
+    $(window).resize(function(){
+        $("#designer").css({
+            "height":$(window).height() - $(".navbar-fixed-top").height() - $("#toolbar").height(),
+            "width":$(window).width() - $("#controlbar").width() - $("#propertybar").width()
+        })  
+    })
+}
 
 //属性栏
 function propertybar() {
@@ -328,7 +341,7 @@ function propertybar() {
 					if (id) {
 						var $workspace = $("#workspace");
 						$container = id.startsWith('phone_') ? $("#phone_content") : $workspace;
-						new Property().save(id === "BODY" ? $workspace : $container.find("#" + id), $(event.target)); //执行保存
+                        new Property().save(id === "BODY" ? $workspace : $container.find("#" + id), $(event.target)); //执行保存
 					}
 					//2017/09/08优化
 					if (this.id === "property_controlType" && event.type === "change") { //如果是控件类型
@@ -343,7 +356,7 @@ function propertybar() {
 						var controlType = event.currentTarget.value;
 						id && controlType === "上传控件" && AccessControl.setUploadEvent();
 						id && controlType === "下拉列表" && AccessControl.showDataSourceTab();
-					}
+                    }
 				});
 			})(item);
 		}
@@ -789,7 +802,8 @@ function back(html) {
 $(document).ready(function () {
 	init().then(() => {
 		navbar();
-		controlbar();
+        controlbar();
+        designer();
 		toolbar();
 		propertybar();
 		workspace();

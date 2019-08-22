@@ -9,11 +9,12 @@
                 if(!Object.prototype.toString.call(fnData) === '[object Object]') return
                 var $functionArgs = $(".eg .eg-function .eg-function-args"),
                     $argsTbody = $(".eg .function-table tbody"),
+                    $queryConfig = $functionArgs.find(".query-config-content"),
                     $argExample = $(".eg .eg-function .function-example"),
                     argsHtml = "",
                     target = $(".eg .eg-elem.current").data('id'),
-                    args = this.getExprArgs(fnData.name, fnType, fnData.async, fnData.voluation, target),
-                    renderData = Array.prototype.concat([], fnData.args);
+                    renderData = Array.prototype.concat([], fnData.args),
+                    args = this.getExprArgs(fnData.name, fnType, fnData.async, fnData.voluation, target, renderData);
                 $functionArgs.show().next().hide();
                 $argExample.text(fnData.example || "");
                 
@@ -31,8 +32,7 @@
                                         '<td data-name="' + arg.cname + '">' + arg.cname + '</td>' +
                                         '<td data-convert="' + arg.type + '">' + typeHtml + '</td>' +
                                         '<td>' +
-                                            '<input '+ (!!arg.readonly ? "disabled" : "") +' class="form-control" data-type="arg" type="text" name="value" value="'+ ((Array.isArray(args)) ? args[idx] : (arg.default == undefined ? "" : arg.default)) +'" >' +
-                                        '</td>' +
+                                            `<input ${(!!arg.readonly ? "disabled" : "")} class="form-control" data-type="arg" type="text" name="value" value='${((Array.isArray(args)) ? args[idx] || "" : (arg.default == undefined ? "" : arg.default))}'>` +                                        '</td>' +
                                     '</tr>';
                     });
                     fnData.args[fnData.args.length - 1].auto ? $argsTbody.parent().addClass("manyArgs-table") : $argsTbody.parent().removeClass("manyArgs-table");
@@ -55,6 +55,7 @@
                                 '</td>' +
                             '</tr>'
                 $argsTbody.empty().append(argsHtml);
+                $queryConfig.empty();
                 FunctionUtil.effect("open");
             },
             getArgsTbody: function () {
@@ -143,18 +144,21 @@
                 var str = '',
                     startIdx = 0;
                 if (fnType === '本地函数') {
-                    startIdx = 1;
-                    str = '(?<=' + fnName + '\\()"'+ target +'"(.+?)(?=\\))'
+                    startIdx = 0;
+                    str = '(?<=' + fnName + '\\("'+ target +'",)(.+?)(?=\\))'
                 } else if (fnType === '远程函数') {
                     startIdx = 4
-                    str = "(?<=functions\\()"+ '"'+ target + '"' + "," + '"'+ fnName + '"' + "," + async + "," + voluation + ",(.+?)(?=\\))";
+                    str = "(?<=functions\\("+ '"'+ target + '")' + "," + '"'+ fnName + '"' + "," + async + "," + voluation + ",(.+?)(?=\\))";
                 }
                 var expr = $(".eg .eg-expr").val(),
                     argReg = new RegExp(str, 'g'),
                     args = expr.match(argReg);
+                    
                 if (Array.isArray(args)) {
-                    return args[0].split(",").slice(startIdx).map(el => {
-                        return /^".+"$/.test(el) ? el.substring(1, el.length - 1) : el
+                    return args[0].split(/,(?=[{\w\d]+)/).slice(startIdx).map(el => {
+                        var val = /^".+"$/.test(el) ? el.substring(1, el.length - 1) : el;
+                        val.endsWith(',') && (val = val.slice(0, val.length - 1));
+                        return  /^[A-Z]{4,6}$/.test(val) ? `{${val}}` : val
                     })
                 }
                 return false;
@@ -275,6 +279,8 @@
                             '<tbody></tbody>' +
                             '</table>' +
                             '</div>' +
+                            '<div class="query-config-content">' +
+                            '</div>' +
                             '<footer class="cfooter">' +
                             '<button class="btn btn-primary function-save">保存</button>' +
                             '<button class="btn btn-danger function-clear">清除</button>' +
@@ -355,7 +361,7 @@
                 }
                 if (expr) {
                     $eg.find(".eg-expr").val(expr);
-                    var matches = expr.match(/[^{]+(?=})/g);
+                    var matches = expr.match(/[^{]([A-Z]+)(?=})/g);
                     if (matches) {
                         var selector = matches.map(function (item) {
                             return '[data-id="' + item + '"]';
@@ -744,7 +750,11 @@
                     var convert = $(this).parent().prev().data('convert'),
                         val = $(this).val();
                     if (/\{(.+?)\}/.test(val)) {
-                        return val
+                        if (convert === 'ElementNoWrap') {
+                            return val.replace(/[\{\}]/g, "")
+                        } else {
+                            return val
+                        }
                     } else if (convert === 'String') {
                         return '"' + val + '"'
                     } else {
@@ -840,17 +850,22 @@
             $(document).on("click" + EVENT_NAMESPACE, '.eg .eg-function [data-config="Query"]', {element: element}, function (event) {
                 var $this = $(this),
                     $input = $this.parent('td').next('td').find('input'),
+                    $content = $('.eg:visible .query-config-content'),
                     val = $input.val(),
                     data = null;
                 try{
                     data = JSON.parse(val);
                 }catch(err) {
                 }
+                $content.is(":empty")
+                    ? $(this).dbQuerier2({
+                            $target: $input,
+                            data: data || {},
+                            $content: $content,
+                        })
+                    : $content.empty()
                 // 生成新的查询属性弹窗
-                $(this).dbQuerier2({
-                    $target: $input,
-                    data: data || {}
-                })
+                
             });
             
         },

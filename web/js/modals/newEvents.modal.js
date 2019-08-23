@@ -1086,6 +1086,7 @@ NewEventsModal.prototype = {
                </td>
                <td>
                    <input type="text" class="form-control" data-type="style" data-name="color">
+                   
                </td>
                <td>
                    <input type="text" class="form-control" data-type="style" data-name="backgroundColor">

@@ -61,7 +61,7 @@
             var $tbody = $(element).find(".table tbody");
             $tbody.empty();
             data.forEach(function (item) {
-                that.setTr(cache.mode, $tbody, item, cache.table, cache.dbName);
+                that.setTr(cache.mode, $tbody, item, cache.table, cache.dbName, cache.noExpression);
             });
         },
         bindEvents: function (element) {
@@ -74,7 +74,7 @@
                 if (!DataType.isObject(cache)) return;
 
                 var $tbody = $(celement).find(".table tbody");
-                that.setTr(cache.mode, $tbody, null, cache.table,cache.dbName);
+                that.setTr(cache.mode, $tbody, null, cache.table,cache.dbName, cache.noExpression);
             });
 
             $(element).on("click" + EVENT_NAMESPACE, ".remove", function (event) {
@@ -141,14 +141,15 @@
                 });
             });
         },
-        setTr: function (mode, $tbody, data, table,dbName) {
+        setTr: function (mode, $tbody, data, table,dbName, noExpression) {
             var that = this,
                 $tr, $operatorSelect, operator;
+            noExpression = !!noExpression;
             if (mode === 1) {
                 $tr = $('<tr><td><select class="form-control" data-key="field"></select></td>' +
                     '<td><select class="form-control" data-key="operator"></select></td>' +
                     '<td><select class="form-control" data-key="type"></select></td>' +
-                    TableHelper.buildBtnInputTd("btn-config btn-expr", "E", "value") +
+                    TableHelper.buildBtnInputTd("btn-config btn-expr", "E", "value", noExpression) +
                     '<td><button class="btn btn-danger btn-sm remove">删除</button></td></tr>');
                 $tbody.append($tr);
 
@@ -269,6 +270,7 @@
                 $(this).find('[data-key]').each(function () {
                     var key = $(this).attr("data-key");
                     obj[key] = $(this).val();
+                    console.log(obj, obj[key])
                 });
                 result.push(obj);
             });
@@ -299,6 +301,7 @@
                     return true;
                 });
             }
+            console.log(result)
             return result;
         }
     };

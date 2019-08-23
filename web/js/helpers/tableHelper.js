@@ -8,13 +8,13 @@ var TableHelper = (function () {
             if ($td.length <= 0) return -1;
             return $td.index();
         },
-        buildBtnInputTd: function (btnStyle, btnText, key) {
+        buildBtnInputTd: function (btnStyle, btnText, key, noExpression) {
             btnStyle = btnStyle || "btn-config";
             btnText = btnText || "…";
             if (!key) return;
 
             return '<td>' +
-                '<button class="btn btn-default btn-sm ' + btnStyle + '">' + btnText + '</button>' +
+                (noExpression ? '' : ('<button class="btn btn-default btn-sm ' + btnStyle + '">' + btnText + '</button>')) +
                 '<input class="form-control" data-key="' + key + '" type="text">' +
                 '</td>';
         },

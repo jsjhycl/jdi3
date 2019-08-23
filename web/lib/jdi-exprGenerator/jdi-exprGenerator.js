@@ -13,31 +13,23 @@
                     $argExample = $(".eg .eg-function .function-example"),
                     argsHtml = "",
                     target = $(".eg .eg-elem.current").data('id'),
-                    renderData = Array.prototype.concat([], fnData.args),
-                    args = this.getExprArgs(fnData.name, fnType, fnData.async, fnData.voluation, target, renderData);
+                    renderData = Array.prototype.concat([], fnData.args);
+                    // args = this.getExprArgs(fnData.name, fnType, fnData.async, fnData.voluation, target, renderData);
                 $functionArgs.show().next().hide();
                 $argExample.text(fnData.example || "");
-                
                 if (Array.isArray(fnData.args) && fnData.args.length > 0) {
-                    if (Array.isArray(args)&& args.length > fnData.args.length){
-                        var discount = args.length - fnData.args.length;
-                        while (discount > 0) {
-                            renderData.push(fnData.args[fnData.args.length - 1]);
-                            discount --;
-                        }
-                    }
                     renderData.forEach(function(arg, idx) {
                         var typeHtml = arg.type === "Query" ? ('<button data-config="Query" class="btn btn-default btn-sm">'+ arg.ctype +'</button>') : arg.ctype;
                         argsHtml += '<tr>' +
                                         '<td data-name="' + arg.cname + '">' + arg.cname + '</td>' +
                                         '<td data-convert="' + arg.type + '">' + typeHtml + '</td>' +
                                         '<td>' +
-                                            `<input ${(!!arg.readonly ? "disabled" : "")} class="form-control" data-type="arg" type="text" name="value" value='${((Array.isArray(args)) ? args[idx] || "" : (arg.default == undefined ? "" : arg.default))}'>` +                                        '</td>' +
+                                            `<input ${(!!arg.readonly ? "disabled" : "")} class="form-control" data-type="arg" type="text" name="value" value='${arg.default == undefined ? "" : arg.default}'>` +
+                                        '</td>' +
                                     '</tr>';
                     });
                     fnData.args[fnData.args.length - 1].auto ? $argsTbody.parent().addClass("manyArgs-table") : $argsTbody.parent().removeClass("manyArgs-table");
                 }
-                
                 argsHtml += '<tr>' +
                                 '<td>是否异步</td>' +
                                 '<td>默认</td>' +
@@ -82,10 +74,11 @@
                     dWidth = $egDialog.width(),
                     cWidth = $egContent.width(),
                     sWidth = $egSidebar.width();
+                    fWidth = $egFunction.width();
                 if (action === "open") {
                     if ($egFunction.is(":hidden")) {
                         $egFunction.show();
-                        $egContent.animate({width: cWidth - sWidth});
+                        $egContent.animate({width: cWidth - fWidth});
                     }
                 } else if (action === "close") {
                     $egContent.animate({width: dWidth - sWidth});
@@ -125,7 +118,7 @@
             setElemSelected: function(expr, args) {
                 var $eg = $('.eg:visible'),
                     expr = expr || $eg.find(".eg-expr").val(),
-                    args = args || $eg.find('[data-type="arg"]').map(function() {
+                    args = args || $eg.find('[data-type="arg"], .queryConfig input').map(function() {
                         return $(this).val()
                     }).get().join(','),
                     matches = (expr + ',' + args).match(/[^{]([A-Z]+)(?=})/img);
@@ -153,7 +146,7 @@
                 var expr = $(".eg .eg-expr").val(),
                     argReg = new RegExp(str, 'g'),
                     args = expr.match(argReg);
-                    
+                
                 if (Array.isArray(args)) {
                     return args[0].split(/,(?=[{\w\d]+)/).slice(startIdx).map(el => {
                         var val = /^".+"$/.test(el) ? el.substring(1, el.length - 1) : el;
@@ -304,6 +297,7 @@
             $(".eg .eg-dialog .eg-page .eg-elem.selected").removeClass("selected");
             $(".eg .eg-dialog .eg-sidebar .eg-toolbar .btn.active").removeClass("active");
             $(".eg .eg-dialog .eg-function .function-args :text.active").removeClass("active");
+            $(".eg .queryConfig :text.active").removeClass("active");
             $(".fn-system-item.selected, .fn-types-item.selected, .fn-item.selected").removeClass('selected');
         },
         setData: function (element) {
@@ -408,7 +402,7 @@
             if (Array.isArray(functions)) {
                 this.renderToolBar(functions, systemFunction);
                 this.setToolBarData(functions[0]);
-                $eg.find(".eg-function").show().end().find(".eg-content").css("width", "calc(100% - 500px)");
+                $eg.find(".eg-function").show().end().find(".eg-content").css("width", "calc(100% - 550px)");
             } else {
                 $eg.find(".eg-function").hide().end().find(".eg-content").css("width", "calc(100% - 250px)");
             }
@@ -531,20 +525,24 @@
                 // }
                 
                 var $eg = $(".eg:visible"),
-                    $arg = $eg.find("[data-type='arg'].active"),
+                    $arg = $eg.find("[data-type='arg'].active, .queryConfig .active"),
                     $egExpr = $eg.find(".eg-expr"),
                     expr = $egExpr.val(),
-                    value = "{" + $(this).attr("data-id") + "}",
-                    isActive = $(this).hasClass('selected');
-                
+                    dataId = $(this).attr("data-id"),
+                    value = '';
+                console.log($eg, $egExpr, $arg)
                 if ($arg.length > 0) {
+                    var valueType = $arg.parent().prev().attr('data-convert');
+                    value = valueType === 'ElementNoWrap' ? dataId : "{" + dataId + "}";
                     $arg.val($arg.val() === value ? "" : value).trigger("input");
                 } else {
+                    value = "{" + dataId + "}";
                     if(expr.indexOf(value) > -1) {
                         $egExpr.val(expr.replace(new RegExp(value, "g"), ""));
                     } else {
                         that.setExpr($egExpr, $egExpr.get(0), expr, value);
                     }
+                    console.log($egExpr)
                 }
                 FunctionUtil.setElemSelected();
             });
@@ -561,12 +559,9 @@
                     value = value.replace("{ID}", id);
                 }
                 
-
                 var $list = $('.eg .eg-function').find(".eg-system-list");
                     cache = $.data(element, CACHE_KEY);
-                console.log($list.is(":visible"))
                 if ($list.is(":visible")) {
-                    
                     FunctionUtil.setSystemStatus(true);
                     $(this).find(".fn-system .fn-system-item").first().click();
                     $list.hide().prev().show();
@@ -727,9 +722,10 @@
             });
 
             //文本框focusin、focusout事件
-            $(document).on("focusin" + EVENT_NAMESPACE, ".eg .eg-expr, .eg .eg-function [data-type='arg']", function (event) {
+            $(document).on("focusin" + EVENT_NAMESPACE, ".eg .eg-expr, .eg .eg-function [data-type='arg'], .queryConfig input", function (event) {
                 event.stopPropagation();
                 $(".eg .eg-expr, .eg .eg-function [data-type='arg']").removeClass("active");
+                $(".eg .queryConfig input").removeClass("active");
                 $(this).addClass("active");
             });
 
@@ -739,10 +735,11 @@
                 var cache = $.data(element, CACHE_KEY),
                     replaceResult = !!cache.replaceResult,
                     $eg = $(".eg:visible"),
-                    $egExpr = $eg.find(".eg-expr")
+                    $egExpr = $eg.find(".eg-expr"),
                     target = $eg.find('.eg-elem.current').data('id'),
                     fnType = $eg.find(".fn-item.selected").data('type') || $eg.find(".fn-system-item.selected").data('type'),
                     fnName = $eg.find(".fn-item.selected").data('name') ||  $eg.find(".fn-system-item.selected").data('name'),
+                    isManyArgsTable = $eg.find(".eg-function-args table").hasClass("manyArgs-table"),
                     result = "";
                 if (!target) return;
                 if(!fnName) return alert('无选中函数！');
@@ -750,17 +747,15 @@
                     var convert = $(this).parent().prev().data('convert'),
                         val = $(this).val();
                     if (/\{(.+?)\}/.test(val)) {
-                        if (convert === 'ElementNoWrap') {
-                            return val.replace(/[\{\}]/g, "")
-                        } else {
-                            return val
-                        }
-                    } else if (convert === 'String') {
-                        return '"' + val + '"'
-                    } else {
                         return val;
-                    }
-                }).get().join(',')
+                    } else if (convert === 'Number') {
+                        return Number(val);
+                    } else {
+                        return '"' + val + '"'
+                    };
+                }).get();
+                isManyArgsTable && args[args.length - 1] === '""' && args.splice(args.length - 1, 1)
+                args = args.join(',');
                 if (fnType === "本地函数") {
                     result = fnName + "("+ '"'+ target + '"' + "," + args +")";
                 } else if (fnType === "远程函数"){

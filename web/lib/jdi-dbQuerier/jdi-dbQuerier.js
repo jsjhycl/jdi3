@@ -42,25 +42,27 @@
                 noTimeQuery = !!cache.noTimeQuery,
                 renderTable = !cache.renderTable,
                 isSm = !!cache.isSm,
+                labelClass = isSm ? "col-sm-12 text-left" : "col-lg-2",
+                inputClass = isSm ? "col-lg-12" : "col-lg-9",
                 tableHtml = '<div class="form-group">' +
-                    `<label class="${isSm ? "col-sm-12 text-left" : "col-lg-2"} control-label">查询数据库：</label>` +
-                    '<div class="col-lg-9"><select class="form-control querier-dbName"></select></div>' +
+                    `<label class="${labelClass} control-label">查询数据库：</label>` +
+                    `<div class="${inputClass}"><select class="form-control querier-dbName"></select></div>` +
                     '</div>' +
                     '<div class="form-group">' +
-                        `<label class="${isSm ? "col-sm-12 text-left" : "col-lg-2"} control-label">查询表格：</label>` +
-                        '<div class="col-lg-9"><select class="form-control querier-table"></select></div>' +
+                        `<label class="${labelClass} control-label">查询表格：</label>` +
+                        `<div class="${inputClass}"><select class="form-control querier-table"></select></div>` +
                     '</div>',
                 querierRate = !noTimeQuery ? '<div class="form-group">' +
-                                                    `<label class="${isSm ? "col-sm-12 text-left" : "col-lg-2"} control-label">查询频率/秒：</label>` +
+                                                    `<label class="${labelClass} control-label">查询频率/秒：</label>` +
                                                 '<div class="col-lg-3"><input class="form-control" data-name="query_time" placeHolder="根据查询频率进行数据查询" /></div>' +
                                             '</div>' : "",
                 renderTable = !renderTable ? '<div class="form-group">' +
-                                                `<label class="${isSm ? "col-sm-12 text-left" : "col-lg-2"} control-label">数据渲染表：</label>` +
+                                                `<label class="${labelClass} control-label">数据渲染表：</label>` +
                                                 '<div class="col-lg-3"><select class="form-control" data-name="render_table"><select></div>' +
                                             '</div>' : "",
                 conditionsHtml = '<div class="form-group">' +
-                    `<label class="${isSm ? "col-sm-12 text-left" : "col-lg-2"} control-label">查询条件：</label>` +
-                    '<div class="col-lg-9 querier-conditions"></div>' +
+                    `<label class="${labelClass} control-label">查询条件：</label>` +
+                    `<div class="${inputClass} querier-conditions"></div>` +
                     '</div>';
             $(element).empty().append(tableHtml + querierRate + renderTable + that.renderFields(element) + conditionsHtml).addClass("form-horizontal querier");
         },
@@ -95,6 +97,7 @@
                 $queryTime = $(element).find('[data-name="query_time"]'),
                 $renderTable = $(element).find('[data-name="render_table"]'),
                 fieldMode = cache.fieldMode,
+                noExpression = !!cache.noExpression,
                 data = cache.data;
             if (fieldMode === "single") {
                 $querierFields = $(element).find(".querier-fields-show,.querier-fields-real");
@@ -135,7 +138,8 @@
                 mode: 1,
                 dbName:dbName,
                 table: table,
-                data: conditions
+                data: conditions,
+                noExpression: noExpression
             });
             $queryTime.val(queryTime || "");
             $("#workspace").find('[data-type="div"]').each(function() {

@@ -47,12 +47,12 @@
                 <section class="queryConfig">
                     <div>
                         <div>
-                            <h4 class="modal-title">数据库查询配置</h4>
-                            <section class="">
+                            <h5 class="query-title">数据库查询配置</h5>
+                            <section class="row">
                                 <div class="form-horizontal">
                                     <div class="form-group">
                                         <label class="col-sm-12 text-left control-label">查询类型：</label>
-                                        <div class="col-lg-9">
+                                        <div class="col-lg-12">
                                             <select class="form-control" data-key="type">
                                                 <option value="">请选择类型</option>
                                                 <option value="common">通用</option>
@@ -63,7 +63,7 @@
                                 </div>
                                 <div class="querier-content"></div>
                             </section>
-                            <footer class="">
+                            <footer class="row">
                                 <button class="btn btn-primary btn-sm db_save">保存</button>
                                 <button class="btn btn-danger btn-sm db_clear">清除</button>
                             </footer>
@@ -78,6 +78,7 @@
                 data: data || {},
                 noTimeQuery: true,
                 isSm: true,
+                noExpression: true
             })
             $(".queryConfig").show();
         },

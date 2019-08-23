@@ -104,12 +104,17 @@ var AccessControl = (function () {
         },
 
         executePagePersent: function($control) {
+            let customId = $("#workspace").attr('data-id');
+            if (!customId || !(customId.slice(2,3) === 'K')) return;
+
             let $table = $control.parents('table');
             if (!$table || $table.length <= 0) return;
+            
             let id = $control.attr('id'),
                 { row } = TableHelper.getRowAndCol($table),
                 location = $control.parent().attr('location');
-            if (!location) return;
+            if (!location) return false;
+            
             let rowMap = location.split(':')[0],
                 currColStart = rowMap.split('-')[0] * 1,
                 currRowStart = rowMap.split('-')[1] * 1,
@@ -170,13 +175,12 @@ var AccessControl = (function () {
             // });
 
             $table.find('tr').each(function() {
-                let $tr = $(this),
-                    trIdx = $tr.index();
+                let $tr = $(this);
                 $tr.find('td input').each(function() {
                     let $td = $(this).parent('td'),
                         location = $td.attr('location'),
                         inputId = $(this).attr('id');
-                    if (!location) return;
+                    if (!location) return false;
                     let rowPer = property.getValue(inputId, 'page.rowPersent'),
                         colPer = property.getValue(inputId, 'page.colPersent'),
                         colspan = Number($td.attr('colspan')) || 1,

@@ -530,7 +530,6 @@
                     expr = $egExpr.val(),
                     dataId = $(this).attr("data-id"),
                     value = '';
-                console.log($eg, $egExpr, $arg)
                 if ($arg.length > 0) {
                     var valueType = $arg.parent().prev().attr('data-convert');
                     value = valueType === 'ElementNoWrap' ? dataId : "{" + dataId + "}";
@@ -542,7 +541,6 @@
                     } else {
                         that.setExpr($egExpr, $egExpr.get(0), expr, value);
                     }
-                    console.log($egExpr)
                 }
                 FunctionUtil.setElemSelected();
             });

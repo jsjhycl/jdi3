@@ -108,8 +108,9 @@ var AccessControl = (function () {
             if (!$table || $table.length <= 0) return;
             let id = $control.attr('id'),
                 { row } = TableHelper.getRowAndCol($table),
-                location = $control.parent().attr('location'),
-                rowMap = location.split(':')[0],
+                location = $control.parent().attr('location');
+            if (!location) return;
+            let rowMap = location.split(':')[0],
                 currColStart = rowMap.split('-')[0] * 1,
                 currRowStart = rowMap.split('-')[1] * 1,
                 property = new Property();
@@ -237,8 +238,6 @@ var AccessControl = (function () {
                     width: Math.round(sumW)
                 }
             }
-
-
         },
     };
 })();

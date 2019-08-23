@@ -269,6 +269,10 @@ function toolbar() {
                     WorkspaceUtil.sameCnameViewer($target);
                     $target.addClass('is_using')
                 }
+                break;
+            case "cnameViewer":
+                break;
+            
                 
         }
     });

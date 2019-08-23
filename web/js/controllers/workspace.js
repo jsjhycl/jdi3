@@ -135,7 +135,10 @@ var WorkspaceUtil = {
                         $span.addClass('check-fn-node').html(cname)
                     }else{
                         $span.addClass('check-fn-node')
-                    }      
+                    } 
+                    break;
+                case "cnameViewer" :
+                    console.log(123)
             }
             $temp.replaceWith($span) //把$tmp中的替换成$span
         })

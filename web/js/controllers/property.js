@@ -18,6 +18,8 @@ function Property() {
             id = that.BODY;//id赋值为BODY
             that.setDefault(id);//调用setDefault方法 设置一下默认的属性
         }
+        // 清空属性
+        this.$propertybar.find("[id^=property_]").val("");
         var data = $.extend(true, {id: id}, that.getProperty(id))//调用jquery的extend方法把{id:id}和调用getProperty方法返回的对象递归合并
         for (var key in data) {//遍历data对象
             var value = data[key],//获取key值

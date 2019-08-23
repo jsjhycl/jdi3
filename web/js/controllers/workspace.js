@@ -6,7 +6,7 @@ var WorkspaceUtil = {
      * @param {Boolean} flag 是否转换元素
      * @param {表达式带有的参数} args 
      */
-    switchWorkspace: function (view, $dom, flag, args) {
+    switchWorkspace: function (view, $dom, flag, args, key) {
         this.resetView();
         var that = this,
             $workspace = $('#workspace'), //获取工作区
@@ -27,7 +27,7 @@ var WorkspaceUtil = {
             zIndex: 801
         });
         if (!flag) { //如果flag为false
-            that.input2Btn(view, $wsCopy.find('input'), true, $workspace); //调用input2Btn模块
+            that.input2Btn(view, $wsCopy.find('input'), true, $workspace,key); //调用input2Btn模块
         }
 
         if ($currentInput) {
@@ -70,6 +70,13 @@ var WorkspaceUtil = {
             $domCopy = DomHelper.copy($dom); //调用函数DomHelper的copy方法
         that.switchWorkspace(view, $domCopy, flag, args, null); //调用函数
     },
+    //property
+    propertyViewer:function($dom){
+        var that = this,
+        key = $dom.attr("data-viewer");
+        var $domCopy = DomHelper.copy($dom)
+        that.switchWorkspace("property",$domCopy,false,null,key)
+    },
 
     numViewer: function () { //元素查看函数检查函数
         this.switchWorkspace('numViewer', null, false, null, null);
@@ -87,7 +94,7 @@ var WorkspaceUtil = {
      * @param {String} view 视图
      * @param {DOMS} $doms 带转换的元素
      */
-    input2Btn: function (view, $doms, flag, $originContainer) {
+    input2Btn: function (view, $doms, flag, $originContainer,key) {
         $.each($doms, function (index, item) { //遍历
             var $dom = $(item), //获取对应的dom
                 id = $dom.attr('id'), //获取对应dom的id
@@ -137,8 +144,9 @@ var WorkspaceUtil = {
                         $span.addClass('check-fn-node')
                     } 
                     break;
-                case "cnameViewer" :
-                    console.log(123)
+                case "property" :
+                    var value = new Property().getValue(id,key)
+                    $span.addClass('check-fn-node').html(value);
             }
             $temp.replaceWith($span) //把$tmp中的替换成$span
         })

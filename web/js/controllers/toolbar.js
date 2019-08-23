@@ -12,7 +12,7 @@ function toolbar() {
             $selected = $workspace.find(".resizable"), //获取工作区中选中的元素
             type = $(this).data("type"), //获取点击的类型
             $target = $(event.currentTarget); //获取当前点击元素
-            distance = parseInt($selected.css('border-left-width')) + parseInt($selected.css('border-right-width'));
+        distance = parseInt($selected.css('border-left-width')) + parseInt($selected.css('border-right-width'));
         switch (type) {
             case "align-left": //左对齐
                 var $first = $selected.first(); //获取选中的第一个元素
@@ -95,7 +95,9 @@ function toolbar() {
                     return;
                 }
                 var $last_selected = $("#" + LAST_SELECTED_ID).parents('.resizable');
-                $selected.css({"width": $last_selected.length > 0 ? $last_selected.width() + distance : "100px"});
+                $selected.css({
+                    "width": $last_selected.length > 0 ? $last_selected.width() + distance : "100px"
+                });
                 // $selected.css({"width": "100px"});//统一设置样式为100px
                 break;
             case "equal-height": //相同高度
@@ -103,7 +105,9 @@ function toolbar() {
                     return;
                 }
                 var $last_selected = $("#" + LAST_SELECTED_ID).parents('.resizable');
-                $selected.css({"height": $last_selected.length > 0 ? $last_selected.height()  + distance : "100px"});
+                $selected.css({
+                    "height": $last_selected.length > 0 ? $last_selected.height() + distance : "100px"
+                });
                 // $selected.css({"height": "100px"});//设置统一高度100px
                 break;
             case "equal-all": //相同宽高
@@ -111,7 +115,10 @@ function toolbar() {
                     return;
                 }
                 var $last_selected = $("#" + LAST_SELECTED_ID).parents('.resizable');
-                $selected.css({"width": $last_selected.length > 0 ? $last_selected.width() + distance : "100px", "height": $last_selected.length > 0 ? $last_selected.height() + distance : "100px"});
+                $selected.css({
+                    "width": $last_selected.length > 0 ? $last_selected.width() + distance : "100px",
+                    "height": $last_selected.length > 0 ? $last_selected.height() + distance : "100px"
+                });
                 // $selected.css({"width": "100px", "height": "100px"});//设置高度100px宽度100px
                 break;
             case "horizon-space": //水平间距
@@ -261,19 +268,26 @@ function toolbar() {
             case "show-phone":
                 $("#phone_warp").toggle();
                 break;
-            case "showSameCname"://查看相同中文名
-                if($target.hasClass('is_using')) {
+            case "showSameCname": //查看相同中文名
+                if ($target.hasClass('is_using')) {
                     WorkspaceUtil.resetView(true);
-                }else{
+                } else {
                     WorkspaceUtil.resetView(true);
                     WorkspaceUtil.sameCnameViewer($target);
                     $target.addClass('is_using')
                 }
                 break;
-            case "cnameViewer":
+            case "propertyViewer":
+                if ($target.hasClass('is_using')) {
+                    WorkspaceUtil.resetView(true);
+                } else {
+                    WorkspaceUtil.resetView(true);
+                    WorkspaceUtil.propertyViewer($target);
+                    $target.addClass('is_using')
+                }
                 break;
-            
-                
+
+
         }
     });
 }

@@ -66,7 +66,7 @@ SetDbDesignerModal.prototype = {
         //渲染表格
         that.$setDbDesigner.dbDesigner({
             disabled: false,
-            $elems: $("#workspace").find("input:not(:button)"),
+            $elems: $("#workspace").find("input"),
             thead: [{
                     name: "id",
                     text: "编号",
@@ -189,7 +189,9 @@ SetDbDesignerModal.prototype = {
         }
         new Service().createTable(bingoData).then(res => {
             this._clearData()
-            that._uploderDb(localData)
+            that._uploderDb(localData).then(res=>{
+                that.$modal.modal("hide")
+            })
         })
     },
 
@@ -203,7 +205,7 @@ SetDbDesignerModal.prototype = {
         })
         that.$modal.find(".modal-footer .save").on("click", function () {
             that.saveData()
-            that.$modal.modal("hide")
+           
         })
 
         // that.basicEvents(null, that.initData, that.saveData, null); //绑定基础事件

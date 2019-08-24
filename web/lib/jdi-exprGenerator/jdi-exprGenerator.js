@@ -19,12 +19,14 @@
                 $argExample.text(fnData.example || "");
                 if (Array.isArray(fnData.args) && fnData.args.length > 0) {
                     renderData.forEach(function(arg, idx) {
-                        var typeHtml = arg.type === "Query" ? ('<button data-config="Query" class="btn btn-default btn-sm">'+ arg.ctype +'</button>') : arg.ctype;
+                        var typeHtml = arg.type === "Query" ? ('<button data-config="Query" class="btn btn-default btn-sm">'+ arg.ctype +'</button>') : arg.ctype,
+                            inputHtml = arg.type === "Boolean"
+                                            ? `<input ${(!!arg.readonly ? "disabled" : "")} class="form-control" data-type="arg" type="checkbox" name="value" ${arg.checked ? "checked" : ""}>`
+                                            : `<input ${(!!arg.readonly ? "disabled" : "")} class="form-control" data-type="arg" type="text" name="value" value='${arg.default == undefined ? "" : arg.default}'>`
                         argsHtml += '<tr>' +
                                         '<td data-name="' + arg.cname + '">' + arg.cname + '</td>' +
                                         '<td data-convert="' + arg.type + '">' + typeHtml + '</td>' +
-                                        '<td>' +
-                                            `<input ${(!!arg.readonly ? "disabled" : "")} class="form-control" data-type="arg" type="text" name="value" value='${arg.default == undefined ? "" : arg.default}'>` +
+                                        '<td>' + inputHtml +
                                         '</td>' +
                                     '</tr>';
                     });
@@ -743,14 +745,15 @@
                 if(!fnName) return alert('无选中函数！');
                 var args = $eg.find('[data-type="arg"]').map(function() {
                     var convert = $(this).parent().prev().data('convert'),
-                        val = $(this).val();
+                        isCheckbox = $(this).is(':checkbox'),
+                        val = !isCheckbox ? $(this).val() : $(this).is(':checked');
                     if (/\{(.+?)\}/.test(val)) {
                         return val;
                     } else if (convert === 'Number') {
                         return Number(val);
-                    } else {
-                        return '"' + val + '"'
-                    };
+                    } else if (convert === 'Boolean') {
+                        return !!val;
+                    } else return '"' + val + '"';
                 }).get();
                 isManyArgsTable && args[args.length - 1] === '""' && args.splice(args.length - 1, 1)
                 args = args.join(',');

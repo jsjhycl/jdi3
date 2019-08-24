@@ -61,7 +61,7 @@ var AccessControl = (function () {
 
         // ，在基本属性中 选择 控件类型是上传控件时，设置其触发属性的值
         setUploadEvent: function() {
-            var type = $("#workspace").data("subtype");
+            var type = $("#workspace").data("type");
             if (type === "布局") {
                 var id = $("#property_id").val(),
                     property = new Property();
@@ -97,7 +97,7 @@ var AccessControl = (function () {
 
         // 下拉列表，直接弹出数据源配置弹窗
         showDataSourceTab: function() {
-            var type = $("#workspace").data("subtype");
+            var type = $("#workspace").data("type");
             if (type === "布局") {
                 $('#dataSource_db_tab_modal').modal('show');
             }

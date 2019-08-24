@@ -30,7 +30,6 @@ ChangeRouter.prototype = {
     setData: function() {
         var that = this;
         new Service().getRouter(function(data) {
-            console.log('data', data);
             if (!Array.isArray(data)) return;
             var html = "";
             data.forEach(item => {

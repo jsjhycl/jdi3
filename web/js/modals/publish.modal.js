@@ -11,14 +11,17 @@ PublishModal.prototype = {
     initData: function () {
         var that = this;
         new Workspace().save(false)
-        new Service().query("newProducts", null, ["customId", "name", "status"]).then(data => {
+        new Service().query("newProducts", null, ["customId", "name", "status","lastEditTime"]).then(data => {
             if (!Array.isArray(data)) return;
             var html = "";
+            data.sort(function(a,b){
+                return Date.parse(b.lastEditTime) - Date.parse(a.lastEditTime);
+            })
             data.forEach(item=>{
                 if(item.status != -1){
                     html += `<tr data-id="${item.customId}">
                     <td>${item.name}</td>
-                    <td>${item.status == "10"?"已发布":"未发布"}</td>
+                    <td style="color:${item.status==10?"black":"red"}">${item.status == "10"?"已发布":"未发布"}</td>
                     <td class="text-center"><a class="btn btn-default btn-sm publish">发布</a> <a class="btn btn-danger btn-sm remove">删除</a></td>
                 </tr>`
                 }

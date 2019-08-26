@@ -766,6 +766,9 @@ Workspace.prototype = {
             var data = that._getData(saveId, name, type, contactId)
             if (data) {
                 that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
+                var dbcondition = [{col:"_id",value:saveId}],
+                    dbdata = [{col:"lastEditTime",value:new Date().toFormatString(null, true)}];
+                that.updataDb(dbCollection,dbcondition,dbdata)
             }
         }
 

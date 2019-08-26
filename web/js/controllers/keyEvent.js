@@ -40,6 +40,7 @@ KeyEvent.prototype = {
             this.$workspace.find(".workspace-node").jresizable("destroy"); //调用jresizable方法传入destroy
         }
         $(".jcontextmenu:visible").hide(); //类名为jcontextmenu的元素隐藏
+        WorkspaceUtil.resetView(true)
     },
     //元素的上移
     moveUpEvent(event) {

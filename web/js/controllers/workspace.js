@@ -15,15 +15,20 @@ var WorkspaceUtil = {
             $wrap_content = $('<div id="mask_content"></div>'), //生成html
             $wsCopy = $('<div id="workspace_copy"></div>').html($workspace.html()); //生成html并把以前的工作区的html添加进来
         $wrap.css({
-            height: $(document).height()
+            height: $("#designer").height(),
+            // width: $workspace.width(),
+            // height: $workspace.height(),
+            top: $workspace.offset().top,
+            left: $workspace.offset().left,
+            overflow:"scroll"
         }); // 2019/1/3 添加给遮罩设置高度
         $wsCopy.css({ //给复制的元素这是css属性
             width: $workspace.width(),
             height: $workspace.height(),
             backgroundColor: $workspace.css('backgroundColor'),
             position: "absolute",
-            top: $workspace.offset().top,
-            left: $workspace.offset().left,
+            // top: $workspace.offset().top,
+            // left: $workspace.offset().left,
             zIndex: 801
         });
         if (!flag) { //如果flag为false
@@ -153,7 +158,6 @@ var WorkspaceUtil = {
                 case "property" :
                     var value = new Property().getValue(id,key)
                     if(value){
-                        console.log($dom)
                         $span.attr({
                             'data-toggle': 'tooltip',
                             'data-placement': 'top',
@@ -212,7 +216,7 @@ var WorkspaceUtil = {
             }
         });
 
-        $('body').on('click.workspace', '.navbar, #controlbar', function (ev) { //绑定事件
+        $('body').on('click.workspace', '.navbar, #controlbar ,#designer,#ruler', function (ev) { //绑定事件
             ($(ev.target).attr('id') === 'viewer') ? '' : that.resetView(true); //获取元素的id与viewr比较如果为真直接为空否知执行resetView函数
         })
     },

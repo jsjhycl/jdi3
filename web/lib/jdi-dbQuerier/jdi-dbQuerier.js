@@ -169,7 +169,7 @@
                 if(fieldMode=="multi"){
                     html +='<label class="checkbox-inline">' +
                     '<input class="all" type="' + "checkbox" + '" name="' + name + '" value="' + "*" + '">' +
-                    "全部字段*" + '</label>'
+                    "*(所有)" + '</label>'
                 }
                 $(this).append(html);
             });

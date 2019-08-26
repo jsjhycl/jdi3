@@ -140,12 +140,26 @@ var WorkspaceUtil = {
                         cname = new Property().getValue(id,"cname");
                     if(cnames.indexOf(cname) != cnames.lastIndexOf(cname)){
                         $span.addClass('check-fn-node').html(cname)
+                        $span.css({"color":"red"})
                     }else{
-                        $span.addClass('check-fn-node')
+                        $span.addClass('check-fn-node').html(cname)
                     } 
+                    $span.attr({
+                        'data-toggle': 'tooltip',
+                        'data-placement': 'top',
+                        'title': cname
+                    });
                     break;
                 case "property" :
                     var value = new Property().getValue(id,key)
+                    if(value){
+                        console.log($dom)
+                        $span.attr({
+                            'data-toggle': 'tooltip',
+                            'data-placement': 'top',
+                            'title': value
+                        });
+                    }
                     $span.addClass('check-fn-node').html(value);
             }
             $temp.replaceWith($span) //把$tmp中的替换成$span

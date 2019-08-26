@@ -59,10 +59,11 @@ ArchivePathModal.prototype = {
             Common.fillSelect(that.$archiveDbName,{name:"请选择存档数据库",value:""},dbs,data.dbName,true)//生成数据库下拉框填充默认选项
             if(dbName){//如果数据库是选中的
                 Object.keys(AllDbName[dbName]).forEach(function(item){//遍历数据库下面所有的表生成，表的下拉选项
-                    tableOptions.push({name:item,value:item})
+                    tableOptions.push({name:AllDbName[dbName][item]["tableDesc"],value:item})
                 })
                 if(table){//如果表存在
                     AllDbName[dbName][table].tableDetail.forEach(function(item){//数据库下面对应的表的字段  生成字段下拉选项
+        
                         fieldsoptions.push({name:item.cname,value:item.id})
                     })
                 }
@@ -129,7 +130,7 @@ ArchivePathModal.prototype = {
                 $select = $("#archivePath_modal").find('[data-key="table"]');//获取table下拉框
             if(dbName){
                 Object.keys(AllDbName[dbName]).forEach(function(item){
-                    tableOptions.push({name:item,value:item})
+                    tableOptions.push({name:AllDbName[dbName][item]["tableDesc"],value:item})
                 })
             }
             Common.fillSelect($select,{name:"请选择存档表格",value:""},tableOptions,null,true)

@@ -137,6 +137,7 @@ SubmitModal.prototype = {
         })
         that.$modal.find(".save").on("click",function(){
             var type = $("#workspace").attr("data-type"),
+                oldId = $("#workspace").attr("data-id")
                 id = "",
                 condition=[],
                 data = that.data;
@@ -155,7 +156,22 @@ SubmitModal.prototype = {
                     }},
                     {col: "edit", value:data.edit +";"+ that.USER+","+new Date().toFormatString(null, true)}
                 ]
-                new Workspace().save(true,null,that.$resourceCategory.val()+id,condition,that.$resourceName.val())
+                if(oldId!=that.$resourceCategory.val()+id){
+                    new Workspace().save(true,null,that.$resourceCategory.val()+id,condition,that.$resourceName.val())
+                }else{
+                    var dbCollection = type == "表单" ? "newResources" : "newProducts",
+                    name = that.$resourceName.val()
+                    condition = [{ col: "customId", value: oldId}],
+                    data = [{col:"name",value:name}];
+                    var result = new Service().update(dbCollection,condition,data)
+                   result.then(res=>{
+                      $("#workspace").attr("data-name",name)
+                      var text = name+ '<span class="text-danger">' + "(" + oldId + ")" + '</span>';
+                      $("#name").empty().append(text);
+                      alert("保存成功")
+                   })
+
+                }
             }
             if(type=="布局"){
                 if(!that.$modalName.val()) return alert("布局名为必填选项");
@@ -191,7 +207,21 @@ SubmitModal.prototype = {
                         contactId: data.basicInfo.contactId
                     }}
                 ]
-                new Workspace().save(true,null,id,condition,that.$modalName.val())
+                if(oldId != id){
+                    new Workspace().save(true,null,id,condition,that.$modalName.val())
+                }else{
+                    var dbCollection = type == "表单" ? "newResources" : "newProducts",
+                    name = that.$modalName.val(),
+                    condition = [{ col: "customId", value: oldId}],
+                    data = [{col:"name",value:name}];
+                    var result = new Service().update(dbCollection,condition,data)
+                   result.then(res=>{
+                      $("#workspace").attr("data-name",name)
+                      var text = name+ '<span class="text-danger">' + "(" + oldId + ")" + '</span>';
+                      $("#name").empty().append(text);
+                      alert("保存成功")
+                   })
+                }
             }
             that.$modal.modal("hide")
         })

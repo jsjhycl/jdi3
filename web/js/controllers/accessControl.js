@@ -105,7 +105,7 @@ var AccessControl = (function () {
 
         executePagePersent: function($control) {
             let customId = $("#workspace").attr('data-id');
-            if (!customId || !(customId.slice(2,3) === 'K')) return;
+            // if (!customId || !(customId.slice(2,3) === 'K')) return;
 
             let $table = $control.parents('table');
             if (!$table || $table.length <= 0) return;
@@ -186,7 +186,7 @@ var AccessControl = (function () {
                         colspan = Number($td.attr('colspan')) || 1,
                         rowspan = Number($td.attr('rowspan')) || 1,
                         rowMap = location.split(':')[0],
-                        colMap = location.split(':')[1],
+                        colMap = location.split(':')[1] || rowMap,
                         colStart = rowMap.split('-')[0] * 1,
                         rowStart = rowMap.split('-')[1] * 1,
                         colEnd = colMap.split('-')[0] * 1,

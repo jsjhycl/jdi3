@@ -2,6 +2,7 @@ function Service() {
     this.baseUrl = "/dbApi/dbOperate";
     this.routerTable = "router"
     this.createTableURL = "/dataApi/api/dataportal/createtable"
+    this.publishURl = "/home/dirCopy"
     this.errmsg = {
         
     }
@@ -154,5 +155,23 @@ Service.prototype = {
                 error:err=>reject(err)
             })
         })
+    },
+    publish:function(customId){
+        var that = this;
+        return new Promise(function(resolve,reject){
+            $.cajax({
+                url:that.publishURl+"?customId="+customId,
+                type:"GET",
+                cache: false,
+                dataType: "json",
+                success: function (result) {
+                    return resolve(result)
+                },
+                error: function (error) {
+                    return reject(error)
+                }
+            })
+        })
+
     }
 }

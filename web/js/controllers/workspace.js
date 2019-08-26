@@ -15,8 +15,8 @@ var WorkspaceUtil = {
             $wrap_content = $('<div id="mask_content"></div>'), //生成html
             $wsCopy = $('<div id="workspace_copy"></div>').html($workspace.html()); //生成html并把以前的工作区的html添加进来
         $wrap.css({
-            height: $("#designer").height(),
-            // width: $workspace.width(),
+            height: $workspace.height(),
+            width: $workspace.width(),
             // height: $workspace.height(),
             top: $workspace.offset().top,
             left: $workspace.offset().left,

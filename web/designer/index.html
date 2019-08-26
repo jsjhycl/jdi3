@@ -534,16 +534,8 @@
                                 <th><span class="add">+</span></th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <!-- <tr>
-                                <td><input type="text" class="form-control" data-name="origin" /></td>
-                                <td><input type="text" class="form-control" data-name="path" /></td>
-                                <td><input type="text" class="form-control" data-name="target" /></td>
-                                <td><button class="btn btn-danger del">删除</button></td>
-                            </tr> -->
-                        </tbody>
+                        <tbody></tbody>
                     </table>
-
                 </section>
                 <footer class="modal-footer">
                     <button class="btn btn-primary save">保存</button>
@@ -564,7 +556,6 @@
                 <section class="modal-body">
                     <ul class="nav nav-tabs">
                         <li class="active"><a data-toggle="tab" href="#receive_template_product_tab">表单产品</a></li>
-                        <!-- <li><a data-toggle="tab" href="#receive_model_product_tab">布局产品</a></li> -->
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="receive_template_product_tab">
@@ -812,6 +803,37 @@
                         </div>
                     </div>
                     <div class="querier"></div>
+                </section>
+                <footer class="modal-footer">
+                    <button class="btn btn-primary save">保存</button>
+                    <button class="btn btn-danger clear">删除</button>
+                </footer>
+            </div>
+        </div>
+    </section>
+
+    <!-- 嵌套查询模态框 -->
+    <section class="modal fade" id="query_nest_modal">
+        <div class="modal-dialog w800px">
+            <div class="modal-content">
+                <header class="modal-header">
+                    <button class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">数据库嵌套查询配置</h4>
+                </header>
+                <section class="modal-body">
+                    <div class="nest-query-related form-horizontal">
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">关联元素编号：</label>
+                            <div class="col-lg-9">
+                                <select class="form-control" data-name="query_related"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">关联查询字段：</label>
+                            <div class="col-lg-9 query_related_fields"></div>
+                        </div>
+                    </div>
+                    <div class="nest-query-content"></div>
                 </section>
                 <footer class="modal-footer">
                     <button class="btn btn-primary save">保存</button>
@@ -1115,8 +1137,6 @@
             </div>
         </div>
     </section>
-
-
 
     <section class="modal fade" id="copySendModal">
         <div class="modal-dialog w1300px">

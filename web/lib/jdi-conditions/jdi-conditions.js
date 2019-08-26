@@ -61,7 +61,7 @@
             var $tbody = $(element).find(".table tbody");
             $tbody.empty();
             data.forEach(function (item) {
-                that.setTr(cache.mode, $tbody, item, cache.table, cache.dbName, cache.noExpression);
+                that.setTr(cache.mode, $tbody, item, cache.table, cache.dbName, cache.noExpression, cache.reduceTypeConfig);
             });
         },
         bindEvents: function (element) {
@@ -74,7 +74,7 @@
                 if (!DataType.isObject(cache)) return;
 
                 var $tbody = $(celement).find(".table tbody");
-                that.setTr(cache.mode, $tbody, null, cache.table,cache.dbName, cache.noExpression);
+                that.setTr(cache.mode, $tbody, null, cache.table,cache.dbName, cache.noExpression, cache.reduceTypeConfig);
             });
 
             $(element).on("click" + EVENT_NAMESPACE, ".remove", function (event) {
@@ -141,10 +141,11 @@
                 });
             });
         },
-        setTr: function (mode, $tbody, data, table,dbName, noExpression) {
+        setTr: function (mode, $tbody, data, table,dbName, noExpression, reduceTypeConfig) {
             var that = this,
                 $tr, $operatorSelect, operator;
             noExpression = !!noExpression;
+            reduceTypeConfig = !!reduceTypeConfig;
             if (mode === 1) {
                 $tr = $('<tr><td><select class="form-control" data-key="field"></select></td>' +
                     '<td><select class="form-control" data-key="operator"></select></td>' +
@@ -172,11 +173,14 @@
                     name: "请选择操作符",
                     value: ""
                 }, ConditionsHelper.getOperators(mode), operator, false);
+                
                 ModalHelper.setSelectData($tr.find('[data-key="type"]'), {
                     name: "请选择类型",
                     value: ""
-                }, ConditionsHelper.typeConfig, type, false);
+                }, !reduceTypeConfig ? ConditionsHelper.typeConfig : ConditionsHelper.reduceTypeConfig, type, false);
+                
                 ModalHelper.setInputData($tr.find('[data-key="value"]'), value, false);
+
             } else {
                 $tr = $('<tr><td><select class="form-control" data-key="leftType"></select></td>' +
                     TableHelper.buildBtnInputTd("btn-config btn-expr", "E", "leftValue") +

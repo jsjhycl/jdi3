@@ -589,7 +589,13 @@ li {
     font-size: 12px;
 }
 
-
+/* 嵌套查询模态框样式 */
+#query_nest_modal .query_related_fields span {
+    display: inline-block;
+    margin-right: 5px;
+    padding: 2px 8px;
+    box-shadow: 1px 2px 4px #d4d4d4
+}
 
 /* 视图样式 */
 /* workspace 元素切换样式 */

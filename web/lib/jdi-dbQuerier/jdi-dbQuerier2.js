@@ -50,16 +50,6 @@
                             <h5 class="query-title">数据库查询配置</h5>
                             <section class="row">
                                 <div class="form-horizontal">
-                                    <div class="form-group">
-                                        <label class="col-sm-12 text-left control-label">查询类型：</label>
-                                        <div class="col-lg-12">
-                                            <select class="form-control" data-key="type">
-                                                <option value="">请选择类型</option>
-                                                <option value="common">通用</option>
-                                                <option value="table">表格</option>
-                                            </select>
-                                        </div>
-                                    </div>
                                 </div>
                                 <div class="querier-content"></div>
                             </section>

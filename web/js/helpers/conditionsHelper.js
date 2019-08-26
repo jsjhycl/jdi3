@@ -84,6 +84,7 @@ var ConditionsHelper = (function () {
             {name: "元素", value: "Element"},
             {name: "查询字符串", value: "QueryString"}
         ],
+        reduceTypeConfig: [{name: "字符串", value: "String"}, {name: "数字", value: "Number"}],
         getOperators: getOperators
     };
 })();

@@ -98,6 +98,7 @@
                 $renderTable = $(element).find('[data-name="render_table"]'),
                 fieldMode = cache.fieldMode,
                 noExpression = !!cache.noExpression,
+                reduceTypeConfig = !!cache.reduceTypeConfig,
                 data = cache.data;
             if (fieldMode === "single") {
                 $querierFields = $(element).find(".querier-fields-show,.querier-fields-real");
@@ -139,7 +140,8 @@
                 dbName:dbName,
                 table: table,
                 data: conditions,
-                noExpression: noExpression
+                noExpression: noExpression,
+                reduceTypeConfig: reduceTypeConfig
             });
             $queryTime.val(queryTime || "");
             $("#workspace").find('[data-type="div"]').each(function() {

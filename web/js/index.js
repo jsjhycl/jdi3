@@ -353,7 +353,8 @@ function propertybar() {
 					}
 
 					if (this.id === "property_controlType") {
-						var controlType = event.currentTarget.value;
+                        var controlType = event.currentTarget.value;
+                        console.log(controlType, id, id && controlType === "下拉列表")
 						id && controlType === "上传控件" && AccessControl.setUploadEvent();
 						id && controlType === "下拉列表" && AccessControl.showDataSourceTab();
                     }
@@ -468,7 +469,8 @@ function propertybar() {
 	//新的触发配置
 	var eventmodal = new NewEventsModal($("#events_modal"), $("#property_events"))
 	eventmodal.bindEvents();
-	eventmodal.execute();
+    eventmodal.execute();
+    
 	//数据库查询
 	var dbQueryModal = new DbQueryModal($("#query_db_modal"), $("#property_query_db"));
 	dbQueryModal.execute();
@@ -476,7 +478,11 @@ function propertybar() {
 	//存档路径
 	var archivePathModal = new ArchivePathModal($("#archivePath_modal"), $("#property_archivePath"));
 	archivePathModal.execute();
-	archivePathModal.bindEvents();
+    archivePathModal.bindEvents();
+    
+    // 嵌套查询
+    var dbNestQueryModal = new DbNestQueryModal($("#query_nest_modal"), $("#property_query_nest"))
+    dbNestQueryModal.execute();
 }
 
 //工作区

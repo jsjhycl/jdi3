@@ -354,7 +354,7 @@ function NewEventsModal($modal, $element) {
         })
         return str;
     }
-    //填充下拉抄送数据库，抄送表，抄送列，抄送字段
+    //填充下拉抄送数据库，抄送表，抄送列，抄送段
     this.fillCopySend = function (type, dbName, table, field, fieldSplit) {
         var dbNames = [],
             tables = [],
@@ -404,13 +404,13 @@ function NewEventsModal($modal, $element) {
             })
         }
         if (type == "field") {
-            str = `<option value="">请选择抄送字段</option>`
+            str = `<option value="">请选择抄送列</option>`
             fields.forEach(function (item) {
                 str += `<option value="${item.value}" ${ field==item.value? "selected" : ""}>${item.name}(${item.value})</option>`
             })
         }
         if (type == "fieldSplit") {
-            str = `<option value="">请选抄送字段分段</option>`
+            str = `<option value="">请选抄送段</option>`
             fieldSplits.forEach(function (item) {
                 str += `<option value="${item.value}" ${ fieldSplit==item.value? "selected" : ""}>${item.name}(${item.value})</option>`
             })
@@ -516,7 +516,7 @@ function NewEventsModal($modal, $element) {
                     <thead>
                         <tr>
                             <th>抄送列</th> 
-                            <th>抄送字段</th>
+                            <th>抄送段</th>
                             <th>数据类型</th>
                             <th>元素</th>
                             <th>运算符</th>
@@ -739,7 +739,7 @@ function NewEventsModal($modal, $element) {
         })
         return copySends;
     }
-    //获取抄送字段
+    //获取抄送段
     this.getCopySendFields = function ($copySendFields) {
         var that = this;
         var $tr = $copySendFields,
@@ -1215,7 +1215,7 @@ NewEventsModal.prototype = {
                         <thead>
                             <tr>
                                 <th>抄送列</th>
-                                <th>抄送字段</th>
+                                <th>抄送段</th>
                                 <th>数据类型</th>
                                 <th>元素</th>
                                 <th>运算符</th>
@@ -1231,7 +1231,7 @@ NewEventsModal.prototype = {
                                 </td>
                                 <td>
                                     <select class="form-control" data-key="fieldSplit" data-type="copySendFieldSplit">
-                                        <option value="" selected="">请选择抄送字段</option>
+                                        <option value="" selected="">请选择抄送段</option>
                                     </select>
                                 </td>
                                 

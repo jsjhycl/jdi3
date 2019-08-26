@@ -20,6 +20,8 @@ function Property() {
         }
         // 清空属性
         this.$propertybar.find("[id^=property_]").val("");
+        AccessControl.executePagePersent($elem);
+
         var data = $.extend(true, {id: id}, that.getProperty(id))//调用jquery的extend方法把{id:id}和调用getProperty方法返回的对象递归合并
         for (var key in data) {//遍历data对象
             var value = data[key],//获取key值
@@ -44,6 +46,7 @@ function Property() {
                             this.setOptions($property,ckey,value)
                         }
 
+                        
 
                         if ($property.length > 0) {//如果能获取到元素
                             if ($property.is(":text") || $property.is("textarea") || $property.is("select")) {//属性配置元素为文本框或则下拉框
@@ -53,6 +56,7 @@ function Property() {
                                 $property.prop("checked", !!cvalue);//给这个复选框设置true或则false
                             }
                         }
+                        
                     }
                 }
             }
@@ -153,7 +157,7 @@ Property.prototype = {
                 )
             )
         ) {
-            AccessControl.executePagePersent($control)
+            
             that._traverseProperty($control);//调用_traverseProperty
             AccessControl.executeControlType($("#property_controlType").val());//获取该元素的文本类型然后给数据源属性判断是否可以点击
         }

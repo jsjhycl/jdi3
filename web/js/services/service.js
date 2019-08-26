@@ -4,7 +4,8 @@ function Service() {
     this.createTableURL = "/dataApi/api/dataportal/createtable"
     this.publishURl = "/home/dirCopy"
     this.errmsg = {
-        
+        "already exists":"已存在",
+        "Table":"表格"
     }
 }
 Service.prototype = {
@@ -145,6 +146,13 @@ Service.prototype = {
                         if (rst.errno === 0) {
                             resolve(rst);
                         } else {
+                            var flag = false;
+                            Object.keys(that.errmsg).forEach((item)=>{
+                                flag = new RegExp(item).test(data)
+                                if(flag){
+                                    data = data.replace(new RegExp(item),that.errmsg[item])
+                                }
+                            })
                             alert(failedMsg + JSON.stringify(data, null, 2));
                         }
                     } else {

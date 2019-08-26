@@ -142,6 +142,7 @@ SetDbDesignerModal.prototype = {
             if (!item.isSave) return true;
             tabledetail.push(item)
         })
+        if(tabledetail.length<1)return alert("请选择入库的字段");
         if (!dbName || !tableName || !tableDesc) return alert("数据库名和表名,表注解为必填选项")
         if (localData[dbName]) {
             localData[dbName][tableName] = {

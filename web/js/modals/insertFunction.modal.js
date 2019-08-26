@@ -47,7 +47,7 @@ function InsertFnModal($modal) {
 InsertFnModal.prototype = {
     initData: async function(data) {
         let that = this,
-            result = await new FileService().readFile('./profile/insert_function.json');
+            result = await new FileService().readFile('./profiles/insert_function.json');
         if (!result || result.length <= 0) {
             alert('暂无插入函数配置!');
             that.$modal.hide();
@@ -142,11 +142,11 @@ InsertFnModal.prototype = {
         that.$modal.on('change' + that.NAMESPACE, '[name="functionType"]', async function(event) {
             let urlObj = {
                 'local': {
-                    url: '/profile/insert_function.json',
+                    url: './profiles/insert_function.json',
                     index: 0
                 },
                 'remote': {
-                    url: '/profile/remote2_function.json',
+                    url: './profiles/remote2_function.json',
                     index: 1
                 }
             },

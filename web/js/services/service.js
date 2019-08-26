@@ -2,6 +2,9 @@ function Service() {
     this.baseUrl = "/dbApi/dbOperate";
     this.routerTable = "router"
     this.createTableURL = "/dataApi/api/dataportal/createtable"
+    this.errmsg = {
+        
+    }
 }
 Service.prototype = {
     base: function (data, callBack) {

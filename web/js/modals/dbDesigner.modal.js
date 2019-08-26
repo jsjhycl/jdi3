@@ -10,6 +10,7 @@ function DbDesignerModal($modal) {
     this.NAME_SPACE = ".dbDesigner"
     
     this.$dbDesigner = this.$modalBody.find("#dbDesigner"); //获取数据库设计器
+    this.$modal = $modal;
 
     this.$db = $("#dbDesignerModal")
     // this.setData = function(rowIndex,columnIndex,key,type){
@@ -46,7 +47,7 @@ DbDesignerModal.prototype = {
         })
         that.$dbDesigner.dbDesigner({ //调用jquery的扩展方法
             disabled: false,
-            $elems: $("#workspace").find("input:not(:button)"),
+            $elems: $("#workspace").find("input"),
             thead: [{
                     name: "id",
                     text: "编号",
@@ -186,6 +187,17 @@ DbDesignerModal.prototype = {
     },
     execute: function () {
         var that = this;
+        // that.$modal.on("show.bs.modal", function () {
+        //     console.log("显示")
+        //     that.initData()
+        // })
+        // that.$modal.find(".modal-header .close").on("click", function () {
+        //     that.$modal.modal("hide")
+        // })
+        // that.$modal.find(".modal-footer .save").on("click", function () {
+        //     that.saveData()
+        //     that.$modal.modal("hide")
+        // })
         that.basicEvents(null, that.initData, that.saveData, null); //绑定基础事件
     },
     bindEvents: function () {

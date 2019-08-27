@@ -8,7 +8,7 @@ function DbDesignerModal($modal) {
     this.AllDbName = {}
 
     this.NAME_SPACE = ".dbDesigner"
-    
+
     this.$dbDesigner = this.$modalBody.find("#dbDesigner"); //获取数据库设计器
     this.$modal = $modal;
 
@@ -37,8 +37,8 @@ DbDesignerModal.prototype = {
         var that = this;
 
         var dbList = await new FileService().readFile("./profiles/table.json", 'utf-8') || {},
-         dbNames = [];
-         that.AllDbName = dbList;
+            dbNames = [];
+        that.AllDbName = dbList;
         Object.keys(dbList).forEach(function (item) {
             dbNames.push({
                 "name": item,
@@ -155,13 +155,13 @@ DbDesignerModal.prototype = {
                 }
             ],
             getProperty: new Property().getProperty,
-            dbList:dbList, //把property的getproperty方法赋值给getProperty
-            type:"dbDesigner"
+            dbList: dbList, //把property的getproperty方法赋值给getProperty
+            type: "dbDesigner"
         });
         var $addtr = that.$dbDesigner.find("tbody .addtr")
-        $addtr.each(function(){
-            $(this).find('[data-key="id"]').css("display","none")
-            $(this).find('[data-key="cname"]').css("display","none")
+        $addtr.each(function () {
+            $(this).find('[data-key="id"]').css("display", "none")
+            $(this).find('[data-key="cname"]').css("display", "none")
             // $(this).find('[data-key="isSave"]').css("display","none")
         })
     },
@@ -170,20 +170,20 @@ DbDesignerModal.prototype = {
             data = that.$dbDesigner.dbDesigner("getData"); //调用getData方法
         if (!Array.isArray(data)) return alert("无效的数据类型！"); //如果data不是数组退出函数提示
         var property = new Property();
-            data.forEach(item=>{
-                property.setValue(item.id,"db",[])
+        data.forEach(item => {
+            property.setValue(item.id, "db", [])
+        })
+        data.forEach(function (item) {
+            if (!item.isSave) return true;
+            property.pushValue(item.id, "db", {
+                isSave: item.isSave, //是否入库
+                dbName: item.dbName, //存档数据库
+                table: item.table, //存档表格
+                field: item.selectField,
+                fieldSplit: item.selectFieldSplit, //新增加
+                desc: item.desc,
             })
-            data.forEach(function(item){
-                if(!item.isSave) return true;
-                property.pushValue(item.id,"db",{
-                    isSave: item.isSave,//是否入库
-                    dbName:item.dbName,//存档数据库
-                    table: item.table,//存档表格
-                    field: item.selectField,
-                    fieldSplit: item.selectFieldSplit,//新增加
-                    desc: item.desc,
-                })
-            })
+        })
     },
     execute: function () {
         var that = this;
@@ -206,13 +206,13 @@ DbDesignerModal.prototype = {
         that.$db.on("change" + that.NAME_SPACE, "[data-key='dbName']", function (event) {
             var $select = $(event.target).parents("tr").find('[data-key="table"]'),
                 key = $(this).val(),
-                AllDbName = that.AllDbName||{},
-                objTableNames = Object.keys(AllDbName[key]||{}),
+                AllDbName = that.AllDbName || {},
+                objTableNames = Object.keys(AllDbName[key] || {}),
                 arrTableNames = [],
                 arr = [];
-                
-            objTableNames.forEach(item=>{
-                if(AllDbName[key][item]["key"] == undefined){
+
+            objTableNames.forEach(item => {
+                if (AllDbName[key][item]["key"] == undefined) {
                     arr.push(item)
                 }
             })
@@ -232,13 +232,13 @@ DbDesignerModal.prototype = {
             // that.setData(rowIndex,columnIndex,key)
         })
 
-        
+
         //切换表格时
         that.$db.on("change" + that.NAME_SPACE, "[data-key='table']", function (event) {
             var $selectDbVal = $(event.target).parents("tr").find('[data-key="dbName"]').val(),
                 $select = $(event.target).parents("tr").find('[data-key="selectField"]')
             key = $(this).val(),
-                AllDbName = that.AllDbName||{},
+                AllDbName = that.AllDbName || {},
                 objTableNames = AllDbName[$selectDbVal][key].tableDetail,
                 arrFieldsNames = [];
             objTableNames.forEach(function (item) {
@@ -261,7 +261,7 @@ DbDesignerModal.prototype = {
             var selectDbVal = $(event.target).parents("tr").find('[data-key="dbName"]').val(),
                 selectTableVal = $(event.target).parents("tr").find('[data-key="table"]').val(),
                 selectField = $(this).val(),
-                localData = that.AllDbName||{},
+                localData = that.AllDbName || {},
                 AllFields = localData[selectDbVal][selectTableVal].tableDetail,
                 selectValue = "",
                 fieldSplit = [];
@@ -292,72 +292,85 @@ DbDesignerModal.prototype = {
         that.$db.on("click" + that.NAME_SPACE, "#dbDesignerAdd", function (event) {
             var target = $(this).parent("td").parent("tr"),
                 html = target.clone(),
-                html = $.extend(html,{});
-                html.addClass("addtr")
-                
-                $(html).find('[data-key="id"]').css("display","none")
-                $(html).find('[data-key="cname"]').css("display","none")
-                // $(html).find('[data-key="isSave"]').css("display","none")
+                html = $.extend(html, {});
+            html.addClass("addtr")
+
+            $(html).find('[data-key="id"]').css("display", "none")
+            $(html).find('[data-key="cname"]').css("display", "none")
+            // $(html).find('[data-key="isSave"]').css("display","none")
             target.after(html)
             var rowspan = Number($(this).parents('tr').find('td').eq(0).attr("rowspan"));
             var dataId = $(this).parents("tr").find('[data-key="id"]').val();
             var ids = $("#dbDesigner tbody tr td").find('[data-key="id"]')
-            ids.each(function(){
-                if($(this).val() == dataId){
-                    $(this).parents('tr').find('td').eq(0).attr("rowspan",rowspan+1)
-                    $(this).parents('tr').find('td').eq(1).attr("rowspan",rowspan+1)
+            ids.each(function () {
+                if ($(this).val() == dataId) {
+                    $(this).parents('tr').find('td').eq(0).attr("rowspan", rowspan + 1)
+                    $(this).parents('tr').find('td').eq(1).attr("rowspan", rowspan + 1)
                 }
-            })    
+            })
         })
         //移除一段
         that.$db.on("click" + that.NAME_SPACE, "#dbDesignerRemove", function (event) {
-           
-                var target = $(this).parent("td").parent("tr");
-                target.remove()
-                var rowspan = Number($(this).parents('tr').find('td').eq(0).attr("rowspan"));
-                var dataId = $(this).parents("tr").find('[data-key="id"]').val();
-                var ids = $("#dbDesigner tbody tr td").find('[data-key="id"]')
-                ids.each(function(){
-                    if($(this).val() == dataId){
-                        $(this).parents('tr').find('td').eq(0).attr("rowspan",rowspan-1)
-                        $(this).parents('tr').find('td').eq(1).attr("rowspan",rowspan-1)
-                    }
-                }) 
-            
+
+            var target = $(this).parent("td").parent("tr");
+            target.remove()
+            var rowspan = Number($(this).parents('tr').find('td').eq(0).attr("rowspan"));
+            var dataId = $(this).parents("tr").find('[data-key="id"]').val();
+            var ids = $("#dbDesigner tbody tr td").find('[data-key="id"]')
+            ids.each(function () {
+                if ($(this).val() == dataId) {
+                    $(this).parents('tr').find('td').eq(0).attr("rowspan", rowspan - 1)
+                    $(this).parents('tr').find('td').eq(1).attr("rowspan", rowspan - 1)
+                }
+            })
+
+
 
         })
-        that.$db.on("click" + that.NAME_SPACE, "[data-key='isSave']", function(evetn){
-            var id = $("#workspace").attr("data-id"),//工作区的id
-                table = $.extend(that.AllDbName,{}),//所有的tablejson
-                dbnames = Object.keys(table);//所有的数据库
-            var $tr = $(this).parents("tr"),//点击的当前行
-                $dbName = $tr.find('[data-key="dbName"]'),//数据库名
-                $table = $tr.find('[data-key="table"]'),//表明
-                $field = $tr.find('[data-key="selectField"]'),//字段名
-                $id = $tr.find('[data-key="id"]');//编号
-            if($(this).is(":checked")){
-                dbnames.forEach(function(item){
-                    if(table[item][id]){
+        that.$db.on("click" + that.NAME_SPACE, "[data-key='isSave']", function (evetn) {
+            var id = $("#workspace").attr("data-id"), //工作区的id
+                table = $.extend(that.AllDbName, {}), //所有的tablejson
+                dbnames = Object.keys(table); //所有的数据库
+            var $tr = $(this).parents("tr"), //点击的当前行
+                $dbName = $tr.find('[data-key="dbName"]'), //数据库名
+                $table = $tr.find('[data-key="table"]'), //表明
+                $field = $tr.find('[data-key="selectField"]'), //字段名
+                $id = $tr.find('[data-key="id"]'); //编号
+            if ($(this).is(":checked")) {
+                dbnames.forEach(function (item) {
+                    if (table[item][id]) {
                         $dbName.val(item).trigger("change")
                         $table.val(id).trigger("change")
                         $field.val($id.val()).trigger("change")
                     }
                 })
-            }else{
+            } else {
                 $dbName.val("")
                 $table.val("")
                 $field.val("")
             }
         })
-        that.$db.on("click"+that.NAME_SPACE,"thead th .check-all",function(){
+        that.$db.on("click" + that.NAME_SPACE, "thead th .check-all", function () {
             var rowIndex = $(this).parent('th').index();
             var $tbody = that.$db.find(".dbdesigner tbody");
             var $tr = $tbody.find("tr");
             var isChecked = $(this).is(":checked")
-                $tr.each(function(){
-                    var $checkbox = $(this).find(`td:eq(${rowIndex}) :checkbox`);
-                    $checkbox.prop("checked",!isChecked).trigger("click")
-                })  
+            $tr.each(function () {
+                var $checkbox = $(this).find(`td:eq(${rowIndex}) :checkbox`);
+                $checkbox.prop("checked", !isChecked).trigger("click")
+            })
+        })
+        that.$db.on("mouseover" + that.NAME_SPACE, "tbody tr",function(){
+            var $this = $(this),
+                dataId = $this.attr("data-id"),
+                $target = that.$db.find(`tbody tr[data-id="${dataId}"]`);
+            $target.css("background","#e9e2ec")
+        })
+        that.$db.on("mouseleave" + that.NAME_SPACE, "tbody tr",function(){
+            var $this = $(this),
+                dataId = $this.attr("data-id"),
+                $target = that.$db.find(`tbody tr[data-id="${dataId}"]`);
+            $target.css("background","")
         })
     }
 };

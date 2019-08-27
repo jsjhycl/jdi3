@@ -92,7 +92,7 @@ DbDesignerModal.prototype = {
                     key: "db.table",
                     group: true,
                     template: function (value, options) {
-                        var $select = $('<select data-key="table"></select>');
+                        var $select = $('<select class="form-control" data-key="table"></select>');
                         Common.fillSelect($select, {
                             name: "请选择表",
                             value: ""
@@ -105,7 +105,7 @@ DbDesignerModal.prototype = {
                     key: "db.field",
                     group: true,
                     template: function (value, options) {
-                        var $select = $('<select data-key="selectField"></select>');
+                        var $select = $('<select class="form-control" data-key="selectField"></select>');
                         Common.fillSelect($select, {
                             name: "请选择字段",
                             value: ""
@@ -119,7 +119,7 @@ DbDesignerModal.prototype = {
                     key: "db.fieldSplit",
                     group: true,
                     template: function (value, options) {
-                        var $select = $('<select data-key="selectFieldSplit"></select>')
+                        var $select = $('<select class="form-control" data-key="selectFieldSplit"></select>')
                         Common.fillSelect($select, {
                             name: "请选择第几段",
                             value: ""
@@ -290,6 +290,7 @@ DbDesignerModal.prototype = {
         })
         //增加一段
         that.$db.on("click" + that.NAME_SPACE, "#dbDesignerAdd", function (event) {
+            // $(this).parents("tr").addClass("tr")
             var target = $(this).parent("td").parent("tr"),
                 html = target.clone(),
                 html = $.extend(html, {});
@@ -313,7 +314,12 @@ DbDesignerModal.prototype = {
         that.$db.on("click" + that.NAME_SPACE, "#dbDesignerRemove", function (event) {
 
             var target = $(this).parent("td").parent("tr");
-            target.remove()
+            target.remove();
+            var targetId = target.attr("data-id")
+            // if(that.$db.find(`tr[data-id="${targetId}"]`).length==1){
+
+            //     that.$db.find(`tr[data-id="${targetId}"]`).removeClass("tr")
+            // }
             var rowspan = Number($(this).parents('tr').find('td').eq(0).attr("rowspan"));
             var dataId = $(this).parents("tr").find('[data-key="id"]').val();
             var ids = $("#dbDesigner tbody tr td").find('[data-key="id"]')

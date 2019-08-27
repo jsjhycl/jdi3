@@ -976,3 +976,7 @@ li {
 #dbDesigner table tbody td{
     vertical-align: middle;
 }
+#dbDesigner table tbody .tr{
+    background:aliceblue;
+    border-top: none;
+}

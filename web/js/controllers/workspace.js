@@ -1,11 +1,4 @@
 var WorkspaceUtil = {
-    /**
-     * 
-     * @param {String} view 视图
-     * @param {DOM} $dom 触发按钮的副本
-     * @param {Boolean} flag 是否转换元素
-     * @param {表达式带有的参数} args 
-     */
     switchWorkspace: function (view, $dom, flag, args, key) {
         this.resetView();
         var that = this,
@@ -56,7 +49,6 @@ var WorkspaceUtil = {
         $('body').append($wrap); //把$wrap添加到body中
         that.bindEvents(); //调用绑定事件
     },
-
     /**
      * 查看函数配置、元素标号查看器
      * @param {DOM} $dom 触发元素
@@ -68,7 +60,6 @@ var WorkspaceUtil = {
         var $domCopy = DomHelper.copy($dom); //调用Domhelper的copy方法
         that.switchWorkspace(view, $domCopy, false, null, null); //调用switchWorkspace
     },
-
     insertFns: function ($dom, flag, args) {
         var that = this,
             view = 'insertFn',
@@ -82,7 +73,6 @@ var WorkspaceUtil = {
         var $domCopy = DomHelper.copy($dom)
         that.switchWorkspace("property",$domCopy,false,null,key)
     },
-
     numViewer: function () { //元素查看函数检查函数
         this.switchWorkspace('numViewer', null, false, null, null);
     },
@@ -91,14 +81,8 @@ var WorkspaceUtil = {
         var that = this;
         view = 'sameCname';
         var $domCopy = DomHelper.copy($dom);
-        that.switchWorkspace(view, $domCopy, false, null, null)
+        that.switchWorkspace(view, $domCopy, false, null, "cname")
     },
-
-    /**
-     * 输入框转为btn
-     * @param {String} view 视图
-     * @param {DOMS} $doms 带转换的元素
-     */
     input2Btn: function (view, $doms, flag, $originContainer,key) {
         $.each($doms, function (index, item) { //遍历
             var $dom = $(item), //获取对应的dom
@@ -107,7 +91,7 @@ var WorkspaceUtil = {
             isSelected = $dom.parent().hasClass('ui-draggable'), // 当前元素是否被选中;
                 isNode = $dom.hasClass('workspace-node'), // 判断是否是表格中的input
                 isFocus = $dom.hasClass('focus'); // 输入框有红色背景
-            var $span = $('<span data-domId="' + id + '" ></span>'),
+            var $span = $('<span data-domId="' + id + '" data-property="'+key+'" class="property"></span>'),
                 // $temp = isSelected ? $dom.parent() : $dom;
                 $temp = $dom;
             $span.css({ //设置样式
@@ -169,7 +153,6 @@ var WorkspaceUtil = {
             $temp.replaceWith($span) //把$tmp中的替换成$span
         })
     },
-
     bindEvents: function () {
         var that = this,
             $mask = $('#mask'); //获取遮罩元素
@@ -183,6 +166,38 @@ var WorkspaceUtil = {
             new InsertFnArgsModal().close(); //实例化InsertFnArgsModal调用close方法
             that.resetView($mask); //调用resetView方法
         });
+        $mask.on('click', ".property", function(event){
+            $mask.find(".property").show();
+            $mask.find(".chageProperty").remove();
+            var value = $(this).attr("title"),
+                id = $(this).attr("data-domid"),
+                type = $(this).attr("data-property");
+            var $input = $(`<input type="text" value="${value}" class="chageProperty" autofocus:"autofocus" data-id="${id}" data-property="${type}">`)
+            $input.css({
+                position:$(this).css("position"),
+                top:$(this).position().top,
+                left:$(this).position().left,
+                width:$(this).width(),
+                height:$(this).height()
+            })
+            
+            $(this).hide()
+            $(this).after($input)
+        })
+        $mask.on("keydown",function(event){
+            var code = event.keyCode;
+            if(code==13){
+                var $target = $(event.target),
+                    property =$target.attr("data-property"),
+                    id = $target.attr("data-id"),
+                    value =$target.val();
+                    new Property().setValue(id,property,value)
+                    $mask.find(`.property[data-domid='${id}']`).text(value);
+                    $mask.find(`.property[data-domid='${id}']`).attr("title",value)
+                    $mask.find(".property").show();
+                    $mask.find(".chageProperty").hide();
+            }
+        })
 
         // 选择参数事件
         $('#workspace_copy').on('click.workspace', '.workspace-node-switch', function (event) {
@@ -220,7 +235,6 @@ var WorkspaceUtil = {
             ($(ev.target).attr('id') === 'viewer') ? '' : that.resetView(true); //获取元素的id与viewr比较如果为真直接为空否知执行resetView函数
         })
     },
-
     setMask: function ($container) {
         if (!$container) return; //如果没有选中元素退出程序
         var arr = ['#controlbar', '.navbar.navbar-fixed-top', '#propertybar', '#toolbar'];
@@ -238,7 +252,6 @@ var WorkspaceUtil = {
             $container.append($mask); //添加到$container
         });
     },
-
     // 移除模态框
     resetView: function (flag) {
         flag = !!flag || false; //flag转布尔值 

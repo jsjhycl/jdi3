@@ -44,7 +44,7 @@
             var cache = $.data(element, CACHE_KEY);
             if (!cache) return;
 
-            var table = '<table class="dbdesigner-table table table-bordered table-striped table-hover table-responsive"><thead><tr>';
+            var table = '<table class="dbdesigner-table table table-bordered table-hover table-striped table-responsive"><thead><tr>';
             cache.thead.forEach(function (item) {
                 var checkbox = item.hasCheckbox ? '<input class="check-all" type="checkbox">' : "";
                 table += '<th>' + item.text + checkbox + '</th>';
@@ -95,11 +95,9 @@
                     propertys.push(property)
                })
                propertys.forEach(item=>{
-                   
                    if(item.db && item.db.length>0){
-                       item.db.forEach((jitem,index)=>{
-                           
-                        tbody +=`<tr class="${index>0 ? "addtr":""}">`;
+                       item.db.forEach((jitem,index)=>{ 
+                        tbody +=`<tr class="${index>0 ? "addtr":""}" data-id =${item.id}>`;
                         cache.thead.forEach(function (citem,cindex) {
                             
                                 var template = citem.template || function (value) {
@@ -112,7 +110,7 @@
                         tbody += "</tr>"; 
                        })
                    }else{
-                        tbody +="<tr>";
+                        tbody +=`<tr data-id =${item.id}>`;
                         cache.thead.forEach(function (citem,index) {
                             var template = citem.template || function (value) {
                                     return value;

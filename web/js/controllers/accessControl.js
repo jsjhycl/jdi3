@@ -111,7 +111,6 @@ var AccessControl = (function () {
             if (!$table || $table.length <= 0) return;
             
             let id = $control.attr('id'),
-                { row } = TableHelper.getRowAndCol($table),
                 location = $control.parent().attr('location');
             if (!location) return false;
             
@@ -121,17 +120,18 @@ var AccessControl = (function () {
                 property = new Property();
                 rowPersent = property.getValue(id, 'page.rowPersent'),
                 colPersent = property.getValue(id, 'page.colPersent');
+
+            console.log(id, rowPersent, colPersent)
             if (rowPersent && colPersent) return;
             // 横百分比未设置
 
-            PAGE_PERSENT = [];
+            let PAGE_PERSENT = this.getPagePersent($table)
+
+            // PAGE_PERSENT = [];
             
-            for(let i = 0; i <= row; i ++) {
-                PAGE_PERSENT.push([]);
-                // for(let j = 0; j <= col; j ++) {
-                //     PAGE_PERSENT[i][j] = {}
-                // }
-            }
+            // for(let i = 0; i <= row; i ++) {
+            //     PAGE_PERSENT.push([]);
+            // }
 
             // 抽象table表格
             // $table.find('tr').each(function() {
@@ -174,38 +174,38 @@ var AccessControl = (function () {
             //     })
             // });
 
-            $table.find('tr').each(function() {
-                let $tr = $(this);
-                $tr.find('td input').each(function() {
-                    let $td = $(this).parent('td'),
-                        location = $td.attr('location'),
-                        inputId = $(this).attr('id');
-                    if (!location) return false;
-                    let rowPer = property.getValue(inputId, 'page.rowPersent'),
-                        colPer = property.getValue(inputId, 'page.colPersent'),
-                        colspan = Number($td.attr('colspan')) || 1,
-                        rowspan = Number($td.attr('rowspan')) || 1,
-                        rowMap = location.split(':')[0],
-                        colMap = location.split(':')[1] || rowMap,
-                        colStart = rowMap.split('-')[0] * 1,
-                        rowStart = rowMap.split('-')[1] * 1,
-                        colEnd = colMap.split('-')[0] * 1,
-                        rowEnd = colMap.split('-')[1] * 1;
-                    for (let i = rowStart; i <= rowEnd; i ++) {
-                        for (let j = colStart; j <= colEnd; j ++) {
-                            let averageRowPer = rowPer / colspan,
-                                averageColPer = colPer / rowspan;
-                            PAGE_PERSENT[i][j] = { id: inputId };
-                            rowPer && (PAGE_PERSENT[i][j].row = averageRowPer)
-                            colPer && (PAGE_PERSENT[i][j].col = averageColPer)
-                        }   
-                    }
-                })
-            });
+            // $table.find('tr').each(function() {
+            //     let $tr = $(this);
+            //     $tr.find('td input').each(function() {
+            //         let $td = $(this).parent('td'),
+            //             location = $td.attr('location'),
+            //             inputId = $(this).attr('id');
+            //         if (!location) return false;
+            //         let rowPer = property.getValue(inputId, 'page.rowPersent'),
+            //             colPer = property.getValue(inputId, 'page.colPersent'),
+            //             colspan = Number($td.attr('colspan')) || 1,
+            //             rowspan = Number($td.attr('rowspan')) || 1,
+            //             rowMap = location.split(':')[0],
+            //             colMap = location.split(':')[1] || rowMap,
+            //             colStart = rowMap.split('-')[0] * 1,
+            //             rowStart = rowMap.split('-')[1] * 1,
+            //             colEnd = colMap.split('-')[0] * 1,
+            //             rowEnd = colMap.split('-')[1] * 1;
+            //         for (let i = rowStart; i <= rowEnd; i ++) {
+            //             for (let j = colStart; j <= colEnd; j ++) {
+            //                 let averageRowPer = rowPer / colspan,
+            //                     averageColPer = colPer / rowspan;
+            //                 PAGE_PERSENT[i][j] = { id: inputId };
+            //                 rowPer && (PAGE_PERSENT[i][j].row = averageRowPer)
+            //                 colPer && (PAGE_PERSENT[i][j].col = averageColPer)
+            //             }   
+            //         }
+            //     })
+            // });
             
             if (!rowPersent) {
                 var { width } = _calcPrev(id, currRowStart, currColStart);
-                width > 0 && property.setValue(id, 'page.rowPersent', width)
+                width > 0 && property.setValue(id, 'page.rowPersent', width);
             }
 
             // 纵百分比未设置
@@ -237,11 +237,58 @@ var AccessControl = (function () {
                 sumH = (sumH >= 100 || sumH < 0) ? "" : sumH;
                 sumW = (sumW >= 100 || sumW < 0) ? "" : sumW;
 
-                return {
+                 return {
                     height: Math.round(sumH),
                     width: Math.round(sumW)
                 }
             }
+
+            
         },
+
+        getPagePersent: function($table) {
+            if (!$table || $table.length <= 0) return false;
+            var PAGE_PERSENT = [],
+                { row } = TableHelper.getRowAndCol($table);
+            for(let i = 0; i <= row; i ++) { PAGE_PERSENT.push([]); };
+
+            $table.find('tr').each(function() {
+                let $tr = $(this);
+                $tr.find('td input').each(function() {
+                    let $td = $(this).parent('td'),
+                        location = $td.attr('location'),
+                        inputId = $(this).attr('id');
+                    if (!location) return false;
+                    let property = new Property(),
+                        rowPer = property.getValue(inputId, 'page.rowPersent'),
+                        colPer = property.getValue(inputId, 'page.colPersent'),
+                        colspan = Number($td.attr('colspan')) || 1,
+                        rowspan = Number($td.attr('rowspan')) || 1,
+                        { colStart, rowStart, colEnd, rowEnd } = Common.getTdLocation($td);
+                    for (let i = rowStart; i <= rowEnd; i ++) {
+                        for (let j = colStart; j <= colEnd; j ++) {
+                            let averageRowPer = rowPer / colspan,
+                                averageColPer = colPer / rowspan;
+                            PAGE_PERSENT[i][j] = { id: inputId };
+                            rowPer && (PAGE_PERSENT[i][j].row = averageRowPer)
+                            colPer && (PAGE_PERSENT[i][j].col = averageColPer)
+                        }   
+                    }
+                })
+            });
+            return PAGE_PERSENT
+        },
+
+        findRemainCell: function(id, rowIdx, colIdx) {
+            let rowStart = 0;
+            for (let i = rowIdx; i < PAGE_PERSENT.length; i ++) {
+                if (PAGE_PERSENT[i][colIdx].id !== id) {
+                    rowStart = PAGE_PERSENT[i][colIdx].id;
+                    return false;
+                }
+            };
+            console.log(rowStart)
+        }
+
     };
 })();

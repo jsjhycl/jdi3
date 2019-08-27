@@ -354,9 +354,40 @@ function propertybar() {
 
 					if (this.id === "property_controlType") {
                         var controlType = event.currentTarget.value;
-                        console.log(controlType, id, id && controlType === "下拉列表")
 						id && controlType === "上传控件" && AccessControl.setUploadEvent();
 						id && controlType === "下拉列表" && AccessControl.showDataSourceTab();
+                    }
+
+                    if (this.id === "property_page_rowPersent") {
+                        let TABLE_MAP = AccessControl.getPagePersent($("#" + id).parents('table')),
+                            { rowStart, rowEnd, colStart } = Common.getTdLocation($("#" + id).parent()),
+                            ids = [],
+                            property = new Property();
+                        for (let i = rowStart; i <= rowEnd; i ++ ) {
+                            for (let j = colStart; j < TABLE_MAP[i].length; j ++) {
+                                let _id = TABLE_MAP[i][j].id;
+                                _id !== id && !ids.includes(_id) && ids.push(_id)
+                            }
+                        };
+                        ids.forEach(item => {
+                            property.setValue(item, 'page.rowPersent', '');
+                        });
+                    }
+
+                    if (this.id === "property_page_colPersent") {
+                        let TABLE_MAP = AccessControl.getPagePersent($("#" + id).parents('table')),
+                            { rowEnd, colStart, colEnd } = Common.getTdLocation($("#" + id).parent()),
+                            ids = [],
+                            property = new Property();
+                        for (let i = rowEnd; i < TABLE_MAP.length; i ++ ) {
+                            for (let j = colStart; j <= colEnd; j ++) {
+                                let _id = TABLE_MAP[i][j].id;
+                                _id !== id && !ids.includes(_id) && ids.push(_id)
+                            }
+                        };
+                        ids.forEach(item => {
+                            property.setValue(item, 'page.colPersent', '');
+                        });
                     }
 				});
 			})(item);

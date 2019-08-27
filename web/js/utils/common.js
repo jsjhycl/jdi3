@@ -115,6 +115,25 @@ var Common = (function () {
             } else {
                 return data[key];
             }
+        },
+        getTdLocation: function($td) {
+            if (!$td) return;
+
+            let location = $td.attr('location');
+            if (!location) return;
+
+            let rowMap = location.split(':')[0],
+                colMap = location.split(':')[1] || rowMap,
+                colStart = rowMap.split('-')[0] * 1,
+                rowStart = rowMap.split('-')[1] * 1,
+                colEnd = colMap.split('-')[0] * 1,
+                rowEnd = colMap.split('-')[1] * 1;
+            return {
+                colStart,
+                rowStart,
+                colEnd,
+                rowEnd
+            }
         }
     };
 })();

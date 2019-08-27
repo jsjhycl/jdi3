@@ -104,8 +104,9 @@ DbNestQueryModal.prototype = {
 
         that.$modal.on('change', '[data-name="query_related"]', async function() {
             let relatedId = $(this).val(),
-                db = new Property().getValue(relatedId, 'query.db'),
-                dbName = db.dbName,
+                db = new Property().getValue(relatedId, 'query.db');
+            if (!db) return false;
+            let dbName = db.dbName,
                 table = db.table,
                 fields = db.fields,
                 show_fields = [],

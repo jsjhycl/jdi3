@@ -370,7 +370,7 @@ DbDesignerModal.prototype = {
             var $this = $(this),
                 dataId = $this.attr("data-id"),
                 $target = that.$db.find(`tbody tr[data-id="${dataId}"]`);
-            $target.css("background","#e9e2ec")
+            $target.css("background","#eee")
         })
         that.$db.on("mouseleave" + that.NAME_SPACE, "tbody tr",function(){
             var $this = $(this),

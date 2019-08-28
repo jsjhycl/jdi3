@@ -167,11 +167,16 @@ var WorkspaceUtil = {
             that.resetView($mask); //调用resetView方法
         });
         $mask.on('click', ".property", function(event){
+            
+            // new Property().load($(event.target))
+
             $mask.find(".property").show();
             $mask.find(".chageProperty").remove();
             var value = $(this).attr("title"),
                 id = $(this).attr("data-domid"),
                 type = $(this).attr("data-property");
+            var $control = $(`#workspace #${id}`)
+            new Property().load($control);
             var $input = $(`<input type="text" value="${value}" class="chageProperty" autofocus:"autofocus" data-id="${id}" data-property="${type}">`)
             $input.css({
                 position:$(this).css("position"),
@@ -192,6 +197,8 @@ var WorkspaceUtil = {
                     id = $target.attr("data-id"),
                     value =$target.val();
                     new Property().setValue(id,property,value)
+                    var $control = $(`#workspace #${id}`)
+                    new Property().load($control);
                     $mask.find(`.property[data-domid='${id}']`).text(value);
                     $mask.find(`.property[data-domid='${id}']`).attr("title",value)
                     $mask.find(".property").show();

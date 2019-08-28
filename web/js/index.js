@@ -255,14 +255,15 @@ function controlbar() {
                         $node.attr({
                             "id": number,
                             "name": number,
-                            "src": jdi.fileApi.getConfigUrl().serverUrl + new FileService().imgUrl + '/' + rst.result
+                            "src": jdi.fileApi.getConfigUrl().serverUrl + new FileService().imgUrl + '/' + rst.result[0].fileName
                         }).css({
                             "left": "5px",
                             "top": "5px"
-                        });
+						});
                         new ContextMenu().done(1, $node); //生成控件的右键菜单浪
                         $("#workspace").append($node); //添加到工作区
-                        new Property().setDefault(number); //初始化属性栏设置默认的属性
+					    new Property().setDefault(number); //初始化属性栏设置默认的属性
+						$("#imgFile").val("")
                     });
                 }
 			});

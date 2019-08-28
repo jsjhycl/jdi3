@@ -1,6 +1,6 @@
 function FileService() {
     this.baseUrl = "/ioApi/fsop";
-    this.imgUploadUrl = "/ioApi/upimg";
+    this.imgUploadUrl = "/ioApi/upload";
     this.imgUrl = "/ioApi";
 }
 FileService.prototype = {

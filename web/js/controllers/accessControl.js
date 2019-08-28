@@ -105,7 +105,7 @@ var AccessControl = (function () {
 
         executePagePersent: function($control) {
             let customId = $("#workspace").attr('data-id');
-            // if (!customId || !(customId.slice(2,3) === 'K')) return;
+            if (!customId || !(customId.slice(2,3) === 'K')) return;
 
             let $table = $control.parents('table');
             if (!$table || $table.length <= 0) return;
@@ -121,7 +121,6 @@ var AccessControl = (function () {
                 rowPersent = property.getValue(id, 'page.rowPersent'),
                 colPersent = property.getValue(id, 'page.colPersent');
 
-            console.log(id, rowPersent, colPersent)
             if (rowPersent && colPersent) return;
             // 横百分比未设置
 
@@ -242,6 +241,42 @@ var AccessControl = (function () {
                     width: Math.round(sumW)
                 }
             }
+        },
+
+        clearRemainPagePVal: function (id, type) {
+
+            let TABLE_MAP = AccessControl.getPagePersent($("#" + id).parents('table')),
+                property = new Property(),
+                ids = [],
+                { rowStart, rowEnd, colStart, colEnd } = Common.getTdLocation($("#" + id).parent());
+
+            if (type === "rowPersent") {
+                for (let i = rowStart; i <= rowEnd; i ++ ) {
+                    for (let j = colStart; j < TABLE_MAP[i].length; j ++) {
+                        let _id = TABLE_MAP[i][j].id;
+                        _id !== id && !ids.includes(_id) && ids.push(_id)
+                    }
+                };
+                ids.forEach(item => {
+                    property.setValue(item, `page.rowPersent`, '');
+                    console.log(item);
+                    this.setPagePersentVal($("#" + item));
+                });
+            }
+
+            if (type === "colPersent") {
+                for (let i = rowEnd; i < TABLE_MAP.length; i ++ ) {
+                    for (let j = colStart; j <= colEnd; j ++) {
+                        let _id = TABLE_MAP[i][j].id;
+                        _id !== id && !ids.includes(_id) && ids.push(_id)
+                    }
+                };
+                ids.forEach(item => {
+                    property.setValue(item, `page.colPersent`, '');
+                    console.log(id);
+                    this.setPagePersentVal($("#" + item));
+                });
+            }
 
             
         },
@@ -288,7 +323,51 @@ var AccessControl = (function () {
                 }
             };
             console.log(rowStart)
-        }
+        },
 
+        bindPagePersentEvent: function(workSpaceId) {
+            if (!workSpaceId) return;
+            let NAME_SPACE = '.PAGE_PERSENT',
+                that = this;
+            $("#workspace").off(NAME_SPACE)
+            if (workSpaceId.slice(2,3) === 'K') {
+                $("#workspace").on('input' + NAME_SPACE, "table input[id]", function() {
+                    let $this = $(this),
+                        val = $this.val(),
+                        id = $this.attr('id'),
+                        persent = val.split(/[,，]/);
+                        rowP = persent[0],
+                        colP = persent[1];
+                    
+                    if (!id) return;
+
+                    let property = new Property(),
+                        { rowPersent, colPersent } = property.getValue(id, 'page');
+
+                    if (rowPersent != rowP) {
+                        property.setValue(id, 'page.rowPersent', rowP);
+                        $("#propertybar #property_page_rowPersent").val(rowP);
+                        that.clearRemainPagePVal(id, 'rowPersent');
+                    }
+
+                    if (colPersent != colP) {
+                        property.setValue(id, 'page.colPersent', colP);
+                        $("#propertybar #property_page_colPersent").val(colP);
+                        that.clearRemainPagePVal(id, 'colPersent');
+                    }
+                });
+            }
+        },
+
+        setPagePersentVal: function($control, Value) {
+            let customId = $("#workspace").attr('data-id');
+            if (!customId || !(customId.slice(2,3) === 'K') || !$control || $control.length <= 0) return;
+
+            let id = $control.attr('id');
+            if (!id) return;
+
+            let { rowPersent = '', colPersent = '' } = new Property().getValue(id, 'page');
+            $control.val(Value ? Value : (rowPersent + ',' + colPersent));
+        }
     };
 })();

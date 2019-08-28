@@ -372,6 +372,9 @@ function propertybar() {
                         ids.forEach(item => {
                             property.setValue(item, 'page.rowPersent', '');
                         });
+
+                        let _colPersent = property.getValue(id, 'page.colPersent');
+                        AccessControl.setPagePersentVal($("#" + id), `${$(this).val()},${_colPersent}`);
                     }
 
                     if (this.id === "property_page_colPersent") {
@@ -388,6 +391,8 @@ function propertybar() {
                         ids.forEach(item => {
                             property.setValue(item, 'page.colPersent', '');
                         });
+                        let _rowPersent = property.getValue(id, 'page.rowPersent');
+                        AccessControl.setPagePersentVal($("#" + id), `${_rowPersent},${$(this).val()}`);
                     }
 				});
 			})(item);

@@ -614,7 +614,9 @@ Workspace.prototype = {
                 "height": settingData.height > max_h ? settingData.height : max_h,
                 "background-color": settingData.bgColor
             });
-            new Ruler().drawCoordinates()
+            new Ruler().drawCoordinates();
+
+            AccessControl.bindPagePersentEvent(id);
         }).fail(function () { //如果失败
             that.init(id, name, type, contactId, relTemplate, that.USER); //调用init方法
         });

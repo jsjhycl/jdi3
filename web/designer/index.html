@@ -229,11 +229,52 @@
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right"">
-                    <li><a data-type="showSameCname" >中文名</a></li>
-                    <li><a data-type="propertyViewer" data-viewer="name">表单名</a></li>
-                    <li><a data-type="propertyViewer" data-viewer="controlType">控件类型</a></li>
-                    <li><a data-type="propertyViewer" data-viewer="color">前景色</a></li>
-                    <li><a data-type="propertyViewer" data-viewer="expression">表达式</a></li>
+                    <li class=" dropdown-submenu">
+                    <a href="#">基本属性</a>
+                    <ul class="dropdown-menu">
+                        <li><a data-type="showSameCname">中文名</a></li>
+                        <li><a data-type="propertyViewer" data-viewer="name">表单名</a></li>
+                        <li><a data-type="propertyViewer" data-viewer="controlType">控件类型</a></li>
+                        <li><a data-type="propertyViewer" data-viewer="color">前景色</a></li>
+                        <li><a data-type="propertyViewer" data-viewer="expression">表达式</a></li>
+                    </ul>
+                    </li>
+                    <li class=" dropdown-submenu">
+                        <a href="#">验证属性</a>
+                        <ul class="dropdown-menu">
+                            <li><a data-type="propertyViewer" data-viewer="validate.format">格式验证</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="validate.minLength">最小字符串</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="validate.maxLength">最大字符串</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="validate.remote">远程验证</a></li>
+                        </ul>
+                    </li>
+                    <li class=" dropdown-submenu">
+                        <a href="#">表达式属性</a>
+                        <ul class="dropdown-menu">
+                            <li><a data-type="propertyViewer" data-viewer="expression">表达式</a></li>
+                        </ul>
+                    </li>
+                    <li class=" dropdown-submenu">
+                        <a href="#">数据源属性</a>
+                        <ul class="dropdown-menu">
+                            <li><a data-type="propertyViewer" data-viewer="dataSource.static">静态数据源</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="dataSource.db">数据库数据源</a></li>
+                        </ul>
+                    </li>
+                    <li class=" dropdown-submenu">
+                        <a href="#">触发属性</a>
+                        <ul class="dropdown-menu">
+                            <li><a data-type="propertyViewer" data-viewer="events">触发</a></li>
+                        </ul>
+                    </li>
+                    <li class=" dropdown-submenu">
+                        <a href="#">查询属性</a>
+                        <ul class="dropdown-menu">
+                            <li><a data-type="propertyViewer" data-viewer="query.db">数据库查询</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="archivePath">存档路径</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="query.nest">嵌套查询</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
             <div class="btn-group dropdown">
@@ -901,7 +942,7 @@
             </div>
         </div>
     </section>
-   
+
     <!--发布布局模态框-->
     <section class="modal fade" id="publishModal">
         <div class="modal-dialog">

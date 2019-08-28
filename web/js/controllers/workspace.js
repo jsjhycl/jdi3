@@ -177,7 +177,7 @@ var WorkspaceUtil = {
                 type = $(this).attr("data-property");
             var $control = $(`#workspace #${id}`)
             new Property().load($control);
-            var $input = $(`<input type="text" value="${value}" class="chageProperty" autofocus:"autofocus" data-id="${id}" data-property="${type}">`)
+            var $input = $(`<input type="text" value="${value?value:""}" class="chageProperty" autofocus:"autofocus" data-id="${id}" data-property="${type}">`)
             $input.css({
                 position:$(this).css("position"),
                 top:$(this).position().top,

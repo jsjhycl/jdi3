@@ -197,6 +197,7 @@ var WorkspaceUtil = {
                     id = $target.attr("data-id"),
                     value =$target.val();
                     new Property().setValue(id,property,value)
+                    if(property == "cname"){ that.sameCnameViewer($("#toolbar a[data-type='showSameCname']"))}
                     var $control = $(`#workspace #${id}`)
                     new Property().load($control);
                     $mask.find(`.property[data-domid='${id}']`).text(value);

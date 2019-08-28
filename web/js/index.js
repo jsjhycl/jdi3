@@ -360,40 +360,15 @@ function propertybar() {
                     }
 
                     if (this.id === "property_page_rowPersent") {
-                        let TABLE_MAP = AccessControl.getPagePersent($("#" + id).parents('table')),
-                            { rowStart, rowEnd, colStart } = Common.getTdLocation($("#" + id).parent()),
-                            ids = [],
-                            property = new Property();
-                        for (let i = rowStart; i <= rowEnd; i ++ ) {
-                            for (let j = colStart; j < TABLE_MAP[i].length; j ++) {
-                                let _id = TABLE_MAP[i][j].id;
-                                _id !== id && !ids.includes(_id) && ids.push(_id)
-                            }
-                        };
-                        ids.forEach(item => {
-                            property.setValue(item, 'page.rowPersent', '');
-                        });
-
-                        let _colPersent = property.getValue(id, 'page.colPersent');
+                        let _colPersent = new Property().getValue(id, 'page.colPersent');
                         AccessControl.setPagePersentVal($("#" + id), `${$(this).val()},${_colPersent}`);
+                        AccessControl.clearRemainPagePVal(id, 'rowPersent');
                     }
 
                     if (this.id === "property_page_colPersent") {
-                        let TABLE_MAP = AccessControl.getPagePersent($("#" + id).parents('table')),
-                            { rowEnd, colStart, colEnd } = Common.getTdLocation($("#" + id).parent()),
-                            ids = [],
-                            property = new Property();
-                        for (let i = rowEnd; i < TABLE_MAP.length; i ++ ) {
-                            for (let j = colStart; j <= colEnd; j ++) {
-                                let _id = TABLE_MAP[i][j].id;
-                                _id !== id && !ids.includes(_id) && ids.push(_id)
-                            }
-                        };
-                        ids.forEach(item => {
-                            property.setValue(item, 'page.colPersent', '');
-                        });
-                        let _rowPersent = property.getValue(id, 'page.rowPersent');
+                        let _rowPersent = new Property().getValue(id, 'page.rowPersent');
                         AccessControl.setPagePersentVal($("#" + id), `${_rowPersent},${$(this).val()}`);
+                        AccessControl.clearRemainPagePVal(id, 'colPersent');
                     }
 				});
 			})(item);

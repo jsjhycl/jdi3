@@ -259,7 +259,6 @@ var AccessControl = (function () {
                 };
                 ids.forEach(item => {
                     property.setValue(item, `page.rowPersent`, '');
-                    console.log(item);
                     this.setPagePersentVal($("#" + item));
                 });
             }
@@ -273,12 +272,9 @@ var AccessControl = (function () {
                 };
                 ids.forEach(item => {
                     property.setValue(item, `page.colPersent`, '');
-                    console.log(id);
                     this.setPagePersentVal($("#" + item));
                 });
             }
-
-            
         },
 
         getPagePersent: function($table) {
@@ -367,7 +363,11 @@ var AccessControl = (function () {
             if (!id) return;
 
             let { rowPersent = '', colPersent = '' } = new Property().getValue(id, 'page');
-            $control.val(Value ? Value : (rowPersent + ',' + colPersent));
+            $control.val(
+                    Value
+                        ? Value
+                        : (!rowPersent && !colPersent) ? '' : (rowPersent + ',' + colPersent)
+                    )
         }
     };
 })();

@@ -26,6 +26,15 @@ function DbNestQueryModal($modal, $element) {
         });
     }
 
+    this._renderFields = function(fields) {
+        if (!Array.isArray(fields)) return false;
+        var html = "";
+        html += fields.map(i => {
+            return `<span>${i.id}(${i.cname})</span>`
+        }).join('');
+        that.$queryRelatedFields.empty().append(html);
+    }
+
 }
 
 DbNestQueryModal.prototype = {
@@ -55,11 +64,16 @@ DbNestQueryModal.prototype = {
                 }
             })
 
-        Common.fillSelect(that.$queryRelated, { name: '请选择关联查询控件编号', value: "", }, options)
-
+        data = data || {};
+        var relatedId = data.relatedId;
+        Common.fillSelect(that.$queryRelated, { name: '请选择关联查询控件编号', value: "", }, options, relatedId)
+        relatedId && this.$queryRelated.trigger('change')
+        // 渲染关联查询字段
+        
+        
         that.$querier.dbQuerier({
             fieldMode: "multi",
-            data: [],
+            data: data || {},
             renderTable: false,
             noTimeQuery: true,
             noExpression: true,

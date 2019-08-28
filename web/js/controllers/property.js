@@ -161,9 +161,9 @@ Property.prototype = {
                 )
             )
         ) {
-
-            that._traverseProperty($control); //调用_traverseProperty
-            AccessControl.executeControlType($("#property_controlType").val()); //获取该元素的文本类型然后给数据源属性判断是否可以点击
+            that._traverseProperty($control);//调用_traverseProperty
+            AccessControl.executeControlType($("#property_controlType").val());//获取该元素的文本类型然后给数据源属性判断是否可以点击
+            AccessControl.setPagePersentVal($control);
         }
     },
     /**

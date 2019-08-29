@@ -5,13 +5,14 @@ function CreateTemplate() {
     this.$templateName = $("#template_name")
     this.USER = "admin"
     this.dbCollection = "newResources"
-    this._getMaxId = async function () {
+    this._getMaxId = async function (category) {
         var arr = [],
             maxId = "";
-        var res = await new Service().query(this.dbCollection, null, ["customId"]);
+        var res = await new Service().query("maxResourceId", [{"col":"type",value:category}], [category]);
+        if(res.length<1) return "AA"
         res.forEach(item => {
-            var customId = item.customId.slice(1,item.customId.length)
-            var numberId = NumberHelper.nameToId(customId.replace(/\((.*)\)/img, ""))
+            var customId = item[category]
+            var numberId = NumberHelper.nameToId(customId)
             arr.push(numberId)
         })
         if (arr.length > 0) {
@@ -21,9 +22,10 @@ function CreateTemplate() {
         }
         return NumberHelper.idToName(maxId + 1, 2);
     }
-    this._saveDb = async function (type, params) {
-        var dbCollection = type == "布局" ? "newProducts" : "newResources";
-        return await new Service().insert(dbCollection, params)
+    this.updateMaxId = async function (category,id) {
+       var condition = [{"col":"type",value:category}],
+            data = [{col:"type",value:category},{col:category,value:id}];
+        new Service().update("maxResourceId",condition,data)
     }
 }
 CreateTemplate.prototype = {
@@ -37,7 +39,7 @@ CreateTemplate.prototype = {
                 category = $('[name="template_category"]').val(),
                 subCategory =$('[name="template_subCategory"]:checked').val();
             if(!name && !category && !subCategory) return alert("表单资源不能为空");
-            that._getMaxId().then(res=>{
+            that._getMaxId(category).then(res=>{
                 var id = res,
                 params = [
                     {col: "_id", value: category+id},
@@ -55,6 +57,7 @@ CreateTemplate.prototype = {
                     if(res.ok==1&&res.n==1){
                         new Workspace().init( category+id, name, "表单", null, null, that.USER);
                         that.$modal.modal("hide")
+                        that.updateMaxId(category,id)
                         $("#workspace").css({"width":"0px","height":"0px"})
                         new Main().open()
                     }

@@ -25,7 +25,11 @@ function CreateTemplate() {
     this.updateMaxId = async function (category,id) {
        var condition = [{"col":"type",value:category}],
             data = [{col:"type",value:category},{col:category,value:id}];
-        new Service().update("maxResourceId",condition,data)
+        if(id !="AA"){
+            new Service().update("maxResourceId",condition,data)
+        }else{
+            new Service().insert("maxResourceId",data)
+        }
     }
 }
 CreateTemplate.prototype = {

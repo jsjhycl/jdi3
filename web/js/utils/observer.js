@@ -22,7 +22,7 @@ let Observer = (function() {
             html,
             globalProperty,
             time: new Date().toFormatString()
-        })
+        });
     }
 
     function _setInterval() {
@@ -31,7 +31,6 @@ let Observer = (function() {
                 _globalProperty = JSON.stringify(GLOBAL_PROPERTY),
                 { html = '', globalProperty = '' } = _history[_history.length - 1] || {};
             (_html != html || _globalProperty != globalProperty) && picture(_html, _globalProperty)
-            // console.log(_history);
         }, interval);
     }
 
@@ -41,18 +40,18 @@ let Observer = (function() {
             if (event.ctrlKey && event.keyCode === 90) {
                 let lastHistory = _history[_history.length - 1] || {};
                 (lastHistory.html === $element.html() && lastHistory.globalProperty === JSON.stringify(GLOBAL_PROPERTY) && _history.length > 1) && (lastHistory = _history.pop());
-                lastHistory = _history.pop() || {};
                 if (!lastHistory.time) return;
 
                 clearInterval(timer);
                 let result = confirm(`确定要回退到 ${lastHistory.time} 时的编辑内容？`);
                 if (result) {
-                    
+                    lastHistory = _history.pop() || {};
                     GLOBAL_PROPERTY = JSON.parse(lastHistory.globalProperty);
                     $element.html(lastHistory.html);
                     $("[id^=property_]").val("");
                     new Property().load($(".focus"));
                 }
+                _history.length === 0 && picture();
                 _setInterval();
             }
         })

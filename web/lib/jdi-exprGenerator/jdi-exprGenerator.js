@@ -260,7 +260,7 @@
                         let __dbName = $el.parents('tr').prev().prev().find('input[data-type="arg"]').val(),
                             _tableName = $el.parents('tr').prev().find('input[data-type="arg"]').val(),
                             colNames = _dbData[__dbName] && _dbData[__dbName][_tableName] && _dbData[__dbName][_tableName].tableDetail;
-                        colNames = colNames.map(i => {
+                        colNames = colNames && colNames.map(i => {
                             return {
                                 name: `${i.cname}(${i.id})`,
                                 value: i.id

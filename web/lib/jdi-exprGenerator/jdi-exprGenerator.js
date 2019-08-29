@@ -4,10 +4,23 @@
      * @type {{clear, setArgsTbody, getArgsTbody, effect, convert, handleArgToString}}
      */
     var FunctionUtil = (function () {
+        let dbData;
+
+        function _renderSelect(data) {
+            if (!Array.isArray(data)) return '<p>未获取到数据！</p>';
+            return `
+            <select data-select="result" class="form-control">
+                ${data.map(i => {
+                    return `<option value="${i.value}">${i.name}</option>`
+                })}
+            </select>
+            `
+        }
         return {
             setArgsTbody: function (fnData, fnType) {
                 if(!Object.prototype.toString.call(fnData) === '[object Object]') return
-                var $functionArgs = $(".eg .eg-function .eg-function-args"),
+                var that = this;
+                    $functionArgs = $(".eg .eg-function .eg-function-args"),
                     $argsTbody = $(".eg .function-table tbody"),
                     $queryConfig = $functionArgs.find(".query-config-content"),
                     $argExample = $(".eg .eg-function .function-example"),
@@ -20,9 +33,10 @@
                 if (Array.isArray(fnData.args) && fnData.args.length > 0) {
                     renderData.forEach(function(arg, idx) {
                         var typeHtml = arg.type === "Query" ? ('<button data-config="Query" class="btn btn-default btn-sm">'+ arg.ctype +'</button>') : arg.ctype,
-                            inputHtml = arg.type === "Boolean"
-                                            ? `<input ${(!!arg.readonly ? "disabled" : "")} class="form-control" data-type="arg" type="checkbox" name="value" ${arg.checked ? "checked" : ""}>`
-                                            : `<input ${(!!arg.readonly ? "disabled" : "")} class="form-control" data-type="arg" type="text" name="value" value='${arg.default == undefined ? "" : arg.default}'>`
+                            inputHtml = `<div class="input-group">
+                                            <input ${(!!arg.readonly ? "disabled" : "")} class="form-control" data-type="arg" type="text" name="value" value='${arg.default == undefined ? "" : arg.default}'>
+                                            ${arg.addon ? '<span class="input-group-addon"  data-placement="left" data-toggle="popover" data-tirgger="click" data-type="'+ arg.addon +'">按钮</span>' : '' }
+                                        </div>`;
                         argsHtml += '<tr>' +
                                         '<td data-name="' + arg.cname + '">' + arg.cname + '</td>' +
                                         '<td data-convert="' + arg.type + '">' + typeHtml + '</td>' +
@@ -51,6 +65,33 @@
                 $argsTbody.empty().append(argsHtml);
                 $queryConfig.empty();
                 FunctionUtil.effect("open");
+
+                $('[data-toggle="popover"]').popover('destroy')
+                $('[data-toggle="popover"]').popover({
+                    contaienr: 'body',
+                    html: true,
+                    template: '<div class="popover" style="width: 200px;"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
+                    title: function() {
+                        let type = $(this).data('type'),
+                            _title = '';
+
+                        switch (type) {
+                            case 'dbName':
+                                _title = '数据库';
+                                break;
+                            case 'tableName':
+                                _title = '表';
+                                break;
+                            case 'colName':
+                                _title = '列'
+                                break;
+                        }
+                        return `请选择${_title}`;
+                    },
+                    content: function() {
+                        return that.setPopoverContent($(this), $(this).data('type'), dbData);
+                    },
+                })
             },
             getArgsTbody: function () {
                 var result = [],
@@ -189,6 +230,51 @@
                     el.index = index > -1 ? index : 9999;
                 });
                 return fns;
+            },
+
+            setPopoverContent: function($el, type, _dbData) {
+                
+                if (!_dbData) return '<p>获取配置文件错误!</p>';
+                let html = '',
+                    trIdx = $el.parents('tr').index();
+                switch (type) {
+                    case 'dbName':
+                        let dbNames = Object.keys(_dbData);
+                        dbNames = dbNames.map(i => { return { name: i, value: i } })
+                        html = _renderSelect(dbNames) + `<button data-type="popover_save" data-resultTr="${trIdx}" class="btn btn-default btn-sm">保存</button>`
+                    break;
+                    case 'tableName':
+                        let _dbName = $el.parents('tr').prev().find('input[data-type="arg"]').val(),
+                            tableNames = _dbData[_dbName] && Object.keys(_dbData[_dbName]).filter(el => el != 'newProducts' && el != 'newResources');
+                        tableNames = tableNames.map(i => {
+                            return {
+                                name: `${_dbData[_dbName][i].tableDesc}(${i})`,
+                                value: i,
+                            }
+                        });
+                        html = 
+                               _renderSelect(tableNames) + `<button data-type="popover_save" data-resultTr="${trIdx}" class="btn btn-default btn-sm">保存</button>`
+                                
+                        break;
+                    case 'colName':
+                        let __dbName = $el.parents('tr').prev().prev().find('input[data-type="arg"]').val(),
+                            _tableName = $el.parents('tr').prev().find('input[data-type="arg"]').val(),
+                            colNames = _dbData[__dbName] && _dbData[__dbName][_tableName] && _dbData[__dbName][_tableName].tableDetail;
+                        colNames = colNames.map(i => {
+                            return {
+                                name: `${i.cname}(${i.id})`,
+                                value: i.id
+                            }
+                        })
+                        html = _renderSelect(colNames) + `<button data-type="popover_save" data-resultTr="${trIdx}" class="btn btn-default btn-sm">保存</button>`
+                        break;
+                }
+                return html;
+            },
+            getDbData() {
+                new FileService().readFile("/profiles/table.json", 'utf-8', function(rst) {
+                    dbData = rst;
+                });
             }
         };
     })();
@@ -213,6 +299,7 @@
             return that.$elements.each(function () {
                 var cache = that.cacheData(this);
                 if (!cache.disabled) {
+                    FunctionUtil.getDbData();
                     that.renderDOM();
                     that.clearData();
                     that.clearStyle();
@@ -860,10 +947,16 @@
                             $content: $content,
                         })
                     : $content.empty()
-                // 生成新的查询属性弹窗
-                
             });
-            
+
+            $(document).on("click" + EVENT_NAMESPACE, '.popover [data-type="popover_save"]', function() {
+                let $this = $(this),
+                    trIdx = $this.data('resulttr'),
+                    val = $this.parents('.popover-content').find('[data-select="result"]').val();
+                
+                $(this).parents(".popover").prev().popover('hide')
+                    .parents('table').find('tbody tr').eq(trIdx).find('input[data-type="arg"]').val(val);
+            })
         },
         setExpr: function ($elem, elem, expr, value, replaceExpr) {
             if (!$elem || $elem.length <= 0 || !elem) return;

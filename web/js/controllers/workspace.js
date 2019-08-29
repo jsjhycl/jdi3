@@ -545,7 +545,6 @@ Workspace.prototype = {
         GLOBAL_PROPERTY = {}; //全局属性值空
         LAST_SELECTED_ID = null; // 最后一次被选中的元素id
         LAST_POSITION = {}; // 选中元素的初始位置
-        PAGE_PERSENT = [];
         var db = await new FileService().readFile("./profiles/table.json", "utf-8")
         for (dbName in db) {
             for (table in db[dbName]) {
@@ -620,8 +619,8 @@ Workspace.prototype = {
                 "background-color": settingData.bgColor
             });
             new Ruler().drawCoordinates();
-
             AccessControl.bindPagePersentEvent(id);
+            Observer.observe($("#workspace"))
         }).fail(function () { //如果失败
             that.init(id, name, type, contactId, relTemplate, that.USER); //调用init方法
         });

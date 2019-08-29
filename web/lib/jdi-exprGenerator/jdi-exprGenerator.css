@@ -457,6 +457,10 @@
 .eg .eg-function .btn.btn-default.btn-sm {
     padding: 0 4px;
 }
+.eg .eg-function .input-group-addon {
+    padding: 6px 2px;
+    font-size: 12px!important;
+}
 .cfooter {
     padding: 10px 0;
     text-align: center;

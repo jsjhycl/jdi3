@@ -3,7 +3,7 @@ let Observer = (function() {
     let $element = $("#workspace"),
         _history = [];
         timer = null;
-        interval = 1000 * 1;
+        interval = 1000 * 30;
         NAME_SPACE = '.observer';
 
     function _reset() {

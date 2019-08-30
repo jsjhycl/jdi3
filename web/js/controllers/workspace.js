@@ -13,7 +13,7 @@ var WorkspaceUtil = {
             // height: $workspace.height(),
             top: $workspace.offset().top,
             left: $workspace.offset().left,
-            overflow:"scroll"
+            overflow: "scroll"
         }); // 2019/1/3 添加给遮罩设置高度
         $wsCopy.css({ //给复制的元素这是css属性
             width: $workspace.width(),
@@ -25,7 +25,7 @@ var WorkspaceUtil = {
             zIndex: 801
         });
         if (!flag) { //如果flag为false
-            that.input2Btn(view, $wsCopy.find('input'), true, $workspace,key); //调用input2Btn模块
+            that.input2Btn(view, $wsCopy.find('input'), true, $workspace, key); //调用input2Btn模块
         }
 
         if ($currentInput) {
@@ -67,23 +67,22 @@ var WorkspaceUtil = {
         that.switchWorkspace(view, $domCopy, flag, args, null); //调用函数
     },
     //property
-    propertyViewer:function($dom){
+    propertyViewer: function ($dom) {
         var that = this,
-        key = $dom.attr("data-viewer");
+            key = $dom.attr("data-viewer");
         var $domCopy = DomHelper.copy($dom)
-        that.switchWorkspace("property",$domCopy,false,null,key)
+        that.switchWorkspace("property", $domCopy, false, null, key)
     },
     numViewer: function () { //元素查看函数检查函数
         this.switchWorkspace('numViewer', null, false, null, null);
     },
     sameCnameViewer: function ($dom) {
-        this.setMask();
         var that = this;
         view = 'sameCname';
         var $domCopy = DomHelper.copy($dom);
         that.switchWorkspace(view, $domCopy, false, null, "cname")
     },
-    input2Btn: function (view, $doms, flag, $originContainer,key) {
+    input2Btn: function (view, $doms, flag, $originContainer, key) {
         $.each($doms, function (index, item) { //遍历
             var $dom = $(item), //获取对应的dom
                 id = $dom.attr('id'), //获取对应dom的id
@@ -91,7 +90,7 @@ var WorkspaceUtil = {
             isSelected = $dom.parent().hasClass('ui-draggable'), // 当前元素是否被选中;
                 isNode = $dom.hasClass('workspace-node'), // 判断是否是表格中的input
                 isFocus = $dom.hasClass('focus'); // 输入框有红色背景
-            var $span = $('<span data-domId="' + id + '" data-property="'+key+'" class="property"></span>'),
+            var $span = $('<span data-domId="' + id + '" data-property="' + key + '" class="property"></span>'),
                 // $temp = isSelected ? $dom.parent() : $dom;
                 $temp = $dom;
             $span.css({ //设置样式
@@ -126,25 +125,27 @@ var WorkspaceUtil = {
                     break;
                 case 'sameCname':
                     var cnames = new Property().getArrayByKey('cname'),
-                        cname = new Property().getValue(id,"cname");
-                    if(cnames.indexOf(cname) != cnames.lastIndexOf(cname)){
+                        cname = new Property().getValue(id, "cname");
+                    if (cnames.indexOf(cname) != cnames.lastIndexOf(cname)) {
                         $span.addClass('check-fn-node').html(cname)
-                        $span.css({"color":"red"})
-                    }else{
+                        $span.css({
+                            "color": "red"
+                        })
+                    } else {
                         $span.addClass('check-fn-node').html(cname)
-                    } 
+                    }
                     $span.attr({
                         'data-toggle': 'tooltip',
                         'data-placement': 'top',
                         'title': cname
                     });
                     break;
-                case "property" :
-                    var value = new Property().getValue(id,key)
-                    if(typeof value == "object"){
+                case "property":
+                    var value = new Property().getValue(id, key)
+                    if (typeof value == "object") {
                         value = JSON.stringify(value)
                     }
-                    if(value){
+                    if (value) {
                         $span.attr({
                             'data-toggle': 'tooltip',
                             'data-placement': 'top',
@@ -155,6 +156,25 @@ var WorkspaceUtil = {
             }
             $temp.replaceWith($span) //把$tmp中的替换成$span
         })
+    },
+    setValue: function () {
+        var that= this;
+        var $mask = $('#mask'),
+            $target = $mask.find("input"),
+            property = $target.attr("data-property"),
+            id = $target.attr("data-id"),
+            value = $target.val();
+        if($target.length<0) return;
+        $mask.find(`.property[data-domid='${id}']`).text(value);
+        $mask.find(`.property[data-domid='${id}']`).attr("title", value)
+        if (property == "expression" || property == "dataSource.db" || property == "events" || property == "query.db" || property == "archivePath" || Property == "query.nest") {
+            value = JSON.parse(value)
+        }
+        new Property().setValue(id, property, value)
+        var $control = $(`#workspace #${id}`)
+        new Property().load($control);
+        $mask.find(".property").show();
+        $mask.find(".chageProperty").hide();
     },
     bindEvents: function () {
         var that = this,
@@ -169,9 +189,9 @@ var WorkspaceUtil = {
             new InsertFnArgsModal().close(); //实例化InsertFnArgsModal调用close方法
             that.resetView($mask); //调用resetView方法
         });
-        $mask.on('click', ".property", function(event){
-            
-            // new Property().load($(event.target))
+        $mask.on('click', ".property", function (event) {
+
+            that.setValue()
 
             $mask.find(".property").show();
             $mask.find(".chageProperty").remove();
@@ -182,34 +202,20 @@ var WorkspaceUtil = {
             new Property().load($control);
             var $input = $(`<input type="text" value='${value?value:""}' class="chageProperty" autofocus:"autofocus" data-id="${id}" data-property="${type}">`)
             $input.css({
-                position:$(this).css("position"),
-                top:$(this).position().top,
-                left:$(this).position().left,
-                width:$(this).width(),
-                height:$(this).height()
+                position: $(this).css("position"),
+                top: $(this).position().top,
+                left: $(this).position().left,
+                width: $(this).width(),
+                height: $(this).height()
             })
-            
+
             $(this).hide()
             $(this).after($input)
         })
-        $mask.on("keydown",function(event){
+        $mask.on("keydown", function (event) {
             var code = event.keyCode;
-            if(code==13){
-                var $target = $(event.target),
-                    property =$target.attr("data-property"),
-                    id = $target.attr("data-id"),
-                    value =$target.val();                    
-                    $mask.find(`.property[data-domid='${id}']`).text(value);
-                    $mask.find(`.property[data-domid='${id}']`).attr("title",value)
-                    if(property=="expression"||property=="dataSource.db"||property=="events"||property=="query.db"||property=="archivePath"||Property=="query.nest"){
-                        value=JSON.parse(value)
-                    }
-                    new Property().setValue(id,property,value)
-                    if(property == "cname"){ that.sameCnameViewer($("#toolbar a[data-type='showSameCname']"))}
-                    var $control = $(`#workspace #${id}`)
-                    new Property().load($control);
-                    $mask.find(".property").show();
-                    $mask.find(".chageProperty").hide();
+            if (code == 13) {
+                that.setValue()
             }
         })
 
@@ -269,6 +275,8 @@ var WorkspaceUtil = {
     // 移除模态框
     resetView: function (flag) {
         flag = !!flag || false; //flag转布尔值 
+        var that =  this;
+        that.setValue();
         $('#mask').remove(); //移除元素
         $("#insertFunctionModal").hide(); //隐藏元素
         $("#insertFunctionArgsModal").hide(); //隐藏元素
@@ -794,9 +802,15 @@ Workspace.prototype = {
             var data = that._getData(saveId, name, type, contactId)
             if (data) {
                 that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
-                var dbcondition = [{col:"_id",value:saveId}],
-                    dbdata = [{col:"lastEditTime",value:new Date().toFormatString(null, true)}];
-                that.updataDb(dbCollection,dbcondition,dbdata)
+                var dbcondition = [{
+                        col: "_id",
+                        value: saveId
+                    }],
+                    dbdata = [{
+                        col: "lastEditTime",
+                        value: new Date().toFormatString(null, true)
+                    }];
+                that.updataDb(dbCollection, dbcondition, dbdata)
             }
         }
 

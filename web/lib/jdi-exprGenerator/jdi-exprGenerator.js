@@ -603,7 +603,12 @@
             $(document).off("input focusin" + EVENT_NAMESPACE);
             var that = this;
             //控件元素click事件
-            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-elem:not(.current)", {element: element}, function (event) {
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-elem", {element: element}, function (event) {
+                console.log($(this).hasClass("current"))
+                if($(this).hasClass("current")){
+                    var result = window.confirm("你却定获取元素本身的值吗？");
+                    if(!result) return;
+                }
                 event.stopPropagation();
                 //判断是不是多选模式
                 var cache = $.data(event.data.element, CACHE_KEY);

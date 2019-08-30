@@ -491,6 +491,10 @@ function propertybar() {
 	var archivePathModal = new ArchivePathModal($("#archivePath_modal"), $("#property_archivePath"));
 	archivePathModal.execute();
     archivePathModal.bindEvents();
+
+    // 批量存档路径
+    var archivePathBatchModal = new ArchivePathBatch($("#archivePathBatch_modal"));
+	archivePathBatchModal.execute();
     
     // 嵌套查询
     var dbNestQueryModal = new DbNestQueryModal($("#query_nest_modal"), $("#property_query_nest"))

@@ -592,6 +592,18 @@ ContextMenu.prototype = {
                                     }
                                 }).init()
                             }
+                        },
+                        {
+                            type: "separator"
+                        },
+                        {
+                            type: "menuitem",
+                            text: "批量设置存档路径",
+                            handler: function () {
+                                let query = new Property().getValue(id, 'query.db');
+                                query ? $("#archivePathBatch_modal").modal('show')
+                                    : alert('当前控件未设置查询属性！')
+                            }
                         }
                     ]
                 });

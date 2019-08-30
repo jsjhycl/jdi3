@@ -927,6 +927,38 @@
         </div>
     </section>
 
+    <!-- 新存档路径模态框 -->
+    <section class="modal fade" id="archivePathBatch_modal">
+            <div class="modal-dialog ">
+                <div class="modal-content">
+                    <header class="modal-header">
+                        <button class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">存档路径配置</h4>
+                    </header>
+                    <section class="modal-body">
+                        <div class="archive-title">
+                            <div class="meta">查询数据库：<span class="meta-content" data-type="dbname"></span></div>
+                            <div class="meta">查询表：<span class="meta-content" data-type="tablename"></span></div>
+                            <div class="meta">查询类型：<span class="meta-content" data-type="querytype"></span></div>
+                        </div>
+                        <div class="archive_content">
+                            <ul class="archive-left">
+                                <p class="meta">查询字段：</p>
+                                <div class="archive-left-content"></div>
+                            </ul>
+                            <ul class="archive-right">
+                                <p class="meta">页面元素：</p>
+                                <div class="archive-right-content"></div>
+                            </ul>
+                        </div>
+                    </section>
+                    <footer class="modal-footer">
+                        <button class="btn btn-primary save">保存</button>
+                        <button class="btn btn-danger clear">清除</button>
+                    </footer>
+                </div>
+            </div>
+        </section>
 
     <!--数据库定义模态框-->
     <section class="modal fade" id="dbDefineModal">

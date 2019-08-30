@@ -983,7 +983,7 @@ li {
 .dropdown-submenu { 
     position: relative; 
   } 
-  .dropdown-submenu > .dropdown-menu { 
+.dropdown-submenu > .dropdown-menu { 
     top: 0; 
     left: 100%; 
     margin-top: -6px; 
@@ -991,11 +991,11 @@ li {
     -webkit-border-radius: 0 6px 6px 6px; 
     -moz-border-radius: 0 6px 6px; 
     border-radius: 0 6px 6px 6px; 
-  } 
-  .dropdown-submenu:hover > .dropdown-menu { 
-    display: block; 
-  } 
-  .dropdown-submenu > a:after { 
+} 
+.dropdown-submenu:hover > .dropdown-menu { 
+    display: block;
+} 
+.dropdown-submenu > a:after { 
     display: block; 
     content: " "; 
     float: right; 
@@ -1007,17 +1007,78 @@ li {
     border-left-color: #ccc; 
     margin-top: 5px; 
     margin-right: -10px; 
-  } 
-  .dropdown-submenu:hover > a:after { 
+} 
+.dropdown-submenu:hover > a:after { 
     border-left-color: #fff; 
-  } 
-  .dropdown-submenu.pull-left { 
+} 
+.dropdown-submenu.pull-left { 
     float: none; 
-  } 
-  .dropdown-submenu.pull-left > .dropdown-menu { 
+} 
+.dropdown-submenu.pull-left > .dropdown-menu { 
     left: -100%; 
     margin-left: 10px; 
-    -webkit-border-radius: 6px 0 6px 6px; 
-    -moz-border-radius: 6px 0 6px 6px; 
-    border-radius: 6px 0 6px 6px; 
-  } 
+    border-radius: 6px 0 6px 6px;
+} 
+
+/* 新存档路径模态框 */
+#archivePathBatch_modal .archive-title {
+    display: flex;
+    justify-content: flex-start;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ccc;
+}
+#archivePathBatch_modal .archive-title > div {
+    margin-right: 15px;
+}
+#archivePathBatch_modal .meta {
+    color: #999;
+}
+#archivePathBatch_modal .meta-field {
+    float: left;
+    vertical-align: middle;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #333;
+    border-radius: 50%;
+    font-size: 12px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+}
+#archivePathBatch_modal .meta-field.del {
+    color: #ccc;
+    border: 1px solid #ccc;
+    text-decoration: line-through;
+}
+#archivePathBatch_modal .meta-content {
+    color: #333;
+}
+#archivePathBatch_modal .archive_content {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+#archivePathBatch_modal .archive_content .archive-left,
+#archivePathBatch_modal .archive_content .archive-right {
+    padding: 15px;
+    flex: 1;
+    box-sizing: border-box;
+}
+#archivePathBatch_modal .archive_content .archive-right {
+    border-left: 1px solid #ccc;
+}
+
+#archivePathBatch_modal .archive_content .archive-left li,
+#archivePathBatch_modal .archive_content .archive-right li {
+    display: inline-block;
+    width: 250px;
+    margin: 5px;
+    padding: 4px 6px;
+    border: 1px solid #c9c9c9;
+    text-align: center;
+}
+#archivePathBatch_modal .archive_content .archive-right li.disabled {
+    border: 1px solid #ccc;
+    color: #ccc;
+}

@@ -130,7 +130,10 @@
          */
         setStyle: function ($jcontextmenu, event) {
             if (!$jcontextmenu || $jcontextmenu.length <= 0) return;
-
+            submodulesOffset = {
+                "left": event.offsetX,
+                "top": event.offsetY
+            }
             $jcontextmenu.css({
                 "left": event.pageX,
                 "top": event.pageY

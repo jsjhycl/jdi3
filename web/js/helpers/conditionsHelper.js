@@ -62,7 +62,7 @@ var ConditionsHelper = (function () {
             if (type === "String") {
                 result = [
                     {name: "赋值", value: "="},
-                    {name: "连接", value: "+"}
+                    {name: "连接", value: "&"}
                 ];
             } else if (type === "Number") {
                 result = [

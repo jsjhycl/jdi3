@@ -415,7 +415,24 @@ ContextMenu.prototype = {
                             type: "menuitem",
                             text: "添加子模块设计器",
                             handler: function () {
-                                $('#controlbar .control-item[data-type="div"]').click();
+                                
+                                // $('#controlbar .control-item[data-type="div"]').click();
+                                    var arrs = [
+                                        "channelmode=no",
+                                        "directories=no",
+                                        "location=no",
+                                        "menubar=no",
+                                        "resizable=yes",
+                                        "scrollbars=no",
+                                        "status=no",
+                                        "titlebar=no",
+                                        "toolbar=no",
+                                        "width=1000px",
+                                        "height=700px",
+                                        "top=100px",
+                                        "left=200px"
+                                    ];
+                                    let editor = window.open("./editor.html", "_blank", arrs.join(", "));
                             }
                         },
                         {

@@ -247,11 +247,7 @@ function NewEventsModal($modal, $element) {
     //抄送行中的操作类型
     this.copySendTypeOptions = function (select) {
         var str = '',
-            defaultOption = {
-                name: "请选择类型",
-                value: ""
-            },
-            options = [defaultOption, ...ConditionsHelper.typeConfig];
+            options =ConditionsHelper.typeConfig;
         options.forEach(function (item) {
             str += `<option value="${item.value}" ${ select == item.value ? "selected" : ""}>${item.name}</option>`
         });
@@ -260,11 +256,7 @@ function NewEventsModal($modal, $element) {
     //抄送值类型的数据
     this.copyValueTypeOptions = function (mode, type, select) {
         var str = '',
-            defaultOption = {
-                name: "请选择操作符",
-                value: ""
-            },
-            options = [defaultOption, ...ConditionsHelper.getOperators(mode, type)]
+        options = ConditionsHelper.getOperators(mode, type);
         options.forEach(function (item) {
             str += `<option value="${item.value}" ${ select == item.value ? "selected" : ""}>${item.name}</option>`
         })
@@ -559,7 +551,7 @@ function NewEventsModal($modal, $element) {
             
             <td>
                 <select class="form-control" data-key="copy_value_operator" >
-                    ${that.copyValueTypeOptions(3,item.value?item.value.type:null,item.value?item.value.operator:null)}              
+                    ${that.copyValueTypeOptions(3, item.value?item.value.type:null, item.value?item.value.operator:null)}              
                 </select>
             </td>
             <td>
@@ -1341,7 +1333,7 @@ NewEventsModal.prototype = {
         //处理抄送类型变化时抄送值变化
         that.$modal.on("change", '[data-key="copy_value_type"]', function () {
             var value = $(this).val(),
-                $operator = $(this).parent("td").next("td").find('[data-key="copy_value_operator"]');
+                $operator = $($(this).parents("tr")[0]).find('td [data-key="copy_value_operator"]');
             $operator.empty();
             var str = that.copyValueTypeOptions(3, value, null)
             $operator.append(str)

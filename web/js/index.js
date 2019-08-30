@@ -17,7 +17,13 @@ async function init() {
 		if (DataType.isObject(result)) { //判断result是否为对象
 			Common.fillCategorySelect(result)
 		}
-    });
+	});
+	 
+	//子模块设计器的位置，全局变量
+	submodulesOffset = {
+		top:"5",
+		left:"5",
+	};
     
 	//右键菜单
 	new ContextMenu().done(1, $workspace);
@@ -273,6 +279,10 @@ function controlbar() {
 	//添加子模块
 	(function addChild() {
 		$('#controlbar .control-item[data-type="div"]').click(function () { //子模块设计器按钮点击
+			submodulesOffset = {
+				top:"5",
+				left:"5",
+			};
 			var arrs = [
 				"channelmode=no",
 				"directories=no",
@@ -798,9 +808,14 @@ function back(html) {
 			"id": number,
 			"name": number
 		}).css({
-			"left": "5px",
-			"top": ($(window).scrollTop() + 5) + "px"
+			"left": submodulesOffset.left+"px",
+			"top": submodulesOffset.top+ "px"
 		});
+		// submodulesOffset = {
+		// 	top:"5",
+		// 	left:"5",
+		// };
+		
 		$("#workspace").append($node);
 		contextMenu.done(2, $node);
 

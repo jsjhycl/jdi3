@@ -142,7 +142,6 @@ var WorkspaceUtil = {
                 case "property" :
                     var value = new Property().getValue(id,key)
                     if(typeof value == "object"){
-                        console.log(JSON.stringify(value))
                         value = JSON.stringify(value)
                     }
                     if(value){
@@ -199,13 +198,16 @@ var WorkspaceUtil = {
                 var $target = $(event.target),
                     property =$target.attr("data-property"),
                     id = $target.attr("data-id"),
-                    value =$target.val();
+                    value =$target.val();                    
+                    $mask.find(`.property[data-domid='${id}']`).text(value);
+                    $mask.find(`.property[data-domid='${id}']`).attr("title",value)
+                    if(property=="expression"||property=="dataSource.db"||property=="events"||property=="query.db"||property=="archivePath"||Property=="query.nest"){
+                        value=JSON.parse(value)
+                    }
                     new Property().setValue(id,property,value)
                     if(property == "cname"){ that.sameCnameViewer($("#toolbar a[data-type='showSameCname']"))}
                     var $control = $(`#workspace #${id}`)
                     new Property().load($control);
-                    $mask.find(`.property[data-domid='${id}']`).text(value);
-                    $mask.find(`.property[data-domid='${id}']`).attr("title",value)
                     $mask.find(".property").show();
                     $mask.find(".chageProperty").hide();
             }
@@ -767,7 +769,7 @@ Workspace.prototype = {
                     }],
                     data = that._getData(saveId, name, type, contactId)
                 that.queryDb(dbCollection, queryCondition).then(res => {
-                    if (res.length > 0) return alert(`表单ID（${changeId}）以存在`)
+                    if (res.length > 0) return alert(`表单ID（${changeId}）以存在`);
                     var condition = [{
                         col: "customId",
                         value: id

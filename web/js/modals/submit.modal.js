@@ -144,25 +144,34 @@ SubmitModal.prototype = {
             if(type=="表单"){
                 if(!that.$resourceName.val()) return alert("表单名为必填选项")
                 id = data.customId.slice(1,data.customId.length);
-                condition = [
-                    {col:"_id",value:that.$resourceCategory.val()+id},
-                    {col: "name", value: that.$resourceName.val()},
-                    {col:"customId",value:that.$resourceCategory.val()+id},
-                    {col: "createTime", value:data.createTime},
-                    {col: "createor", value:data.createor},
-                    {col: "basicInfo", value:{
-                        category: that.$resourceCategory.val(),
-                        subCategory: that.$modal.find('[name="Changetemplate_subCategory"]:checked').val()
-                    }},
-                    {col: "edit", value:data.edit +";"+ that.USER+","+new Date().toFormatString(null, true)}
-                ]
+                
                 if(oldId!=that.$resourceCategory.val()+id){
-                    new Workspace().save(true,null,that.$resourceCategory.val()+id,condition,that.$resourceName.val())
+                    new CreateTemplate()._getMaxId(that.$resourceCategory.val()).then(res=>{
+                        var newid =  res;
+                        console.log(newid)
+                        condition = [
+                            {col:"_id",value:that.$resourceCategory.val()+newid},
+                            {col: "name", value: that.$resourceName.val()},
+                            {col:"customId",value:that.$resourceCategory.val()+newid},
+                            {col: "createTime", value:data.createTime},
+                            {col: "createor", value:data.createor},
+                            {col: "basicInfo", value:{
+                                category: that.$resourceCategory.val(),
+                                subCategory: that.$modal.find('[name="Changetemplate_subCategory"]:checked').val()
+                            }},
+                            {col: "edit", value:data.edit +";"+ that.USER+","+new Date().toFormatString(null, true)}
+                        ]
+                        new CreateTemplate().updateMaxId(that.$resourceCategory.val(),newid)
+                        new Workspace().save(true,null,that.$resourceCategory.val()+newid,condition,that.$resourceName.val())
+                    })
                 }else{
                     var dbCollection = type == "表单" ? "newResources" : "newProducts",
                     name = that.$resourceName.val()
                     condition = [{ col: "customId", value: oldId}],
-                    data = [{col:"name",value:name}];
+                    data = [{col:"name",value:name},{col: "basicInfo", value:{
+                        category: that.$resourceCategory.val(),
+                        subCategory: that.$modal.find('[name="Changetemplate_subCategory"]:checked').val()
+                    }}];
                     var result = new Service().update(dbCollection,condition,data)
                    result.then(res=>{
                       $("#workspace").attr("data-name",name)

@@ -37,6 +37,7 @@ Loader.prototype = {
                 that.JS_PATH + "/utils/cajax.js",
                 that.JS_PATH + "/utils/common.js",
                 that.JS_PATH + "/utils/clipboard.js",
+                that.JS_PATH + "/utils/observer.js",
                 that.JS_PATH + "/helpers/numberHelper.js",
                 that.JS_PATH + "/helpers/domHelper.js",
                 that.JS_PATH + "/helpers/conditionsHelper.js",
@@ -72,10 +73,10 @@ Loader.prototype = {
                 that.JS_PATH + "/controllers/propertybar.js",
                 that.JS_PATH + "/controllers/contextMenu.js",
                 that.JS_PATH + "/controllers/shortcut.js",
-                that.JS_PATH + "/controllers/ruler.js",//标尺
-                that.JS_PATH + "/controllers/keyEvent.js",//标尺
+                that.JS_PATH + "/controllers/ruler.js",
+                that.JS_PATH + "/controllers/keyEvent.js",
                 that.JS_PATH + "/modals/base.modal.js",
-                that.JS_PATH + "/modals/saveAs.modal.js",//
+                that.JS_PATH + "/modals/saveAs.modal.js",
                 that.JS_PATH + "/modals/product.modal.js",
                 that.JS_PATH + "/modals/publish.modal.js",
                 that.JS_PATH + "/modals/workspace.modal.js",

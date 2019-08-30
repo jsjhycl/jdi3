@@ -322,7 +322,7 @@ var AccessControl = (function () {
         },
 
         bindPagePersentEvent: function(workSpaceId) {
-            if (!workSpaceId) return;
+            if (!workSpaceId || workSpaceId.slice(2,3) !== 'K') return;
             let NAME_SPACE = '.PAGE_PERSENT',
                 that = this;
             $("#workspace").off(NAME_SPACE)

@@ -457,6 +457,27 @@
 .eg .eg-function .btn.btn-default.btn-sm {
     padding: 0 4px;
 }
+.eg .eg-function .input-group-addon {
+    padding: 6px 2px;
+    font-size: 12px!important;
+}
+
+.eg .eg-function .popover .popover-title {
+    color: #fff;
+    background: #747d8c;
+}
+.eg .eg-function .popover,
+.eg .eg-function .popover .arrow::after {
+    background: #95a5a6;
+}
+.eg .eg-function .popover .popover-content {
+    overflow: hidden;
+}
+.eg .eg-function .popover .popover-content [data-type="popover_save"] {
+    margin-top: 5px;
+    float: right;
+}
+
 .cfooter {
     padding: 10px 0;
     text-align: center;

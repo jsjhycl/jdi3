@@ -1,9 +1,3 @@
-/**
- * 存档路径配置
- * @param $modal
- * @param $element
- * @constructor
- */
 function ArchivePathBatch($modal, $element) {
     BaseModal.call(this, $modal, $element);//调用基础弹窗布局
     
@@ -83,7 +77,7 @@ ArchivePathBatch.prototype = {
         let dbName = query.dbName,
             tableName = query.table,
             queryType = this.TYPE_CONFIG[query.type] && this.TYPE_CONFIG[query.type].name || '无',
-            queryTypeValue = this.TYPE_CONFIG[query.type] && this.TYPE_CONFIG[query.type].value || '',
+            queryTypeValue = this.TYPE_CONFIG[query.type] && this.TYPE_CONFIG[query.type].value,
             fields = query.fields,
             ori_fields = {};
         dbData[dbName][tableName].tableDetail.forEach(i => {
@@ -97,9 +91,6 @@ ArchivePathBatch.prototype = {
         this._renderFields(fields, ori_fields);
         this._renderWorkspace(dbName, tableName);
         this.bindEvents();
-            
-
-         
     },
     saveData: function () {
         let id = $("#property_id").val();//获取$("#property_id")的值
@@ -110,7 +101,7 @@ ArchivePathBatch.prototype = {
         let property = new Property(),
             dbName = this.$dbName.text(),
             table = this.$tableName.text(),
-            type = this.$queryType.attr('data-type') || '';
+            type = this.$queryType.attr('data-type');
         this.$right.find('.control-item').each(function() {
             let $this = $(this),
                 id = $this.attr('data-id'),
@@ -131,7 +122,7 @@ ArchivePathBatch.prototype = {
             id = $("#property_id").val();
         if (!id) {
             that.$modal.modal("hide");
-        } else {//否则
+        } else {
             let result = confirm("确定要清除所有存储路径配置数据吗？");
             if (!result) return;
             let property = new Property(),

@@ -148,7 +148,6 @@ SubmitModal.prototype = {
                 if(oldId!=that.$resourceCategory.val()+id){
                     new CreateTemplate()._getMaxId(that.$resourceCategory.val()).then(res=>{
                         var newid =  res;
-                        console.log(newid)
                         condition = [
                             {col:"_id",value:that.$resourceCategory.val()+newid},
                             {col: "name", value: that.$resourceName.val()},

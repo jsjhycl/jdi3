@@ -1071,12 +1071,16 @@ li {
 
 #archivePathBatch_modal .archive_content .archive-left li,
 #archivePathBatch_modal .archive_content .archive-right li {
+    float: left;
     display: inline-block;
     width: 250px;
     margin: 5px;
     padding: 4px 6px;
     border: 1px solid #c9c9c9;
     text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 #archivePathBatch_modal .archive_content .archive-right li.disabled {
     border: 1px solid #ccc;

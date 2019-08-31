@@ -24,31 +24,57 @@ function ArchivePathBatch($modal, $element) {
         }
     };
 
-    this._getMetaFieldHtml = function(id, isDelete) {
-        return `<i class="meta-field ${isDelete ? 'del' : ''} ">${id}</i>`
+    // this._getMetaFieldHtml = function(id, isDelete) {
+    //     return `<i class="meta-field ${isDelete ? 'del' : ''} ">${id}</i>`
+    // }
+
+    this._getAPIds = function() {
+        return Object.keys(GLOBAL_PROPERTY).filter(id => {
+            return GLOBAL_PROPERTY[id].archivePath;
+        }).map(id => {
+            return {
+                id,
+                cname: GLOBAL_PROPERTY[id].cname,
+                archivePath: GLOBAL_PROPERTY[id].archivePath
+            }
+        });
     }
 
-    this._renderFields = function(fields, oriObj) {
+    this.correctControl = function(dbName, table, field, aPIds) {
+        if (!dbName || !table || !field || !aPIds) return;
+        let idx;
+        aPIds.forEach((aP, index) => {
+            if (dbName === aP.archivePath.dbName && table === aP.archivePath.table && field === aP.archivePath.field) {
+                idx = index;
+                return false;
+            }
+        });
+        return aPIds[idx];
+    };
+
+    this._renderFields = function(fields, oriObj, dbName, table) {
         let that = this,
             html = '',
-            arr = fields.includes('*') ? Object.keys(oriObj) : fields;
+            arr = fields.includes('*') ? Object.keys(oriObj) : fields,
+            aPIds = that._getAPIds();
         html += arr.map((i, idx) => {
-            return `<li class="field-item" data-field="${i}">${that._getMetaFieldHtml((idx + 1))}${i}(${oriObj[i]})</li>`
+            let control = that.correctControl(dbName, table, i, aPIds),
+                controlId = control ? control.id : '',
+                controlText = control ? `${control.id}(${control.cname})` : '';
+            return `<li class="field-item" data-field="${i}"><span class="field-item-content">${i}(${oriObj[i]})</span><span class="related-control" data-field="${i}" data-id="${controlId}">${controlText}</span></li>`
         }).join('');
-        this.$left.empty().append(html)
+        this.$left.empty().append(html);
     };
 
     this._renderWorkspace = function(dbName, table) {
-        let that = this,
-            html = '',
+        let html = '',
             property = new Property();
         $('#workspace').find('input').each(function(idx) {
             let id = this.id,
                 cname = property.getValue(id, 'cname'),
                 archivePath = property.getValue(id, 'archivePath'),
-                isRelated = archivePath && archivePath.dbName === dbName && archivePath.table === table,
-                iHtml = isRelated ? that._getMetaFieldHtml($(`.field-item[data-field="${archivePath.field}"]`).index() + 1) : '';
-            html += `<li class="control-item ${archivePath && !isRelated ? 'disabled' : ''}" ${ isRelated ? ('data-field="' + archivePath.field + '"') : '' } data-id="${id}">${iHtml}${id}(${cname})</li>`
+                isRelated = archivePath && archivePath.dbName === dbName && archivePath.table === table;
+            html += `<li class="control-item ${archivePath && !isRelated ? 'disabled' : ''}" data-id="${id}">${id}(${cname})</li>`
         });
         this.$right.empty().append(html);
     };
@@ -88,7 +114,7 @@ ArchivePathBatch.prototype = {
         this.$dbName.text(dbName || '无');
         this.$tableName.text(tableName || '无');
         this.$queryType.text(queryType || '无').attr('data-type', queryTypeValue);
-        this._renderFields(fields, ori_fields);
+        this._renderFields(fields, ori_fields, dbName, tableName);
         this._renderWorkspace(dbName, tableName);
         this.bindEvents();
     },
@@ -102,20 +128,21 @@ ArchivePathBatch.prototype = {
             dbName = this.$dbName.text(),
             table = this.$tableName.text(),
             type = this.$queryType.attr('data-type');
-        this.$right.find('.control-item').each(function() {
+        this.$right.find('.control-item.del').each(function() {
+            let id = $(this).attr('data-id');
+            property.remove(id, 'archivePath');
+        });
+        this.$left.find('.related-control').each(function() {
             let $this = $(this),
                 id = $this.attr('data-id'),
                 field = $this.attr('data-field'),
-                isDisabled = $this.hasClass('disabled'),
-                $meta = $this.find('.meta-field'),
-                isDel = $meta.hasClass('del');
-            if (isDisabled || !$meta || $meta.length <= 0) return;
-            else if (isDel) {
-                property.remove(id, 'archivePath');    
-            } else if (field) {
-                property.setValue(id, 'archivePath', { type, dbName, table, field });
-            }
-        })
+                idDel = $this.hasClass('del');
+            if (!id) return;
+            idDel
+                ? property.remove(id, 'archivePath')
+                : property.setValue(id, 'archivePath', { type, dbName, table, field });
+        });
+        
     },
     clearData: function () {
         var that = this,
@@ -123,22 +150,19 @@ ArchivePathBatch.prototype = {
         if (!id) {
             that.$modal.modal("hide");
         } else {
-            let result = confirm("确定要清除所有存储路径配置数据吗？");
+            let result = confirm("确定要清除当前查询已配置的存档路径？");
             if (!result) return;
-            let property = new Property(),
-                dbName = this.$dbName.text(),
-                table = this.$tableName.text(),
-                type = this.$queryType.attr('data-type') || '';
+
+            let property = new Property();
             this.$right.find('.control-item').each(function() {
                 let $this = $(this),
                     id = $this.attr('data-id'),
-                    isDisabled = $this.hasClass('disabled'),
-                    archivePath = property.getValue(id, 'archivePath');
-                if (isDisabled) return;
-                $this.removeAttr('data-field').find('.meta-field').remove();
-                if (archivePath && archivePath.dbName === dbName && archivePath.table === table && archivePath.type === type) {
-                    property.remove(id, 'archivePath');
-                }
+                    canClear = $this.hasClass('disabled');
+                !canClear && property.remove(id, 'archivePath');
+                $this.removeClass('del');
+            });
+            this.$left.find('.related-control').each(function() {
+                $(this).removeClass('del').attr('data-id', '').text('');
             });
         }
     },
@@ -151,21 +175,28 @@ ArchivePathBatch.prototype = {
 
         // 依赖jquery ui
         ;(function() {
-            $(".field-item").draggable({ revert: true });
-            $( ".control-item:not(.disabled)" ).droppable({
+            $(".control-item:not(.disabled)").draggable({ revert: true });
+            $( ".field-item" ).droppable({
                 drop: function( event, ui ) {
-                    let $control = $(event.target),
-                        $field = $(ui.draggable),
-                        field = $field.attr('data-field'),
-                        fieldIdx = $field.index() + 1;
-                    $control.attr('data-field', field).find('.meta-field').remove().end().append(that._getMetaFieldHtml(fieldIdx));
+                    let $field = $(event.target),
+                        $relatedC = $field.find('.related-control'),
+                        currControlId = $relatedC.attr('data-id'),
+                        $control = $(ui.draggable).removeClass('del'),
+                        controlId = $control.attr('data-id'),
+                        controlText = $control.text();
+                    //  清除重复
+                    $(`.related-control[data-id="${controlId}"]`).attr('data-id', "").text("");
+                    if (currControlId != controlId) {
+                        $(`.control-item[data-id="${currControlId}"]`).addClass('del');
+                    }
+                    $relatedC.removeClass('del').attr('data-id', controlId).text(controlText);
                 }
               });
         })();
 
-        this.$modal.on('dblclick', '.control-item', function() {
+        this.$modal.on('dblclick', '.field-item', function() {
             let $this = $(this);
-            $this.removeAttr('data-field').find('.meta-field').addClass('del');
+            $this.find('.related-control').addClass('del');
         })
     }
 };

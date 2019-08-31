@@ -1082,3 +1082,30 @@ li {
     border: 1px solid #ccc;
     color: #ccc;
 }
+#archivePathBatch_modal .archive_content .archive-left li .related-control {
+    display: inline-block;
+    float: right;
+    width: 125px;
+    height: 22px;
+    line-height: 22px;
+    font-size: 12px;
+    border-left: 1px solid #ccc;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+#archivePathBatch_modal .archive_content .archive-left li .related-control.del {
+    color: #ccc;
+    text-decoration: line-through;
+}
+#archivePathBatch_modal .archive_content .archive-left li .field-item-content {
+    display: inline-block;
+    width: 110px;
+    height: 22px;
+    line-height: 22px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

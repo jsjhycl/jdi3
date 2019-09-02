@@ -647,7 +647,6 @@
             var that = this;
             //控件元素click事件
             $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-elem", {element: element}, function (event) {
-                console.log($(this).hasClass("current"))
                 if($(this).hasClass("current")){
                     var result = window.confirm("你却定获取元素本身的值吗？");
                     if(!result) return;
@@ -668,7 +667,7 @@
                     dataId = $(this).attr("data-id"),
                     value = '';
                 if ($arg.length > 0) {
-                    var valueType = $arg.parent().prev().attr('data-convert');
+                    var valueType = $arg.parent().parent().prev().attr('data-convert');
                     value = valueType === 'ElementNoWrap' ? dataId : "{" + dataId + "}";
                     $arg.val($arg.val() === value ? "" : value).trigger("input");
                 } else {

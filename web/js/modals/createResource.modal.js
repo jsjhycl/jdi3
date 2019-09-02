@@ -64,7 +64,8 @@ CreateResource.prototype = {
             var value = $(this).val();
             if (value) {
                 var text = $(this).find("option:selected").text();
-                that.$resoureName.val(text.replace(/\((.*)\)/img, ""));
+                // that.$resoureName.val(text.replace(/\((.*)\)/img, ""));
+                that.$resoureName.val(text.slice(0,-5));
             } else {
                 that.$resoureName.val("");
             }

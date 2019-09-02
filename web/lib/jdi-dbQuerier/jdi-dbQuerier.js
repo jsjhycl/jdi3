@@ -123,7 +123,7 @@
                 dbOptions.push({name:item,value:item})
             })
             Common.fillSelect($querierDbName,{name:"请选择数据库",value:""},dbOptions,dbName,true)
-            if(dbName){
+            if(dbName && AllDbName[dbName]){
                 Object.keys(AllDbName[dbName]).forEach(function(item){
                     (AllDbName[dbName][item].key !== 0 && AllDbName[dbName][item].key !== 1) && tableOptions.push({name:AllDbName[dbName][item]["tableDesc"],value:item})
                 })

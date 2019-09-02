@@ -38,6 +38,8 @@
                     // args = this.getExprArgs(fnData.name, fnType, fnData.async, fnData.voluation, target, renderData);
                 $functionArgs.show().next().hide();
                 $argExample.text(fnData.example || "");
+
+                // 渲染参数
                 if (Array.isArray(fnData.args) && fnData.args.length > 0) {
 
                     // 渲染填充参数
@@ -54,9 +56,10 @@
 
                     renderData.forEach(function(arg, idx) {
                         var typeHtml = arg.type === "Query" ? ('<button data-config="Query" class="btn btn-default btn-sm">'+ arg.ctype +'</button>') : arg.ctype,
-                            val = `${ hasSetArgs ? args[idx] ? JSON.stringify(args[idx]) : '' : arg.default == undefined ? "" : arg.default}`
+                            val = hasSetArgs ? (args[idx] ? JSON.stringify(args[idx]) : '') : arg.default == undefined ? "" : JSON.stringify(arg.default),
+                            valHtml = /^{.+[:].+}$/img.test(val) ? `value='${val}'` : `value=${val}`,
                             inputHtml = `<div class="input-group">
-                                            <input ${(!!arg.readonly ? "disabled" : "")} class="form-control" data-type="arg" type="text" name="value" value=${val}>
+                                            <input ${(!!arg.readonly ? "disabled" : "")} class="form-control" data-type="arg" type="text" name="value" ${valHtml}>
                                             ${arg.addon ? '<span class="input-group-addon"  data-placement="left" data-toggle="popover" data-tirgger="click" data-type="'+ arg.addon +'">按钮</span>' : '' }
                                         </div>`;
                         argsHtml += '<tr>' +
@@ -86,6 +89,19 @@
                             '</tr>'
                 $argsTbody.empty().append(argsHtml);
                 $queryConfig.empty();
+
+                // 填充参数
+                // if (Array.isArray(args)) {
+                //     args.forEach((i, idx) => {
+
+                //     })
+                // }
+
+                // $argsTbody.find('input[data-type="arg"]').each(function(idx, el) {
+                //     console.log(idx);
+                //     $(this).val(hasSetArgs ? (args[idx] ? JSON.stringify(args[idx]) : '') : renderData[idx].default == undefined ? "" : JSON.stringify(arg.default))
+                // });
+                
                 FunctionUtil.effect("open");
 
                 $('[data-toggle="popover"]').popover('destroy')
@@ -468,7 +484,7 @@
                 if (expr) {
 
                     // 重写
-                    var exprHtml = that.convertExpr(expr);
+                    var exprHtml = that.convertExpr(expr, functions);
                     // $eg.find(".eg-expr").val(expr);
                     $eg.find(".eg-expr").html(exprHtml);
                     var matches = expr.match(/[^{]([A-Z]+)(?=})/g);
@@ -716,7 +732,7 @@
                 // 处理 expr
                 children.forEach(i => {
                     if (i.tagName && i.tagName.toUpperCase() === 'SPAN') {
-                        expr += $(i).data('fn');
+                        expr += decodeURI($(i).attr('data-fn'));
                     } else {
                         expr += i.textContent;
                     }
@@ -756,7 +772,7 @@
                 if (!result) return;
 
                 // czp修改清除只改变值
-                $(".eg .eg-dialog .eg-sidebar .eg-result .eg-expr").val("");
+                $(".eg .eg-dialog .eg-sidebar .eg-result .eg-expr").empty();
             });
             //关闭
             $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-close", {element: element}, function (event) {
@@ -800,7 +816,7 @@
             });
             
             // 选择三级函数分类
-            $(document).on("click" + EVENT_NAMESPACE, ".eg .cpanel .fn-item", {element: element}, function (event, ...args) {
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .cpanel .fn-item", {element: element}, function (event, args) {
                 event.stopPropagation();
                 if ($(this).hasClass('selected')) return;
 
@@ -812,7 +828,7 @@
                 $(".eg .cpanel .fn-item").removeClass('selected');
                 $(this).addClass('selected');
                 $(".eg .fn-desc").text($(this).data('desc'));
-                FunctionUtil.setArgsTbody(fnsData.data.items[idx], type, args);
+                FunctionUtil.setArgsTbody(fnsData.data.items[idx], type, args && args.args);
                 FunctionUtil.setElemSelected();
             });
             
@@ -900,27 +916,31 @@
                     result = fnName + "("+ argsString +")"
                 }
                 
-                // 参数为对象时，不转换
-                let argsArr = $eg.find('[data-type="arg"]').map(function() {
-                    var convert = $(this).parent().prev().data('convert'),
-                        isCheckbox = $(this).is(':checkbox'),
-                        val = !isCheckbox ? $(this).val() : $(this).is(':checked');
-                    if (/\{([^,]+)\}/.test(val)) {
-                        return val;
-                    } else if (convert === 'Number') {
-                        return Number(val);
-                    } else if (convert === 'Boolean') {
-                        return !!val;
-                    } else {
-                        try {
-                            return JSON.parse(val);
-                        } catch(err) {
-                            return val
-                        }
-                    };
-                }).get();
-                argsArr.unshift(target);
-                that.setExpr($egExpr, $egExpr.get(0), $egExpr.html(), that.generatExprFn(fnName, result, argsArr), replaceResult);
+                if (fnType === "系统函数") {
+                    that.setExpr($egExpr, $egExpr.get(0), $egExpr.html(), result, replaceResult);
+                } else {
+                    // 参数为对象时，不转换
+                    let argsArr = $eg.find('[data-type="arg"]').map(function() {
+                        var convert = $(this).parent().prev().data('convert'),
+                            isCheckbox = $(this).is(':checkbox'),
+                            val = !isCheckbox ? $(this).val() : $(this).is(':checked');
+                        if (/\{([^,]+)\}/.test(val)) {
+                            return val;
+                        } else if (convert === 'Number') {
+                            return Number(val);
+                        } else if (convert === 'Boolean') {
+                            return !!val;
+                        } else {
+                            try {
+                                return JSON.parse(val);
+                            } catch(err) {
+                                return val
+                            }
+                        };
+                    }).get();
+                    argsArr.unshift(target);
+                    that.setExpr($egExpr, $egExpr.get(0), $egExpr.html(), that.generatExprFn(fnName, result, argsArr), replaceResult);
+                }
                 
                 $(".eg .eg-function [data-type='arg'].active").removeClass("active");
             });
@@ -999,6 +1019,7 @@
                 remove && $(".eg .eg-system-list").find('[data-cname="'+ remove +'"]').addClass("canAdd");
             });
 
+            // 数据源
             $(document).on("click" + EVENT_NAMESPACE, '.eg .eg-function [data-config="Query"]', {element: element}, function (event) {
                 var $this = $(this),
                     $input = $this.parent('td').next('td').find('input'),
@@ -1033,17 +1054,19 @@
                 let $eg = $(".eg"),
                     $this = $(this),
                     fnName = $this.text(),
-                    fnType = fnName.startsWith('functions') ? '远程函数' : '本地函数',
+                    fnType = decodeURI($this.attr('data-fn')).startsWith('functions') ? '远程函数' : '本地函数',
                     functions = $.data(element, CACHE_KEY).functions,
                     searchData = functions.filter(i => i.title === fnType)[0].data,
                     fnIdx = searchData.items.findIndex(i => { return i.name === fnName }),
                     fnCate = searchData.items[fnIdx].category,
-                    fnData = $this.data('fn'),
-                    args = $this.data('fn_args');
-                args = Array.isArray(args) ? args.slice(1) : null;
+                    args = decodeURI($this.data('fn_args'));
+                try {
+                    let _args = JSON.parse(args);
+                    args = _args;
+                } catch (err) {}
                 $eg.find(`.fn-types-item[data-type="${fnType}"]`).trigger('click');
                 $eg.find('.fn-category-select').val(fnCate).trigger('change', true);
-                $eg.find(`.fn-item[data-name="${fnName}"]`).trigger('click', args);
+                $eg.find(`.fn-item[data-name="${fnName}"]`).trigger('click', {args: args});
             })
         },
         setExpr: function ($elem, elem, expr, value, replaceExpr) {
@@ -1064,20 +1087,21 @@
             var result = expr + value;
             !replaceExpr ? $elem.html(result) : $elem.html(value);
         },
-        generatExprFn: function(fn, fnData, args) {
-            if (!fn || !fnData) return;
-
+        generatExprFn: function(fnName, fnData, args) {
+            if (!fnName || !fnData) return;
             if (Array.isArray(args)) {
                 args = args.map(i => {
                     return DataType.isObject(i) && i[Object.keys(i)[0]].nodeType != undefined ? ('{' + Object.keys(i)[0] + '}') : i;
                 })
             };
-            let $span = $(`<span contenteditable="false" data-fn=${fnData} data-fn_args=${JSON.stringify(args)} class="expr-fn-item">${fn}</span>`);
-            $.data($span, 'fn', fnData);
-            $.data($span, 'fn_args', args);
+            console.log(fnData)
+            console.log('encodeURI(fnData): ', encodeURI(fnData))
+            console.log('encodeURI(fnData): ', decodeURI(fnData))
+            let $span = $(`<span contenteditable="false" data-fn=${encodeURI(fnData)} data-fn_args=${encodeURI(JSON.stringify(args))} class="expr-fn-item">${fnName}</span>`);
+            console.log($span.get(0).outerHTML)
             return $span.get(0).outerHTML + " ";
         },
-        convertExpr:function(expr) {
+        convertExpr:function(expr, cacheFns) {
             if (!expr) return "";
             let that = this;
             return expr.replace(/[a-zA-Z]*?\(([^)]*)\)/img, function() {
@@ -1087,9 +1111,9 @@
                 if (fn.startsWith('functions')) {
                     try {
                         let args = eval(fn) || [];
-                        if (Array.isArray(args) && args[1]) {
-                            return that.generatExprFn(args[1], fn, args);
-                        }
+                        if (Array.isArray(args) && args[1] && that.isBuiltInFn(fn, args[1], cacheFns)) {
+                            return that.generatExprFn(args[1], fn, args.slice(4));
+                        } else return fn;
                     } catch(err) {
                         throw('解析远程函数出错: ', err)
                     }
@@ -1097,16 +1121,28 @@
                     // 本地函数
                     let localFnName = fn.match(/(^[a-zA-Z]+)(?=\(.*\))/img);
                     if(!localFnName) return;
+                    console.log('localFnName: ', localFnName)
                     localFnName = localFnName[0];
-                    try {
-                        eval('function ' + localFnName + '(...args) { return args }');
-                        let args = eval(fn);
-                        return that.generatExprFn(localFnName, fn, args)
-                    } catch(err) {
-                        throw ('解析本地函数出错！', err);
-                    }
+                    if (that.isBuiltInFn(fn, localFnName, cacheFns)) {
+                        try {
+                            eval('function ' + localFnName + '(...args) { return args }');
+                            let args = eval(fn);
+                            console.log(args)
+                            return that.generatExprFn(localFnName, fn, args.slice(1))
+                        } catch(err) {
+                            throw ('解析本地函数出错！', err);
+                        }
+                    } else return fn;
                 }
             })
+        },
+
+        isBuiltInFn: function(fn, fnName, cacheFns) {
+            let isRemote = fn.startsWith('functions'),
+                fns = cacheFns.filter(i => i.title === (isRemote ? '远程函数' : '本地函数'));
+            return fns && fns[0].data.items.findIndex(i => {
+                return i.name === fnName;
+            }) > -1;
         }
     };
 

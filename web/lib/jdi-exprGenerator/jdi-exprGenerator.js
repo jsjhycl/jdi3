@@ -875,6 +875,30 @@
                 $(this).addClass("active");
             });
 
+            // 文本框粘贴事件
+            $(document).on("paste" + EVENT_NAMESPACE, ".eg .eg-expr", function (e) {
+                e.preventDefault();
+                let text;
+                let clp = (e.originalEvent || e).clipboardData;
+                if (clp === undefined || clp === null) {
+                    text = window.clipboardData.getData("text") || "";
+                    if (text !== "") {
+                        if (window.getSelection) {
+                            var newNode = document.createElement("span");
+                            newNode.innerHTML = text;
+                            window.getSelection().getRangeAt(0).insertNode(newNode);
+                        } else {
+                            document.selection.createRange().pasteHTML(text);
+                        }
+                    }
+                } else {
+                    text = clp.getData('text/plain') || "";
+                    if (text !== "") {
+                        document.execCommand('insertText', false, text);
+                    }
+                }
+            });
+
             //保存函数配置
             $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-function .function-save", {element: element}, function (event) {
                 event.stopPropagation();

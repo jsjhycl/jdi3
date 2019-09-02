@@ -60,7 +60,7 @@
                             valHtml = /^{.+[:].+}$/img.test(val) ? `value='${val}'` : `value=${val}`,
                             inputHtml = `<div class="input-group">
                                             <input ${(!!arg.readonly ? "disabled" : "")} class="form-control" data-type="arg" type="text" name="value" ${valHtml}>
-                                            ${arg.addon ? '<span class="input-group-addon"  data-placement="left" data-toggle="popover" data-tirgger="click" data-type="'+ arg.addon +'">按钮</span>' : '' }
+                                            ${arg.addon ? '<span class="input-group-addon addon-data"  data-placement="left" data-toggle="popover" data-tirgger="click" data-type="'+ arg.addon +'"></span>' : '' }
                                         </div>`;
                         argsHtml += '<tr>' +
                                         '<td data-name="' + arg.cname + '">' + arg.cname + '</td>' +
@@ -1117,11 +1117,7 @@
                     return DataType.isObject(i) && i[Object.keys(i)[0]].nodeType != undefined ? ('{' + Object.keys(i)[0] + '}') : i;
                 })
             };
-            console.log(fnData)
-            console.log('encodeURI(fnData): ', encodeURI(fnData))
-            console.log('encodeURI(fnData): ', decodeURI(fnData))
             let $span = $(`<span contenteditable="false" data-fn=${encodeURI(fnData)} data-fn_args=${encodeURI(JSON.stringify(args))} class="expr-fn-item">${fnName}</span>`);
-            console.log($span.get(0).outerHTML)
             return $span.get(0).outerHTML + " ";
         },
         convertExpr:function(expr, cacheFns) {

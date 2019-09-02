@@ -468,8 +468,16 @@
 .eg .eg-function .input-group-addon {
     padding: 6px 2px;
     font-size: 12px!important;
+    cursor: pointer;
+    width: 20px;
+    height: 15px;
+    background-size: 16px 16px;
+    background-position: center;
+    background-repeat: no-repeat;
 }
-
+.eg .eg-function .input-group-addon.addon-data {
+    background-image: url(data:img/jpg;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABJUlEQVQ4T83TvSuFYRgG8N/xMbEYJZnZ5IgUYZOPMhhJ2S1sNmaTv4CRQREWRVl8JqWsIrOFzVd3PSfvOZ1zcjb39Pbez30913U995XzW/UYwyD60IPm1H7DDS5whiN8Ri+XDnRiBwGyjxOc4zX1W9CPEUym4Rk8FACusIGtDKNqn3NYRL4A8I0OPP0RoD2dzWUBXrCEA4TmchWejGMdbWFBFmAaK+jCfQUPwthHLGO3FCAM/EIjhjCQTA0m8f8Zd2jNvEIRg3ls/sGDCXRjtZTBLBZwidMKEmI/oo7TPhQxCAlRQT18CKpZj27T4CgO0y78IwnhckONEj5QV9AYxkUG1mp4hSn0ZsO0nVjsVXmFYcRgJLEoTHFxaZzzaEqM3nFdLs4/ULFWEU+A7CEAAAAASUVORK5CYII=);
+}
 .eg .eg-function .popover .popover-title {
     color: #fff;
     background: #747d8c;

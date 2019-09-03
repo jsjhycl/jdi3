@@ -13,17 +13,27 @@ function CreateResource() {
             value = that.$createResource.find('[name="model_resource_subCategory"]:checked').val(),
             defaultOption = {
                 name: "请选择关联表单",
-                value: ""
+                value: "",
+                nameAndValue:"请选择关联表单"
             },
             options = that.data.filter(function (fitem) {
                 return value === fitem.basicInfo.subCategory;
             }).map(function (mitem) {
                 return {
-                    name: `${mitem.name}(${mitem.customId})`,
-                    value: mitem.customId
+                    name: `${mitem.name}`,
+                    value: mitem.customId,
+                    nameAndValue:`${mitem.name}(${mitem.customId})`
                 }
             });
-        Common.fillSelect(that.$resoureRelId, defaultOption, options, null, false);
+            options.unshift(defaultOption)
+            var str = "";
+            console.log(value)
+            options.forEach(function(item){
+                str += `<option value="${item.value}" data-name="${item.name}">${item.nameAndValue}</option>`
+            })
+            that.$resoureRelId.empty().append(str)
+        // Common.fillSelect(that.$resoureRelId, defaultOption, options, null, false);
+
         that.$createResource.find("#model_subCategory").val(value)
     }
     this.queryModal = function (condition) {
@@ -63,9 +73,8 @@ CreateResource.prototype = {
         that.$createResource.on("change", '[name="model_resource_relId"]', function () {
             var value = $(this).val();
             if (value) {
-                var text = $(this).find("option:selected").text();
-                // that.$resoureName.val(text.replace(/\((.*)\)/img, ""));
-                that.$resoureName.val(text.slice(0,-5));
+                var text = $(this).find("option:selected").attr("data-name");
+                that.$resoureName.val(text);
             } else {
                 that.$resoureName.val("");
             }

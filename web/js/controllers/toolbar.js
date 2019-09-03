@@ -269,23 +269,19 @@ function toolbar() {
                 $("#phone_warp").toggle();
                 break;
             case "showSameCname": //查看相同中文名
-                if ($target.hasClass('is_using')) {
-                    WorkspaceUtil.resetView(true);
-                } else {
-                    WorkspaceUtil.resetView(true);
-                    WorkspaceUtil.sameCnameViewer($target);
-                    $target.addClass('is_using')
-                }
+                PropertyWatch.resetView()
+                var key = $target.attr("data-viewer"),
+                    name = $target.text(),
+                    change = $target.attr("data-change")
+                PropertyWatch.selectWorkspace("sameCname", key, name, change)
                 break;
             case "propertyViewer":
-                if ($target.hasClass('is_using')) {
-                    WorkspaceUtil.resetView(true);
-                } else {
-                    WorkspaceUtil.resetView(true);
-                    WorkspaceUtil.propertyViewer($target);
-                    $target.addClass('is_using')
-                }
-                break;
+                PropertyWatch.resetView()
+                var key = $target.attr("data-viewer"),
+                    name = $target.text(),
+                    change = $target.attr("data-change");
+                PropertyWatch.selectWorkspace("property", key, name,change)
+
 
 
         }

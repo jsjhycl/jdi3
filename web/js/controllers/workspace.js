@@ -86,7 +86,7 @@ var WorkspaceUtil = {
         $.each($doms, function (index, item) { //遍历
             var $dom = $(item), //获取对应的dom
                 id = $dom.attr('id'), //获取对应dom的id
-                $origin = $originContainer.find('#' + id); //获取工作区中对应的元素
+                $origin = $originContainer.find('#' + id), //获取工作区中对应的元素
             isSelected = $dom.parent().hasClass('ui-draggable'), // 当前元素是否被选中;
                 isNode = $dom.hasClass('workspace-node'), // 判断是否是表格中的input
                 isFocus = $dom.hasClass('focus'); // 输入框有红色背景
@@ -124,6 +124,7 @@ var WorkspaceUtil = {
                     $span.addClass('check-fn-node').html(id); //添加类名并在里面添加id
                     break;
                 case 'sameCname':
+                    
                     var cnames = new Property().getArrayByKey('cname'),
                         cname = new Property().getValue(id, "cname");
                     if (cnames.indexOf(cname) != cnames.lastIndexOf(cname)) {
@@ -160,7 +161,7 @@ var WorkspaceUtil = {
     setValue: function () {
         var that= this;
         var $mask = $('#mask'),
-            $target = $mask.find("input"),
+            $target = $mask.find(".chageProperty"),
             property = $target.attr("data-property"),
             id = $target.attr("data-id"),
             value = $target.val();
@@ -168,9 +169,15 @@ var WorkspaceUtil = {
         $mask.find(`.property[data-domid='${id}']`).text(value);
         $mask.find(`.property[data-domid='${id}']`).attr("title", value)
         if (property == "expression" || property == "dataSource.db" || property == "events" || property == "query.db" || property == "archivePath" || Property == "query.nest") {
+            if(!value) return;
             value = JSON.parse(value)
         }
-        new Property().setValue(id, property, value)
+        console.log(value)
+        try {
+            new Property().setValue(id, property, value)
+        } catch (error) {
+            alert("请检查保存的数据格式是否正确?")
+        }
         var $control = $(`#workspace #${id}`)
         new Property().load($control);
         $mask.find(".property").show();
@@ -195,18 +202,21 @@ var WorkspaceUtil = {
 
             $mask.find(".property").show();
             $mask.find(".chageProperty").remove();
-            var value = $(this).attr("title"),
-                id = $(this).attr("data-domid"),
-                type = $(this).attr("data-property");
+            var id = $(this).attr("data-domid"),
+                type = $(this).attr("data-property"),
+                value =  new Property().getValue(id,type);
             var $control = $(`#workspace #${id}`)
             new Property().load($control);
-            var $input = $(`<input type="text" value='${value?value:""}' class="chageProperty" autofocus:"autofocus" data-id="${id}" data-property="${type}">`)
+            var $input = $(`<textarea type="text" value='${value?value:""}' class="chageProperty" autofocus:"autofocus" data-id="${id}" data-property="${type}"></textarea>`)
+            if(typeof value == "object") {value=JSON.stringify(value,null,2)}
+            $input.val(value?value:"")
             $input.css({
                 position: $(this).css("position"),
                 top: $(this).position().top,
                 left: $(this).position().left,
                 width: $(this).width(),
-                height: $(this).height()
+                height: $(this).height(),
+                "z-index":10002
             })
 
             $(this).hide()

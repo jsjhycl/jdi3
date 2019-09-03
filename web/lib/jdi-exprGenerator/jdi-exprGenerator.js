@@ -23,6 +23,22 @@
             </select>
             `
         }
+
+        function _renderAddon(addonType) {
+            if (!addonType) return '';
+            let html = ''
+            switch(addonType) {
+                case 'query':
+                    html += '<span class="input-group-addon addon-query" data-config="query" data-mode="multi"></span>'
+                    break;
+                case 'queryColumn':
+                    // html += '<span class="input-group-addon addon-data"  data-placement="left" data-toggle="popover" data-tirgger="click" data-type="'+ addonType +'"></span>'
+                    html += '<span class="input-group-addon addon-query" data-config="query" data-mode="column"></span>'
+                    break;
+            }
+            return html;
+        }
+
         return {
             setArgsTbody: function (fnData, fnType, args) {
                 if(!Object.prototype.toString.call(fnData) === '[object Object]') return
@@ -55,16 +71,15 @@
                     }
 
                     renderData.forEach(function(arg, idx) {
-                        var typeHtml = arg.type === "Query" ? ('<button data-config="Query" class="btn btn-default btn-sm">'+ arg.ctype +'</button>') : arg.ctype,
-                            val = hasSetArgs ? (args[idx] ? JSON.stringify(args[idx]) : '') : arg.default == undefined ? "" : JSON.stringify(arg.default),
+                        var val = hasSetArgs ? (args[idx] ? JSON.stringify(args[idx]) : '') : arg.default == undefined ? "" : JSON.stringify(arg.default),
                             valHtml = /^{.+[:].+}$/img.test(val) ? `value='${val}'` : `value=${val}`,
                             inputHtml = `<div class="input-group">
                                             <input ${(!!arg.readonly ? "disabled" : "")} class="form-control" data-type="arg" type="text" name="value" ${valHtml}>
-                                            ${arg.addon ? '<span class="input-group-addon addon-data"  data-placement="left" data-toggle="popover" data-tirgger="click" data-type="'+ arg.addon +'"></span>' : '' }
+                                            ${_renderAddon(arg.addon)}
                                         </div>`;
                         argsHtml += '<tr>' +
                                         '<td data-name="' + arg.cname + '">' + arg.cname + '</td>' +
-                                        '<td data-convert="' + arg.type + '">' + typeHtml + '</td>' +
+                                        '<td data-convert="' + arg.type + '">' + arg.ctype + '</td>' +
                                         '<td>' + inputHtml +
                                         '</td>' +
                                     '</tr>';
@@ -308,7 +323,7 @@
                 }
                 return html;
             },
-            getDbData() {
+            getDbData () {
                 new FileService().readFile("/profiles/table.json", 'utf-8', function(rst) {
                     dbData = rst;
                 });
@@ -961,7 +976,6 @@
                             }
                         };
                     }).get();
-                    argsArr.unshift(target);
                     that.setExpr($egExpr, $egExpr.get(0), $egExpr.html(), that.generatExprFn(fnName, result, argsArr), replaceResult);
                 }
                 
@@ -1043,21 +1057,23 @@
             });
 
             // 数据源
-            $(document).on("click" + EVENT_NAMESPACE, '.eg .eg-function [data-config="Query"]', {element: element}, function (event) {
+            $(document).on("click" + EVENT_NAMESPACE, '.eg .eg-function [data-config="query"]', {element: element}, function (event) {
                 var $this = $(this),
-                    $input = $this.parent('td').next('td').find('input'),
+                    $input = $this.prev('input'),
+                    mode = $this.data('mode'),
                     $content = $('.eg:visible .query-config-content'),
                     val = $input.val(),
                     data = null;
                 try{
                     data = JSON.parse(val);
-                }catch(err) {
-                }
+                }catch(err) {};
+                
                 $content.is(":empty")
                     ? $(this).dbQuerier2({
                             $target: $input,
                             data: data || {},
                             $content: $content,
+                            fieldMode: mode
                         })
                     : $content.empty()
             });
@@ -1129,6 +1145,7 @@
                 // 远程函数
                 if (fn.startsWith('functions')) {
                     try {
+                        console.log(fn)
                         let args = eval(fn) || [];
                         if (Array.isArray(args) && args[1] && that.isBuiltInFn(fn, args[1], cacheFns)) {
                             return that.generatExprFn(args[1], fn, args.slice(4));

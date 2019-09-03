@@ -478,6 +478,9 @@
 .eg .eg-function .input-group-addon.addon-data {
     background-image: url(data:img/jpg;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABJUlEQVQ4T83TvSuFYRgG8N/xMbEYJZnZ5IgUYZOPMhhJ2S1sNmaTv4CRQREWRVl8JqWsIrOFzVd3PSfvOZ1zcjb39Pbez30913U995XzW/UYwyD60IPm1H7DDS5whiN8Ri+XDnRiBwGyjxOc4zX1W9CPEUym4Rk8FACusIGtDKNqn3NYRL4A8I0OPP0RoD2dzWUBXrCEA4TmchWejGMdbWFBFmAaK+jCfQUPwthHLGO3FCAM/EIjhjCQTA0m8f8Zd2jNvEIRg3ls/sGDCXRjtZTBLBZwidMKEmI/oo7TPhQxCAlRQT18CKpZj27T4CgO0y78IwnhckONEj5QV9AYxkUG1mp4hSn0ZsO0nVjsVXmFYcRgJLEoTHFxaZzzaEqM3nFdLs4/ULFWEU+A7CEAAAAASUVORK5CYII=);
 }
+.eg .eg-function .input-group-addon.addon-query {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABP0lEQVQ4T53TzSumYRTH8Q/SUGgGCyytxB8w9rOwmkxpmqWiLFnJgkQSO2ylbNTYmcVsJv4BK3vFUuStqBFDo1PXU1eP+6ac1X2fl+91zul3apTbZ6yiFuPYL0qtKXD2YAnfqmI7mMRR7s8BXZjDCOrwgDXcYwr1eMQGZnEeoArgJ4ZSUvh/YwLH6bVurONL+g/4NoYD0IybrK0o/lqymr0MEilNAWjDRVXBFX4gCsICuIWWqrz2ALTisuTFA3xAbxYPeNSEvQnIuf+wgBXc5oBPCOprtotB3MXc7wF04jS98ALwEddvdJAD4vskH6EBfzNNFLGiKIQzhkXE2P9DAhUhhdaX0VjSyfek0r4Uj11Mx0JzKXdgHqNJykWsJ2xiBme5lPPkOKboJrae2690E4e5s+gaK/F+/EmzDpSd8zMzwjyZWmGTOwAAAABJRU5ErkJggg==);
+}
 .eg .eg-function .popover .popover-title {
     color: #fff;
     background: #747d8c;

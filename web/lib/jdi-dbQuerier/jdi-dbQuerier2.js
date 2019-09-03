@@ -43,6 +43,7 @@
             var that = this,
                 cache = $.data(element, CACHE_KEY),
                 data = cache.data,
+                fieldMode = cache.fieldMode
                 $content = cache.$content,
                 html = `
                 <section class="queryConfig">
@@ -65,7 +66,7 @@
             
             $content.find('.queryConfig').remove().end().append(html);
             $(".queryConfig").find(".querier-content").dbQuerier({
-                fieldMode: "multi",
+                fieldMode: fieldMode || "multi",
                 data: data || {},
                 noTimeQuery: true,
                 isSm: true,

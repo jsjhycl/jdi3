@@ -343,7 +343,8 @@ function propertybar() {
 		for (var i = 0; i < eventList.length; i++) { //遍历eventList
 			var item = eventList[i];
 			(function (item) {
-				$(document).on(item.type, item.selector, function (event) { //绑定事件
+                $(document).on(item.type, item.selector, function (event) { //绑定事件
+                    console.log('表达式触发事件：', item.type, ' selector: ', item.selector)
 					var id = $("#property_id").val(); //获取id
 					if (id) {
 						var $workspace = $("#workspace");

@@ -44,6 +44,7 @@
                 isSm = !!cache.isSm,
                 labelClass = isSm ? "col-sm-12 text-left" : "col-lg-2",
                 inputClass = isSm ? "col-lg-12" : "col-lg-9",
+                isColumn = cache.fieldMode === 'column',
                 tableHtml = '<div class="form-group">' +
                     `<label class="${labelClass} control-label">查询数据库：</label>` +
                     `<div class="${inputClass}"><select class="form-control querier-dbName"></select></div>` +
@@ -60,11 +61,11 @@
                                                 `<label class="${labelClass} control-label">数据渲染表：</label>` +
                                                 '<div class="col-lg-3"><select class="form-control" data-name="render_table"><select></div>' +
                                             '</div>' : "",
-                conditionsHtml = '<div class="form-group">' +
+                conditionsHtml = !isColumn ? '<div class="form-group">' +
                     `<label class="${labelClass} control-label">查询条件：</label>` +
                     `<div class="${inputClass} querier-conditions"></div>` +
-                    '</div>';
-            $(element).empty().append(tableHtml + querierRate + renderTable + that.renderFields(element) + conditionsHtml).addClass("form-horizontal querier");
+                    '</div>' : '';
+            $(element).empty().append(tableHtml + querierRate + renderTable + that.renderFields(element) + conditionsHtml ).addClass("form-horizontal querier");
         },
         renderFields: function (element) {
             var cache = $.data(element, CACHE_KEY),
@@ -75,7 +76,7 @@
                     `<label class="${isSm ? "col-sm-12 text-left" : "col-lg-2"} control-label">查询字段：<input class="check-all" type="checkbox"></label>` +
                     '<div class="col-lg-10 querier-fields" data-name="querier_fields"></div>' +
                     '</div>';
-            } else {
+            } else if (fieldMode === 'single') {
                 return '<div class="form-group">' +
                     '<label class="col-lg-2 control-label">显示值字段：</label>' +
                     '<div class="col-lg-10 querier-fields-show" data-name="querier_fields_show"></div>' +
@@ -84,6 +85,11 @@
                     '<label class="col-lg-2 control-label">实际值字段：</label>' +
                     '<div class="col-lg-10 querier-fields-real" data-name="querier_fields_real"></div>' +
                     '</div>';
+            } else if (fieldMode === 'column') {
+                return '<div class="form-group">' +
+                            `<label class="${isSm ? "col-sm-12 text-left" : "col-lg-2"} control-label">列名：</label>` +
+                            `<div class="${isSm ? "col-sm-12" : "col-lg-2"} querier-fields-column" data-name="querier_fields_column"></div>` +
+                        '</div>'
             }
         },
         //设置数据
@@ -102,6 +108,8 @@
                 data = cache.data;
             if (fieldMode === "single") {
                 $querierFields = $(element).find(".querier-fields-show,.querier-fields-real");
+            } else if (fieldMode === 'column') {
+                $querierFields = $(element).find(".querier-fields-column");
             };
 
             var dbName, table, fields, conditions, queryTime, renderTable;
@@ -180,7 +188,7 @@
                 data.forEach(function (item) {
                     $fieldsDiv.find(':input[value="' + item + '"]').prop("checked", true);
                 });
-            } else {
+            } else if (fieldMode === 'single') {
                 var text = null,
                     value = null;
                 if (DataType.isObject(data)) {
@@ -199,6 +207,9 @@
                         }
                     }
                 });
+            } else if (fieldMode === 'column'){
+                console.log('data')
+                $(this).find(':input[value="' + fields + '"]').prop("checked", true);
             }
         },
         setQuerierDate: function($date, autoCreate, times) {
@@ -275,7 +286,9 @@
                     }
                 if (fieldMode === "single") {
                     $querierFields = $(celement).find(".querier-fields-show,.querier-fields-real");
-                }
+                } else if (fieldMode === "column") {
+                    $querierFields = $(celement).find(".querier-fields-column");
+                };
                 if (DataType.isObject(data) && data.table === table) {
                     that.setFields($querierFields, fieldMode, fieldsoptions, data.fields);
                     $querierConditions.conditions({
@@ -361,6 +374,8 @@
                     text: $querier.find(".querier-fields-show :input:checked").val(),
                     value: $querier.find(".querier-fields-real :input:checked").val()
                 };
+            } else if (cache.fieldMode === 'column') {
+                fields = $querier.find(".querier-fields-column :input:checked").val();
             } else {
                 fields = [];
                 $querier.find(".querier-fields").find(":input").each(function () {
@@ -369,15 +384,17 @@
                     }
                 });
             }
-            return {
+
+            let result = {
                 dbName:$querier.find(".querier-dbName").val(),
                 table: $querier.find(".querier-table").val(),
-                querierTime: $querierStartTime.length > 0 ? { starttime: $querierStartTime.val() || now, endtime: $querierEndTime.val() || now } : {},
                 fields: fields,
-                conditions: $querier.find(".querier-conditions").conditions("getData"),
-                queryTime: queryTime,
-                renderTable: renderTable
+                // querierTime: $querierStartTime.length > 0 ? { starttime: $querierStartTime.val() || now, endtime: $querierEndTime.val() || now } : {},
             };
+            !cache.noTimeQuery && (result.queryTime = queryTime);
+            !!cache.renderTable && (result.renderTable = renderTable);
+            cache.fieldMode !== 'column' && (result.conditions = $querier.find(".querier-conditions").conditions("getData"))
+            return result;
         }
     };
 })(jQuery, window, document);

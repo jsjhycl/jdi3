@@ -134,6 +134,43 @@ var Common = (function () {
                 colEnd,
                 rowEnd
             }
+        },
+
+        getCursortPosition: function(dom) {
+            var cursorPos = 0;
+            if (document.selection) {
+                // IE Support
+                dom.focus ();
+                var selectRange = document.selection.createRange();
+                selectRange.moveStart ('character', -dom.value.length);
+                cursorPos = selectRange.text.length;
+            }else if (dom.selectionStart || dom.selectionStart == '0') {
+                // Firefox support
+                cursorPos = dom.selectionStart;
+            }
+            return cursorPos;
+        },
+        insertAfterText: function(dom, value) {
+            let selectRange;
+            if (document.selection) {
+                dom.focus();
+                selectRange = document.selection.createRange();
+                selectRange.text = value;
+                dom.focus();
+            }else if (dom.selectionStart || dom.selectionStart == '0') {
+                let startPos = dom.selectionStart,
+                    endPos = dom.selectionEnd,
+                    scrollTop = dom.scrollTop;
+                dom.value = dom.value.substring(0, startPos) + value + dom.value.substring(endPos, dom.value.length);
+                dom.focus();
+                dom.selectionStart = startPos + value.length;
+                dom.selectionEnd = startPos + value.length;
+                dom.scrollTop = scrollTop;
+            }
+            else {
+                dom.value += value;
+                dom.focus();
+            }
         }
     };
 })();

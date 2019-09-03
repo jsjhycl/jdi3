@@ -607,7 +607,7 @@ function NewEventsModal($modal, $element) {
                 <div class="saveHTML" ${item.subscribe.saveHTML ? "":'style="display:none"'}>
                     <div style="margin-bottom:20px">
                         <span>保存文件名</span>
-                        <input style="display:inline-block;width:300px;margin-left:10px;" type="text" class="form-control" data-category="saveHTML" data-wrap="true" value="${item.subscribe.saveHTML||''}">
+                        <input style="display:inline-block;width:300px;margin-left:10px;" type="text" class="form-control" data-category="saveHTML" data-wrap="true" data-insert="true" value=${item.subscribe.saveHTML||''}>
                     </div>
                 </div>
                 <div class="changeProperty"  ${item.subscribe.property?"":'style="display:none"'}>
@@ -1364,12 +1364,14 @@ NewEventsModal.prototype = {
             if (!category) return;
             var id = $(this).data("id"),
                 isWrap = !!$target.data("wrap"),
+                isInsert = !!$target.data("insert"),
                 originVal = $target.val().split(','),
                 val = isWrap ? "{" + id + "}" : $(this).data("id"),
                 isExist = originVal.isExist(null, val),
                 isAdd = !!$target.data('apply');
-
-            if ($(this).hasClass("applied") && isExist) {
+            if (isInsert) {
+                Common.insertAfterText($target.get(0), val);
+            } else if ($(this).hasClass("applied") && isExist) {
                 $target.val(originVal.join().replace(new RegExp(val + '[,]*', 'g'), ""));
             } else {
                 $target.val(isAdd ? $target.val() + "," + val : val);

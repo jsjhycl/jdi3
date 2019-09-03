@@ -702,6 +702,17 @@ li {
     white-space: nowrap;
     overflow: hidden;
 }
+#copyWorkspace .check-fn-node{
+    position: absolute;
+    z-index: 511;
+    background-color: #fff;
+    color: blue;
+    border: 1px solid #6a1;
+    text-align: left;
+    padding: 1px 0px;
+    white-space: nowrap;
+    overflow: hidden;
+}
 
 #workspace_copy .workspace-node-switch.originSelected {
     color: white;
@@ -1112,4 +1123,32 @@ li {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+#changePropertyBox {
+    width: 300px;
+    height: 230px;
+    background: #dadada;
+    border-radius: 5px;
+    box-shadow: #000 2px 3px 6px;
+}
+#changePropertyBox .header{
+    font-size: 20px;
+    margin: auto;
+    text-align: center;
+    border-bottom: 1px solid #000;
+}
+#changePropertyBox .content{
+    width: 200px;
+    padding-top: 10px;
+    margin: auto;
+}
+#changePropertyBox .content .btn{
+    float: right;
+}
+#changePropertyBox .changePropertyValue{
+    width: 203px;
+    height: 149px;
+}
+#copyWorkspace .selCurrent{
+    border: 1px solid red;
 }

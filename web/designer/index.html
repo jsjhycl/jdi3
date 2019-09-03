@@ -49,7 +49,6 @@
                     <li><a data-toggle="modal" href="#dbDesignerModal" data-first-filter="db">配置本表数据</a></li>
                     <li><a data-toggle="modal" href="#change_category_moda">分类选项编辑</a></li>
                     <li><a data-toggle="modal" href="#change_router_modal">路由配置编辑</a></li>
-                    <li><a id="viewer">元素编号查看器</a></li>
                     <li><a id="controlRuler">标尺查看器</a></li>
                 </ul>
             </li>
@@ -232,47 +231,49 @@
                     <li class=" dropdown-submenu">
                     <a href="#">基本属性</a>
                     <ul class="dropdown-menu">
-                        <li><a data-type="showSameCname">中文名</a></li>
-                        <li><a data-type="propertyViewer" data-viewer="name">表单名</a></li>
-                        <li><a data-type="propertyViewer" data-viewer="controlType">控件类型</a></li>
-                        <li><a data-type="propertyViewer" data-viewer="color">前景色</a></li>
-                        <li><a data-type="propertyViewer" data-viewer="expression">表达式</a></li>
+                        <li><a data-type="propertyViewer" data-viewer="id" data-change="false">编号</a></li>
+                        <li><a data-type="showSameCname" data-viewer="cname" data-change="true">中文名</a></li>
+                        <li><a data-type="propertyViewer" data-viewer="name" data-change="true">表单名</a></li>
+                        <li><a data-type="propertyViewer" data-viewer="controlType" data-change="true">控件类型</a></li>
+                        <li><a data-type="propertyViewer" data-viewer="color" data-change="true">前景色</a></li>
+                        <li><a data-type="propertyViewer" data-viewer="visibility" data-change="true">可见性</a></li>
+                        <li><a data-type="propertyViewer" data-viewer="readonly" data-change="true">只读</a></li>
                     </ul>
                     </li>
                     <li class=" dropdown-submenu">
                         <a href="#">验证属性</a>
                         <ul class="dropdown-menu">
-                            <li><a data-type="propertyViewer" data-viewer="validate.format">格式验证</a></li>
-                            <li><a data-type="propertyViewer" data-viewer="validate.minLength">最小字符串</a></li>
-                            <li><a data-type="propertyViewer" data-viewer="validate.maxLength">最大字符串</a></li>
-                            <li><a data-type="propertyViewer" data-viewer="validate.remote">远程验证</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="validate.format" data-change="true">格式验证</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="validate.minLength" data-change="true">最小字符串</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="validate.maxLength" data-change="true">最大字符串</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="validate.remote" data-change="true">远程验证</a></li>
                         </ul>
                     </li>
                     <li class=" dropdown-submenu">
                         <a href="#">表达式属性</a>
                         <ul class="dropdown-menu">
-                            <li><a data-type="propertyViewer" data-viewer="expression">表达式</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="expression" data-change="true">表达式</a></li>
                         </ul>
                     </li>
                     <li class=" dropdown-submenu">
                         <a href="#">数据源属性</a>
                         <ul class="dropdown-menu">
-                            <li><a data-type="propertyViewer" data-viewer="dataSource.static">静态数据源</a></li>
-                            <li><a data-type="propertyViewer" data-viewer="dataSource.db">数据库数据源</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="dataSource.static" data-change="true">静态数据源</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="dataSource.db" data-change="true">数据库数据源</a></li>
                         </ul>
                     </li>
                     <li class=" dropdown-submenu">
                         <a href="#">触发属性</a>
                         <ul class="dropdown-menu">
-                            <li><a data-type="propertyViewer" data-viewer="events">触发</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="events" data-change="true">触发</a></li>
                         </ul>
                     </li>
                     <li class=" dropdown-submenu">
                         <a href="#">查询属性</a>
                         <ul class="dropdown-menu">
-                            <li><a data-type="propertyViewer" data-viewer="query.db">数据库查询</a></li>
-                            <li><a data-type="propertyViewer" data-viewer="archivePath">存档路径</a></li>
-                            <li><a data-type="propertyViewer" data-viewer="query.nest">嵌套查询</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="query.db" data-change="true">数据库查询</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="archivePath" data-change="true">存档路径</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="query.nest" data-change="true">嵌套查询</a></li>
                         </ul>
                     </li>
                 </ul>

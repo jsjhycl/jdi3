@@ -86,7 +86,7 @@ var WorkspaceUtil = {
         $.each($doms, function (index, item) { //遍历
             var $dom = $(item), //获取对应的dom
                 id = $dom.attr('id'), //获取对应dom的id
-                $origin = $originContainer.find('#' + id); //获取工作区中对应的元素
+                $origin = $originContainer.find('#' + id), //获取工作区中对应的元素
             isSelected = $dom.parent().hasClass('ui-draggable'), // 当前元素是否被选中;
                 isNode = $dom.hasClass('workspace-node'), // 判断是否是表格中的input
                 isFocus = $dom.hasClass('focus'); // 输入框有红色背景

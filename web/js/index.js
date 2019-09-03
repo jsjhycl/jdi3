@@ -184,10 +184,6 @@ function navbar() {
 		});
 	})();
 
-	$("#viewer").click(function () {
-		WorkspaceUtil.numViewer(); //调用编号查看器
-	});
-
 	//标尺查看器
 	(function controlRuler() {
 		var flag = false;

@@ -43,6 +43,7 @@ Loader.prototype = {
                 that.JS_PATH + "/helpers/conditionsHelper.js",
                 that.JS_PATH + "/helpers/tableHelper.js",
                 that.JS_PATH + "/helpers/modalHelper.js",
+                that.JS_PATH + "/helpers/PropertyWatch.js",
                 that.LIB_PATH + "/jresizable/jresizable.js",
                 that.LIB_PATH + "/jcontextmenu/jcontextmenu.js",
                 that.LIB_PATH + "/jpagination/jpagination.js",

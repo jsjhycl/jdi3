@@ -175,13 +175,20 @@
                 var $eg = $('.eg:visible'),
                     expr = expr || $eg.find(".eg-expr").text(),
                     args = args || $eg.find('[data-type="arg"], .queryConfig input').map(function() {
-                        return $(this).val()
-                    }).get().join(','),
-                    matches = (expr + ',' + args).match(/[^{]([A-Z]+)(?=})/img);
-                
+                        let val = $(this).val();
+                        let convert = $(this).parent().parent().prev().data('convert');
+                        if (/\{[A-Z]{4}\}/mg.test(val)) { return val.replace(/[{}]/img, '') }
+                        else if (convert && convert.includes('Element') && /^[A-Z]{4}$/mg.test(val)) {
+                            return val;
+                        } else return '';
+                    }).get().filter(i => i != ''),
+                    matches = expr.match(/[^{]([A-Z]+)(?=})/img),
+                    ids = [];
+                matches && (ids = [...matches]);
+                Array.isArray(args) && (ids = [...ids, ...args])
                 $eg.find(".eg-elem.selected").removeClass("selected");
-                if (matches) {
-                    var selector = matches.map(function (item) {
+                if (ids.length > 0) {
+                    var selector = ids.map(function (item) {
                         return '[data-id="' + item + '"]';
                     }).join(",");
                     $eg.find(selector).addClass("selected");
@@ -864,7 +871,8 @@
             });
 
             // 插入函数的参数中有...，表示有多个相同参数
-            $(document).on("input focusin" + EVENT_NAMESPACE, ".manyArgs-table tbody tr input[data-type='arg']:last", function(event) {
+            // 重复写是因为事件无法关闭。
+            $(document).on("input" + EVENT_NAMESPACE, ".manyArgs-table tbody tr input[data-type='arg']:last", function(event) {
                 var $ev = $(event.currentTarget),
                     val = $ev.val();
                 if (!$ev) return;
@@ -873,6 +881,16 @@
                     $clone.insertAfter($(this).parents('tr')).find("input").val("").removeClass("active");
                 }
             });
+            $(document).on("focusin" + EVENT_NAMESPACE, ".manyArgs-table tbody tr input[data-type='arg']:last", function(event) {
+                var $ev = $(event.currentTarget),
+                    val = $ev.val();
+                if (!$ev) return;
+                if (val.trim() != '') {
+                    var $clone = $(this).parents('tr').clone(true);
+                    $clone.insertAfter($(this).parents('tr')).find("input").val("").removeClass("active");
+                }
+            });
+            
 
             //文本框focusin、focusout事件
             $(document).on("focusin" + EVENT_NAMESPACE, ".eg .eg-expr, .eg .eg-function [data-type='arg'], .queryConfig input", function (event) {
@@ -1151,13 +1169,11 @@
                     // 本地函数
                     let localFnName = fn.match(/(^[a-zA-Z]+)(?=\(.*\))/img);
                     if(!localFnName) return;
-                    console.log('localFnName: ', localFnName)
                     localFnName = localFnName[0];
                     if (that.isBuiltInFn(fn, localFnName, cacheFns)) {
                         try {
                             eval('function ' + localFnName + '(...args) { return args }');
                             let args = eval(fn);
-                            console.log(args)
                             return that.generatExprFn(localFnName, fn, args.slice(1))
                         } catch(err) {
                             throw ('解析本地函数出错！', err);

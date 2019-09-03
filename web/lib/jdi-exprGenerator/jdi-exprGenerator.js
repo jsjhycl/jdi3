@@ -658,7 +658,8 @@
             }
         },
         bindEvents: function (element) {
-            $(document).off("input focusin" + EVENT_NAMESPACE);
+            $(document).off("input" + EVENT_NAMESPACE);
+            $(document).off("focusin" + EVENT_NAMESPACE);
             var that = this;
             //控件元素click事件
             $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-elem", {element: element}, function (event) {

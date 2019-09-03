@@ -142,6 +142,7 @@ function NewEventsModal($modal, $element) {
         if (subscribe.copySend) arr.push("copySend");
         if (subscribe.property) arr.push("changeProperty");
         if (subscribe.notify) arr.push("notify");
+        if (subscribe.saveHTML) arr.push("saveHTML");
         subscribe.query && subscribe.query.forEach(function (item) {
             arr.push(item)
         })
@@ -603,6 +604,12 @@ function NewEventsModal($modal, $element) {
                         <input style="display:inline-block;width:300px;margin-left:10px;" type="text" data-category="notify"  data-apply="add" class="form-control" data-key="notifyEl" value="${item.subscribe.notify||''}">
                     </div>
                 </div>
+                <div class="saveHTML" ${item.subscribe.saveHTML ? "":'style="display:none"'}>
+                    <div style="margin-bottom:20px">
+                        <span>保存文件名</span>
+                        <input style="display:inline-block;width:300px;margin-left:10px;" type="text" class="form-control" data-category="saveHTML" data-wrap="true" value="${item.subscribe.saveHTML||''}">
+                    </div>
+                </div>
                 <div class="changeProperty"  ${item.subscribe.property?"":'style="display:none"'}>
                     <div>
                         <table class="table table-bordered">
@@ -676,7 +683,7 @@ function NewEventsModal($modal, $element) {
     }
     //获取客户自定义的方法
     this.getCustomMethods = function (triggerMethods) {
-        var customs = ["save", "copySend","upload", "login", "checkAll", "cancelAll", "saveHTML"],
+        var customs = ["save", "copySend","upload", "login", "checkAll", "cancelAll"],
             result = [];
         triggerMethods.each(function () {
             var value = $(this).val();
@@ -910,7 +917,8 @@ NewEventsModal.prototype = {
                 property = null,
                 notify = null,
                 query = null,
-                timeQuery = null;
+                timeQuery = null,
+                saveHTML = null;
             if (that.judgeCheckMehods("commonQuery", $(this).find(".triggerMethods:checked"))) {
                 query = []
                 query.push("commonQuery")
@@ -938,6 +946,11 @@ NewEventsModal.prototype = {
             if (that.judgeCheckMehods("timeQuery", $(this).find(".triggerMethods:checked"))) {
                 timeQuery = $(this).find('[data-category="queryTime"]').val()
             };
+            if (that.judgeCheckMehods("saveHTML", $(this).find(".triggerMethods:checked"))) {
+                console.log($(this).find('[data-category="saveHTML"]'))
+                saveHTML = $(this).find('[data-category="saveHTML"]').val()
+            };
+
             $exprMethods.each(function() {
                 exprMethods.push({
                     fnName: $(this).next('span').text(),
@@ -960,11 +973,12 @@ NewEventsModal.prototype = {
                         notify: notify,
                         query: query,
                         timeQuery: timeQuery,
-                        exprMethods: exprMethods
+                        exprMethods: exprMethods,
+                        saveHTML: saveHTML
                     }
                 })
             }
-
+            console.log(result);
         })
         result.length>0?that.$element.val(JSON.stringify(result)):that.$element.val("");
         
@@ -1041,8 +1055,9 @@ NewEventsModal.prototype = {
                 check = $(this).prop("checked"),
                 $copySendTable = $(this).parents("tr").find(".copySend"),
                 $changeProperty = $(this).parents("tr").find(".changeProperty"),
-                $notify = $(this).parents("tr").find(".notify");
-            $timeQuery = $(this).parents("tr").find(".timeQuery");
+                $notify = $(this).parents("tr").find(".notify"),
+                $timeQuery = $(this).parents("tr").find(".timeQuery"),
+                $saveHtml = $(this).parents("tr").find(".saveHTML");
             if (value == "changeProperty") {
                 check ? $changeProperty.show() : $changeProperty.hide()
             }
@@ -1054,6 +1069,9 @@ NewEventsModal.prototype = {
             }
             if (value == "timeQuery") {
                 check ? $timeQuery.show() : $timeQuery.hide()
+            }
+            if (value == 'saveHTML') {
+                check ? $saveHtml.show() : $saveHtml.hide();
             }
         })
         //增加属性改变栏

@@ -60,7 +60,7 @@
                             valHtml = /^{.+[:].+}$/img.test(val) ? `value='${val}'` : `value=${val}`,
                             inputHtml = `<div class="input-group">
                                             <input ${(!!arg.readonly ? "disabled" : "")} class="form-control" data-type="arg" type="text" name="value" ${valHtml}>
-                                            ${arg.addon ? '<span class="input-group-addon"  data-placement="left" data-toggle="popover" data-tirgger="click" data-type="'+ arg.addon +'">按钮</span>' : '' }
+                                            ${arg.addon ? '<span class="input-group-addon addon-data"  data-placement="left" data-toggle="popover" data-tirgger="click" data-type="'+ arg.addon +'"></span>' : '' }
                                         </div>`;
                         argsHtml += '<tr>' +
                                         '<td data-name="' + arg.cname + '">' + arg.cname + '</td>' +
@@ -647,7 +647,6 @@
             var that = this;
             //控件元素click事件
             $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-elem", {element: element}, function (event) {
-                console.log($(this).hasClass("current"))
                 if($(this).hasClass("current")){
                     var result = window.confirm("你却定获取元素本身的值吗？");
                     if(!result) return;
@@ -668,7 +667,7 @@
                     dataId = $(this).attr("data-id"),
                     value = '';
                 if ($arg.length > 0) {
-                    var valueType = $arg.parent().prev().attr('data-convert');
+                    var valueType = $arg.parent().parent().prev().attr('data-convert');
                     value = valueType === 'ElementNoWrap' ? dataId : "{" + dataId + "}";
                     $arg.val($arg.val() === value ? "" : value).trigger("input");
                 } else {
@@ -874,6 +873,30 @@
                 $(".eg .eg-expr, .eg .eg-function [data-type='arg']").removeClass("active");
                 $(".eg .queryConfig input").removeClass("active");
                 $(this).addClass("active");
+            });
+
+            // 文本框粘贴事件
+            $(document).on("paste" + EVENT_NAMESPACE, ".eg .eg-expr", function (e) {
+                e.preventDefault();
+                let text;
+                let clp = (e.originalEvent || e).clipboardData;
+                if (clp === undefined || clp === null) {
+                    text = window.clipboardData.getData("text") || "";
+                    if (text !== "") {
+                        if (window.getSelection) {
+                            var newNode = document.createElement("span");
+                            newNode.innerHTML = text;
+                            window.getSelection().getRangeAt(0).insertNode(newNode);
+                        } else {
+                            document.selection.createRange().pasteHTML(text);
+                        }
+                    }
+                } else {
+                    text = clp.getData('text/plain') || "";
+                    if (text !== "") {
+                        document.execCommand('insertText', false, text);
+                    }
+                }
             });
 
             //保存函数配置
@@ -1094,11 +1117,7 @@
                     return DataType.isObject(i) && i[Object.keys(i)[0]].nodeType != undefined ? ('{' + Object.keys(i)[0] + '}') : i;
                 })
             };
-            console.log(fnData)
-            console.log('encodeURI(fnData): ', encodeURI(fnData))
-            console.log('encodeURI(fnData): ', decodeURI(fnData))
             let $span = $(`<span contenteditable="false" data-fn=${encodeURI(fnData)} data-fn_args=${encodeURI(JSON.stringify(args))} class="expr-fn-item">${fnName}</span>`);
-            console.log($span.get(0).outerHTML)
             return $span.get(0).outerHTML + " ";
         },
         convertExpr:function(expr, cacheFns) {

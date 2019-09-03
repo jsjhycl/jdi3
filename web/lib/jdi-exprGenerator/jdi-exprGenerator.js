@@ -104,47 +104,7 @@
                             '</tr>'
                 $argsTbody.empty().append(argsHtml);
                 $queryConfig.empty();
-
-                // 填充参数
-                // if (Array.isArray(args)) {
-                //     args.forEach((i, idx) => {
-
-                //     })
-                // }
-
-                // $argsTbody.find('input[data-type="arg"]').each(function(idx, el) {
-                //     console.log(idx);
-                //     $(this).val(hasSetArgs ? (args[idx] ? JSON.stringify(args[idx]) : '') : renderData[idx].default == undefined ? "" : JSON.stringify(arg.default))
-                // });
-                
                 FunctionUtil.effect("open");
-
-                $('[data-toggle="popover"]').popover('destroy')
-                $('[data-toggle="popover"]').popover({
-                    contaienr: 'body',
-                    html: true,
-                    template: '<div class="popover" style="width: 200px;"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
-                    title: function() {
-                        let type = $(this).data('type'),
-                            _title = '';
-
-                        switch (type) {
-                            case 'dbName':
-                                _title = '数据库';
-                                break;
-                            case 'tableName':
-                                _title = '表';
-                                break;
-                            case 'colName':
-                                _title = '列'
-                                break;
-                        }
-                        return `请选择${_title}`;
-                    },
-                    content: function() {
-                        return that.setPopoverContent($(this), $(this).data('type'), dbData);
-                    },
-                })
             },
             getArgsTbody: function () {
                 var result = [],
@@ -213,7 +173,7 @@
             },
             setElemSelected: function(expr, args) {
                 var $eg = $('.eg:visible'),
-                    expr = expr || $eg.find(".eg-expr").val(),
+                    expr = expr || $eg.find(".eg-expr").text(),
                     args = args || $eg.find('[data-type="arg"], .queryConfig input').map(function() {
                         return $(this).val()
                     }).get().join(','),
@@ -323,11 +283,38 @@
                 }
                 return html;
             },
-            getDbData () {
+            getDbData: function () {
                 new FileService().readFile("/profiles/table.json", 'utf-8', function(rst) {
                     dbData = rst;
                 });
-            }
+            },
+            insertAtCursor: function(dom, html, notDom) {
+                if (!dom) return;
+                dom.focus();
+                let sel = window.getSelection();
+                if (lastEditRange) {
+                    sel.removeAllRanges();
+                    sel.addRange(lastEditRange);
+                };
+                let range = sel.getRangeAt(0),
+                    el = document.createElement("div");
+                el.innerHTML = html;
+                let frag = document.createDocumentFragment(),
+                    lastNode,
+                    node = !notDom ? $(html).get(0) : html;
+                while ((node = el.firstChild)) {  
+                    lastNode = frag.appendChild(node);  
+                }  
+                range.insertNode(frag);
+                if (lastNode) {  
+                    range = range.cloneRange();  
+                    range.setStartAfter(lastNode);  
+                    range.collapse(true);  
+                    sel.removeAllRanges();  
+                    sel.addRange(range);  
+                }  
+                lastEditRange = sel.getRangeAt(0)
+            },
         };
     })();
 
@@ -338,6 +325,9 @@
      */
     var EVENT_NAMESPACE = ".eg_event",
         CACHE_KEY = "eg_cache";
+
+    // 记录光标
+    let lastEditRange;
 
     var ExprGenerator = function (elements, options) {
         this.$elements = elements;
@@ -661,6 +651,7 @@
             $(document).off("input" + EVENT_NAMESPACE);
             $(document).off("focusin" + EVENT_NAMESPACE);
             var that = this;
+            
             //控件元素click事件
             $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-elem", {element: element}, function (event) {
                 if($(this).hasClass("current")){
@@ -691,7 +682,7 @@
                     if(expr.indexOf(value) > -1) {
                         $egExpr.val(expr.replace(new RegExp(value, "g"), ""));
                     } else {
-                        that.setExpr($egExpr, $egExpr.get(0), expr, value);
+                        that.setExpr($egExpr, $egExpr.get(0), expr, value, null, true);
                     }
                 }
                 FunctionUtil.setElemSelected();
@@ -889,6 +880,22 @@
                 $(".eg .eg-expr, .eg .eg-function [data-type='arg']").removeClass("active");
                 $(".eg .queryConfig input").removeClass("active");
                 $(this).addClass("active");
+            });
+
+            // 获取光标位置
+            $(document).on("focusout click keyup" + EVENT_NAMESPACE, ".eg .eg-expr", function (event) {
+                let $this = $(this).get(0);
+                const doc = $this.ownerDocument || $this.document,
+                    win = doc.defaultView || doc.parentWindow,
+                    sel = win.getSelection();
+                if (sel.rangeCount > 0) {
+                    const range = win.getSelection().getRangeAt(0),
+                        preCaretRange = range.cloneRange()
+                    preCaretRange.selectNodeContents($this)
+                    preCaretRange.setEnd(range.endContainer, range.endOffset)
+                    caretOffset = preCaretRange.toString().length
+                }
+                lastEditRange = window.getSelection().getRangeAt(0);
             });
 
             // 文本框粘贴事件
@@ -1109,23 +1116,10 @@
                 $eg.find(`.fn-item[data-name="${fnName}"]`).trigger('click', {args: args});
             })
         },
-        setExpr: function ($elem, elem, expr, value, replaceExpr) {
+        setExpr: function ($elem, elem, expr, value, replaceExpr, isDom) {
             if (!$elem || $elem.length <= 0 || !elem) return;
-
             expr = $elem.html();
-            var position = 0;
-            if (elem.selectionStart) {
-                position = elem.selectionStart;
-            } else {
-                if (document.selection) {
-                    var range = document.selection.createRange();
-                    range.moveStart("character", - expr.length);
-                    position = range.text.length;
-                }
-            }
-            // var result = expr.slice(0, position) + value + expr.substring(position);
-            var result = expr + value;
-            !replaceExpr ? $elem.html(result) : $elem.html(value);
+            !replaceExpr ? FunctionUtil.insertAtCursor(elem, value, isDom) : $elem.val(value);
         },
         generatExprFn: function(fnName, fnData, args) {
             if (!fnName || !fnData) return;
@@ -1146,7 +1140,6 @@
                 // 远程函数
                 if (fn.startsWith('functions')) {
                     try {
-                        console.log(fn)
                         let args = eval(fn) || [];
                         if (Array.isArray(args) && args[1] && that.isBuiltInFn(fn, args[1], cacheFns)) {
                             return that.generatExprFn(args[1], fn, args.slice(4));

@@ -97,6 +97,7 @@
                propertys.forEach((item,ci)=>{
                    if(item.db && item.db.length>0){
                        item.db.forEach((jitem,index)=>{ 
+                           console.log(ci)
                         tbody +=`<tr class="${index>0 ? "addtr":""}  ${ ci%2 ==0 ? "tr":""}"  data-id =${item.id}>`;
                         cache.thead.forEach(function (citem,cindex) {
                             
@@ -110,7 +111,7 @@
                         tbody += "</tr>"; 
                        })
                    }else{
-                        tbody +=`<tr data-id =${item.id} >`;
+                        tbody +=`<tr data-id =${item.id}  class="${ ci%2 ==0 ? "tr":""}">`;
                         cache.thead.forEach(function (citem,index) {
                             var template = citem.template || function (value) {
                                     return value;

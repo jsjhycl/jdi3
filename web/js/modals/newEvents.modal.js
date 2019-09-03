@@ -607,7 +607,7 @@ function NewEventsModal($modal, $element) {
                 <div class="saveHTML" ${item.subscribe.saveHTML ? "":'style="display:none"'}>
                     <div style="margin-bottom:20px">
                         <span>保存文件名</span>
-                        <input style="display:inline-block;width:300px;margin-left:10px;" type="text" class="form-control" data-category="saveHTML" data-wrap="true" data-insert="true" value=${item.subscribe.saveHTML||''}>
+                        <input style="display:inline-block;width:300px;margin-left:10px;" type="text" class="form-control" data-category="saveHTML" data-wrap="true" data-insert="true" />
                     </div>
                 </div>
                 <div class="changeProperty"  ${item.subscribe.property?"":'style="display:none"'}>
@@ -657,7 +657,8 @@ function NewEventsModal($modal, $element) {
                 </div>
             </td>
         </tr>`);
-        that.$tbody.append($str)
+        that.$tbody.append($str);
+        item.subscribe.saveHTML && $str.find('[data-category="saveHTML"]').val(item.subscribe.saveHTML)
     }
     //移除表格中的一行
     this._removeItem = function ($tr) {

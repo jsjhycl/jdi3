@@ -1069,22 +1069,36 @@ li {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
+    
 }
-#archivePathBatch_modal .archive_content .archive-left,
-#archivePathBatch_modal .archive_content .archive-right {
+#archivePathBatch_modal .archive_content .archive-left {
     padding: 15px;
     flex: 1;
     box-sizing: border-box;
+    height: 650px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+#archivePathBatch_modal .archive_content .archive-left input.active {
+    border-color: #66afe9;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
 }
 #archivePathBatch_modal .archive_content .archive-right {
+    padding: 15px;
+    flex: 2;
+    box-sizing: border-box;
     border-left: 1px solid #ccc;
+    height: 650px;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 
-#archivePathBatch_modal .archive_content .archive-left li,
 #archivePathBatch_modal .archive_content .archive-right li {
     float: left;
     display: inline-block;
-    width: 250px;
+    width: 170px;
     margin: 5px;
     padding: 4px 6px;
     border: 1px solid #c9c9c9;
@@ -1092,6 +1106,19 @@ li {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+#archivePathBatch_modal .archive_content .archive-right li[data-field] {
+    position: relative;
+    box-shadow: 0 0 5px rgba(0, 154, 97, 0.7);
+    border: 1px solid rgba(0,154,97,0.4);
+}
+#archivePathBatch_modal .archive_content .archive-right li[data-field]::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    content: attr(data-field);
+    font-size: 10px;
+    color: rgba(0, 154, 97, 0.5)
 }
 #archivePathBatch_modal .archive_content .archive-right li.disabled {
     border: 1px solid #ccc;

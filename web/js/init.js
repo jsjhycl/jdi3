@@ -103,6 +103,7 @@ Loader.prototype = {
                 that.JS_PATH + "/modals/openConfig.modal.js",
                 that.JS_PATH + "/modals/changeRouter.modal.js",
                 that.JS_PATH + "/modals/changeCategory.modal.js",
+                that.JS_PATH + "/modals/changeGlobal.modal.js",
                 that.JS_PATH + "/index.js"
             ];
         that.recurseLoadScript(scripts);

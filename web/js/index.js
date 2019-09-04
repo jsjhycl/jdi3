@@ -73,6 +73,10 @@ function navbar() {
     var ChangeRouterModal = new ChangeRouter($("#change_router_modal"));
     ChangeRouterModal.execute();
 
+    // 修改全局变量
+    var ChangeGlobalModal = new ChangeGlobal($("#change_global_modal"));
+    ChangeGlobalModal.execute();
+
 	//另存为
 	var saveAsModal = new SaveAsModal($("#saveAsModal"));
 	saveAsModal.execute();
@@ -592,7 +596,7 @@ function workspace() {
 	//jresizable
 	$workspace.on("click", ".workspace-node", function (event) {
 		$workspace.jresizable("destroy");
-		$workspace.removeClass("focus");
+		$workspace.removeClass("focus").css("overflow","visible");
 		$("#delete").css('color', 'red');
 		$("#phone_content").find(".workspace-node").jresizable("destroy");
 		event.stopPropagation();
@@ -641,7 +645,7 @@ function workspace() {
 			new Property().clearDOM();
 			$workspace.find(".workspace-node").jresizable("destroy");
 			$workspace.jresizable("destroy");
-			$workspace.removeClass("focus");
+			$workspace.removeClass("focus").css("overflow","visible");
 		}
 		$(".jcontextmenu:visible").hide();
 	});

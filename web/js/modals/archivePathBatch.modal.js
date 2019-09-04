@@ -143,7 +143,7 @@ ArchivePathBatch.prototype = {
                 $(this).removeAttr('data-field');
             });
             this.$left.find('.related-control').each(function() {
-                $(this).attr('data-id', '').text('');
+                $(this).attr('data-id', '').val('');
             });
         }
     },

@@ -24,10 +24,6 @@ function ArchivePathBatch($modal, $element) {
         }
     };
 
-    // this._getMetaFieldHtml = function(id, isDelete) {
-    //     return `<i class="meta-field ${isDelete ? 'del' : ''} ">${id}</i>`
-    // }
-
     this._getAPIds = function() {
         return Object.keys(GLOBAL_PROPERTY).filter(id => {
             return GLOBAL_PROPERTY[id].archivePath;
@@ -212,9 +208,5 @@ ArchivePathBatch.prototype = {
                 .end().end().attr('data-id', controlId).val($this.text())
             // $this.find('.control-item').addClass('del');
         });
-        // this.$modal.on('dblclick', '.field-item', function() {
-        //     let $this = $(this);
-        //     $this.find('.related-control').addClass('del');
-        // })
     }
 };

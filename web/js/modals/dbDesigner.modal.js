@@ -79,7 +79,7 @@ DbDesignerModal.prototype = {
                     key: "db.dbName",
                     group: true,
                     template: function (value) {
-                        var $select = $('<select data-key="dbName"></select>')
+                        var $select = $('<select class="form-control" data-key="dbName"></select>')
                         Common.fillSelect($select, {
                             name: "请选择库",
                             value: ""

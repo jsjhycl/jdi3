@@ -69,22 +69,59 @@
             this.dbList = cache.dbList
             var tbody = "";
             if(cache.type=="setDbDesigner"){
-                cache.$elems.each(function (index) {
-                    var id = this.id;
-                    if (!id) return true;
-                    var property = $.extend(getProperty(id), {
-                        id: id
+                var setDbList = cache.dbList,
+                    setdbName = cache.db,
+                    setTableName = cache.table;
+                if(setDbList[setdbName][setTableName]){
+                    var setTableDetail =  setDbList[setdbName][setTableName]
+                    
+                    cache.$elems.each(function(index){
+                        var id = this.id;
+                        if (!id) return true;
+                        var property = $.extend(getProperty(id), {
+                            id: id
+                        });
+                        tbody += "<tr>";
+                        cache.thead.forEach(function (item,cindex) {
+                            var template = item.template || function (value) {
+                                    return value;
+                                },
+                                value="";
+                                if(cindex>1){
+                                    setTableDetail.tableDetail.forEach(function(jitem){
+                                        if(id == jitem.id){
+                                            
+                                            value = jitem[item.key]
+                                        }
+                                    })
+                                }else{
+                                    value = property[item.key]
+                                }
+                            tbody += '<td>' + template(value) + '</td>';
+                        });
+                        tbody += "</tr>";
+                    })
+                    if(cache.$elems.length != setTableDetail.tableDetail.length){
+                        alert("当前布局与数据库中的不匹配")
+                    }
+                }else{
+                    cache.$elems.each(function (index) {
+                        var id = this.id;
+                        if (!id) return true;
+                        var property = $.extend(getProperty(id), {
+                            id: id
+                        });
+                        tbody += "<tr>";
+                        cache.thead.forEach(function (item) {
+                            var template = item.template || function (value) {
+                                    return value;
+                                },
+                                value = that.recurseObject(property, item.key, cache.type);
+                            tbody += '<td>' + template(value[0] || "", value[1] || "") + '</td>';
+                        });
+                        tbody += "</tr>";
                     });
-                    tbody += "<tr>";
-                    cache.thead.forEach(function (item) {
-                        var template = item.template || function (value) {
-                                return value;
-                            },
-                            value = that.recurseObject(property, item.key, cache.type);
-                        tbody += '<td>' + template(value[0] || "", value[1] || "") + '</td>';
-                    });
-                    tbody += "</tr>";
-                });
+                }
             }
             if(cache.type=="dbDesigner"){
                 var propertys= []
@@ -97,7 +134,6 @@
                propertys.forEach((item,ci)=>{
                    if(item.db && item.db.length>0){
                        item.db.forEach((jitem,index)=>{ 
-                           console.log(ci)
                         tbody +=`<tr class="${index>0 ? "addtr":""}  ${ ci%2 ==0 ? "tr":""}"  data-id =${item.id}>`;
                         cache.thead.forEach(function (citem,cindex) {
                             

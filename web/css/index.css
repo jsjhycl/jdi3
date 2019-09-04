@@ -19,7 +19,7 @@ li {
     position: relative;
     margin: auto;
     width: 10000px;
-    height: 1000px;
+    height: 3000px;
 }
 
 .ruler_horizontal,
@@ -1138,7 +1138,7 @@ li {
     border-bottom: 1px solid #000;
 }
 #changePropertyBox .content{
-    width: 200px;
+    width: 280px;
     padding-top: 10px;
     margin: auto;
 }
@@ -1146,8 +1146,10 @@ li {
     float: right;
 }
 #changePropertyBox .changePropertyValue{
-    width: 203px;
+    width: 280px;
     height: 149px;
+    resize:none;
+    outline: none;
 }
 #copyWorkspace .selCurrent{
     border: 1px solid red;

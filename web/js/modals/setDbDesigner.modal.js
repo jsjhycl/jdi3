@@ -126,7 +126,7 @@ SetDbDesignerModal.prototype = {
                                     <option value="int" ${value=="int"?"selected":""}>整型</option>
                                     <option value="float" ${value=="float"?"selected":""}>浮点型</option>
                                     <option value="time" ${value=="time"?"selected":""}>日期型</option>
-                                    <option value="datatime" ${value=="datatime"?"selected":""}>时间型</option>
+                                    <option value="datetime" ${value=="datetime"?"selected":""}>时间型</option>
                                 </select>`
                     }
                 },

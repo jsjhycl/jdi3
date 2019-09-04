@@ -28,13 +28,13 @@ var PropertyWatch = {
             padding: "0 10px 20px 20px",
             background: "rgb(0,0,0,.6)"
         })
-        that.inputToBtn(view, $copyWorkSpace.find('input'), $workspace, key, name,change)
+        that.inputToBtn(view, $copyWorkSpace.find('input'), $workspace, key, name, change)
         $PropertyMaskContent.append($copyWorkSpace)
         $PropertyMask.append($PropertyMaskContent)
         $('body').append($PropertyMask)
         that.bindEvents()
     },
-    inputToBtn: function (view, $doms, $originContainer, key,name ,change) {
+    inputToBtn: function (view, $doms, $originContainer, key, name, change) {
         $.each($doms, function (idnex, item) {
             var $dom = $(item),
                 id = $dom.attr("id"),
@@ -78,11 +78,13 @@ var PropertyWatch = {
                     break;
                 case "property":
                     var value = new Property().getValue(id, key)
-                    if(key=="id"){value = id};
+                    if (key == "id") {
+                        value = id
+                    };
                     if (typeof value == "object") {
                         value = JSON.stringify(value)
                     }
-                    
+
                     if (value) {
                         $span.attr({
                             'data-toggle': 'tooltip',
@@ -110,6 +112,12 @@ var PropertyWatch = {
             $designer.css({
                 display: "block"
             })
+        })
+        $mask.on("click", ".propertySpan", function () {
+            $mask.find(".propertySpan").removeClass("selCurrent")
+            var domId = $(this).attr("data-domid"),
+                $control = $(`#workspace #${domId}`);
+            new Property().load($control);
         })
 
         $mask.on("dblclick", ".propertySpan[data-change='true']", function (event) {
@@ -149,7 +157,7 @@ var PropertyWatch = {
             that.execute()
         })
 
-        $("body").on("click",".navbar",function(){
+        $("body").on("click", ".navbar", function () {
             that.resetView()
             $designer = $("#designer");
             $designer.css({
@@ -173,14 +181,13 @@ var PropertyWatch = {
             $mask.find(`.propertySpan[data-domid='${id}']`).attr("title", value);
             if (property == "expression" || property == "dataSource.db" || property == "events" || property == "query.db" || property == "archivePath" || Property == "query.nest") {
                 if (!value) return;
-                value = JSON.parse(value)
+                try {
+                    value = JSON.parse(value)
+                }catch{
+                   return alert("请检查保存的数据格式是否正确?")
+                }
             }
-            console.log(value)
-            try {
-                new Property().setValue(id, property, value)
-            } catch (error) {
-                alert("请检查保存的数据格式是否正确?")
-            }
+            new Property().setValue(id, property, value)
             var $control = $(`#workspace #${id}`)
             new Property().load($control);
 

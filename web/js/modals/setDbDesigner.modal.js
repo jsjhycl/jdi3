@@ -22,7 +22,9 @@ function SetDbDesignerModal($modal) {
         return await new FileService().readFile("./profiles/table.json", 'utf-8')
     }
     this._getTableValue = function () {
-        return $("#name .text-danger").text().replace(/\(|\)/g, "")
+        var value = $("#name .text-danger").text()
+        return value.slice(1, value.length - 1)
+        // return $("#name .text-danger").text().replace(/\(|\)/g, "")
     }
     this._setDefaultTableName = function () {
         var value = this._getTableValue()
@@ -39,7 +41,7 @@ function SetDbDesignerModal($modal) {
         this.$reserveFive.val("");
     }
     this.setDboptions = function () {
-        var that = this
+        var that = this;
         new FileService().readFile("./profiles/table.json", 'utf-8').then(res => {
             this.localData = res;
             var AllDbName = res || {},
@@ -56,14 +58,45 @@ function SetDbDesignerModal($modal) {
 
     }
     this.localData = null
+    this.dbList = null
+    this.tableName = null
 }
 SetDbDesignerModal.prototype = {
-    initData: function () {
+    initData: async function () {
         var that = this;
+        that._clearData();
+        that.dbList = await new FileService().readFile("./profiles/table.json", 'utf-8') || {};
         that.setDboptions()
+
         //设置默认的表名
-        that._setDefaultTableName()
-        //渲染表格
+        that._setDefaultTableName();
+        that.tableName = that._getTableValue()
+        var db = Object.keys(that.dbList);
+        that.initTable(db[0])
+        that.initTableHeader(db[0])
+    },
+    initTableHeader: function (dbName) {
+        var that = this;
+        if (that.dbList[dbName][that.tableName]) {
+            var tabledetail = that.dbList[dbName][that.tableName];
+            that.$tabeleDesc.val(tabledetail.tableDesc)
+            that.$reserveOne.val(tabledetail.reserveOne)
+            that.$reserveTwo.val(tabledetail.reserveTwo)
+            that.$reserveThere.val(tabledetail.reserveThere)
+            that.$reserveFour.val(tabledetail.reserveFour)
+            that.$reserveFive.val(tabledetail.reserveFive)
+        } else {
+            that.$tabeleDesc.val("")
+            that.$reserveOne.val("")
+            that.$reserveTwo.val("")
+            that.$reserveThere.val("")
+            that.$reserveFour.val("")
+            that.$reserveFive.val("")
+        }
+
+    },
+    initTable: function (dbName) {
+        var that = this;
         that.$setDbDesigner.dbDesigner({
             disabled: false,
             $elems: $("#workspace").find("input"),
@@ -88,7 +121,13 @@ SetDbDesignerModal.prototype = {
                     text: "数据类型",
                     key: "type",
                     template: function (value) {
-                        return `<select class="form-control" data-key="type"><option value="string">字符型</option><option value="int">整型</option><option value="float">浮点型</option><option value="time">日期型</option><option value="datatime">时间型</option></select>`
+                        return `<select class="form-control" data-key="type">
+                                    <option value="string" ${value=="string"?"selected":""}>字符型</option>
+                                    <option value="int" ${value=="int"?"selected":""}>整型</option>
+                                    <option value="float" ${value=="float"?"selected":""}>浮点型</option>
+                                    <option value="time" ${value=="time"?"selected":""}>日期型</option>
+                                    <option value="datatime" ${value=="datatime"?"selected":""}>时间型</option>
+                                </select>`
                     }
                 },
                 {
@@ -102,7 +141,7 @@ SetDbDesignerModal.prototype = {
                 {
                     name: "isSave",
                     text: "是否入库",
-                    key: "db.isSave",
+                    key: "isSave",
                     group: true,
                     hasCheckbox: true,
                     template: function (value) {
@@ -113,7 +152,7 @@ SetDbDesignerModal.prototype = {
                 { //新增加
                     name: "fieldSplit",
                     text: "字段分段",
-                    key: "db.fieldSplit",
+                    key: "fieldSplit",
                     group: true,
                     template: function (value) {
                         return '<input class="form-control" data-key="fieldSplit"  type="text" value="' + value + '">'
@@ -121,6 +160,9 @@ SetDbDesignerModal.prototype = {
                 }
             ],
             getProperty: new Property().getProperty,
+            dbList: that.dbList,
+            db: dbName,
+            table: that.tableName,
             type: "setDbDesigner"
         })
     },
@@ -142,7 +184,7 @@ SetDbDesignerModal.prototype = {
             if (!item.isSave) return true;
             tabledetail.push(item)
         })
-        if(tabledetail.length<1)return alert("请选择入库的字段");
+        if (tabledetail.length < 1) return alert("请选择入库的字段");
         if (!dbName || !tableName || !tableDesc) return alert("数据库名和表名,表注解为必填选项")
         if (localData[dbName]) {
             localData[dbName][tableName] = {
@@ -190,7 +232,7 @@ SetDbDesignerModal.prototype = {
         }
         new Service().createTable(bingoData).then(res => {
             this._clearData()
-            that._uploderDb(localData).then(res=>{
+            that._uploderDb(localData).then(res => {
                 that.$modal.modal("hide")
             })
         })
@@ -206,7 +248,7 @@ SetDbDesignerModal.prototype = {
         })
         that.$modal.find(".modal-footer .save").on("click", function () {
             that.saveData()
-           
+
         })
 
         // that.basicEvents(null, that.initData, that.saveData, null); //绑定基础事件
@@ -219,6 +261,11 @@ SetDbDesignerModal.prototype = {
                 $dataLength = $tr.find('[data-key="maxlength"]');
             type == "string" ? ($dataLength.removeAttr("readonly"), $dataLength.val(50)) : ($dataLength.attr("readonly", true) && $dataLength.val(""))
 
+        })
+        that.$modal.on("change" + that.NAME_SPACE, '[data-type="dbName"]', function () {
+           var dbName = $(this).val()
+           that.initTableHeader(dbName)
+           that.initTable(dbName)
         })
     }
 }

@@ -1163,12 +1163,6 @@ li {
     border-radius: 5px;
     box-shadow: #000 2px 3px 6px;
 }
-#changePropertyBox .header{
-    font-size: 20px;
-    margin: auto;
-    text-align: center;
-    border-bottom: 1px solid #000;
-}
 #changePropertyBox .content{
     width: 280px;
     padding-top: 10px;
@@ -1179,7 +1173,7 @@ li {
 }
 #changePropertyBox .changePropertyValue{
     width: 280px;
-    height: 149px;
+    height: 180px;
     resize:none;
     outline: none;
 }

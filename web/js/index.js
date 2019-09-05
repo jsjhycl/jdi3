@@ -425,8 +425,8 @@ function propertybar() {
 	//表达式配置
 	(function () {
 		function buildArgs($expr, staticGlobal, dynamicGlobal, localFunction, remoteFunction, systemFunction) {
-			var global = {};
-			if (DataType.isObject(staticGlobal)) { //如果
+            var global = {};
+			if (DataType.isObject(staticGlobal)) {
 				for (var key in staticGlobal) {
 					var value = staticGlobal[key];
 					global[value + "(静态)"] = "GLOBAL." + key;
@@ -490,20 +490,24 @@ function propertybar() {
             fileService.readFile("/profiles/remote_functions.json", "UTF-8"),
             fileService.readFile("/profiles/system_functions.json", "UTF-8")).done(function (result1, result2, result3, result4) {
 				if (!result1 || !result2 || !result3 || !result4) return;
-				var staticGlobal = result1,
+                var staticGlobal = result1,
 					localFunction = result2,
 					remoteFunction = result3,
-					systemFunction = result4;
+                    systemFunction = result4,
+                    global = {};
 
-				// 关闭插入函数弹窗
-				$("#insertFunctionArgsModal .close").trigger('click')
 
+                if (staticGlobal && DataType.isObject(staticGlobal) && Array.isArray(staticGlobal.global)) {
+                    staticGlobal.global.forEach(el => {
+                        global[el.key] = el.desc;
+                    })
+                }
 				// if (globalId) {
 				// 	commonService.getFile("/publish/" + globalId + "/property.json", function (dynamicGlobal) {
 				// 		buildArgs($expr, staticGlobal, dynamicGlobal, localFunction, remoteFunction, systemFunction);
 				// 	});
 				// } else {
-					buildArgs($expr, staticGlobal, null, localFunction, remoteFunction, systemFunction);
+					buildArgs($expr, global, null, localFunction, remoteFunction, systemFunction);
 				// }
 			}).fail(function (err) {
 				console.log(err);

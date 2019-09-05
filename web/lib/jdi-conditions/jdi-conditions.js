@@ -151,7 +151,13 @@
                 var $expr = $(this);
                 new FileService().readFile("/profiles/global.json","UTF-8",function(data) {
                     if (!data) return;
-                    buildArgs($expr, data, null);
+                    let global = {}
+                    if (DataType.isObject(data) && Array.isArray(data.global)) {
+                        data.global.forEach(el => {
+                            global[el.key] = el.desc;
+                        })
+                    }
+                    buildArgs($expr, global, null);
                 });
             });
 

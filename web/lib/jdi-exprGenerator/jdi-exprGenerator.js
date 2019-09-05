@@ -35,6 +35,8 @@
                     // html += '<span class="input-group-addon addon-data"  data-placement="left" data-toggle="popover" data-tirgger="click" data-type="'+ addonType +'"></span>'
                     html += '<span class="input-group-addon addon-query" data-config="query" data-mode="column"></span>'
                     break;
+                case 'contact':
+                        html += '<span class="input-group-addon addon-contact" data-config="contact"></span>'
             }
             return html;
         }
@@ -254,45 +256,6 @@
                 });
                 return fns;
             },
-            // setPopoverContent: function($el, type, _dbData) {
-                
-            //     if (!_dbData) return '<p>获取配置文件错误!</p>';
-            //     let html = '',
-            //         trIdx = $el.parents('tr').index();
-            //     switch (type) {
-            //         case 'dbName':
-            //             let dbNames = Object.keys(_dbData);
-            //             dbNames = dbNames.map(i => { return { name: i, value: i } })
-            //             html = _renderSelect(dbNames) + `<button data-type="popover_save" data-resultTr="${trIdx}" class="btn btn-default btn-sm">保存</button>`
-            //         break;
-            //         case 'tableName':
-            //             let _dbName = $el.parents('tr').prev().find('input[data-type="arg"]').val(),
-            //                 tableNames = _dbData[_dbName] && Object.keys(_dbData[_dbName]).filter(el => el != 'newProducts' && el != 'newResources');
-            //             tableNames = tableNames.map(i => {
-            //                 return {
-            //                     name: `${_dbData[_dbName][i].tableDesc}(${i})`,
-            //                     value: i,
-            //                 }
-            //             });
-            //             html = 
-            //                    _renderSelect(tableNames) + `<button data-type="popover_save" data-resultTr="${trIdx}" class="btn btn-default btn-sm">保存</button>`
-                                
-            //             break;
-            //         case 'colName':
-            //             let __dbName = $el.parents('tr').prev().prev().find('input[data-type="arg"]').val(),
-            //                 _tableName = $el.parents('tr').prev().find('input[data-type="arg"]').val(),
-            //                 colNames = _dbData[__dbName] && _dbData[__dbName][_tableName] && _dbData[__dbName][_tableName].tableDetail;
-            //             colNames = colNames && colNames.map(i => {
-            //                 return {
-            //                     name: `${i.cname}(${i.id})`,
-            //                     value: i.id
-            //                 }
-            //             })
-            //             html = _renderSelect(colNames) + `<button data-type="popover_save" data-resultTr="${trIdx}" class="btn btn-default btn-sm">保存</button>`
-            //             break;
-            //     }
-            //     return html;
-            // },
             getDbData: function () {
                 new FileService().readFile("/profiles/table.json", 'utf-8', function(rst) {
                     dbData = rst;
@@ -325,6 +288,92 @@
                 }  
                 lastEditRange = sel.getRangeAt(0)
             },
+            renderContactTable: async function(ori_data, $content, $input) {
+                if (!ori_data || !DataType.isObject(ori_data)) return alert('当前未配置查询或查询参数不正确！');
+
+                let { dbName, table, fields = [] } = ori_data,
+                    oriFields = {},
+                    renderFields = [];
+                if (dbData[dbName] && dbData[dbName][table] && dbData[dbName][table].tableDetail) {
+                   dbData[dbName][table].tableDetail.forEach(i => {
+                        oriFields[i.id] = i.cname
+                    });
+                }
+
+                // 查询字段
+                if (fields.includes('*')) renderFields = Object.keys(oriFields).map(i => { return { name: `${oriFields[i]}(${i})`, value: i} })
+                else {
+                    fields.forEach(i => {
+                        oriFields[i] && renderFields.push({ name: `${oriFields[i]}(${i})`, value: i })
+                    })
+                }
+
+                let globalData = await new FileService().readFile('./profiles/global.json'),
+                    global;
+                if (globalData && Array.isArray(globalData.global)) global = globalData.global;
+
+                let fieldsHtml = '<select><option value="">请选择</option>' + renderFields.map(i => {
+                        return `<option value="${i.value}">${i.name}</option>`
+                    }).join('') + '</select>',
+                    trs = global ? global.map(i => {
+                        return `
+                                <tr>
+                                    <td data-global="${i.key}">${i.desc}(${i.key})</td>
+                                    <td>--></td>
+                                    <td>${fieldsHtml}</td>
+                                </tr>
+                        `
+                    }).join('') : '';
+                    str = `<div class="form-group">
+                            <table class="table table-bordered table-striped table-contact">
+                                <thead>
+                                    <tr>
+                                        <th>全局变量</th>
+                                        <th>对应</th>
+                                        <th>查询字段变量</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${trs}</tbody>
+                            </table>
+                            <div class="contact-footer">
+                            <button class="btn btn-primary btn-sm contact-save">保存</button>
+                            <button class="btn btn-danger btn-sm contact-clear">清除</button>
+                            </div>
+                        </div>
+                        `
+                $content.empty().append(str);
+
+                // 渲染数据
+                let val = $input.val();
+                try {
+                    val = JSON.parse(val);
+                } catch(err) {}
+
+                if(DataType.isObject(val)) {
+                    Object.keys(val).forEach(i => {
+                        if (!val[i]) return;
+                        $(`td[data-global="${i}"]`).next().next().find('select').val(val[i]);
+                    })
+                };
+
+                // 绑定事件
+                ;(function() {
+                    // 保存对应关系
+                    $(document).off('.contact_nameSpace');
+                    $(document).on("click" + '.contact_nameSpace', '.eg .eg-function .contact-save', function (event) {
+                        let result = {}
+                        $content.find('.table-contact tbody tr').each(function() {
+                            let global_variable = $(this).find('[data-global]').data('global'),
+                                field = $(this).find('select').val();
+                            result[global_variable] = field;
+                        });
+                        $input.val(JSON.stringify(result));
+                    });
+                    $(document).on("click" + '.contact_nameSpace', '.eg .eg-function .contact-clear', function (event) {
+                        $content.find('select').val("");
+                    });
+                })();
+            }
         };
     })();
 
@@ -515,9 +564,10 @@
                     }
                 }
             } else if (data) {
-                if (Array.isArray(data)) {
-                    let html = '';
-                    data.forEach(i => {
+                if (Object.prototype.toString.call(data) === '[object Function]') {
+                    let html = '',
+                    methods = data();
+                    methods && methods.forEach(i => {
                         html += that.generatExprFn(i.fnName, i.expr, i.fnArgs, true, i.fnCname);
                     });
                     $eg.find(".eg-expr").html(html);
@@ -1124,6 +1174,19 @@
                     : $content.empty()
             });
 
+            // 全局变量对应关系
+            $(document).on("click" + EVENT_NAMESPACE, '.eg .eg-function [data-config="contact"]', {element: element}, function (event) {
+                var $this = $(this),
+                    $input = $this.prev('input'),
+                    $content = $('.eg:visible .query-config-content'),
+                    val = $input.val(),
+                    data = $this.parents('tr').prev().find('[data-type="arg"]').val();
+                try{
+                    data = JSON.parse(data);
+                }catch(err) {};
+                FunctionUtil.renderContactTable(data, $content, $input)
+            });
+
             // // 参数弹窗
             // $(document).on("click" + EVENT_NAMESPACE, '.popover [data-type="popover_save"]', function() {
             //     let $this = $(this),
@@ -1187,7 +1250,6 @@
                     return DataType.isObject(i) && i[Object.keys(i)[0]].nodeType != undefined ? ('{' + Object.keys(i)[0] + '}') : i;
                 })
             };
-            console.log('fnCname: ', fnCname)
             let $span = $(`<span contenteditable="false" data-fn_name="${fnName}" data-fn_cname="${fnCname || cFnName}" data-fn=${encodeURI(fnData)} data-fn_args=${encodeURI(JSON.stringify(args))} class="expr-fn-item" ${isGlobal ? 'data-global' : ''}>${fnCname || cFnName}</span>`);
             return $span.get(0).outerHTML + " ";
         },

@@ -202,16 +202,20 @@
 .eg .eg-dialog .eg-sidebar .eg-result .cfooter {
     border-top: 1px solid #383e4c;
 }
-
+.eg .eg-dialog .eg-function .btn,
 .eg .eg-dialog .eg-sidebar .eg-result .cfooter .btn {
     padding: 5px 10px;
     font-size: 14px;
 }
 
+.eg .eg-dialog .eg-function .table-contact .btn,
 .eg .eg-dialog .eg-sidebar .eg-result .cfooter .btn,
 .eg .eg-dialog .eg-function .cfooter .btn,
 .eg .eg-dialog .eg-insertFn .cfooter .btn {
     margin-right: 10px;
+}
+.eg .eg-dialog .eg-function .contact-footer {
+    text-align: center;
 }
 
 /*悬浮栏样式*/
@@ -489,6 +493,10 @@
 .eg .eg-function .input-group-addon.addon-query {
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABP0lEQVQ4T53TzSumYRTH8Q/SUGgGCyytxB8w9rOwmkxpmqWiLFnJgkQSO2ylbNTYmcVsJv4BK3vFUuStqBFDo1PXU1eP+6ac1X2fl+91zul3apTbZ6yiFuPYL0qtKXD2YAnfqmI7mMRR7s8BXZjDCOrwgDXcYwr1eMQGZnEeoArgJ4ZSUvh/YwLH6bVurONL+g/4NoYD0IybrK0o/lqymr0MEilNAWjDRVXBFX4gCsICuIWWqrz2ALTisuTFA3xAbxYPeNSEvQnIuf+wgBXc5oBPCOprtotB3MXc7wF04jS98ALwEddvdJAD4vskH6EBfzNNFLGiKIQzhkXE2P9DAhUhhdaX0VjSyfek0r4Uj11Mx0JzKXdgHqNJykWsJ2xiBme5lPPkOKboJrae2690E4e5s+gaK/F+/EmzDpSd8zMzwjyZWmGTOwAAAABJRU5ErkJggg==);
 }
+.eg .eg-function .input-group-addon.addon-contact {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA+klEQVQ4T9WTIU4EQRBFf82cgHAHMunOKDBwBwzBgAW14DFwBBwWgl3JNVAkTJeaBAEOEpCj6pNems1mtwaFgNaV1/Vf/5amadbrup6ISI3xw2EYrvu+f1kekRjjBYBNEXn4ARDM7E1VJx7gkuSjqt6OAUII+yKyl1I6/CeAJbFTM4s5goicATgqMWZis8QVB0XstojcA3ABJDdIfowBMvRJVa/ybZ7EGOMugINfAZwD2FrowZTkcd6gqqq7kjmQfE0pnXw/43yDtm3XzOx0oYkegABuuq57XgF45Sli5w5GZr4c/FlAFrtTeuB+kdwDAO9uBEesB5mJ/QQaU9Z1qwsyrwAAAABJRU5ErkJggg==);
+}
+
 .eg .eg-function .popover .popover-title {
     color: #fff;
     background: #747d8c;

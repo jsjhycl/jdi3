@@ -365,7 +365,7 @@
                         $content.find('.table-contact tbody tr').each(function() {
                             let global_variable = $(this).find('[data-global]').data('global'),
                                 field = $(this).find('select').val();
-                            result[global_variable] = field;
+                            result[global_variable] = field || '';
                         });
                         $input.val(JSON.stringify(result));
                     });

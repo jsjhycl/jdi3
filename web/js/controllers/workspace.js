@@ -172,7 +172,6 @@ var WorkspaceUtil = {
             if(!value) return;
             value = JSON.parse(value)
         }
-        console.log(value)
         try {
             new Property().setValue(id, property, value)
         } catch (error) {

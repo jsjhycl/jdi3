@@ -45,9 +45,7 @@ var PropertyWatch = {
             var $dom = $(item),
                 id = $dom.attr("id"),
                 $origin = $originContainer.find("#" + id),
-                isSelected = $dom.parent().hasClass("ui-draggable"),
                 isNode = $dom.hasClass("workspace-node"),
-                isFocus = $dom.hasClass('focus'),
                 $span = $(`<span data-domId = "${id}" data-change="${change}" data-property="${key}" data-name="${name}" class="propertySpan"></span>`);
             // $temp = isSelected ? $dom.parent() : $dom;
             $temp = $dom;
@@ -137,8 +135,7 @@ var PropertyWatch = {
                 key = $(this).attr("data-property"),
                 name = $(this).attr("data-name"),
                 value = "",
-                $div = $(`<div id="changePropertyBox">
-               
+                $div = $(`<div id="changePropertyBox"> 
                 <div class="content">
                     <textarea class="changePropertyValue" autofocus="autofocus"></textarea>
                     <button class="cancel btn btn-default btn-sm">取消</button>

@@ -39,7 +39,7 @@ Propertybar.prototype = {
         if (isPM) {//如果是PM为true
             data = that.getPM(result);//调用getPM返回true或false
         }
-        html = that.render(data, suffix);//调用render函数
+        var html = that.render(data, suffix);//调用render函数
         that.$container.empty().append(html);//把html插入到$container
         this.bindEvents()
     },

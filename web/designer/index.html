@@ -50,7 +50,7 @@
                     <li><a href="javascript:void(0)" id="globalExprMethods" data-first-filter="db">全局函数配置</a></li>
                     <li><a data-toggle="modal" href="#change_category_moda">分类选项编辑</a></li>
                     <li><a data-toggle="modal" href="#change_router_modal">路由配置编辑</a></li>
-                    <li><a data-toggle="modal" href="#change_global_modal">全局变量编辑</a></li>
+                    <li><a data-toggle="modal" href="#change_global_modal" data-first-filter="db">全局变量编辑</a></li>
                     <li><a id="controlRuler">标尺查看器</a></li>
                 </ul>
             </li>
@@ -233,22 +233,34 @@
                     <li class=" dropdown-submenu">
                     <a href="#">基本属性</a>
                     <ul class="dropdown-menu">
-                        <li><a data-type="propertyViewer" data-viewer="id" data-change="false">编号</a></li>
-                        <li><a data-type="showSameCname" data-viewer="cname" data-change="true">中文名</a></li>
-                        <li><a data-type="propertyViewer" data-viewer="name" data-change="true">表单名</a></li>
-                        <li><a data-type="propertyViewer" data-viewer="controlType" data-change="true">控件类型</a></li>
+                        <li><a data-type="propertyViewer" data-viewer="id" data-type="span" data-change="false">编号</a>
+                        </li>
+                        <li><a data-type="showSameCname" data-viewer="cname" data-type="span" data-change="true">中文名</a>
+                        </li>
+                        <li><a data-type="propertyViewer" data-viewer="name" data-type="span" data-change="true">表单名</a>
+                        </li>
+                        <li><a data-type="propertyViewer" data-viewer="controlType" data-type="span"
+                                data-change="true">控件类型</a></li>
                         <li><a data-type="propertyViewer" data-viewer="color" data-change="true">前景色</a></li>
-                        <li><a data-type="propertyViewer" data-viewer="visibility" data-change="true">可见性</a></li>
-                        <li><a data-type="propertyViewer" data-viewer="readonly" data-change="true">只读</a></li>
+                        <li><a data-type="propertyViewer" data-viewer="visibility" data-type="checkbox"
+                                data-change="true">可见性</a></li>
+                        <li><a data-type="propertyViewer" data-viewer="visibility" data-type="checkbox"
+                                data-change="true">禁用</a></li>
+                        <li><a data-type="propertyViewer" data-viewer="readonly" data-type="checkbox"
+                                data-change="true">只读</a></li>
                     </ul>
                     </li>
                     <li class=" dropdown-submenu">
                         <a href="#">验证属性</a>
                         <ul class="dropdown-menu">
-                            <li><a data-type="propertyViewer" data-viewer="validate.format" data-change="true">格式验证</a></li>
-                            <li><a data-type="propertyViewer" data-viewer="validate.minLength" data-change="true">最小字符串</a></li>
-                            <li><a data-type="propertyViewer" data-viewer="validate.maxLength" data-change="true">最大字符串</a></li>
-                            <li><a data-type="propertyViewer" data-viewer="validate.remote" data-change="true">远程验证</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="validate.format" data-change="true">格式验证</a>
+                            </li>
+                            <li><a data-type="propertyViewer" data-viewer="validate.minLength"
+                                    data-change="true">最小字符串</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="validate.maxLength"
+                                    data-change="true">最大字符串</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="validate.remote" data-change="true">远程验证</a>
+                            </li>
                         </ul>
                     </li>
                     <li class=" dropdown-submenu">
@@ -260,8 +272,10 @@
                     <li class=" dropdown-submenu">
                         <a href="#">数据源属性</a>
                         <ul class="dropdown-menu">
-                            <li><a data-type="propertyViewer" data-viewer="dataSource.static" data-change="true">静态数据源</a></li>
-                            <li><a data-type="propertyViewer" data-viewer="dataSource.db" data-change="true">数据库数据源</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="dataSource.static"
+                                    data-change="true">静态数据源</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="dataSource.db" data-change="true">数据库数据源</a>
+                            </li>
                         </ul>
                     </li>
                     <li class=" dropdown-submenu">
@@ -588,26 +602,46 @@
             </div>
         </div>
     </section>
-    
+
     <!-- 全局变量配置 -->
     <section class="modal fade" id="change_global_modal">
         <div class="modal-dialog w800px">
             <div class="modal-content">
                 <header class="modal-header">
                     <button class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">全局变量配置</h4>
+                    <h4 class="modal-title">变量配置</h4>
                 </header>
                 <section class="modal-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>属性值</th>
-                                <th>描述</th>
-                                <th><span class="add">+</span></th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#gLobalVariable" data-toggle="tab" class="global">全局</a></li>
+                        <li><a href="#localVariable" data-toggle="tab">局部</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="gLobalVariable">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">属性值</th>
+                                        <th class="text-center">描述</th>
+                                        <th><span class="add globalAdd">+</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="localVariable">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">属性值</th>
+                                        <th class="text-center">描述</th>
+                                        <th><span class="add localadd">+</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </section>
                 <footer class="modal-footer">
                     <button class="btn btn-primary save">保存</button>
@@ -960,45 +994,45 @@
 
     <!-- 新存档路径模态框 -->
     <section class="modal fade" id="archivePathBatch_modal">
-            <div class="modal-dialog w1200px">
-                <div class="modal-content">
-                    <header class="modal-header">
-                        <button class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">存档路径配置</h4>
-                    </header>
-                    <section class="modal-body">
-                        <div class="archive-title">
-                            <div class="meta">查询数据库：<span class="meta-content" data-type="dbname"></span></div>
-                            <div class="meta">查询表：<span class="meta-content" data-type="tablename"></span></div>
-                            <div class="meta">查询类型：<span class="meta-content" data-type="querytype"></span></div>
-                        </div>
-                        <div class="archive_content">
-                            <div class="archive-left">
-                                <!-- <p class="meta">查询字段：</p>
+        <div class="modal-dialog w1200px">
+            <div class="modal-content">
+                <header class="modal-header">
+                    <button class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">存档路径配置</h4>
+                </header>
+                <section class="modal-body">
+                    <div class="archive-title">
+                        <div class="meta">查询数据库：<span class="meta-content" data-type="dbname"></span></div>
+                        <div class="meta">查询表：<span class="meta-content" data-type="tablename"></span></div>
+                        <div class="meta">查询类型：<span class="meta-content" data-type="querytype"></span></div>
+                    </div>
+                    <div class="archive_content">
+                        <div class="archive-left">
+                            <!-- <p class="meta">查询字段：</p>
                                 <div class="archive-left-content"></div> -->
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>查询字段</th>
-                                            <th>存档元素（页面元素）</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                            <ul class="archive-right">
-                                <p class="meta">页面元素：</p>
-                                <div class="archive-right-content"></div>
-                            </ul>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>查询字段</th>
+                                        <th>存档元素（页面元素）</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
                         </div>
-                    </section>
-                    <footer class="modal-footer">
-                        <button class="btn btn-primary save">保存</button>
-                        <button class="btn btn-danger clear">清除</button>
-                    </footer>
-                </div>
+                        <ul class="archive-right">
+                            <p class="meta">页面元素：</p>
+                            <div class="archive-right-content"></div>
+                        </ul>
+                    </div>
+                </section>
+                <footer class="modal-footer">
+                    <button class="btn btn-primary save">保存</button>
+                    <button class="btn btn-danger clear">清除</button>
+                </footer>
             </div>
-        </section>
+        </div>
+    </section>
 
     <!--数据库定义模态框-->
     <section class="modal fade" id="dbDefineModal">

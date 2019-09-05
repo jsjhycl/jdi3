@@ -935,7 +935,8 @@ li {
     -webkit-border-radius: 50%;
     cursor: pointer;
 }
-
+#change_global_modal .add,
+#change_global_modal .del,
 #events_modal .add,
 #change_router_modal .add,
 #events_modal .del,
@@ -954,6 +955,7 @@ li {
     cursor: pointer;
     -webkit-border-radius: 50%;
 }
+#change_global_modal .add,
 #events_modal .add,
 #dbDesignerModal .add,
 #change_router_modal .add {

@@ -68,39 +68,48 @@
 
             this.dbList = cache.dbList
             var tbody = "";
-            if(cache.type=="setDbDesigner"){
+            if (cache.type == "setDbDesigner") {
                 var setDbList = cache.dbList,
                     setdbName = cache.db,
                     setTableName = cache.table;
-                if(setDbList[setdbName][setTableName]){
-                    var setTableDetail =  setDbList[setdbName][setTableName]
-                    
-                    cache.$elems.each(function(index){
+                if (setDbList[setdbName][setTableName]) {
+                    var setTableDetail = setDbList[setdbName][setTableName]
+
+                    var ids = []
+                    cache.$elems.each(function (index) {
                         var id = this.id;
+                        ids.push(id)
                         if (!id) return true;
                         var property = $.extend(getProperty(id), {
                             id: id
                         });
                         tbody += "<tr>";
-                        cache.thead.forEach(function (item,cindex) {
+                        cache.thead.forEach(function (item, cindex) {
                             var template = item.template || function (value) {
                                     return value;
                                 },
-                                value="";
-                                if(cindex>1){
-                                    setTableDetail.tableDetail.forEach(function(jitem){
-                                        if(id == jitem.id){
-                                            value = jitem[item.key]? jitem[item.key]:" "
-                                        }
-                                    })
-                                }else{
-                                    value = property[item.key]
-                                }
+                                value = "";
+                            if (cindex > 1) {
+                                setTableDetail.tableDetail.forEach(function (jitem) {
+                                    if (id == jitem.id) {
+                                        value = jitem[item.key] ? jitem[item.key] : " "
+                                    }
+                                })
+                            } else {
+                                value = property[item.key]
+                            }
                             tbody += '<td>' + template(value) + '</td>';
                         });
                         tbody += "</tr>";
                     })
-                }else{
+
+                    setTableDetail.tableDetail.some(n => {
+                        if(!ids.find((item)=>{return item == n.id})){
+                           alert("数据库中的元素的当前布局不匹配")
+                           return true;
+                        }
+                    })
+                } else {
                     cache.$elems.each(function (index) {
                         var id = this.id;
                         if (!id) return true;
@@ -119,32 +128,34 @@
                     });
                 }
             }
-            if(cache.type=="dbDesigner"){
-                var propertys= []
-                cache.$elems.each(function(index){
-                   var id = this.id;
-                   if(!id) return true;
-                    var property = $.extend(getProperty(id),{id:id})
+            if (cache.type == "dbDesigner") {
+                var propertys = []
+                cache.$elems.each(function (index) {
+                    var id = this.id;
+                    if (!id) return true;
+                    var property = $.extend(getProperty(id), {
+                        id: id
+                    })
                     propertys.push(property)
-               })
-               propertys.forEach((item,ci)=>{
-                   if(item.db && item.db.length>0){
-                       item.db.forEach((jitem,index)=>{ 
-                        tbody +=`<tr class="${index>0 ? "addtr":""}  ${ ci%2 ==0 ? "tr":""}"  data-id =${item.id}>`;
-                        cache.thead.forEach(function (citem,cindex) {
-                            
+                })
+                propertys.forEach((item, ci) => {
+                    if (item.db && item.db.length > 0) {
+                        item.db.forEach((jitem, index) => {
+                            tbody += `<tr class="${index>0 ? "addtr":""}  ${ ci%2 ==0 ? "tr":""}"  data-id =${item.id}>`;
+                            cache.thead.forEach(function (citem, cindex) {
+
                                 var template = citem.template || function (value) {
                                         return value;
                                     },
                                     value = that.recurseSaveObject(item, citem.key, index);
-    
+
                                 tbody += `<td rowspan="${(cindex<2)?item.db.length:1}"> ${template(value[0] || "", value[1] || "")}  </td>`
-                        });
-                        tbody += "</tr>"; 
-                       })
-                   }else{
-                        tbody +=`<tr data-id =${item.id}  class="${ ci%2 ==0 ? "tr":""}">`;
-                        cache.thead.forEach(function (citem,index) {
+                            });
+                            tbody += "</tr>";
+                        })
+                    } else {
+                        tbody += `<tr data-id =${item.id}  class="${ ci%2 ==0 ? "tr":""}">`;
+                        cache.thead.forEach(function (citem, index) {
                             var template = citem.template || function (value) {
                                     return value;
                                 },
@@ -152,11 +163,11 @@
                             tbody += `<td rowspan="${(index<2)?1:""}" > ${template(value[0] || "", value[1] || "")}   </td>`;
                         });
                         tbody += "</tr>";
-                   }
-               })
+                    }
+                })
 
             }
-           
+
             $tbody.empty().append(tbody);
         },
         bindEvents: function (element) {
@@ -164,16 +175,20 @@
 
             var that = this;
             //PS：此处存在依赖问题，待优化……
-            $(element).on("click" + EVENT_NAMESPACE, '[data-key="isSave"]', {element: element}, function (event) {
+            $(element).on("click" + EVENT_NAMESPACE, '[data-key="isSave"]', {
+                element: element
+            }, function (event) {
                 var current = event.data.element,
                     key = $(this).attr("data-key"),
                     $tr = $(this).parents("tr"),
                     isChecked = $(this).is(":checked");
                 that.setDefaultData(current, key, $tr, isChecked);
             });
-            $(element).on("click" + EVENT_NAMESPACE, "thead th .check-all", {element: element}, function (event) {
+            $(element).on("click" + EVENT_NAMESPACE, "thead th .check-all", {
+                element: element
+            }, function (event) {
                 var cache = $.data(element, CACHE_KEY);
-                if(cache.type=="dbDesigner")return;
+                if (cache.type == "dbDesigner") return;
                 var current = event.data.element,
                     index = $(this).parent("th").index(),
                     isChecked = $(this).is(":checked");
@@ -263,62 +278,62 @@
                 table = (data.db && data.db.table) || "",
                 field = (data.db && data.db.field) || "",
                 options = [];
-            
-                var dbList = this.dbList;
-                if (ckey == "dbName") {
-                    Object.keys(dbList).forEach(function (item) {
+
+            var dbList = this.dbList;
+            if (ckey == "dbName") {
+                Object.keys(dbList).forEach(function (item) {
+                    options.push({
+                        name: item,
+                        value: item
+                    })
+                })
+            }
+            if (ckey == "table") {
+                if (dbName) {
+                    var arr = [];
+                    var table = Object.keys(dbList[dbName]).forEach(function (item) {
+                        if (dbList[dbName][item]["key"] == undefined) {
+                            arr.push(item)
+                        }
+                    })
+                    arr.forEach(function (item) {
                         options.push({
-                            name: item,
+                            name: dbList[dbName][item]["tableDesc"],
                             value: item
                         })
                     })
                 }
-                if (ckey == "table") {
-                    if (dbName) {
-                        var arr = [];
-                        var table = Object.keys(dbList[dbName]).forEach(function(item){
-                            if(dbList[dbName][item]["key"] == undefined){
-                                arr.push(item)
-                            }
+            }
+            if (ckey == "field") {
+                if (dbName && table) {
+                    var fields = dbList[dbName][table].tableDetail;
+                    fields.forEach(function (item) {
+                        options.push({
+                            name: item.cname,
+                            value: item.id
                         })
-                        arr.forEach(function (item) {
-                            options.push({
-                                name: dbList[dbName][item]["tableDesc"],
-                                value: item
-                            })
-                        })
-                    }
+                    })
                 }
-                if (ckey == "field") {
-                    if (dbName && table) {
-                        var fields = dbList[dbName][table].tableDetail;
-                        fields.forEach(function (item) {
-                            options.push({
-                                name: item.cname,
-                                value: item.id
-                            })
-                        })
-                    }
-                }
-                if (ckey == "fieldSplit") {
-                    if (dbName && table) {
-                        var fields = dbList[dbName][table].tableDetail,
-                            fieldSplits = '';
-                        fields.forEach(function (item) {
-                            if (data.id == item.id) {
-                                fieldSplits = Number(item.fieldSplit)
-                            }
-                        })
-                        for (i = 1; i <= fieldSplits; i++) {
-                            options.push({
-                                name: "插入",
-                                value: String(i)
-                            })
+            }
+            if (ckey == "fieldSplit") {
+                if (dbName && table) {
+                    var fields = dbList[dbName][table].tableDetail,
+                        fieldSplits = '';
+                    fields.forEach(function (item) {
+                        if (data.id == item.id) {
+                            fieldSplits = Number(item.fieldSplit)
                         }
+                    })
+                    for (i = 1; i <= fieldSplits; i++) {
+                        options.push({
+                            name: "插入",
+                            value: String(i)
+                        })
                     }
                 }
+            }
 
-                return options;
+            return options;
         },
         getSaveOptions: function (data, ckey, index) {
 
@@ -326,61 +341,61 @@
                 table = (data.db[index] && data.db[index].table) || "",
                 field = (data.db[index] && data.db[index].field) || "",
                 options = [];
-                var dbList = this.dbList;    
-                if (ckey == "dbName") {
-                    Object.keys(dbList).forEach(function (item) {
+            var dbList = this.dbList;
+            if (ckey == "dbName") {
+                Object.keys(dbList).forEach(function (item) {
+                    options.push({
+                        name: item,
+                        value: item
+                    })
+                })
+            }
+            if (ckey == "table") {
+                if (dbName) {
+                    var arr = [];
+                    var table = Object.keys(dbList[dbName]).forEach(function (item) {
+                        if (dbList[dbName][item]["key"] == undefined) {
+                            arr.push(item)
+                        }
+                    })
+                    arr.forEach(function (item) {
                         options.push({
-                            name: item,
+                            name: dbList[dbName][item]["tableDesc"],
                             value: item
                         })
                     })
                 }
-                if (ckey == "table") {
-                    if (dbName) { 
-                        var arr = [];
-                        var table = Object.keys(dbList[dbName]).forEach(function(item){
-                            if(dbList[dbName][item]["key"] == undefined){
-                                arr.push(item)
-                            }
+            }
+            if (ckey == "field") {
+                if (dbName && table) {
+                    var fields = dbList[dbName][table].tableDetail;
+                    fields.forEach(function (item) {
+                        options.push({
+                            name: item.cname,
+                            value: item.id
                         })
-                        arr.forEach(function (item) {
-                            options.push({
-                                name:  dbList[dbName][item]["tableDesc"],
-                                value: item
-                            })
-                        })
-                    }
+                    })
                 }
-                if (ckey == "field") {
-                    if (dbName && table) {
-                        var fields = dbList[dbName][table].tableDetail;
-                        fields.forEach(function (item) {
-                            options.push({
-                                name: item.cname,
-                                value: item.id
-                            })
-                        })
-                    }
-                }
-                if (ckey == "fieldSplit") {
-                    if (dbName && table) {
-                        var fields = dbList[dbName][table].tableDetail,
-                            fieldSplits = '';
-                        fields.forEach(function (item) {
-                            if (data.id == item.id) {
-                                fieldSplits = Number(item.fieldSplit)
-                            }
-                        })
-                        for (i = 1; i <= fieldSplits; i++) {
-                            options.push({
-                                name: "插入",
-                                value: String(i)
-                            })
+            }
+            if (ckey == "fieldSplit") {
+                if (dbName && table) {
+                    var fields = dbList[dbName][table].tableDetail,
+                        fieldSplits = '';
+                    fields.forEach(function (item) {
+                        if (data.id == item.id) {
+                            fieldSplits = Number(item.fieldSplit)
                         }
+                    })
+                    for (i = 1; i <= fieldSplits; i++) {
+                        options.push({
+                            name: "插入",
+                            value: String(i)
+                        })
                     }
                 }
+            }
 
-                return options;
+            return options;
         }
 
     };

@@ -125,6 +125,7 @@ var PropertyWatch = {
             $(this).addClass("selCurrent")
             var domId = $(this).attr("data-domid"),
                 $control = $(`#workspace #${domId}`);
+                $("#changePropertyBox").remove();
             new Property().load($control);
         })
 
@@ -137,9 +138,7 @@ var PropertyWatch = {
                 name = $(this).attr("data-name"),
                 value = "",
                 $div = $(`<div id="changePropertyBox">
-                <div class="header">
-                    <span>修改${domId}${name}属性</span>
-                </div>
+               
                 <div class="content">
                     <textarea class="changePropertyValue" autofocus="autofocus"></textarea>
                     <button class="cancel btn btn-default btn-sm">取消</button>

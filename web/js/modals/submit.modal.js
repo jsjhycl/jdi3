@@ -86,9 +86,7 @@ SubmitModal.prototype = {
     changeGlobalJson: async function (oldId, newId) {
         var that = this,
             data = await new FileService().readFile(that.globalJsonPath);
-            console.log("data",data)
         if(data[oldId]){
-            console.log("q23",data[oldId])
             var newdata = $.extend(data[oldId],{})
             delete data[oldId]
             data[newId] = newdata

@@ -52,13 +52,14 @@ ChangeGlobal.prototype = {
             type = that.$modal.find(".nav .active a").text(),
             $target = type == "全局" ? that.$globaltbody : that.$localVariable,
             typeId = type == "局部" ? $("#workspace").attr("data-id") : "global";
-        $target.find("tr").each((trIndex,trEle)=>{
+        $target.find("tr").each((trIndex, trEle) => {
+            if (!$(trEle).find("input:first").val() || !$(trEle).find("input:last").val()) return;
             save.push({
-                key:$(trEle).find("input:first").val(),
-                desc:$(trEle).find("input:last").val(),
-                value:""
+                key: $(trEle).find("input:first").val(),
+                desc: $(trEle).find("input:last").val(),
+                value: ""
             })
-            
+
         })
         that.data[typeId] = save
         new FileService().writeFile(that.path, JSON.stringify(that.data))

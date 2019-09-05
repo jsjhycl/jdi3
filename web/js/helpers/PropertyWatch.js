@@ -1,5 +1,6 @@
 var PropertyWatch = {
     selectWorkspace: function (view, key, name, change) {
+
         var that = this,
             $designer = $("#designer"),
             $workspace = $("#workspace"),
@@ -7,10 +8,13 @@ var PropertyWatch = {
             $PropertyMask = $('<div id="propertyMask"><button class="close" data-dismiss="modal" style="color:red;opacity:1;outline:none;font-size:34px">&times;</button></div>'),
             $PropertyMaskContent = $('<div id="propertyMaskContent"></div>');
         $copyWorkSpace = $('<div id="copyWorkspace"></div>').html($workspace.html());
+        that.resetView()
         $PropertyMaskContent.css({
-            width: $designer.find("#ruler").width(),
-            height: $designer.height(),
-            overflow: "auto",
+            // width: $designer.width(),
+            // height: $workspace.height(),
+            width: "1434px",
+            height: "915px",
+            overflow: "scroll",
             margin: "auto",
             position: "relative"
         })
@@ -25,6 +29,8 @@ var PropertyWatch = {
             display: "none"
         })
         $PropertyMask.css({
+            width:"1458px",
+            height:$designer.find("#ruler").height(),
             padding: "0 10px 20px 20px",
             background: "rgb(0,0,0,.6)"
         })
@@ -54,7 +60,8 @@ var PropertyWatch = {
                 left: $origin.css('left'),
                 zIndex: 803,
                 display: "block",
-                boxSizing: "border-box"
+                boxSizing: "border-box",
+                cursor: "pointer"
             })
 
             switch (view) {
@@ -100,13 +107,13 @@ var PropertyWatch = {
     },
     resetView: function () {
         $("#propertyMask").remove()
+        $("#changePropertyBox").remove()
     },
 
     bindEvents: function () {
         var that = this;
         $mask = $("#propertyMask");
         $mask.on("click", ".close", function () {
-            $("#changePropertyBox").remove();
             that.resetView();
             $designer = $("#designer");
             $designer.css({
@@ -115,6 +122,7 @@ var PropertyWatch = {
         })
         $mask.on("click", ".propertySpan", function () {
             $mask.find(".propertySpan").removeClass("selCurrent")
+            $(this).addClass("selCurrent")
             var domId = $(this).attr("data-domid"),
                 $control = $(`#workspace #${domId}`);
             new Property().load($control);
@@ -130,10 +138,10 @@ var PropertyWatch = {
                 value = "",
                 $div = $(`<div id="changePropertyBox">
                 <div class="header">
-                    <span>修改${name}属性</span>
+                    <span>修改${domId}${name}属性</span>
                 </div>
                 <div class="content">
-                    <textarea class="changePropertyValue"></textarea>
+                    <textarea class="changePropertyValue" autofocus="autofocus"></textarea>
                     <button class="cancel btn btn-default btn-sm">取消</button>
                     <button class="propertySave btn btn-default btn-sm" data-domid="${domId}" data-property="${key}">保存</button>
                 </div>
@@ -144,6 +152,7 @@ var PropertyWatch = {
                 top: event.pageY,
                 zIndex: 955
             })
+            // console.log($div.find(".changePropertyValue").attr('autofocus', 'autofocus'))
             var $control = $(`#workspace #${domId}`)
             new Property().load($control);
 
@@ -153,8 +162,9 @@ var PropertyWatch = {
             }
 
             $div.find(".changePropertyValue").val(value)
-            $("body").append($div)
+            $div.appendTo($("body")).find('.changePropertyValue').focus();
             that.execute()
+            $("#changePropertyBox").draggable()
         })
 
         $("body").on("click", ".navbar", function () {
@@ -190,8 +200,6 @@ var PropertyWatch = {
             new Property().setValue(id, property, value)
             var $control = $(`#workspace #${id}`)
             new Property().load($control);
-
-
             $("#changePropertyBox").remove()
         })
     }

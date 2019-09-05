@@ -90,8 +90,7 @@
                                 if(cindex>1){
                                     setTableDetail.tableDetail.forEach(function(jitem){
                                         if(id == jitem.id){
-                                            
-                                            value = jitem[item.key]
+                                            value = jitem[item.key]? jitem[item.key]:" "
                                         }
                                     })
                                 }else{
@@ -101,9 +100,6 @@
                         });
                         tbody += "</tr>";
                     })
-                    if(cache.$elems.length != setTableDetail.tableDetail.length){
-                        alert("当前布局与数据库中的不匹配")
-                    }
                 }else{
                     cache.$elems.each(function (index) {
                         var id = this.id;

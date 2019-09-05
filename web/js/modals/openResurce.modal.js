@@ -4,7 +4,7 @@
 function OpenResource($openModal) {
     BaseModal.call(this, $openModal);
     this.$openModal = $openModal;
-    
+    this.globalJsonPath = "./profiles/global.json";
     this.getQueryConfig = function() {
         var config;
         try {
@@ -92,6 +92,15 @@ function OpenResource($openModal) {
                 var id = $(this).parents("tr").attr("data-id"),
                     p1 = new Service().removeByCustomId(query['table'], id);
                     p2 = new FileService().rmdir('/product/' + id);
+                if(id.length >= 10){
+                    new FileService().readFile(that.globalJsonPath).then(res=>{
+                        var data = res;
+                        if(data[id]){
+                            delete data[id]
+                            new FileService().writeFile(that.globalJsonPath, JSON.stringify(data)) 
+                        }
+                    });
+                }
                 return Promise.all([p1, p2]);
             }
         });

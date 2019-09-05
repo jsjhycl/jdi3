@@ -1107,10 +1107,15 @@ li {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
 #archivePathBatch_modal .archive_content .archive-right li[data-field] {
     position: relative;
     box-shadow: 0 0 5px rgba(0, 154, 97, 0.7);
     border: 1px solid rgba(0,154,97,0.4);
+}
+#archivePathBatch_modal .archive_content .archive-right li[data-field].active {
+    box-shadow: 0 0 5px rgb(43, 241, 158);
+    border: 1px solid rgba(43, 241, 158, 0.8);
 }
 #archivePathBatch_modal .archive_content .archive-right li[data-field]::after {
     position: absolute;

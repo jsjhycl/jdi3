@@ -116,10 +116,10 @@ ArchivePathBatch.prototype = {
         this.bindEvents();
     },
     saveData: function () {
-        let id = $("#property_id").val();//获取$("#property_id")的值
-        if (!id) return;//如果没有退出函数
+        let id = $("#property_id").val();
+        if (!id) return;
 
-        if (id === "BODY") return alert("页面属性中不可以配置存档路径！");//如果id等于BODY退出函数并提示
+        if (id === "BODY") return alert("页面属性中不可以配置存档路径！");
 
         let property = new Property(),
             dbName = this.$dbName.text(),
@@ -160,6 +160,8 @@ ArchivePathBatch.prototype = {
 
         this.$modal.on('focusin', 'table .related-control', function() {
             $(this).parents('tbody').find('.related-control').removeClass('active').end().end().addClass('active');
+            let field = $(this).data('field')
+            field && $(`.control-item[data-field="${field}"]`).addClass('active').siblings().removeClass('active');
         });
 
         this.$modal.on('input', 'table .related-control', function() {
@@ -186,10 +188,9 @@ ArchivePathBatch.prototype = {
                 controlId = $this.data('id'),
                 targetField = $target.data('field');
             
-            $this.attr('data-field', targetField).siblings(`[data-field="${targetField}"]`).removeAttr('data-field');
+            $this.attr('data-field', targetField).addClass('active').siblings().removeClass('active').end().siblings(`[data-field="${targetField}"]`).removeAttr('data-field');
             $target.parents('tbody').find(`.related-control[data-id="${controlId}"]`).attr('data-id', "").val('')
                 .end().end().attr('data-id', controlId).val($this.text())
-            // $this.find('.control-item').addClass('del');
         });
     }
 };

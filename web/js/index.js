@@ -204,7 +204,7 @@ function navbar() {
         $dom.exprGenerator({
             $source: $("#workspace"),
             // $result: $("#property_expression"),
-            data: new Property().getValue('BODY', 'globalMethods'),
+            data: function() { return new Property().getValue('BODY', 'globalMethods') },
             hasBrace: true,
             global: true,
             functions: [{

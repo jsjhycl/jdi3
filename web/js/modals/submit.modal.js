@@ -11,7 +11,7 @@ function SubmitModal($modal, $submit) {
     this.data = {};
     this.USER = "admin"
 
-    this.$resourceName = this.$modal.find("#Changetemplate_name") 
+    this.$resourceName = this.$modal.find("#Changetemplate_name")
     this.$resourceCategory = this.$modal.find("#Changetemplate_category")
     this.$resourceSubcategory = this.$modal.find('[name="Changetemplate_subCategory"]:checked')
 
@@ -21,36 +21,37 @@ function SubmitModal($modal, $submit) {
     this.$modalArea = this.$modal.find("#Changemodel_area")
     this.$modalSubcategory = this.$modal.find("#Changemodel_subCategory")
     this.$modalSpare1 = this.$modal.find("#Changemodel_spare1")
-    this.$modalSpare2 =this.$modal.find("#Changemodel_spare2")
+    this.$modalSpare2 = this.$modal.find("#Changemodel_spare2")
     this.$modalUserGrade = this.$modal.find("#Changemodel_userGrade")
     this.$modalAutoCreate = this.$modal.find("#Changemodel_autoCreate")
-    this.queryBasicInfo = async function(dbCollection,condition){
-        return await new Service().query(dbCollection,condition,["basicInfo"])
+    this.queryBasicInfo = async function (dbCollection, condition) {
+        return await new Service().query(dbCollection, condition, ["basicInfo"])
     }
-    this.getDb = function(dbCollection,condition){
-        return new Service().query(dbCollection,condition)
+    this.getDb = function (dbCollection, condition) {
+        return new Service().query(dbCollection, condition)
     }
-    this.setData = function(data,type){
-        if(type == "表单"){
+    this.setData = function (data, type) {
+        if (type == "表单") {
             this.$resourceName.val(this.data.name)
             this.$resourceCategory.val(this.data.basicInfo.category)
-            
+
             var subCategory = this.data.basicInfo.subCategory,
                 $subCategory = this.$modal.find(`[name="Changetemplate_subCategory"][value="${subCategory}"]`);
-            $subCategory.attr("checked",true)
+            $subCategory.attr("checked", true)
         }
-        if(type == "布局"){
+        if (type == "布局") {
             this.$modalName.val(this.data.name)
             this.$modalFeature.val(this.data.basicInfo.feature)
             this.$modalCategory.val(this.data.basicInfo.category)
             this.$modalArea.val(this.data.basicInfo.area)
             this.$modalSubcategory.val(this.data.basicInfo.subCategory)
-            this.$modalSpare1.val(this.data.basicInfo.spare1||0)
-            this.$modalSpare2.val(this.data.basicInfo.spare2||0)
+            this.$modalSpare1.val(this.data.basicInfo.spare1 || 0)
+            this.$modalSpare2.val(this.data.basicInfo.spare2 || 0)
             this.$modalUserGrade.val(this.data.basicInfo.userGrade)
             this.$modalAutoCreate.val(this.data.basicInfo.autoCreate)
         }
     }
+    this.globalJsonPath = "./profiles/global.json";
 }
 
 SubmitModal.prototype = {
@@ -59,18 +60,21 @@ SubmitModal.prototype = {
             $workspace = $("#workspace"),
             type = $workspace.attr("data-type"),
             id = $workspace.attr('data-id')
-            dbCollection= type== "表单" ? "newResources": "newProducts",
-            condition=[{col:"customId",value:id}];
-        if(type =="表单"){
+        dbCollection = type == "表单" ? "newResources" : "newProducts",
+            condition = [{
+                col: "customId",
+                value: id
+            }];
+        if (type == "表单") {
             that.$modalBody.find('.nav-tabs li:eq(0) a[data-toggle="tab"]').click();
-            that.$modalBody.find('.nav-tabs li:eq(1)').css("display","none");
-        }else{
-            that.$modal.find('.nav-tabs li:eq(0)').css("display","none");
+            that.$modalBody.find('.nav-tabs li:eq(1)').css("display", "none");
+        } else {
+            that.$modal.find('.nav-tabs li:eq(0)').css("display", "none");
             that.$modal.find('.nav-tabs li:eq(1) a[data-toggle="tab"]').click();
         }
-        that.getDb(dbCollection,condition).then(res=>{
+        that.getDb(dbCollection, condition).then(res => {
             that.data = res[0]
-            that.setData(that.data,type)
+            that.setData(that.data, type)
         })
     },
     saveData: function () {
@@ -78,6 +82,18 @@ SubmitModal.prototype = {
     },
     execute: function () {
         var that = this;
+    },
+    changeGlobalJson: async function (oldId, newId) {
+        var that = this,
+            data = await new FileService().readFile(that.globalJsonPath);
+            console.log("data",data)
+        if(data[oldId]){
+            console.log("q23",data[oldId])
+            var newdata = $.extend(data[oldId],{})
+            delete data[oldId]
+            data[newId] = newdata
+            new FileService().writeFile(that.globalJsonPath, JSON.stringify(data)) 
+        }
     },
     bindEvents: function () {
         var that = this;
@@ -132,59 +148,88 @@ SubmitModal.prototype = {
             // }
 
         });
-        that.$modal.on("show.bs.modal",function(){
+        that.$modal.on("show.bs.modal", function () {
             that.initData()
         })
-        that.$modal.find(".save").on("click",function(){
+        that.$modal.find(".save").on("click", function () {
             var type = $("#workspace").attr("data-type"),
                 oldId = $("#workspace").attr("data-id")
-                id = "",
-                condition=[],
+            id = "",
+                condition = [],
                 data = that.data;
-            if(type=="表单"){
-                if(!that.$resourceName.val()) return alert("表单名为必填选项")
-                id = data.customId.slice(1,data.customId.length);
-                
-                if(oldId!=that.$resourceCategory.val()+id){
-                    new CreateTemplate()._getMaxId(that.$resourceCategory.val()).then(res=>{
-                        var newid =  res;
-                        condition = [
-                            {col:"_id",value:that.$resourceCategory.val()+newid},
-                            {col: "name", value: that.$resourceName.val()},
-                            {col:"customId",value:that.$resourceCategory.val()+newid},
-                            {col: "createTime", value:data.createTime},
-                            {col: "createor", value:data.createor},
-                            {col: "basicInfo", value:{
+            if (type == "表单") {
+                if (!that.$resourceName.val()) return alert("表单名为必填选项")
+                id = data.customId.slice(1, data.customId.length);
+
+                if (oldId != that.$resourceCategory.val() + id) {
+                    new CreateTemplate()._getMaxId(that.$resourceCategory.val()).then(res => {
+                        var newid = res;
+                        condition = [{
+                                col: "_id",
+                                value: that.$resourceCategory.val() + newid
+                            },
+                            {
+                                col: "name",
+                                value: that.$resourceName.val()
+                            },
+                            {
+                                col: "customId",
+                                value: that.$resourceCategory.val() + newid
+                            },
+                            {
+                                col: "createTime",
+                                value: data.createTime
+                            },
+                            {
+                                col: "createor",
+                                value: data.createor
+                            },
+                            {
+                                col: "basicInfo",
+                                value: {
+                                    category: that.$resourceCategory.val(),
+                                    subCategory: that.$modal.find('[name="Changetemplate_subCategory"]:checked').val()
+                                }
+                            },
+                            {
+                                col: "edit",
+                                value: data.edit + ";" + that.USER + "," + new Date().toFormatString(null, true)
+                            }
+                        ]
+                        new CreateTemplate().updateMaxId(that.$resourceCategory.val(), newid)
+                        new Workspace().save(true, null, that.$resourceCategory.val() + newid, condition, that.$resourceName.val())
+                    })
+                } else {
+                    var dbCollection = type == "表单" ? "newResources" : "newProducts",
+                        name = that.$resourceName.val()
+                    condition = [{
+                            col: "customId",
+                            value: oldId
+                        }],
+                        data = [{
+                            col: "name",
+                            value: name
+                        }, {
+                            col: "basicInfo",
+                            value: {
                                 category: that.$resourceCategory.val(),
                                 subCategory: that.$modal.find('[name="Changetemplate_subCategory"]:checked').val()
-                            }},
-                            {col: "edit", value:data.edit +";"+ that.USER+","+new Date().toFormatString(null, true)}
-                        ]
-                        new CreateTemplate().updateMaxId(that.$resourceCategory.val(),newid)
-                        new Workspace().save(true,null,that.$resourceCategory.val()+newid,condition,that.$resourceName.val())
+                            }
+                        }];
+                    var result = new Service().update(dbCollection, condition, data)
+                    result.then(res => {
+                        $("#workspace").attr("data-name", name)
+                        var text = name + '<span class="text-danger">' + "(" + oldId + ")" + '</span>';
+                        $("#name").empty().append(text);
+                        alert("保存成功")
                     })
-                }else{
-                    var dbCollection = type == "表单" ? "newResources" : "newProducts",
-                    name = that.$resourceName.val()
-                    condition = [{ col: "customId", value: oldId}],
-                    data = [{col:"name",value:name},{col: "basicInfo", value:{
-                        category: that.$resourceCategory.val(),
-                        subCategory: that.$modal.find('[name="Changetemplate_subCategory"]:checked').val()
-                    }}];
-                    var result = new Service().update(dbCollection,condition,data)
-                   result.then(res=>{
-                      $("#workspace").attr("data-name",name)
-                      var text = name+ '<span class="text-danger">' + "(" + oldId + ")" + '</span>';
-                      $("#name").empty().append(text);
-                      alert("保存成功")
-                   })
 
                 }
             }
-            if(type=="布局"){
-                if(!that.$modalName.val()) return alert("布局名为必填选项");
+            if (type == "布局") {
+                if (!that.$modalName.val()) return alert("布局名为必填选项");
                 var autoCreate = that.$modalAutoCreate.val(),
-                    userGrade  = that.$modalUserGrade.val(),
+                    userGrade = that.$modalUserGrade.val(),
                     feature = that.$modalFeature.val(),
                     category = that.$modalCategory.val(),
                     subCategory = that.$modalSubcategory.val(),
@@ -192,43 +237,70 @@ SubmitModal.prototype = {
                     spare1 = that.$modalSpare1.val(),
                     spare2 = that.$modalSpare2.val(),
                     contactId = data.basicInfo.contactId.replace(/\((.*)\)/img, "");
-                if(data.customId.length>10){
-                    var saveAsNumber = data.customId.slice(10,that.data.customId.length)
+                if (data.customId.length > 10) {
+                    var saveAsNumber = data.customId.slice(10, that.data.customId.length)
                 }
-                id = autoCreate + userGrade + feature + category + area + spare1 + spare2 + contactId + (saveAsNumber?saveAsNumber:"");
-                condition = [
-                    {col: "_id", value: id},
-                    {col: "name", value: that.$modalName.val()},
-                    {col: "customId", value: id},
-                    {col: "createor", value: data.createor},
-                    {col: "createTime", value: data.createTime},
-                    {col: "edit", value: data.edit + ";" + that.USER+","+new Date().toFormatString(null, true)},
-                    {col: "basicInfo", value:{
-                        category: category,
-                        subCategory: subCategory,
-                        feature: feature,
-                        userGrade: userGrade,
-                        area: area,
-                        autoCreate: autoCreate,
-                        spare1: spare1,
-                        spare2: spare2,
-                        contactId: data.basicInfo.contactId
-                    }}
+                id = autoCreate + userGrade + feature + category + area + spare1 + spare2 + contactId + (saveAsNumber ? saveAsNumber : "");
+                condition = [{
+                        col: "_id",
+                        value: id
+                    },
+                    {
+                        col: "name",
+                        value: that.$modalName.val()
+                    },
+                    {
+                        col: "customId",
+                        value: id
+                    },
+                    {
+                        col: "createor",
+                        value: data.createor
+                    },
+                    {
+                        col: "createTime",
+                        value: data.createTime
+                    },
+                    {
+                        col: "edit",
+                        value: data.edit + ";" + that.USER + "," + new Date().toFormatString(null, true)
+                    },
+                    {
+                        col: "basicInfo",
+                        value: {
+                            category: category,
+                            subCategory: subCategory,
+                            feature: feature,
+                            userGrade: userGrade,
+                            area: area,
+                            autoCreate: autoCreate,
+                            spare1: spare1,
+                            spare2: spare2,
+                            contactId: data.basicInfo.contactId
+                        }
+                    }
                 ]
-                if(oldId != id){
-                    new Workspace().save(true,null,id,condition,that.$modalName.val())
-                }else{
+                if (oldId != id) {
+                    new Workspace().save(true, null, id, condition, that.$modalName.val())
+                    that.changeGlobalJson(oldId, id)
+                } else {
                     var dbCollection = type == "表单" ? "newResources" : "newProducts",
-                    name = that.$modalName.val(),
-                    condition = [{ col: "customId", value: oldId}],
-                    data = [{col:"name",value:name}];
-                    var result = new Service().update(dbCollection,condition,data)
-                   result.then(res=>{
-                      $("#workspace").attr("data-name",name)
-                      var text = name+ '<span class="text-danger">' + "(" + oldId + ")" + '</span>';
-                      $("#name").empty().append(text);
-                      alert("保存成功")
-                   })
+                        name = that.$modalName.val(),
+                        condition = [{
+                            col: "customId",
+                            value: oldId
+                        }],
+                        data = [{
+                            col: "name",
+                            value: name
+                        }];
+                    var result = new Service().update(dbCollection, condition, data)
+                    result.then(res => {
+                        $("#workspace").attr("data-name", name)
+                        var text = name + '<span class="text-danger">' + "(" + oldId + ")" + '</span>';
+                        $("#name").empty().append(text);
+                        alert("保存成功")
+                    })
                 }
             }
             that.$modal.modal("hide")

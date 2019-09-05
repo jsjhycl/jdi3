@@ -82,7 +82,8 @@ var ConditionsHelper = (function () {
             {name: "字符串", value: "String"},
             {name: "数字", value: "Number"},
             {name: "元素", value: "Element"},
-            {name: "查询字符串", value: "QueryString"}
+            {name: "查询字符串", value: "QueryString"},
+            {name: "外部变量", value: "outerSideVarible"}
         ],
         reduceTypeConfig: [{name: "字符串", value: "String"}, {name: "数字", value: "Number"}],
         getOperators: getOperators

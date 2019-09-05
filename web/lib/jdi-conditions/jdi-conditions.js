@@ -6,6 +6,16 @@
         this.$elements = elements;
         this.options = options;
         this.AllDbName = null;
+        this.outerSideVariable = null;
+
+        this._renderVariableSelect = function($replace, varibale) {
+            let $select = $('<select data-key="value"></select>')
+                options = this.outerSideVariable.map(i => {
+                    return { name: i.desc, value: i.key }
+                });
+            $select.replaceAll($replace);
+            Common.fillSelect($select, {name: "请选择外部变量", value:"" }, options, varibale, true);
+        }
     }
 
     Conditions.prototype.constructor = Conditions;
@@ -37,8 +47,12 @@
             return cache;
         },
         getDbData: async function() {
-            var data = await new FileService().readFile("./profiles/table.json");
+            var _tableP = new FileService().readFile("./profiles/table.json"),
+                _globalP = new FileService().readFile("./profiles/global.json"),
+                data = await _tableP,
+                global = await _globalP;
             if (DataType.isObject(data)) this.AllDbName = data;
+            if (DataType.isObject(global) && Array.isArray(global.global)) this.outerSideVariable = global.global;
         },
         renderDOM: function (element) {
             var cache = $.data(element, CACHE_KEY),
@@ -137,8 +151,19 @@
                 var $expr = $(this);
                 new FileService().readFile("/profiles/global.json","UTF-8",function(data) {
                     if (!data) return;
-                    buildArgs($expr, data, null);
+                    let global = {}
+                    if (DataType.isObject(data) && Array.isArray(data.global)) {
+                        data.global.forEach(el => {
+                            global[el.key] = el.desc;
+                        })
+                    }
+                    buildArgs($expr, global, null);
                 });
+            });
+
+            $(element).on("change" + EVENT_NAMESPACE, '[data-key="type"]', {element: element}, function (event) {
+                event.stopPropagation();
+                that._renderVariableSelect($(element).find('[data-key="value"]'));
             });
         },
         setTr: function (mode, $tbody, data, table,dbName, noExpression, reduceTypeConfig) {
@@ -179,7 +204,11 @@
                     value: ""
                 }, !reduceTypeConfig ? ConditionsHelper.typeConfig : ConditionsHelper.reduceTypeConfig, type, false);
                 
-                ModalHelper.setInputData($tr.find('[data-key="value"]'), value, false);
+                if (type === 'outerSideVariable') {
+                    this._renderVariableSelect($tr.find('[data-key="value"]'), value);
+                } else {
+                    ModalHelper.setInputData($tr.find('[data-key="value"]'), value, false);
+                }
 
             } else {
                 $tr = $('<tr><td><select class="form-control" data-key="leftType"></select></td>' +

@@ -130,7 +130,6 @@ function NewEventsModal($modal, $element) {
             value: 'timeQuery'
         });
     };
-
     //清空数据
     this._resetData = function () {
         this.$tbody.empty();
@@ -156,18 +155,24 @@ function NewEventsModal($modal, $element) {
                         <span>${item.name}</span>
                     </div>`
 
-        })
+        });
+
+        // 渲染全局函数
         return str
     }
-    this.renderExprMethod = function(exprMethods, $node) {
-        if (!Array.isArray(exprMethods)) return "";
-        var html = "";
-        exprMethods.forEach(item => {
-            html += `<div>
-                        <input type="checkbox" checked value='${JSON.stringify(item.expression)}' class="exprMethods">
-                        <span>${item.fnName}</span>
-                    </div>`
-        });
+    this.renderExprMethod = function(data, $node) {
+        let ExprMethods = new Property().getValue('BODY', 'globalMethods'),
+            html = '';
+        if (Array.isArray(ExprMethods)) {
+            let hasOldData = Array.isArray(data);
+            html = ExprMethods.map(i => {
+                let isChecked = hasOldData && data.findIndex(item => item.fnCname === i.fnCname) > -1;
+                return `<div>
+                            <input type="checkbox" value=${i.expr} ${ isChecked ? "checked" : "" } class="exprMethods">
+                            <span>${i.fnCname}</span>
+                        </div>`
+                }).join('');
+        };
         $node && $node.before(html);
         return html;
     }
@@ -897,6 +902,7 @@ NewEventsModal.prototype = {
                     that._addItem(item)
                 })
             } catch (err) {
+                console.log(err)
                 return alert('获取配置文件错误！')
             }
         })
@@ -954,7 +960,7 @@ NewEventsModal.prototype = {
 
             $exprMethods.each(function() {
                 exprMethods.push({
-                    fnName: $(this).next('span').text(),
+                    fnCname: $(this).next('span').text(),
                     expression: $(this).val()
                 })
             });

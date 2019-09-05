@@ -195,7 +195,52 @@ function navbar() {
 			new Ruler().controlCoordinates(flag) //调用标尺查看器
 			flag = !flag;
 		})
-	})()
+    })();
+    
+    // 全局函数配置
+//表达式配置
+(function () {
+    function globalExprMethods($dom, localFunction, remoteFunction) {
+        $dom.exprGenerator({
+            $source: $("#workspace"),
+            // $result: $("#property_expression"),
+            data: new Property().getValue('BODY', 'globalMethods'),
+            hasBrace: true,
+            global: true,
+            functions: [{
+                    data: localFunction,
+                    title: "本地函数"
+                },
+                {
+                    data: remoteFunction,
+                    title: "远程函数"
+                }
+            ],
+            onSetProperty: function (data) {
+                new Property().setValue('BODY', 'globalMethods', data)
+                console.log('data: ', data)
+                console.log('GLOBAL_PROPERTY: ', GLOBAL_PROPERTY)
+            },
+            onClearProperty: function () {
+                new Property().remove('BODY', 'globalMethods');
+            }
+        });
+    }
+
+    $(document).on("click", "#globalExprMethods", function () {
+        var $this = $(this),
+            fileService = new FileService();
+            
+        $.when(fileService.readFile("/profiles/local_functions.json", "UTF-8"),
+        fileService.readFile("/profiles/remote_functions.json", "UTF-8")).done(function (result1, result2) {
+            if (!result1 || !result2) return;
+            globalExprMethods($this, result1, result2);
+        }).fail(function (err) {
+            console.log(err);
+            alert("全局函数配置器生成失败！");
+        });
+    });
+})();
 }
 
 //控件栏
@@ -299,15 +344,6 @@ function controlbar() {
 				"left=200px"
 			];
 			let editor = window.open("./editor.html", "_blank", arrs.join(", ")); //打开新的界面
-			// timer = null,
-			// html = null;
-			// timer = setInterval(function(){
-			//     if (editor.closed) {
-			//         html = localStorage.cache
-			//         back(html)
-			//         clearInterval(timer)
-			//    }
-			// }, 500);
 		});
 	})();
 }

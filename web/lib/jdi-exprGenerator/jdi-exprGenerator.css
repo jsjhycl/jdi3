@@ -193,6 +193,11 @@
     border-radius: 4px;
     cursor: pointer;
 }
+.eg .eg-dialog .eg-sidebar .eg-result .eg-expr .expr-fn-item.current {
+    box-shadow: 0 0 5px rgb(0, 0, 0);
+    border: 1px solid rgb(142, 136, 136);
+}
+
 .eg .eg-dialog .eg-sidebar .eg-result .cfooter {
     border-top: 1px solid #383e4c;
 }
@@ -202,9 +207,9 @@
     font-size: 14px;
 }
 
-.eg .eg-dialog .eg-sidebar .eg-result .cfooter .btn.eg-save,
-.eg .eg-dialog .eg-function .cfooter .btn.function-save,
-.eg .eg-dialog .eg-insertFn .cfooter .btn.function-save {
+.eg .eg-dialog .eg-sidebar .eg-result .cfooter .btn,
+.eg .eg-dialog .eg-function .cfooter .btn,
+.eg .eg-dialog .eg-insertFn .cfooter .btn {
     margin-right: 10px;
 }
 

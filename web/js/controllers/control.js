@@ -156,8 +156,10 @@ Control.prototype = {
     },
     renderHtml: function (id, basic, subtype) {
         var that = this,
-            $node = $(that.CONTROL_HTML[basic.type]);
+            $node = $(that.CONTROL_HTML[basic.type]),
+            $ori = $('#' + basic.id);
         $node.attr({"id": basic.id, "name": basic.name, value: basic.value || ""});
+        $ori.is(":checkbox") && $ori.is(":checked") ? $node.attr('checked', 'checked') : $node.removeAttr('checked');
         $node.css({
             "position": "absolute",
             "left": basic.rect.left,

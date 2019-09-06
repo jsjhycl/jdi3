@@ -475,7 +475,7 @@ function NewEventsModal($modal, $element) {
                     </select>
                 </td>
                 <td>
-                    <input type="text" class="form-control linkValue" value="${item.value||""}"></input>
+                    <input type="text" class="form-control linkValue" data-category="conditions" data-wrap="true" value="${item.value||""}"></input>
                 </td>
                 <td>
                     <span class="del removeCopySend" style="padding:0px">×</span> 

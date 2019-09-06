@@ -636,11 +636,7 @@ function NewEventsModal($modal, $element) {
         })
         return str;
     }
-    this.renderLinkHTML = function (linkHtml = [{
-        table: "",
-        conditions: [],
-        params: []
-    }]) {
+    this.renderLinkHTML = function (linkHtml = [{table: "",params: []}]) {
         if (!DataType.isArray(linkHtml)) return "";
         var that = this,
             str = "";
@@ -653,23 +649,6 @@ function NewEventsModal($modal, $element) {
                     <select class="form-control LinkTable">
                         ${ that.fillLinkHtml(item.table)}
                     </select>
-                </td>
-                <td>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th class="text-center">左值类型</th>
-                                <th class="text-center">左数值</th>
-                                <th class="text-center">操作符</th>
-                                <th class="text-center">右值类型</th>
-                                <th class="text-center">右数值</th>
-                                <th><span class="add addlinkHtmlCondition" style="padding:0px">+</span></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${that.renderLinkHtmlCondition(item.conditions)}
-                        </tbody>
-                    </table>
                 </td>
                 <td>
                     <table class="table table-bordered">
@@ -782,13 +761,12 @@ function NewEventsModal($modal, $element) {
                 <div class="timeQuery" ${item.subscribe.timeQuery?"":'style="display:none"'}>
                     ${that.renderTimeQuery(item.subscribe.timeQuery, item.query)}
                 </div>
-                <div class="linkHtml" >
+                <div class="linkHtml"  ${item.subscribe.linkHtml?'style="width:860px"':'style="display:none;width:860px"'} >
                     <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th width="40px"><span class="add addLinkHtml" style="padding:0px">+</span></th>
                                 <th width="261px" class="text-center">跳转页面</th>
-                                <th width="580px" class="text-center">跳转条件</th>
                                 <th width="400px" class="text-center">跳转参数</th>
                             </tr>
                         <thead>
@@ -888,7 +866,6 @@ function NewEventsModal($modal, $element) {
         $linkhtml.each(function () {
             var linkHtml = {};
             linkHtml.table = $(this).find(".LinkTable").val()
-            linkHtml.conditions = that.getTriggerConditions($(this).find('.linkHtml_conditions'))
             linkHtml.params = that.getLinkHtmlParams($(this).find('.linkParamsTr'))
             linkHtmls.push(linkHtml)
         })
@@ -1260,7 +1237,8 @@ NewEventsModal.prototype = {
                 $changeProperty = $(this).parents("tr").find(".changeProperty"),
                 $notify = $(this).parents("tr").find(".notify"),
                 $timeQuery = $(this).parents("tr").find(".timeQuery"),
-                $saveHtml = $(this).parents("tr").find(".saveHTML");
+                $saveHtml = $(this).parents("tr").find(".saveHTML"),
+                $linkhtml = $(this).parents("tr").find(".linkHtml");
             if (value == "changeProperty") {
                 check ? $changeProperty.show() : $changeProperty.hide()
             }
@@ -1275,6 +1253,9 @@ NewEventsModal.prototype = {
             }
             if (value == 'saveHTML') {
                 check ? $saveHtml.show() : $saveHtml.hide();
+            }
+            if(value == 'linkHtml'){
+                check ? $linkhtml.show() : $linkhtml.hide();
             }
         })
         //增加属性改变栏

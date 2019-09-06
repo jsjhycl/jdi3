@@ -53,7 +53,7 @@ var NumberHelper = (function () {
                 search = '[data-type="div"]';
                 break;
             default:
-                search = ':input'
+                search = ':input, canvas'
         }
         $container.find(search).each(function() {
             maxId = $(this).attr('id') > maxId ? $(this).attr('id') : maxId;

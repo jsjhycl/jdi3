@@ -804,7 +804,7 @@ function NewEventsModal($modal, $element) {
     }
     //获取客户自定义的方法
     this.getCustomMethods = function (triggerMethods) {
-        var customs = ["save", "copySend", "upload", "login", "checkAll", "cancelAll","saveHtml","linkHtml"],
+        var customs = ["save", "copySend", "upload", "login", "checkAll", "cancelAll",],
             result = [];
         triggerMethods.each(function () {
             var value = $(this).val();

@@ -142,6 +142,7 @@ function NewEventsModal($modal, $element) {
         if (subscribe.property) arr.push("changeProperty");
         if (subscribe.notify) arr.push("notify");
         if (subscribe.saveHTML) arr.push("saveHTML");
+        if (subscribe.saveHTML) arr.push("linkHtml")
         subscribe.query && subscribe.query.forEach(function (item) {
             arr.push(item)
         })
@@ -156,11 +157,10 @@ function NewEventsModal($modal, $element) {
                     </div>`
 
         });
-
         // 渲染全局函数
         return str
     }
-    this.renderExprMethod = function(data, $node) {
+    this.renderExprMethod = function (data, $node) {
         let ExprMethods = new Property().getValue('BODY', 'globalMethods'),
             html = '';
         if (Array.isArray(ExprMethods)) {
@@ -171,7 +171,7 @@ function NewEventsModal($modal, $element) {
                             <input type="checkbox" value=${i.expr} ${ isChecked ? "checked" : "" } class="exprMethods">
                             <span>${i.fnCname}</span>
                         </div>`
-                }).join('');
+            }).join('');
         };
         $node && $node.before(html);
         return html;
@@ -253,7 +253,7 @@ function NewEventsModal($modal, $element) {
     //抄送行中的操作类型
     this.copySendTypeOptions = function (select) {
         var str = '',
-            options =ConditionsHelper.typeConfig;
+            options = ConditionsHelper.typeConfig;
         options.forEach(function (item) {
             str += `<option value="${item.value}" ${ select == item.value ? "selected" : ""}>${item.name}</option>`
         });
@@ -262,7 +262,7 @@ function NewEventsModal($modal, $element) {
     //抄送值类型的数据
     this.copyValueTypeOptions = function (mode, type, select) {
         var str = '',
-        options = ConditionsHelper.getOperators(mode, type);
+            options = ConditionsHelper.getOperators(mode, type);
         options.forEach(function (item) {
             str += `<option value="${item.value}" ${ select == item.value ? "selected" : ""}>${item.name}</option>`
         })
@@ -275,6 +275,36 @@ function NewEventsModal($modal, $element) {
         var str = "";
         conditions.forEach(function (item) {
             str += `<tr class="trigger_conditions">
+             <td>
+                 ${that.typeOfValueOptions("leftType","请选择左类型",item.leftType)}
+             </td>
+             <td>
+                 <input class="form-control" data-category="conditions" data-wrap="true" data-key="leftValue" type="text" value="${item.leftValue}">
+             </td>
+             <td>
+                 <select class="form-control" data-key="triggerOperator">
+                    ${that.operateTypeOptions(2,null,item.leftType,item.operator)}
+                 </select>
+             </td>
+             <td>
+                 ${that.typeOfValueOptions("rightType","请选择右类型",item.rightType)}
+             </td>
+             <td>
+                 <input class="form-control" data-category="conditions" data-wrap="true" data-key="rightValue" type="text" value="${item.rightValue}">
+             </td>
+             <td>
+                <span class="del removeTriggerCondition" style="padding:0px">×</span> 
+             </td>
+         </tr>`
+        })
+        return str;
+    }
+    this.renderLinkHtmlCondition = function (conditions) {
+        if (!DataType.isArray(conditions)) return "";
+        var that = this;
+        var str = "";
+        conditions.forEach(function (item) {
+            str += `<tr class="linkHtml_conditions">
              <td>
                  ${that.typeOfValueOptions("leftType","请选择左类型",item.leftType)}
              </td>
@@ -416,6 +446,45 @@ function NewEventsModal($modal, $element) {
         return str;
 
     }
+    this.fillLinkHtml = function (link) {
+        var that = this,
+            str = `<option value="">请选择跳转页面</option>`;
+        that.linkHtmlData.forEach(item => {
+            str += `<option value="${item.customId}" ${ link==item.customId? "selected" : ""}>${item.name}(${item.customId})</option>`
+        })
+        return str;
+    }
+    this.fillLinkParams = function(table,param){
+        var that = this,
+            str=`<option value="">请选择跳转参数</option>`;
+        var params = that.linkParams[table];
+        params && params.forEach(item=>{
+            str += `<option value="${item.key}" ${ param==item.key? "selected" : ""}>${item.desc}(${item.key})</option>`
+        })
+        return str;
+    }
+    this.renderParmas = function (table,params = [{}]) {
+        var that = this;
+        if (!DataType.isArray(params)) return;
+        var str = "";
+        params.forEach(item => {
+            str += `<tr class="linkParamsTr">
+                <td>
+                    <select class="form-control linkparam">
+                        ${that.fillLinkParams(table,item.key)}     
+                    </select>
+                </td>
+                <td>
+                    <input type="text" class="form-control linkValue" value="${item.value||""}"></input>
+                </td>
+                <td>
+                    <span class="del removeCopySend" style="padding:0px">×</span> 
+                </td>
+            </tr>`
+        })
+        return str;
+
+    }
     this.renderCopySendCondition = function (conditions, dbName, table, field) {
         if (!DataType.isArray(conditions)) return "";
         var that = this,
@@ -530,7 +599,7 @@ function NewEventsModal($modal, $element) {
         })
         return str;
     }
-    this.renderCopySendFields = function (fields,dbName,table) {
+    this.renderCopySendFields = function (fields, dbName, table) {
         if (!DataType.isArray(fields)) return;
         var that = this,
             str = '';
@@ -564,6 +633,59 @@ function NewEventsModal($modal, $element) {
                 <span class="del removeCopy" style="padding:0px">×</span> 
             </td>
         </tr>`
+        })
+        return str;
+    }
+    this.renderLinkHTML = function (linkHtml = [{
+        table: "",
+        conditions: [],
+        params: []
+    }]) {
+        if (!DataType.isArray(linkHtml)) return "";
+        var that = this,
+            str = "";
+        linkHtml.forEach(item => {
+            str += `<tr class="linkHtmlTr">
+                <td>
+                    <span class="del removeCopySend" style="padding:0px">×</span> 
+                </td>
+                <td>
+                    <select class="form-control LinkTable">
+                        ${ that.fillLinkHtml(item.table)}
+                    </select>
+                </td>
+                <td>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center">左值类型</th>
+                                <th class="text-center">左数值</th>
+                                <th class="text-center">操作符</th>
+                                <th class="text-center">右值类型</th>
+                                <th class="text-center">右数值</th>
+                                <th><span class="add addlinkHtmlCondition" style="padding:0px">+</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${that.renderLinkHtmlCondition(item.conditions)}
+                        </tbody>
+                    </table>
+                </td>
+                <td>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center">页面参数</th>
+                                <th class="text-cneter">参数值</th>
+                                <th><span class="add addParmas" style="padding:0px">+</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${that.renderParmas(item.table,item.params)}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>`
         })
         return str;
     }
@@ -660,6 +782,21 @@ function NewEventsModal($modal, $element) {
                 <div class="timeQuery" ${item.subscribe.timeQuery?"":'style="display:none"'}>
                     ${that.renderTimeQuery(item.subscribe.timeQuery, item.query)}
                 </div>
+                <div class="linkHtml" >
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th width="40px"><span class="add addLinkHtml" style="padding:0px">+</span></th>
+                                <th width="261px" class="text-center">跳转页面</th>
+                                <th width="580px" class="text-center">跳转条件</th>
+                                <th width="400px" class="text-center">跳转参数</th>
+                            </tr>
+                        <thead>
+                        <tbody>
+                            ${that.renderLinkHTML(item.subscribe.linkHtml)}
+                        </tbody>
+                    </table>
+                </div>
             </td>
         </tr>`);
         that.$tbody.append($str);
@@ -689,7 +826,7 @@ function NewEventsModal($modal, $element) {
     }
     //获取客户自定义的方法
     this.getCustomMethods = function (triggerMethods) {
-        var customs = ["save", "copySend","upload", "login", "checkAll", "cancelAll"],
+        var customs = ["save", "copySend", "upload", "login", "checkAll", "cancelAll","saveHtml","linkHtml"],
             result = [];
         triggerMethods.each(function () {
             var value = $(this).val();
@@ -726,6 +863,7 @@ function NewEventsModal($modal, $element) {
         })
         return conditions
     }
+
     //获取抄送
     this.getCopySend = function ($copySends) {
         var that = this,
@@ -743,6 +881,28 @@ function NewEventsModal($modal, $element) {
             copySends.push(copysend)
         })
         return copySends;
+    }
+    this.getLinkHtml = function ($linkhtml) {
+        var that = this,
+            linkHtmls = [];
+        $linkhtml.each(function () {
+            var linkHtml = {};
+            linkHtml.table = $(this).find(".LinkTable").val()
+            linkHtml.conditions = that.getTriggerConditions($(this).find('.linkHtml_conditions'))
+            linkHtml.params = that.getLinkHtmlParams($(this).find('.linkParamsTr'))
+            linkHtmls.push(linkHtml)
+        })
+        return linkHtmls
+    }
+    this.getLinkHtmlParams = function ($target) {
+        var params = [];
+        $target.each(function () {
+            var param = {};
+            param.key = $(this).find(".linkparam").val()
+            param.value = $(this).find(".linkValue").val()
+            params.push(param)
+        })
+        return params;
     }
     //获取抄送段
     this.getCopySendFields = function ($copySendFields) {
@@ -876,11 +1036,23 @@ function NewEventsModal($modal, $element) {
         }
         return str
     }
+    this.linkHtmlData = null;
+    this.linkParams = null;
 }
 NewEventsModal.prototype = {
     initData: async function (data) {
         var that = this;
         that._resetData();
+        var table = "newProducts",
+            consition = [{
+                col: "status",
+                value: "10"
+            }],
+            fields = ["customId", "name"];
+        new Service().query(table, consition, fields).then(data => {
+            that.linkHtmlData = data;
+        })
+        that.linkParams = await new FileService().readFile("./profiles/global.json")
         that._initCustomMethods().then(() => {
             that._initQueryMethods();
         }).then(async () => {
@@ -925,7 +1097,8 @@ NewEventsModal.prototype = {
                 notify = null,
                 query = null,
                 timeQuery = null,
-                saveHTML = null;
+                saveHTML = null,
+                linkHtml = null;
             if (that.judgeCheckMehods("commonQuery", $(this).find(".triggerMethods:checked"))) {
                 query = []
                 query.push("commonQuery")
@@ -937,6 +1110,9 @@ NewEventsModal.prototype = {
             //判断抄送是否点击
             if (that.judgeCheckMehods("copySend", $(this).find(".triggerMethods:checked"))) {
                 copySend = that.getCopySend($(this).find('.copySendTr'))
+            }
+            if (that.judgeCheckMehods("linkHtml", $(this).find(".triggerMethods:checked"))) {
+                linkHtml = that.getLinkHtml($(this).find('.linkHtmlTr'))
             }
             if (that.judgeCheckMehods("changeProperty", $(this).find(".triggerMethods:checked"))) {
                 property = that.getChangeProperty($(this).find(".changePropertyTr"))
@@ -954,17 +1130,16 @@ NewEventsModal.prototype = {
                 timeQuery = $(this).find('[data-category="queryTime"]').val()
             };
             if (that.judgeCheckMehods("saveHTML", $(this).find(".triggerMethods:checked"))) {
-                console.log($(this).find('[data-category="saveHTML"]'))
                 saveHTML = $(this).find('[data-category="saveHTML"]').val()
             };
 
-            $exprMethods.each(function() {
+            $exprMethods.each(function () {
                 exprMethods.push({
                     fnCname: $(this).next('span').text(),
                     expression: $(this).val()
                 })
             });
-            
+
             if (trigger_type) {
                 result.push({
                     publish: {
@@ -981,21 +1156,21 @@ NewEventsModal.prototype = {
                         query: query,
                         timeQuery: timeQuery,
                         exprMethods: exprMethods,
-                        saveHTML: saveHTML
+                        saveHTML: saveHTML,
+                        linkHtml: linkHtml
                     }
                 })
             }
-            console.log(result);
         })
-        result.length>0?that.$element.val(JSON.stringify(result)):that.$element.val("");
-        
+        result.length > 0 ? that.$element.val(JSON.stringify(result)) : that.$element.val("");
+
         var $workspace = $("#workspace"), //获取工作区
             $control = $workspace.find("#" + id); //获取对应id的元素
         new Property().save(id === "BODY" ? $workspace : $control, that.$element); //实例化property调用save方法
     },
     clearData: function () {
         var that = this;
-            id = $("#property_id").val(); //获取编号id
+        id = $("#property_id").val(); //获取编号id
         if (!id) { //如果编号id不存在
             that.$modal.modal("hide"); //弹窗关闭
         } else {
@@ -1005,7 +1180,7 @@ NewEventsModal.prototype = {
             that._resetData(); //调用_resetData
             that.$element.val(""); //将$element设置为空
             new Property().remove(id, "events"); //调用property的remove方法
-        that.$modal.modal("hide"); //弹窗隐藏
+            that.$modal.modal("hide"); //弹窗隐藏
         }
     },
     bindEvents: function () {
@@ -1038,6 +1213,27 @@ NewEventsModal.prototype = {
         that.$modal.on("click", ".addTriggerCondition", function () {
             var $tbody = $($(this).parents("table")[0]).find("tbody"),
                 str = `<tr class="trigger_conditions"><td>${that.typeOfValueOptions("leftType","请选择左类型")}</td>
+                    <td><input class="form-control" data-category="conditions" data-wrap="true" data-key="leftValue" type="text"></td>
+                    <td>
+                        <select class="form-control" data-key="triggerOperator">
+                            <option value="">请选择操作符</option>
+                        </select>
+                    </td>
+                    <td>
+                        ${that.typeOfValueOptions("rightType","请选择右类型")}
+                    </td>
+                    <td>
+                        <input class="form-control" data-category="conditions" data-wrap="true" data-key="rightValue" type="text">
+                    </td>
+                    <td>
+                        <span class="del removeTriggerCondition" style="padding:0px">×</span>
+                    </td>
+                </tr>`
+            $tbody.append(str)
+        })
+        that.$modal.on("click",".addlinkHtmlCondition",function(){
+            var $tbody = $($(this).parents("table")[0]).find("tbody"),
+                str = `<tr class="linkHtml_conditions"><td>${that.typeOfValueOptions("leftType","请选择左类型")}</td>
                     <td><input class="form-control" data-category="conditions" data-wrap="true" data-key="leftValue" type="text"></td>
                     <td>
                         <select class="form-control" data-key="triggerOperator">
@@ -1282,6 +1478,19 @@ NewEventsModal.prototype = {
             </tr>`;
             $tbody.append(str)
         })
+        //添加跳转页面
+        that.$modal.on("click", ".addLinkHtml", function () {
+            var $tbody = $($(this).parents("table")[0]).find("tbody").eq(0),
+                str = that.renderLinkHTML()
+            $tbody.append(str)
+        })
+        //添加跳转参数
+        that.$modal.on("click", ".addParmas", function () {
+            var $tbody = $($(this).parents("table")[0]).find("tbody").eq(0),
+                value = $($(this).parents("tr")[1]).find(".LinkTable").val();
+                str = that.renderParmas(value);
+            $tbody.append(str)
+        })
         //移除抄送配置
         that.$modal.on("click", ".removeCopySend", function () {
             var $tr = $(this).parents("tr")[0];
@@ -1308,8 +1517,8 @@ NewEventsModal.prototype = {
         //抄送表
         that.$modal.on("change", '[data-key="table"]', function () {
             var $fieldSelect = $($(this).parents("tr")[0]).find('[data-key="field"]'),
-                $conditionsField =  $($(this).parents("tr")[0]).find('[data-key="copySendConditionField"]')
-                table = $(this).val(),
+                $conditionsField = $($(this).parents("tr")[0]).find('[data-key="copySendConditionField"]')
+            table = $(this).val(),
                 dbName = $($(this).parents("tr")[0]).find('[data-key="dbName"]').val(),
                 fieldOptions = [];
             if (dbName && table) {
@@ -1448,6 +1657,12 @@ NewEventsModal.prototype = {
             var $tr = $(this).parents("tr")[0];
             that._removeItem($tr)
         })
+        that.$modal.on("change", ".linkHtml .LinkTable", function () {
+            var value = $(this).val(),
+            str = that.fillLinkParams(value);
+            var $target = $($(this).parents("tr")[0]).find(".linkparam")
+            $target.empty().append(str)
+        })
         // that.$modal.on('click', ".buildExpression", function() {
         //     var $this = $(this),
         //         fileService = new FileService();
@@ -1455,10 +1670,10 @@ NewEventsModal.prototype = {
         //     fileService.readFile("/profiles/local_functions.json", "UTF-8"),
         //     fileService.readFile("/profiles/remote_functions.json", "UTF-8"),
         //     fileService.readFile("/profiles/system_functions.json", "UTF-8")).done(function (result1, result2, result3, result4) {
-		// 		if (!result1 || !result2 || !result3 || !result4) return;
-		// 		var staticGlobal = result1,
-		// 			localFunction = result2,
-		// 			remoteFunction = result3,
+        // 		if (!result1 || !result2 || !result3 || !result4) return;
+        // 		var staticGlobal = result1,
+        // 			localFunction = result2,
+        // 			remoteFunction = result3,
         //             systemFunction = result4,
         //             global = {};
         //         if (DataType.isObject(staticGlobal)) { //如果
@@ -1490,27 +1705,25 @@ NewEventsModal.prototype = {
         //             ],
         //             systemFunction: systemFunction,
         //             onSetProperty: function (expr) {
-        //                 console.log(id, "保存");
         //                 var id = $("#property_id").val();
         //                 if (id) {
-                            
+
         //                     // new Property().setValue(id, "expression", expr);
         //                 }
         //             },
         //             onClearProperty: function () {
-        //                 console.log(id, "清除");
         //                 var id = $("#property_id").val();
         //                 if (id) {
         //                 }
         //             }
         //         });
-                    
-		// 	}).fail(function (err) {
-		// 		console.log(err);
-		// 		alert("自定义方法配置窗口生成失败！");
-		// 	});
+
+        // 	}).fail(function (err) {
+        // 		console.log(err);
+        // 		alert("自定义方法配置窗口生成失败！");
+        // 	});
         // })
-       
+
 
     },
     execute: function () {

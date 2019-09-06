@@ -429,6 +429,9 @@ function Workspace() {
                         html: $this.html
                     }
                     break;
+                case "arrow":
+                    item["subtype"] = $this.data("subtype")
+                    break
             }
             phoneHtml += new Control().getPhoneControlHtml($this, cid);
             phoneSettingData.items.push(item)
@@ -677,6 +680,9 @@ Workspace.prototype = {
                         case "div": //如果类型为div
                             $node.append(item.attach ? item.attach.html : ""); //向当前元素中添加元素
                             break;
+                        case "arrow":
+                            $node.attr('data-subtype', item.subtype)
+                            control.drawArrow($node, item.subtype, item.rect.width, item.rect.height)
                     }
                     contextMenu.done(4, $node);
                     that.$phone.append($node);

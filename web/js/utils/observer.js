@@ -34,6 +34,13 @@ let Observer = (function() {
         }, interval);
     }
 
+    function _drawArrow($element) {
+        let control = new Control();
+        $element.find('canvas.workspace-node').each(function() {
+            control.drawArrow($(this), $(this).data('subtype'), $(this).width(), $(this).height())
+        })
+    }
+
     function bindEvents() {
         $(document).on('keydown' + this.NAME_SPACE, function(event) {
             
@@ -50,6 +57,10 @@ let Observer = (function() {
                     $element.html(lastHistory.html);
                     $("[id^=property_]").val("");
                     new Property().load($(".focus"));
+
+                    // 加载箭头
+                    _drawArrow($element);
+
                 }
                 _history.length === 0 && picture();
                 _setInterval();

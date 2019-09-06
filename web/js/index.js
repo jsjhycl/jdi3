@@ -218,8 +218,6 @@ function navbar() {
             ],
             onSetProperty: function (data) {
                 new Property().setValue('BODY', 'globalMethods', data)
-                console.log('data: ', data)
-                console.log('GLOBAL_PROPERTY: ', GLOBAL_PROPERTY)
             },
             onClearProperty: function () {
                 new Property().remove('BODY', 'globalMethods');
@@ -384,7 +382,6 @@ function propertybar() {
 			var item = eventList[i];
 			(function (item) {
                 $(document).on(item.type, item.selector, function (event) { //绑定事件
-                    console.log('表达式触发事件：', item.type, ' selector: ', item.selector)
 					var id = $("#property_id").val(); //获取id
 					if (id) {
 						var $workspace = $("#workspace");
@@ -767,26 +764,43 @@ function phone() {
 	});
 
 	$phone_content.droppable({
-		accept: ".control-item, #workspace .resizable",
+		accept: ".control-item, #workspace .resizable, .draw-item",
 		drop: function (event, ui) {
 			var type = ui.helper.data("type"),
 				control = new Control(),
-				property = new Property();
+                property = new Property();
 			if (type) {
-				control.setControl(type, function ($node) {
-					var id = 'phone_' + NumberHelper.getNewId(type, $phone_content),
-						offset = $phone_content.offset();
-					$node.attr({
-						"id": id,
-						"name": id
-					}).css({
-						"left": event.pageX - offset.left + $phone_content.scrollLeft(),
-						"top": event.pageY - offset.top + $phone_content.scrollTop()
-					});
-					$phone_content.append($node);
-					property.setDefault(id);
-					return false
-				}, true);
+                if (type === 'arrow') {
+                    let $target = $(ui.helper[0]);
+                    control.setDrawControl(type, $target.data('subtype'), $target.outerWidth(), $target.outerHeight(), function($canvas) {
+                        var id = 'phone_' + NumberHelper.getNewId(type, $phone_content),
+                            offset = $phone_content.offset();
+                        $canvas.attr({
+                            "id": id,
+                            "name": id
+                        }).css({
+                            "left": event.pageX - offset.left + $phone_content.scrollLeft(),
+                            "top": event.pageY - offset.top + $phone_content.scrollTop()
+                        });
+                        $phone_content.append($canvas);
+                        new Property().setDefault(id);
+                    })
+                } else {
+                    control.setControl(type, function ($node) {
+                        var id = 'phone_' + NumberHelper.getNewId(type, $phone_content),
+                            offset = $phone_content.offset();
+                        $node.attr({
+                            "id": id,
+                            "name": id
+                        }).css({
+                            "left": event.pageX - offset.left + $phone_content.scrollLeft(),
+                            "top": event.pageY - offset.top + $phone_content.scrollTop()
+                        });
+                        $phone_content.append($node);
+                        property.setDefault(id);
+                        return false
+                    }, true);
+                }
 			} else {
 				// 从工作区拖拽
 				var contextMenu = new ContextMenu();

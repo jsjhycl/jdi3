@@ -10,7 +10,7 @@
 
         this._renderVariableSelect = function($replace, varibale) {
             let $select = $('<select data-key="value"></select>')
-                options = this.outerSideVariable.map(i => {
+                options = this.outerSideVariable && this.outerSideVariable.map(i => {
                     return { name: i.desc, value: i.key }
                 });
             $select.replaceAll($replace);
@@ -52,7 +52,12 @@
                 data = await _tableP,
                 global = await _globalP;
             if (DataType.isObject(data)) this.AllDbName = data;
-            if (DataType.isObject(global) && Array.isArray(global.global)) this.outerSideVariable = global.global;
+            if (DataType.isObject(global)) {
+                
+                let workspaceId = $("#workspace").data('id');
+                if (!workspaceId || !global[workspaceId]) return;
+                this.outerSideVariable = global[workspaceId];
+            }
         },
         renderDOM: function (element) {
             var cache = $.data(element, CACHE_KEY),

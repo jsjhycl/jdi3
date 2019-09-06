@@ -319,10 +319,10 @@
                         return `
                                 <tr>
                                     <td data-global="${i.key}">${i.desc}(${i.key})</td>
-                                    <td>--></td>
+                                    <td class="icon-related"></td>
                                     <td>${fieldsHtml}</td>
                                 </tr>
-                        `
+                            `
                     }).join('') : '';
                     str = `<div class="form-group">
                             <table class="table table-bordered table-striped table-contact">

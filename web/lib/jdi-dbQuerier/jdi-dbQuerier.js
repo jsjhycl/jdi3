@@ -74,7 +74,7 @@
             if (fieldMode === "multi") {
                 return '<div class="form-group">' +
                     `<label class="${isSm ? "col-sm-12 text-left" : "col-lg-2"} control-label">查询字段：<input class="check-all" type="checkbox"></label>` +
-                    '<div class="col-lg-10 querier-fields" data-name="querier_fields"></div>' +
+                    `<div class="${isSm ? "col-sm-12" : "col-lg-10"} querier-fields" data-name="querier_fields"></div>` +
                     '</div>';
             } else if (fieldMode === 'single') {
                 return '<div class="form-group">' +

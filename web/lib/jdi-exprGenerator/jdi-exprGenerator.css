@@ -202,7 +202,6 @@
 .eg .eg-dialog .eg-sidebar .eg-result .cfooter {
     border-top: 1px solid #383e4c;
 }
-.eg .eg-dialog .eg-function .btn,
 .eg .eg-dialog .eg-sidebar .eg-result .cfooter .btn {
     padding: 5px 10px;
     font-size: 14px;
@@ -214,7 +213,13 @@
 .eg .eg-dialog .eg-insertFn .cfooter .btn {
     margin-right: 10px;
 }
+.eg .eg-dialog .eg-function .table-contact {
+    max-height: 500px;
+    overflow: scroll;
+}
 .eg .eg-dialog .eg-function .contact-footer {
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ccc;
     text-align: center;
 }
 
@@ -270,8 +275,8 @@
 .eg .queryConfig input.active{
     border: 1px solid red;
 }
-
-.eg .eg-dialog .eg-function .cfooter .btn,
+.eg .eg-dialog .eg-function .btn,
+.eg .eg-dialog .query-config-content .btn,
 .eg .eg-dialog .eg-insertFn .cfooter .btn {
     padding: 2px 4px;
     font-size: 12px;
@@ -477,6 +482,7 @@
 .eg .eg-function .btn.btn-default.btn-sm {
     padding: 0 4px;
 }
+.eg .icon-related,
 .eg .eg-function .input-group-addon {
     padding: 6px 2px;
     font-size: 12px!important;
@@ -496,7 +502,9 @@
 .eg .eg-function .input-group-addon.addon-contact {
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA+klEQVQ4T9WTIU4EQRBFf82cgHAHMunOKDBwBwzBgAW14DFwBBwWgl3JNVAkTJeaBAEOEpCj6pNems1mtwaFgNaV1/Vf/5amadbrup6ISI3xw2EYrvu+f1kekRjjBYBNEXn4ARDM7E1VJx7gkuSjqt6OAUII+yKyl1I6/CeAJbFTM4s5goicATgqMWZis8QVB0XstojcA3ABJDdIfowBMvRJVa/ybZ7EGOMugINfAZwD2FrowZTkcd6gqqq7kjmQfE0pnXw/43yDtm3XzOx0oYkegABuuq57XgF45Sli5w5GZr4c/FlAFrtTeuB+kdwDAO9uBEesB5mJ/QQaU9Z1qwsyrwAAAABJRU5ErkJggg==);
 }
-
+.eg .icon-related {
+    background-image: url(data:img/jpg;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABCklEQVQ4T6XSsSuAQRzG8Y/EZEPZDBQ2MtoMJsVOWAzKJJlt/gILSgZKFmFkYrdaWJTJQGIR6epeXdd7XvJO7/3u7nvP7/k9Lf75tRTuz+IQ7038HDCEDUyhG49/ASxiE23x0jSe439Qco23HFgpWMBuw2tPmMNpeq4CDGAfo8nmJT6TdQ/6MIjbqp560Io1rKMdHXjNVI2gF8d1gKoW1OxhvK7n6NH3dEpjzO3oigav4r7Og6o2gQt8ZISg6gYvCJCtUgtLWMFZMsJwthPLCfQc83jIWwgZOIpBasrQDA5KHowlgQqgfmxHYmgjRP0krH9r4nBM4lWUfvfTGOukhxBNYqcU5aZ+i/tfrNArEUzVpu8AAAAASUVORK5CYII=);
+}
 .eg .eg-function .popover .popover-title {
     color: #fff;
     background: #747d8c;

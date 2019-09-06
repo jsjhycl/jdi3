@@ -37,7 +37,6 @@ PublishModal.prototype = {
         var that = this;
         //发布布局
         that.$modal.on("click", ".modal-body .table .publish", function () {
-            console.log("法币")
             var id = $(this).parents("tr").attr("data-id"),
                 condition = [{col:"customId",value:id}],
                 save = [{col:"status",value:"10"}];

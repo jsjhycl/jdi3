@@ -142,7 +142,7 @@ function NewEventsModal($modal, $element) {
         if (subscribe.property) arr.push("changeProperty");
         if (subscribe.notify) arr.push("notify");
         if (subscribe.saveHTML) arr.push("saveHTML");
-        if (subscribe.saveHTML) arr.push("linkHtml")
+        if (subscribe.linkHtml) arr.push("linkHtml")
         subscribe.query && subscribe.query.forEach(function (item) {
             arr.push(item)
         })

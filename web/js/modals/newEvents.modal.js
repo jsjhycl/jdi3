@@ -142,7 +142,7 @@ function NewEventsModal($modal, $element) {
         if (subscribe.property) arr.push("changeProperty");
         if (subscribe.notify) arr.push("notify");
         if (subscribe.saveHTML) arr.push("saveHTML");
-        if (subscribe.saveHTML) arr.push("linkHtml")
+        if (subscribe.linkHtml) arr.push("linkHtml")
         subscribe.query && subscribe.query.forEach(function (item) {
             arr.push(item)
         })
@@ -636,18 +636,15 @@ function NewEventsModal($modal, $element) {
         })
         return str;
     }
-    this.renderLinkHTML = function (linkHtml = [{table: "",params: []}]) {
-        if (!DataType.isArray(linkHtml)) return "";
+    this.renderLinkHTML = function (linkHtml={table:"",params:[]}) {
+        if (!DataType.isObject(linkHtml)) return "";
         var that = this,
-            str = "";
-        linkHtml.forEach(item => {
+            str="";
+   
             str += `<tr class="linkHtmlTr">
                 <td>
-                    <span class="del removeCopySend" style="padding:0px">×</span> 
-                </td>
-                <td>
                     <select class="form-control LinkTable">
-                        ${ that.fillLinkHtml(item.table)}
+                        ${ that.fillLinkHtml(linkHtml.table)}
                     </select>
                 </td>
                 <td>
@@ -660,12 +657,12 @@ function NewEventsModal($modal, $element) {
                             </tr>
                         </thead>
                         <tbody>
-                            ${that.renderParmas(item.table,item.params)}
+                            ${that.renderParmas(linkHtml.table,linkHtml.params)}
                         </tbody>
                     </table>
                 </td>
-            </tr>`
-        })
+            </tr>`;
+    
         return str;
     }
     //增加一条事件配置
@@ -765,7 +762,6 @@ function NewEventsModal($modal, $element) {
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th width="40px"><span class="add addLinkHtml" style="padding:0px">+</span></th>
                                 <th width="261px" class="text-center">跳转页面</th>
                                 <th width="400px" class="text-center">跳转参数</th>
                             </tr>
@@ -804,7 +800,7 @@ function NewEventsModal($modal, $element) {
     }
     //获取客户自定义的方法
     this.getCustomMethods = function (triggerMethods) {
-        var customs = ["save", "copySend", "upload", "login", "checkAll", "cancelAll","saveHtml","linkHtml"],
+        var customs = ["save", "copySend", "upload", "login", "checkAll", "cancelAll",],
             result = [];
         triggerMethods.each(function () {
             var value = $(this).val();
@@ -862,14 +858,12 @@ function NewEventsModal($modal, $element) {
     }
     this.getLinkHtml = function ($linkhtml) {
         var that = this,
-            linkHtmls = [];
+            linkHtml = {};
         $linkhtml.each(function () {
-            var linkHtml = {};
             linkHtml.table = $(this).find(".LinkTable").val()
             linkHtml.params = that.getLinkHtmlParams($(this).find('.linkParamsTr'))
-            linkHtmls.push(linkHtml)
         })
-        return linkHtmls
+        return linkHtml;
     }
     this.getLinkHtmlParams = function ($target) {
         var params = [];
@@ -1457,12 +1451,6 @@ NewEventsModal.prototype = {
                     </table>
                 </td>   
             </tr>`;
-            $tbody.append(str)
-        })
-        //添加跳转页面
-        that.$modal.on("click", ".addLinkHtml", function () {
-            var $tbody = $($(this).parents("table")[0]).find("tbody").eq(0),
-                str = that.renderLinkHTML()
             $tbody.append(str)
         })
         //添加跳转参数

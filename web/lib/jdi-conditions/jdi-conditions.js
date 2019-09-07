@@ -139,9 +139,9 @@
                         for (var id in dynamicGlobal) {
                             var property = dynamicGlobal[id];
                             //此处过滤规则待优化
-                            if (property.cname !== id) {
-                                global[property.cname + "(动态)"] = "GLOBAL." + id;
-                            }
+                            // if (property.cname !== id) {
+                            global[property + "(动态)"] = "GLOBAL." + id;
+                            // }
                         }
                     }
                     $expr.exprGenerator({
@@ -156,13 +156,20 @@
                 var $expr = $(this);
                 new FileService().readFile("/profiles/global.json","UTF-8",function(data) {
                     if (!data) return;
-                    let global = {}
+                    let globalVariable = {},
+                        localVariable = {};
                     if (DataType.isObject(data) && Array.isArray(data.global)) {
                         data.global.forEach(el => {
-                            global[el.key] = el.desc;
+                            globalVariable[el.key] = el.desc;
                         })
                     }
-                    buildArgs($expr, global, null);
+                    let workspaceId = $('#workspace').data('id');
+                    if (workspaceId && Array.isArray(data[workspaceId])) {
+                        data[workspaceId].forEach(el => {
+                            localVariable[el.key] = el.desc;
+                        });
+                    }
+                    buildArgs($expr, globalVariable, localVariable);
                 });
             });
 

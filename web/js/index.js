@@ -433,9 +433,9 @@ function propertybar() {
 				for (var id in dynamicGlobal) {
 					var property = dynamicGlobal[id];
 					//此处过滤规则待优化
-					if (property.cname !== id) {
-						global[property.cname + "(动态)"] = "GLOBAL." + id;
-					}
+					// if (property.cname !== id) {
+					global[property + "(动态)"] = "GLOBAL." + id;
+					// }
 				}
 			}
 			$expr.exprGenerator({
@@ -491,20 +491,29 @@ function propertybar() {
 					localFunction = result2,
 					remoteFunction = result3,
                     systemFunction = result4,
-                    global = {};
+                    globalVariable = {},
+                    localVariable = {};
 
-
-                if (staticGlobal && DataType.isObject(staticGlobal) && Array.isArray(staticGlobal.global)) {
-                    staticGlobal.global.forEach(el => {
-                        global[el.key] = el.desc;
-                    })
+                if (staticGlobal) {
+                    if (Array.isArray(staticGlobal.global)) {
+                        staticGlobal.global.forEach(el => {
+                            globalVariable[el.key] = el.desc;
+                        });
+                    }
+                    let workspaceId = $('#workspace').data('id');
+                    if (workspaceId && Array.isArray(staticGlobal[workspaceId])) {
+                        staticGlobal[workspaceId].forEach(el => {
+                            localVariable[el.key] = el.desc;
+                        });
+                    }
                 }
+
 				// if (globalId) {
 				// 	commonService.getFile("/publish/" + globalId + "/property.json", function (dynamicGlobal) {
 				// 		buildArgs($expr, staticGlobal, dynamicGlobal, localFunction, remoteFunction, systemFunction);
 				// 	});
 				// } else {
-					buildArgs($expr, global, null, localFunction, remoteFunction, systemFunction);
+					buildArgs($expr, globalVariable, localVariable, localFunction, remoteFunction, systemFunction);
 				// }
 			}).fail(function (err) {
 				console.log(err);

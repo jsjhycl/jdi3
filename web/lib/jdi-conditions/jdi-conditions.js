@@ -7,14 +7,21 @@
         this.options = options;
         this.AllDbName = null;
         this.outerSideVariable = null;
+        this.globalVariable = null;
 
         this._renderVariableSelect = function($replace, varibale) {
-            let $select = $('<select data-key="value"></select>')
-                options = this.outerSideVariable && this.outerSideVariable.map(i => {
-                    return { name: i.desc, value: i.key }
-                });
-            $select.replaceAll($replace);
-            Common.fillSelect($select, {name: "请选择外部变量", value:"" }, options, varibale, true);
+            let $select = $('<select data-key="value" class="form-control" style="width: 83%"></select>')
+                localOptions = this.outerSideVariable && this.outerSideVariable.map(i => {
+                    return { name: i.desc + '（局部）', value: i.key }
+                }),
+                globalOptions = this.globalVariable && this.globalVariable.map(i => {
+                    return { name: i.desc + '（全局）', value: i.key }
+                }),
+                options = [];
+                localOptions && (options = options.concat(localOptions));
+                globalOptions && (options = options.concat(globalOptions));
+            $replace.replaceWith($select);
+            Common.fillSelect($select, {name: "请选择变量", value:"" }, options, varibale, true);
         }
     }
 
@@ -53,8 +60,8 @@
                 global = await _globalP;
             if (DataType.isObject(data)) this.AllDbName = data;
             if (DataType.isObject(global)) {
-                
-                let workspaceId = $("#workspace").data('id');
+                if (Array.isArray(global.global)) { this.globalVariable = global.global }
+                let workspaceId = $("#workspace").attr('data-id');
                 if (!workspaceId || !global[workspaceId]) return;
                 this.outerSideVariable = global[workspaceId];
             }
@@ -122,6 +129,15 @@
                         operator = $operatorSelect.val();
                     ModalHelper.setSelectData($operatorSelect, defaultOption, options, operator, false);
                 }
+
+                let $target = $(this).parent().parent().find('[data-key="value"]');
+                // $target.length <= 0 && ($target = $(this).parent().parent().find('[data-key="rightValue"]'));
+                if (value === 'outerSideVariable') {
+                    $target.is('input') && that._renderVariableSelect($target);
+                } else if ($target.is('select')) {
+                    let $input = $('<input class="form-control" data-key="value" type="text">');
+                    $target.replaceWith($input);
+                }
             });
 
             $(element).on("click" + EVENT_NAMESPACE, ".btn-expr", {element: element}, function (event) {
@@ -172,17 +188,13 @@
                     buildArgs($expr, globalVariable, localVariable);
                 });
             });
-
-            $(element).on("change" + EVENT_NAMESPACE, '[data-key="type"]', {element: element}, function (event) {
-                event.stopPropagation();
-                that._renderVariableSelect($(element).find('[data-key="value"]'));
-            });
         },
         setTr: function (mode, $tbody, data, table,dbName, noExpression, reduceTypeConfig) {
             var that = this,
                 $tr, $operatorSelect, operator;
             noExpression = !!noExpression;
             reduceTypeConfig = !!reduceTypeConfig;
+            console.log('mode: ', mode)
             if (mode === 1) {
                 $tr = $('<tr><td><select class="form-control" data-key="field"></select></td>' +
                     '<td><select class="form-control" data-key="operator"></select></td>' +
@@ -215,7 +227,7 @@
                     name: "请选择类型",
                     value: ""
                 }, !reduceTypeConfig ? ConditionsHelper.typeConfig : ConditionsHelper.reduceTypeConfig, type, false);
-                
+
                 if (type === 'outerSideVariable') {
                     this._renderVariableSelect($tr.find('[data-key="value"]'), value);
                 } else {
@@ -315,7 +327,6 @@
                 $(this).find('[data-key]').each(function () {
                     var key = $(this).attr("data-key");
                     obj[key] = $(this).val();
-                    console.log(obj, obj[key])
                 });
                 result.push(obj);
             });

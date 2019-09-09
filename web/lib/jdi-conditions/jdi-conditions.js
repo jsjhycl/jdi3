@@ -9,12 +9,12 @@
         this.outerSideVariable = null;
         this.globalVariable = null;
 
-        this._renderVariableSelect = function($replace, varibale) {
+        this._renderVariableSelect = function($replace, varibale, queryCondition) {
             let $select = $('<select data-key="value" class="form-control" style="width: 83%"></select>')
                 localOptions = this.outerSideVariable && this.outerSideVariable.map(i => {
                     return { name: i.desc + '（局部）', value: 'LOCAL.' + i.key }
                 }),
-                globalOptions = this.globalVariable && this.globalVariable.map(i => {
+                globalOptions = queryCondition !== 'noGlobal' && this.globalVariable && this.globalVariable.map(i => {
                     return { name: i.desc + '（全局）', value: 'GLOBAL.' + i.key }
                 }),
                 options = [];
@@ -87,7 +87,7 @@
             var $tbody = $(element).find(".table tbody");
             $tbody.empty();
             data.forEach(function (item) {
-                that.setTr(cache.mode, $tbody, item, cache.table, cache.dbName, cache.noExpression, cache.reduceTypeConfig);
+                that.setTr(cache.mode, $tbody, item, cache.table, cache.dbName, cache.noExpression, cache.reduceTypeConfig, cache.queryCondition);
             });
         },
         bindEvents: function (element) {
@@ -100,7 +100,7 @@
                 if (!DataType.isObject(cache)) return;
 
                 var $tbody = $(celement).find(".table tbody");
-                that.setTr(cache.mode, $tbody, null, cache.table,cache.dbName, cache.noExpression, cache.reduceTypeConfig);
+                that.setTr(cache.mode, $tbody, null, cache.table,cache.dbName, cache.noExpression, cache.reduceTypeConfig, cache.queryCondition);
             });
 
             $(element).on("click" + EVENT_NAMESPACE, ".remove", function (event) {
@@ -112,7 +112,8 @@
                 event.stopPropagation();
 
                 var celement = event.data.element,
-                    cache = $.data(celement, CACHE_KEY);
+                    cache = $.data(celement, CACHE_KEY),
+                    queryCondition = cache.queryCondition;
                 if (!DataType.isObject(cache)) return;
 
                 var value = $(this).val(),
@@ -133,7 +134,7 @@
                 let $target = $(this).parent().parent().find('[data-key="value"]');
                 // $target.length <= 0 && ($target = $(this).parent().parent().find('[data-key="rightValue"]'));
                 if (value === 'outerSideVariable') {
-                    $target.is('input') && that._renderVariableSelect($target);
+                    $target.is('input') && that._renderVariableSelect($target, null, queryCondition);
                 } else if ($target.is('select')) {
                     let $input = $('<input class="form-control" data-key="value" type="text">');
                     $target.replaceWith($input);
@@ -228,7 +229,7 @@
                 }, !reduceTypeConfig ? ConditionsHelper.typeConfig : ConditionsHelper.reduceTypeConfig, type, false);
 
                 if (type === 'outerSideVariable') {
-                    this._renderVariableSelect($tr.find('[data-key="value"]'), value);
+                    this._renderVariableSelect($tr.find('[data-key="value"]'), value, queryCondition);
                 } else {
                     ModalHelper.setInputData($tr.find('[data-key="value"]'), value, false);
                 }

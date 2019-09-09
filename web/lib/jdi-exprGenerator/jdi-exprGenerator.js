@@ -24,12 +24,12 @@
             `
         }
 
-        function _renderAddon(addonType) {
+        function _renderAddon(addonType, queryCondition) {
             if (!addonType) return '';
             let html = ''
             switch(addonType) {
                 case 'query':
-                    html += '<span class="input-group-addon addon-query" data-config="query" data-mode="multi"></span>'
+                    html += `<span class="input-group-addon addon-query" data-config="query" ${queryCondition ? 'data-query_condition="' + queryCondition + '"' : ''} data-mode="multi"></span>`
                     break;
                 case 'queryColumn':
                     // html += '<span class="input-group-addon addon-data"  data-placement="left" data-toggle="popover" data-tirgger="click" data-type="'+ addonType +'"></span>'
@@ -77,7 +77,7 @@
                             valHtml = /^{.+[:].+}$/img.test(val) ? `value='${val}'` : `value=${val}`,
                             inputHtml = `<div class="input-group">
                                             <input ${(!!arg.readonly ? "disabled" : "")} class="form-control" data-type="arg" type="text" name="value" ${valHtml}>
-                                            ${_renderAddon(arg.addon)}
+                                            ${_renderAddon(arg.addon, arg.queryCondition)}
                                         </div>`;
                         argsHtml += '<tr>' +
                                         '<td data-name="' + arg.cname + '">' + arg.cname + '</td>' +
@@ -1156,7 +1156,8 @@
             $(document).on("click" + EVENT_NAMESPACE, '.eg .eg-function [data-config="query"]', {element: element}, function (event) {
                 var $this = $(this),
                     $input = $this.prev('input'),
-                    mode = $this.data('mode'),
+                    mode = $this.attr('data-mode'),
+                    queryCondition = $this.attr('data-query_condition'),
                     $content = $('.eg:visible .query-config-content'),
                     val = $input.val(),
                     data = null;
@@ -1169,7 +1170,8 @@
                             $target: $input,
                             data: data || {},
                             $content: $content,
-                            fieldMode: mode
+                            fieldMode: mode,
+                            queryCondition: queryCondition
                         })
                     : $content.empty()
             });

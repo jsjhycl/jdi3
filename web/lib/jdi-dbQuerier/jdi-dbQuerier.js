@@ -149,7 +149,8 @@
                 table: table,
                 data: conditions,
                 noExpression: noExpression,
-                reduceTypeConfig: reduceTypeConfig
+                reduceTypeConfig: reduceTypeConfig,
+                queryCondition: queryCondition,
             });
             $queryTime.val(queryTime || "");
             $("#workspace").find('[data-type="div"]').each(function() {
@@ -295,7 +296,8 @@
                         mode: 1,
                         dbName:dbName,
                         table: table,
-                        data: data.conditions
+                        data: data.conditions,
+                        queryCondition: queryCondition,
                     });
                 } else {
                     that.setFields($querierFields, fieldMode, fieldsoptions, null);
@@ -303,7 +305,8 @@
                         mode: 1,
                         dbName:dbName,
                         table: table,
-                        data: null
+                        data: null,
+                        queryCondition: queryCondition,
                     });
                 }
                 that.setQuerierDate($(element).find(".querier-date").parent(), tableAutoCreate);

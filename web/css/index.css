@@ -955,6 +955,10 @@ li {
     cursor: pointer;
     -webkit-border-radius: 50%;
 }
+#events_modal .add,
+#events_modal .del{
+    padding: 0px;
+}
 #change_global_modal .add,
 #events_modal .add,
 #dbDesignerModal .add,

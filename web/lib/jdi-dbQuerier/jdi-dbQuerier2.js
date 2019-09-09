@@ -14,7 +14,6 @@
             var that = this;
             return that.$elements.each(function () {
                 var cache = that.cacheData(this);
-                console.log('cache: ', cache)
                 if (!cache.disabled) {
                     that.renderDOM(this);
                     that.clear(this)

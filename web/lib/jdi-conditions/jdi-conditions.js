@@ -12,10 +12,10 @@
         this._renderVariableSelect = function($replace, varibale) {
             let $select = $('<select data-key="value" class="form-control" style="width: 83%"></select>')
                 localOptions = this.outerSideVariable && this.outerSideVariable.map(i => {
-                    return { name: i.desc + '（局部）', value: i.key }
+                    return { name: i.desc + '（局部）', value: 'LOCAL.' + i.key }
                 }),
                 globalOptions = this.globalVariable && this.globalVariable.map(i => {
-                    return { name: i.desc + '（全局）', value: i.key }
+                    return { name: i.desc + '（全局）', value: 'GLOBAL.' + i.key }
                 }),
                 options = [];
                 localOptions && (options = options.concat(localOptions));
@@ -194,7 +194,6 @@
                 $tr, $operatorSelect, operator;
             noExpression = !!noExpression;
             reduceTypeConfig = !!reduceTypeConfig;
-            console.log('mode: ', mode)
             if (mode === 1) {
                 $tr = $('<tr><td><select class="form-control" data-key="field"></select></td>' +
                     '<td><select class="form-control" data-key="operator"></select></td>' +
@@ -357,7 +356,6 @@
                     return true;
                 });
             }
-            console.log(result)
             return result;
         }
     };

@@ -105,6 +105,7 @@
                 fieldMode = cache.fieldMode,
                 noExpression = !!cache.noExpression,
                 reduceTypeConfig = !!cache.reduceTypeConfig,
+                queryCondition = cache.queryCondition,
                 data = cache.data;
             if (fieldMode === "single") {
                 $querierFields = $(element).find(".querier-fields-show,.querier-fields-real");

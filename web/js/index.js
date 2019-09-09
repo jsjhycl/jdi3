@@ -500,7 +500,7 @@ function propertybar() {
                             globalVariable[el.key] = el.desc;
                         });
                     }
-                    let workspaceId = $('#workspace').data('id');
+                    let workspaceId = $('#workspace').attr('data-id');
                     if (workspaceId && Array.isArray(staticGlobal[workspaceId])) {
                         staticGlobal[workspaceId].forEach(el => {
                             localVariable[el.key] = el.desc;

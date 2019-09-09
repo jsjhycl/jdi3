@@ -179,7 +179,7 @@
                             globalVariable[el.key] = el.desc;
                         })
                     }
-                    let workspaceId = $('#workspace').data('id');
+                    let workspaceId = $('#workspace').attr('data-id');
                     if (workspaceId && Array.isArray(data[workspaceId])) {
                         data[workspaceId].forEach(el => {
                             localVariable[el.key] = el.desc;

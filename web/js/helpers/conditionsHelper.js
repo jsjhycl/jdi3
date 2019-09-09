@@ -85,6 +85,12 @@ var ConditionsHelper = (function () {
             {name: "查询字符串", value: "QueryString"},
             {name: "外部变量", value: "outerSideVarible"}
         ],
+        copySendConfig:[
+            {name: "元素", value: "Element"},
+            {name: "字符串", value: "String"},
+            {name: "数字", value: "Number"},
+            {name: "查询字符串", value: "QueryString"},
+        ],
         reduceTypeConfig: [{name: "字符串", value: "String"}, {name: "数字", value: "Number"}],
         getOperators: getOperators
     };

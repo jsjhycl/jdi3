@@ -156,7 +156,7 @@
                             var property = dynamicGlobal[id];
                             //此处过滤规则待优化
                             // if (property.cname !== id) {
-                            global[property + "(动态)"] = "GLOBAL." + id;
+                            global[property + "(动态)"] = "LOCAL." + id;
                             // }
                         }
                     }

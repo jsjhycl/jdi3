@@ -272,6 +272,7 @@
                 var table = $(this).val(),
                     celement = event.data.element,
                     cache = $.data(celement, CACHE_KEY),
+                    queryCondition = cache.queryCondition,
                     $querierFields = $(celement).find(".querier-fields"),
                     $querierConditions = $(celement).find(".querier-conditions"),
                     AllDbName = that.AllDbName,

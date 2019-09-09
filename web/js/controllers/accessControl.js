@@ -362,7 +362,7 @@ var AccessControl = (function () {
             let id = $control.attr('id');
             if (!id) return;
 
-            let { rowPersent = '', colPersent = '' } = new Property().getValue(id, 'page');
+            let { rowPersent = '', colPersent = '' } = new Property().getValue(id, 'page') || {};
             $control.val(
                     Value
                         ? Value

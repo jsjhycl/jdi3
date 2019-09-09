@@ -83,7 +83,7 @@ var ConditionsHelper = (function () {
             {name: "数字", value: "Number"},
             {name: "元素", value: "Element"},
             {name: "查询字符串", value: "QueryString"},
-            {name: "外部变量", value: "outerSideVarible"}
+            {name: "变量", value: "outerSideVariable"}
         ],
         copySendConfig:[
             {name: "元素", value: "Element"},

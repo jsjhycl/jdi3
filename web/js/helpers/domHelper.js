@@ -75,7 +75,7 @@ var DomHelper = (function () {
     }
 
     function isInPhone($phoneContainer, $node, nodeOffsetTop, nodeOffsetLeft) {
-        if (!$phoneContainer || !$node) return;
+        if (!$phoneContainer || !$node || $phoneContainer.is(':hidden')) return;
             var p_top = $phoneContainer.offset().top,
                 p_bottom = $phoneContainer.offset().top + $phoneContainer.height(),
                 p_left = $phoneContainer.offset().left,

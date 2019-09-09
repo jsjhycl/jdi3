@@ -7,14 +7,21 @@
         this.options = options;
         this.AllDbName = null;
         this.outerSideVariable = null;
+        this.globalVariable = null;
 
-        this._renderVariableSelect = function($replace, varibale) {
-            let $select = $('<select data-key="value"></select>')
-                options = this.outerSideVariable && this.outerSideVariable.map(i => {
-                    return { name: i.desc, value: i.key }
-                });
-            $select.replaceAll($replace);
-            Common.fillSelect($select, {name: "请选择外部变量", value:"" }, options, varibale, true);
+        this._renderVariableSelect = function($replace, varibale, queryCondition) {
+            let $select = $('<select data-key="value" class="form-control" style="width: 83%"></select>')
+                localOptions = this.outerSideVariable && this.outerSideVariable.map(i => {
+                    return { name: i.desc + '（局部）', value: 'LOCAL.' + i.key }
+                }),
+                globalOptions = queryCondition !== 'noGlobal' && this.globalVariable && this.globalVariable.map(i => {
+                    return { name: i.desc + '（全局）', value: 'GLOBAL.' + i.key }
+                }),
+                options = [];
+                localOptions && (options = options.concat(localOptions));
+                globalOptions && (options = options.concat(globalOptions));
+            $replace.replaceWith($select);
+            Common.fillSelect($select, {name: "请选择变量", value:"" }, options, varibale, true);
         }
     }
 
@@ -53,8 +60,8 @@
                 global = await _globalP;
             if (DataType.isObject(data)) this.AllDbName = data;
             if (DataType.isObject(global)) {
-                
-                let workspaceId = $("#workspace").data('id');
+                if (Array.isArray(global.global)) { this.globalVariable = global.global }
+                let workspaceId = $("#workspace").attr('data-id');
                 if (!workspaceId || !global[workspaceId]) return;
                 this.outerSideVariable = global[workspaceId];
             }
@@ -80,7 +87,7 @@
             var $tbody = $(element).find(".table tbody");
             $tbody.empty();
             data.forEach(function (item) {
-                that.setTr(cache.mode, $tbody, item, cache.table, cache.dbName, cache.noExpression, cache.reduceTypeConfig);
+                that.setTr(cache.mode, $tbody, item, cache.table, cache.dbName, cache.noExpression, cache.reduceTypeConfig, cache.queryCondition);
             });
         },
         bindEvents: function (element) {
@@ -93,7 +100,7 @@
                 if (!DataType.isObject(cache)) return;
 
                 var $tbody = $(celement).find(".table tbody");
-                that.setTr(cache.mode, $tbody, null, cache.table,cache.dbName, cache.noExpression, cache.reduceTypeConfig);
+                that.setTr(cache.mode, $tbody, null, cache.table,cache.dbName, cache.noExpression, cache.reduceTypeConfig, cache.queryCondition);
             });
 
             $(element).on("click" + EVENT_NAMESPACE, ".remove", function (event) {
@@ -105,7 +112,8 @@
                 event.stopPropagation();
 
                 var celement = event.data.element,
-                    cache = $.data(celement, CACHE_KEY);
+                    cache = $.data(celement, CACHE_KEY),
+                    queryCondition = cache.queryCondition;
                 if (!DataType.isObject(cache)) return;
 
                 var value = $(this).val(),
@@ -121,6 +129,15 @@
                         options = ConditionsHelper.getOperators(cache.mode, value),
                         operator = $operatorSelect.val();
                     ModalHelper.setSelectData($operatorSelect, defaultOption, options, operator, false);
+                }
+
+                let $target = $(this).parent().parent().find('[data-key="value"]');
+                // $target.length <= 0 && ($target = $(this).parent().parent().find('[data-key="rightValue"]'));
+                if (value === 'outerSideVariable') {
+                    $target.is('input') && that._renderVariableSelect($target, null, queryCondition);
+                } else if ($target.is('select')) {
+                    let $input = $('<input class="form-control" data-key="value" type="text">');
+                    $target.replaceWith($input);
                 }
             });
 
@@ -139,9 +156,9 @@
                         for (var id in dynamicGlobal) {
                             var property = dynamicGlobal[id];
                             //此处过滤规则待优化
-                            if (property.cname !== id) {
-                                global[property.cname + "(动态)"] = "GLOBAL." + id;
-                            }
+                            // if (property.cname !== id) {
+                            global[property + "(动态)"] = "LOCAL." + id;
+                            // }
                         }
                     }
                     $expr.exprGenerator({
@@ -156,19 +173,21 @@
                 var $expr = $(this);
                 new FileService().readFile("/profiles/global.json","UTF-8",function(data) {
                     if (!data) return;
-                    let global = {}
+                    let globalVariable = {},
+                        localVariable = {};
                     if (DataType.isObject(data) && Array.isArray(data.global)) {
                         data.global.forEach(el => {
-                            global[el.key] = el.desc;
+                            globalVariable[el.key] = el.desc;
                         })
                     }
-                    buildArgs($expr, global, null);
+                    let workspaceId = $('#workspace').attr('data-id');
+                    if (workspaceId && Array.isArray(data[workspaceId])) {
+                        data[workspaceId].forEach(el => {
+                            localVariable[el.key] = el.desc;
+                        });
+                    }
+                    buildArgs($expr, globalVariable, localVariable);
                 });
-            });
-
-            $(element).on("change" + EVENT_NAMESPACE, '[data-key="type"]', {element: element}, function (event) {
-                event.stopPropagation();
-                that._renderVariableSelect($(element).find('[data-key="value"]'));
             });
         },
         setTr: function (mode, $tbody, data, table,dbName, noExpression, reduceTypeConfig) {
@@ -208,9 +227,9 @@
                     name: "请选择类型",
                     value: ""
                 }, !reduceTypeConfig ? ConditionsHelper.typeConfig : ConditionsHelper.reduceTypeConfig, type, false);
-                
+
                 if (type === 'outerSideVariable') {
-                    this._renderVariableSelect($tr.find('[data-key="value"]'), value);
+                    this._renderVariableSelect($tr.find('[data-key="value"]'), value, queryCondition);
                 } else {
                     ModalHelper.setInputData($tr.find('[data-key="value"]'), value, false);
                 }
@@ -308,7 +327,6 @@
                 $(this).find('[data-key]').each(function () {
                     var key = $(this).attr("data-key");
                     obj[key] = $(this).val();
-                    console.log(obj, obj[key])
                 });
                 result.push(obj);
             });
@@ -339,7 +357,6 @@
                     return true;
                 });
             }
-            console.log(result)
             return result;
         }
     };

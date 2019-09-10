@@ -959,6 +959,9 @@ li {
 #events_modal .del{
     padding: 0px;
 }
+#events_modal .condition{
+    margin-bottom: 10px;
+}
 #change_global_modal .add,
 #events_modal .add,
 #dbDesignerModal .add,

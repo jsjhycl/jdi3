@@ -105,6 +105,7 @@ function NewEventsModal($modal, $elemts) {
                     </td>
                     <td>
                         ${ that.renderSaveHTML( event.subscribe.saveHTML ) }
+                        ${ that.renderNextProcess( event.subscribe.nextProcess ) }
                         ${ that.renderNotify( event.subscribe.notify ) }
                         ${ that.renderTimeQuery(event.subscribe.timeQuery)}
                         ${ that.renderChangePropertyTable( event.subscribe.property ) }
@@ -211,6 +212,15 @@ function NewEventsModal($modal, $elemts) {
             str += `<option value="${item.customId}" ${link==item.customId? "selected" : ""}> ${item.name}(${item.customId})</option>`
         })
         return `${str}</selectd>`;
+    }
+    this.renderNextProcess = function (nextProcess) {
+        let that = this,
+            str = "";
+        str = `<div class="condition nextProcess" ${nextProcess?"" :'style="display:none"'}>
+                    <span>下一流程</span>
+                    <input type="text" class="form-control" data-save="nextProcess" data-category="nextProcess" data-wrap="true" data-insert="true"  style="display:inline-block;margin-left:10px;" value="${nextProcess||""}">                    
+                </div>`;
+        return str;
     }
     this.renderNotify = function (notify) {
         let that = this,
@@ -801,20 +811,20 @@ function NewEventsModal($modal, $elemts) {
     this.getLinkHtml = function ($tr) {
         let that = this,
             result = {};
-        $tr.each(function(){
+        $tr.each(function () {
             result.table = $(this).find('[data-save="linkTable"]').val()
             result.parmas = that.getLinkParams($(this).find(".linkHtmlParamsTr"))
         })
         console.log(result)
         return result;
     }
-    this.getLinkParams = function($tr){
+    this.getLinkParams = function ($tr) {
         let that = this,
-            result =[];
-        $tr.each(function(){
+            result = [];
+        $tr.each(function () {
             var obj = {};
-            obj.key=$(this).find('[data-save="linkKey"]').val();
-            obj.desc=$(this).find('[data-save="linkDesc"]').val();
+            obj.key = $(this).find('[data-save="linkKey"]').val();
+            obj.desc = $(this).find('[data-save="linkDesc"]').val();
             obj.type = $(this).find('[data-save="linkHtml_type"]').val();
             obj.value = $(this).find('[data-save="linkValue"]').val();
             result.push(obj)
@@ -873,7 +883,8 @@ NewEventsModal.prototype = {
                 query = null,
                 timeQuery = null,
                 saveHTML = null,
-                linkHtml = null;
+                linkHtml = null,
+                nextProcess = null;
             if (that.judgeCheckMehods("commonQuery", $(this).find(".triggerMethods:checked"))) {
                 query = []
                 query.push("commonQuery")
@@ -906,6 +917,9 @@ NewEventsModal.prototype = {
             if (that.judgeCheckMehods("saveHTML", $(this).find(".triggerMethods:checked"))) {
                 saveHTML = $(this).find('[data-save="saveHTML"]').val()
             };
+            if (that.judgeCheckMehods("nextProcess", $(this).find(".triggerMethods:checked"))) {
+                nextProcess = $(this).find('[data-save="nextProcess"]').val()
+            };
             $exprMethods.each(function () {
                 exprMethods.push({
                     fnCname: $(this).next('span').text(),
@@ -929,7 +943,8 @@ NewEventsModal.prototype = {
                         timeQuery: timeQuery,
                         exprMethods: exprMethods,
                         saveHTML: saveHTML,
-                        linkHtml: linkHtml
+                        linkHtml: linkHtml,
+                        nextProcess:nextProcess
                     }
                 })
             }
@@ -978,7 +993,7 @@ NewEventsModal.prototype = {
         that.$modal.on("click" + that.NAME_SPACE, ".methods input[type='checkbox']", function () {
             let value = $(this).val(),
                 check = $(this).prop("checked");
-            let arr = ["save", "upload", "login", "checkAll", "cancelAll", "changeProperty", "copySend", "notify", "saveHTML", "linkHtml"];
+            let arr = ["save", "upload", "login", "checkAll", "cancelAll", "changeProperty", "copySend", "notify", "saveHTML", "linkHtml","nextProcess"];
             if (!arr.includes(value)) return;
             $target = $(this).parents("tr").find(`.${value}`)
             check ? $target.show() : $target.hide()

@@ -813,7 +813,7 @@ function NewEventsModal($modal, $elemts) {
             result = {};
         $tr.each(function () {
             result.table = $(this).find('[data-save="linkTable"]').val()
-            result.parmas = that.getLinkParams($(this).find(".linkHtmlParamsTr"))
+            result.params = that.getLinkParams($(this).find(".linkHtmlParamsTr"))
         })
         console.log(result)
         return result;

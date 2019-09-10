@@ -111,7 +111,7 @@
                 // 填充数据
                 if (Array.isArray(args)) {
                     $argsTbody.find('input[data-type="arg"]').each(function(idx) {
-                        (args[idx]) && $(this).val((args[idx]))
+                        (args[idx]) && $(this).val(typeof args[idx] === 'object' ? JSON.stringify(args[idx]) : args[idx])
                     })
                 }
                 
@@ -286,12 +286,17 @@
                     node = !notDom ? $(html).get(0) : html;
                 while ((node = el.firstChild)) {  
                     lastNode = frag.appendChild(node);  
-                }  
+                }
+
+                // 光标在span上时，光标移动到该span的后面
+                if (range.startContainer.parentNode && $(range.startContainer.parentNode).is('span')) {
+                    range.setStartAfter(range.startContainer.parentNode)
+                }
                 range.insertNode(frag);
                 if (lastNode) {  
                     range = range.cloneRange();  
                     range.setStartAfter(lastNode);  
-                    range.collapse(true);  
+                    range.collapse(true);
                     sel.removeAllRanges();  
                     sel.addRange(range);  
                 }  
@@ -1084,9 +1089,9 @@
                             }
                         };
                     }).get();
+                    $egExpr.find('.current').length > 0 && $egExpr.trigger('focus')
                     that.setExpr($egExpr, $egExpr.get(0), $egExpr.html(), that.generatExprFn(fnName, result, argsArr, isGlobal), replaceResult, null, isGlobal);
                 }
-                
                 $(".eg .eg-function [data-type='arg'].active").removeClass("active");
             });
 

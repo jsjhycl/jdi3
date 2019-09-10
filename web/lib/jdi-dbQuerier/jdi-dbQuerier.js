@@ -210,8 +210,7 @@
                     }
                 });
             } else if (fieldMode === 'column'){
-                console.log('data')
-                $(this).find(':input[value="' + fields + '"]').prop("checked", true);
+                $fieldsDiv.find(':input[value="' + data + '"]').prop("checked", true);
             }
         },
         setQuerierDate: function($date, autoCreate, times) {

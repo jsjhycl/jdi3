@@ -73,10 +73,12 @@
                     }
 
                     renderData.forEach(function(arg, idx) {
-                        var val = hasSetArgs ? (args[idx] ? JSON.stringify(args[idx]) : '') : arg.default == undefined ? "" : JSON.stringify(arg.default),
-                            valHtml = /^{.+[:].+}$/img.test(val) ? `value='${val}'` : `value=${val}`,
+                        var 
+                            // val = hasSetArgs ? (args[idx] ? JSON.stringify(args[idx]) : '') : arg.default == undefined ? "" : JSON.stringify(arg.default),
+                            // valHtml = /^\{[^:]+\}$/img.test(val) ? `value='${val}'` : `value=${val}`,
+                            val = arg.default == undefined ? '' : JSON.stringify(arg.default),
                             inputHtml = `<div class="input-group">
-                                            <input ${(!!arg.readonly ? "disabled" : "")} class="form-control" data-type="arg" type="text" name="value" ${valHtml}>
+                                            <input ${(!!arg.readonly ? "disabled" : "")} class="form-control" data-type="arg" type="text" name="value" value=${val}>
                                             ${_renderAddon(arg.addon, arg.queryCondition)}
                                         </div>`;
                         argsHtml += '<tr>' +
@@ -105,6 +107,13 @@
                                 '</td>' +
                             '</tr>'
                 $argsTbody.empty().append(argsHtml);
+
+                // 填充数据
+                if (Array.isArray(args)) {
+                    $argsTbody.find('input[data-type="arg"]').each(function(idx) {
+                        (args[idx]) && $(this).val(typeof args[idx] === 'object' ? JSON.stringify(args[idx]) : args[idx])
+                    })
+                }
                 
                 delBtn ? $functionArgs.find('.cfooter .function-remove').length <= 0 && $functionArgs.find('.cfooter').append('<button class="btn btn-danger function-remove">删除该函数</button>')
                        : $functionArgs.find('.cfooter .function-remove').remove();
@@ -182,15 +191,15 @@
                     args = args || $eg.find('[data-type="arg"], .queryConfig input').map(function() {
                         let val = $(this).val();
                         let convert = $(this).parent().parent().prev().data('convert');
-                        if (/\{[A-Z]{4}\}/mg.test(val)) { return val.replace(/[{}]/img, '') }
+                        if (/^\{([A-Z]{4})\}$/g.test(val)) { return val.replace(/[{}]/mg, '') }
                         else if (convert && convert.includes('Element') && /^[A-Z]{4}$/mg.test(val)) {
                             return val;
                         } else return '';
                     }).get().filter(i => i != ''),
-                    matches = expr.match(/[^{]([A-Z]+)(?=})/img),
+                    matches = expr.match(/[^{]([A-Z]+)(?=})/mg),
                     ids = [];
                 matches && (ids = [...matches]);
-                Array.isArray(args) && (ids = [...ids, ...args])
+                Array.isArray(args) && (ids = [...ids, ...args]);
                 $eg.find(".eg-elem.selected").removeClass("selected");
                 if (ids.length > 0) {
                     var selector = ids.map(function (item) {
@@ -277,12 +286,17 @@
                     node = !notDom ? $(html).get(0) : html;
                 while ((node = el.firstChild)) {  
                     lastNode = frag.appendChild(node);  
-                }  
+                }
+
+                // 光标在span上时，光标移动到该span的后面
+                if (range.startContainer.parentNode && $(range.startContainer.parentNode).is('span')) {
+                    range.setStartAfter(range.startContainer.parentNode)
+                }
                 range.insertNode(frag);
                 if (lastNode) {  
                     range = range.cloneRange();  
                     range.setStartAfter(lastNode);  
-                    range.collapse(true);  
+                    range.collapse(true);
                     sel.removeAllRanges();  
                     sel.addRange(range);  
                 }  
@@ -820,12 +834,11 @@
                     if (cache.onSetProperty) {
                         let _val = isGlobal ? $expr.find('.expr-fn-item[data-global]').map(function() {
                                                 let $this = $(this);
-
                                                 return {
-                                                    fnCname: $this.data('fn_cname'),
-                                                    fnName: $this.data('fn_name'),
-                                                    fnArgs: $this.data('fn_args') ? JSON.parse(decodeURI($this.data('fn_args'))) : '',
-                                                    expr: decodeURI($this.data('fn'))
+                                                    fnCname: $this.attr('data-fn_cname'),
+                                                    fnName: $this.attr('data-fn_name'),
+                                                    fnArgs: $this.attr('data-fn_args') ? JSON.parse(decodeURI($this.attr('data-fn_args'))) : '',
+                                                    expr: decodeURI($this.attr('data-fn'))
                                                 }
                                             }).get()
                                             : expr;
@@ -965,6 +978,8 @@
                 $(".eg .eg-expr, .eg .eg-function [data-type='arg']").removeClass("active");
                 $(".eg .queryConfig input").removeClass("active");
                 $(this).addClass("active");
+
+                // FunctionUtil.setElemSelected();
             });
 
             // 获取光标位置
@@ -1050,6 +1065,8 @@
                     result = fnName + "("+ argsString +")"
                 }
                 
+                
+
                 if (fnType === "系统函数") {
                     that.setExpr($egExpr, $egExpr.get(0), $egExpr.html(), result, replaceResult);
                 } else {
@@ -1072,9 +1089,9 @@
                             }
                         };
                     }).get();
+                    $egExpr.find('.current').length > 0 && $egExpr.trigger('focus')
                     that.setExpr($egExpr, $egExpr.get(0), $egExpr.html(), that.generatExprFn(fnName, result, argsArr, isGlobal), replaceResult, null, isGlobal);
                 }
-                
                 $(".eg .eg-function [data-type='arg'].active").removeClass("active");
             });
 
@@ -1173,7 +1190,7 @@
                             fieldMode: mode,
                             queryCondition: queryCondition
                         })
-                    : $content.empty()
+                    : $content.empty();
             });
 
             // 全局变量对应关系
@@ -1213,7 +1230,9 @@
                 try {
                     let _args = JSON.parse(args);
                     args = _args;
-                } catch (err) {}
+                } catch (err) {
+                    console.log('err: ', err)
+                }
                 $this.addClass('current').siblings().removeClass('current');
                 $eg.find(`.fn-types-item[data-type="${fnType}"]`).trigger('click');
                 $eg.find('.fn-category-select').val(fnCate).trigger('change', true);
@@ -1247,11 +1266,11 @@
                     cFnName = fnName + `_${ count + 1}`;
                 }
             }
-            if (Array.isArray(args)) {
-                args = args.map(i => {
-                    return DataType.isObject(i) && i[Object.keys(i)[0]].nodeType != undefined ? ('{' + Object.keys(i)[0] + '}') : i;
-                })
-            };
+            // if (Array.isArray(args)) {
+            //     args = args.map(i => {
+            //         return DataType.isObject(i) && i[Object.keys(i)[0]].nodeType != undefined ? ('{' + Object.keys(i)[0] + '}') : i;
+            //     })
+            // };
             let $span = $(`<span contenteditable="false" data-fn_name="${fnName}" data-fn_cname="${fnCname || cFnName}" data-fn=${encodeURI(fnData)} data-fn_args=${encodeURI(JSON.stringify(args))} class="expr-fn-item" ${isGlobal ? 'data-global' : ''}>${fnCname || cFnName}</span>`);
             return $span.get(0).outerHTML + " ";
         },
@@ -1276,6 +1295,7 @@
                     let localFnName = fn.match(/(^[a-zA-Z]+)(?=\(.*\))/img);
                     if(!localFnName) return;
                     localFnName = localFnName[0];
+                    
                     if (that.isBuiltInFn(fn, localFnName, cacheFns)) {
                         try {
                             eval('function ' + localFnName + '(...args) { return args }');

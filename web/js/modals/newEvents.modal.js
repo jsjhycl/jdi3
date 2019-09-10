@@ -218,7 +218,7 @@ function NewEventsModal($modal, $elemts) {
             str = "";
         str = `<div class="condition nextProcess" ${nextProcess?"" :'style="display:none"'}>
                     <span>下一流程</span>
-                    <input type="text" class="form-control" data-save="nextProcess" data-category="nextProcess" data-wrap="true" data-insert="true"  style="display:inline-block;margin-left:10px;" value="${nextProcess||""}">                    
+                    <input type="text" class="form-control" data-save="nextProcess" data-category="nextProcess" data-wrap="true" data-insert="true"  style="display:inline-block;margin-left:10px;" value='${nextProcess||""}'>                    
                 </div>`;
         return str;
     }
@@ -227,7 +227,7 @@ function NewEventsModal($modal, $elemts) {
             str = "";
         str = `<div class="condition notify" ${notify ? "" : 'style="display:none"' }>
                     <span>通知元素</span>
-                    <input type="text" class="form-control" data-save="notifyEl" data-category="notify" data-apply="add"  style="display:inline-block;margin-left:10px;" value="${notify||""}">
+                    <input type="text" class="form-control" data-save="notifyEl" data-category="notify" data-apply="add"  style="display:inline-block;margin-left:10px;" value='${notify||""}'>
                </div>`
         return str;
     }

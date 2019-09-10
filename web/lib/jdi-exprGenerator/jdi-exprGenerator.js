@@ -182,15 +182,15 @@
                     args = args || $eg.find('[data-type="arg"], .queryConfig input').map(function() {
                         let val = $(this).val();
                         let convert = $(this).parent().parent().prev().data('convert');
-                        if (/\{[A-Z]{4}\}/mg.test(val)) { return val.replace(/[{}]/img, '') }
+                        if (/^\{([A-Z]{4})\}$/g.test(val)) { return val.replace(/[{}]/mg, '') }
                         else if (convert && convert.includes('Element') && /^[A-Z]{4}$/mg.test(val)) {
                             return val;
                         } else return '';
                     }).get().filter(i => i != ''),
-                    matches = expr.match(/[^{]([A-Z]+)(?=})/img),
+                    matches = expr.match(/[^{]([A-Z]+)(?=})/mg),
                     ids = [];
                 matches && (ids = [...matches]);
-                Array.isArray(args) && (ids = [...ids, ...args])
+                Array.isArray(args) && (ids = [...ids, ...args]);
                 $eg.find(".eg-elem.selected").removeClass("selected");
                 if (ids.length > 0) {
                     var selector = ids.map(function (item) {
@@ -965,6 +965,8 @@
                 $(".eg .eg-expr, .eg .eg-function [data-type='arg']").removeClass("active");
                 $(".eg .queryConfig input").removeClass("active");
                 $(this).addClass("active");
+
+                FunctionUtil.setElemSelected();
             });
 
             // 获取光标位置
@@ -1173,7 +1175,7 @@
                             fieldMode: mode,
                             queryCondition: queryCondition
                         })
-                    : $content.empty()
+                    : $content.empty();
             });
 
             // 全局变量对应关系

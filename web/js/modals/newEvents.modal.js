@@ -161,6 +161,7 @@ function NewEventsModal($modal, $elemts) {
     this.renderLinkHTML = function (linkHtml = {}) {
         let that = this,
             str = '';
+        if(!linkHtml) return str;
         str += `<tr class="linkHtmlTr">
                     <td>
                         ${ that.renderLinkHTMLSelect(linkHtml.table) }
@@ -815,7 +816,6 @@ function NewEventsModal($modal, $elemts) {
             result.table = $(this).find('[data-save="linkTable"]').val()
             result.params = that.getLinkParams($(this).find(".linkHtmlParamsTr"))
         })
-        console.log(result)
         return result;
     }
     this.getLinkParams = function ($tr) {

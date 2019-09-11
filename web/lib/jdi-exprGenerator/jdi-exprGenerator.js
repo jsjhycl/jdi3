@@ -1068,7 +1068,7 @@
                 
 
                 if (fnType === "系统函数") {
-                    that.setExpr($egExpr, $egExpr.get(0), $egExpr.html(), result, replaceResult);
+                    that.setExpr($egExpr, $egExpr.get(0), $egExpr.html(), result, replaceResult, true);
                 } else {
                     // 参数为对象时，不转换，（待优化，没空写）
                     let argsArr = $eg.find('[data-type="arg"]').map(function() {
@@ -1244,6 +1244,7 @@
                 let result = confirm('确认删除该已配置函数？')
                 if(!result) return;
                 $('.expr-fn-item.current').remove();
+                $(this).remove();
             });
         },
         setExpr: function ($elem, elem, expr, value, replaceExpr, isDom, isGlobal) {

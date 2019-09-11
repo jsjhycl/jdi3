@@ -179,11 +179,11 @@ Propertybar.prototype = {
                 }
                 Common.fillSelect($select,{name:"请选择第几段",value:""},options,null,true)
         })
-        that.$container.on("change" + that.NAME_SPACE, ".property-color-input", function(event){
+        that.$container.on("input change" + that.NAME_SPACE, ".property-color-input", function(event){
             var $this = $(this),
                 target = $this.data('belong');
             $("#" + target).val($this.val()).focus().trigger("blur");
-            $this.val("#000000")
+            $this.val("#FFFFFF");
         })
     }
 };

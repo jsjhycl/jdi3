@@ -161,7 +161,8 @@ function NewEventsModal($modal, $elemts) {
     this.renderLinkHTML = function (linkHtml = {}) {
         let that = this,
             str = '';
-        if(!linkHtml) return str;
+        if(!linkHtml) linkHtml={table:""};
+        console.log(linkHtml)
         str += `<tr class="linkHtmlTr">
                     <td>
                         ${ that.renderLinkHTMLSelect(linkHtml.table) }
@@ -177,7 +178,7 @@ function NewEventsModal($modal, $elemts) {
                                 <tr>
                             </thead>
                             <tbody class="linkbody">
-                                ${that.renderLinkHTMLParmas(linkHtml.parmas)}
+                                ${that.renderLinkHTMLParmas(linkHtml.params)}
                             </tbody>
                         </table>
                     </td>

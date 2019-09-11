@@ -1,6 +1,5 @@
 var PropertyWatch = {
     selectWorkspace: function (view, key, name, change) {
-
         var that = this,
             $designer = $("#designer"),
             $workspace = $("#workspace"),
@@ -29,8 +28,8 @@ var PropertyWatch = {
             display: "none"
         })
         $PropertyMask.css({
-            width:"1458px",
-            height:$designer.find("#ruler").height(),
+            width: "1458px",
+            height: $designer.find("#ruler").height(),
             padding: "0 10px 20px 20px",
             background: "rgb(0,0,0,.6)"
         })
@@ -123,7 +122,7 @@ var PropertyWatch = {
             $(this).addClass("selCurrent")
             var domId = $(this).attr("data-domid"),
                 $control = $(`#workspace #${domId}`);
-                $("#changePropertyBox").remove();
+            $("#changePropertyBox").remove();
             new Property().load($control);
         })
 
@@ -148,7 +147,6 @@ var PropertyWatch = {
                 top: event.pageY,
                 zIndex: 955
             })
-            // console.log($div.find(".changePropertyValue").attr('autofocus', 'autofocus'))
             var $control = $(`#workspace #${domId}`)
             new Property().load($control);
 
@@ -186,17 +184,29 @@ var PropertyWatch = {
             $mask.find(`.propertySpan[data-domid='${id}']`).text(value);
             $mask.find(`.propertySpan[data-domid='${id}']`).attr("title", value);
             if (property == "expression" || property == "dataSource.db" || property == "events" || property == "query.db" || property == "archivePath" || Property == "query.nest") {
-                if (!value) return;
+                value ? "" : value = null;
                 try {
                     value = JSON.parse(value)
-                }catch{
-                   return alert("请检查保存的数据格式是否正确?")
+                } catch {
+                    return alert("请检查保存的数据格式是否正确?")
+                }
+            }
+            if (property == "visibility" || property == "readonly" || property == "disabled") {
+                if (value == "true") {
+                    value = true
+                } else if (value == "false") {
+                    value = false
+                } else {
+                    return alert("请检查输入是否正确")
                 }
             }
             new Property().setValue(id, property, value)
             var $control = $(`#workspace #${id}`)
             new Property().load($control);
             $("#changePropertyBox").remove()
+            if (property == "cname") {
+                that.selectWorkspace("sameCname", "cname", "中文名", "true")
+            }
         })
     }
 

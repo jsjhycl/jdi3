@@ -287,6 +287,7 @@ function NewEventsModal($modal, $elemts) {
         if (subscribe.notify) checkArr.push("notify");
         if (subscribe.saveHTML) checkArr.push("saveHTML");
         if (subscribe.linkHtml) checkArr.push("linkHtml")
+        if (subscribe.nextProcess) checkArr.push("nextProcess")
         subscribe.query && subscribe.query.forEach(item => {
             checkArr.push(item)
         })

@@ -452,7 +452,8 @@ function Workspace() {
 
         var $temp = $('<div></div>');
         $temp.css({
-            "position": "absolute",
+            "position": "relative",
+            "margin":"0 auto",
             "width": settingData.width,
             "height": settingData.height,
             "background-color": settingData.bgColor,

@@ -12,7 +12,7 @@
         this._renderVariableSelect = function($replace, varibale, queryCondition) {
             let $select = $('<select data-key="value" class="form-control" style="width: 83%"></select>')
                 localOptions = this.outerSideVariable && this.outerSideVariable.map(i => {
-                    return { name: i.desc + '（局部）', value: 'LOCAL.' + i.key }
+                    return { name: i.desc + '（登录）', value: 'LOCAL.' + i.key }
                 }),
                 globalOptions = queryCondition !== 'noGlobal' && this.globalVariable && this.globalVariable.map(i => {
                     return { name: i.desc + '（全局）', value: 'GLOBAL.' + i.key }
@@ -149,7 +149,7 @@
                     if (DataType.isObject(staticGlobal)) {
                         for (var key in staticGlobal) {
                             var value = staticGlobal[key];
-                            global[value + "(静态)"] = "GLOBAL." + key;
+                            global[value + "(登录)"] = "GLOBAL." + key;
                         }
                     }
                     if (DataType.isObject(dynamicGlobal)) {

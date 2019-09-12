@@ -342,7 +342,7 @@
                             <table class="table table-bordered table-striped table-contact">
                                 <thead>
                                     <tr>
-                                        <th>全局变量</th>
+                                        <th>登录变量</th>
                                         <th>对应</th>
                                         <th>查询字段变量</th>
                                     </tr>
@@ -1031,7 +1031,7 @@
                     isGlobal = !!cache.global,
                     $eg = $(".eg:visible"),
                     $egExpr = $eg.find(".eg-expr"),
-                    target = $eg.find('.eg-elem.current').data('id'),
+                    target = $eg.find('.eg-elem.current').data('id') || $('#property_id').val(),
                     fnType = $eg.find(".fn-item.selected").data('type') || $eg.find(".fn-system-item.selected").data('type'),
                     fnName = $eg.find(".fn-item.selected").data('name') ||  $eg.find(".fn-system-item.selected").data('name'),
                     isManyArgsTable = $eg.find(".eg-function-args table").hasClass("manyArgs-table"),

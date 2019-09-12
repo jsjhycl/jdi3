@@ -1031,7 +1031,7 @@
                     isGlobal = !!cache.global,
                     $eg = $(".eg:visible"),
                     $egExpr = $eg.find(".eg-expr"),
-                    target = $eg.find('.eg-elem.current').data('id'),
+                    target = $eg.find('.eg-elem.current').data('id') || $('#property_id').val(),
                     fnType = $eg.find(".fn-item.selected").data('type') || $eg.find(".fn-system-item.selected").data('type'),
                     fnName = $eg.find(".fn-item.selected").data('name') ||  $eg.find(".fn-system-item.selected").data('name'),
                     isManyArgsTable = $eg.find(".eg-function-args table").hasClass("manyArgs-table"),

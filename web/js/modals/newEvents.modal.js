@@ -14,6 +14,8 @@ function NewEventsModal($modal, $elemts) {
     this.FONT_SIZE = null;
     this.event = null;
     this.LINKHTML_DATA = null
+    this.globalVariable = null;
+    this.outerSideVariable = null;
     this.$eventTbody = this.$modalBody.find(".table .events_tbbody")
     //获取已经发布的布局
     this.GET_PUBLISH_JSON = async function () {
@@ -26,9 +28,11 @@ function NewEventsModal($modal, $elemts) {
             fields = ["customId", "name"];
         that.PUBLISH_JSON = await new Service().query(table, conditions, fields)
     }
-    this.GET_GLOBAL_JSON = async function () {
+    this.GET_GLOBAL_JSON = async function (id) {
         let that = this;
-        that.GLOBAL_JSON = await new FileService().readFile("./profiles/global.json")
+        that.GLOBAL_JSON = await new FileService().readFile("./profiles/global.json");
+        that.globalVariable = that.GLOBAL_JSON.globalVariable;
+        that.outerSideVariable = that.GET_GLOBAL_JSON[id]
     }
     //获取EVENT的配置信息 
     this.GET_EVENTS_JSON = async function () {
@@ -161,7 +165,9 @@ function NewEventsModal($modal, $elemts) {
     this.renderLinkHTML = function (linkHtml = {}) {
         let that = this,
             str = '';
-        if(!linkHtml) linkHtml={table:""};
+        if (!linkHtml) linkHtml = {
+            table: ""
+        };
         console.log(linkHtml)
         str += `<tr class="linkHtmlTr">
                     <td>
@@ -220,7 +226,7 @@ function NewEventsModal($modal, $elemts) {
             str = "";
         str = `<div class="condition nextProcess" ${nextProcess?"" :'style="display:none"'}>
                     <span>下一流程</span>
-                    <input type="text" class="form-control" data-save="nextProcess" data-category="nextProcess" data-wrap="true" data-insert="true"  style="display:inline-block;margin-left:10px;" value='${nextProcess||""}'>                    
+                    <input type="text" class="form-control" data-save="nextProcess" data-category="nextProcess" data-wrap="true" data-insert="true"  style="display:inline-block;margin-left:10px; width:500px" value='${nextProcess||""}'>                    
                 </div>`;
         return str;
     }
@@ -229,7 +235,7 @@ function NewEventsModal($modal, $elemts) {
             str = "";
         str = `<div class="condition notify" ${notify ? "" : 'style="display:none"' }>
                     <span>通知元素</span>
-                    <input type="text" class="form-control" data-save="notifyEl" data-category="notify" data-apply="add"  style="display:inline-block;margin-left:10px;" value='${notify||""}'>
+                    <input type="text" class="form-control" data-save="notifyEl" data-category="notify" data-apply="add"  style="display:inline-block;margin-left:10px;width:500px" value='${notify||""}'>
                </div>`
         return str;
     }
@@ -238,7 +244,7 @@ function NewEventsModal($modal, $elemts) {
             str = "";
         str = `<div class="condition saveHTML" ${saveHTML ? "" : 'style="display:none"' }>
                 <span>保存文件名</span>
-                <input type="text" class="form-control" style="display:inline-block;margin-left:10px;" value='${saveHTML||""}' data-save="saveHTML" data-category="saveHTML" data-wrap="true" data-insert="true">
+                <input type="text" class="form-control" style="display:inline-block;margin-left:10px;width:500px" value='${saveHTML||""}' data-save="saveHTML" data-category="saveHTML" data-wrap="true" data-insert="true">
             </div>`
         return str;
     }
@@ -268,10 +274,10 @@ function NewEventsModal($modal, $elemts) {
     }
     this.renderOPeratorSelect = function (type, saveType, relyValue, selected) {
         let defalutOption = {
-                name: "请选择操作符",
-                value: ""
-            },
-            options = [defalutOption, ...ConditionsHelper.getOperators(type, relyValue)],
+            name: "请选择操作符",
+            value: ""
+        }
+        options = type == 3 ? ConditionsHelper.getOperators(type, relyValue) : [defalutOption, ...ConditionsHelper.getOperators(type, relyValue)],
             str = `<select class="form-control" data-save="${saveType}" data-change="${saveType}">`;
         options.forEach(item => {
             str += `<option value="${item.value}" ${ selected==item.value ? "selected" : "" }>${item.name}</option>`
@@ -848,7 +854,7 @@ NewEventsModal.prototype = {
             await that.GET_METHODS();
             await that.GET_EVENTS_DESC()
             await that.GET_EVENTS_JSON()
-            await that.GET_GLOBAL_JSON()
+            await that.GET_GLOBAL_JSON(id)
         } catch (error) {
             alert("获取文件配置失败")
         }
@@ -946,7 +952,7 @@ NewEventsModal.prototype = {
                         exprMethods: exprMethods,
                         saveHTML: saveHTML,
                         linkHtml: linkHtml,
-                        nextProcess:nextProcess
+                        nextProcess: nextProcess
                     }
                 })
             }
@@ -988,14 +994,18 @@ NewEventsModal.prototype = {
             let value = $(this).val(),
                 $tr = $(this).parents("tr").eq(0),
                 $op = $tr.find('[data-change="operator"]'),
+                $leftValue = $tr.find('[data-save="leftValue"]')
                 $html = that.renderOPeratorSelect(2, "operator", value, null);
+            if (value == "outerSideVariable") {
+
+            }
             $op.replaceWith($html)
         })
         //触发方法的点击
         that.$modal.on("click" + that.NAME_SPACE, ".methods input[type='checkbox']", function () {
             let value = $(this).val(),
                 check = $(this).prop("checked");
-            let arr = ["save", "upload", "login", "checkAll", "cancelAll", "changeProperty", "copySend", "notify", "saveHTML", "linkHtml","nextProcess"];
+            let arr = ["save", "upload", "login", "checkAll", "cancelAll", "changeProperty", "copySend", "notify", "saveHTML", "linkHtml", "nextProcess"];
             if (!arr.includes(value)) return;
             $target = $(this).parents("tr").find(`.${value}`)
             check ? $target.show() : $target.hide()

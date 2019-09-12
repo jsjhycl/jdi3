@@ -213,9 +213,10 @@
 .eg .eg-dialog .eg-insertFn .cfooter .btn {
     margin-right: 10px;
 }
-.eg .eg-dialog .eg-function .table-contact {
+.eg .eg-dialog .eg-function .query-config-content {
     max-height: 500px;
-    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 .eg .eg-dialog .eg-function .contact-footer {
     padding-bottom: 15px;

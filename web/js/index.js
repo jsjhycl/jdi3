@@ -426,7 +426,7 @@ function propertybar() {
 			if (DataType.isObject(staticGlobal)) {
 				for (var key in staticGlobal) {
 					var value = staticGlobal[key];
-					global[value + "(静态)"] = "GLOBAL." + key;
+					global[value + "(登录)"] = "GLOBAL." + key;
 				}
 			}
 			if (DataType.isObject(dynamicGlobal)) {
@@ -450,7 +450,7 @@ function propertybar() {
 					// 	data: {"+": "+", "-": "-", "*": "*", "/": "/"},
 					// 	style: "cpanel-operator"
 					// },
-					{title: "全局变量", type: "normal", data: global, style: "cpanel-global"},
+					{title: "变量", type: "normal", data: global, style: "cpanel-global"},
 				],
 				functions: [{
 						data: localFunction,

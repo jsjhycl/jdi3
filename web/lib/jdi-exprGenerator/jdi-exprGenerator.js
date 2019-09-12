@@ -342,7 +342,7 @@
                             <table class="table table-bordered table-striped table-contact">
                                 <thead>
                                     <tr>
-                                        <th>全局变量</th>
+                                        <th>登录变量</th>
                                         <th>对应</th>
                                         <th>查询字段变量</th>
                                     </tr>

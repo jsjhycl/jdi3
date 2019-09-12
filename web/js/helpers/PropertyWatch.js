@@ -46,6 +46,10 @@ var PropertyWatch = {
                 $origin = $originContainer.find("#" + id),
                 isNode = $dom.hasClass("workspace-node"),
                 $span = $(`<span data-domId = "${id}" data-change="${change}" data-property="${key}" data-name="${name}" class="propertySpan"></span>`);
+            // console.log(view,key,name)
+            // if(key=="visibility"||key=="disabled"||key=="readonly"){
+            //     $span = $(`<input type="checkbox">`) 
+            // }
             // $temp = isSelected ? $dom.parent() : $dom;
             $temp = $dom;
             $span.css({
@@ -58,7 +62,8 @@ var PropertyWatch = {
                 zIndex: 803,
                 display: "block",
                 boxSizing: "border-box",
-                cursor: "pointer"
+                cursor: "pointer",
+                lineHeight: '0'
             })
 
             switch (view) {
@@ -82,6 +87,7 @@ var PropertyWatch = {
                     break;
                 case "property":
                     var value = new Property().getValue(id, key)
+
                     if (key == "id") {
                         value = id
                     };
@@ -95,6 +101,9 @@ var PropertyWatch = {
                             'data-placement': 'top',
                             'title': value
                         });
+                    }
+                    if (key == "visibility" || key == "disabled" || key == "readonly") {
+                        value = $(`<input type="checkbox" ${ value ? "checked" : ""} data-click="true" data-domId = "${id}"  data-property="${key}" data-name="${name}">`)
                     }
                     break;
             }
@@ -125,8 +134,19 @@ var PropertyWatch = {
             $("#changePropertyBox").remove();
             new Property().load($control);
         })
+        $mask.on("click", '[data-click="true"]', function () {
+            var domId = $(this).attr("data-domid"),
+                key = $(this).attr("data-property"),
+                check = $(this).is(":checked");
+            new Property().setValue(domId, key, check)
+            var $control = $(`#workspace #${domId}`)
+            new Property().load($control);
+
+        })
 
         $mask.on("dblclick", ".propertySpan[data-change='true']", function (event) {
+            var key = $(this).attr("data-property");
+            if (key == "visibility" || key == "disabled" || key == "readonly") return;
             $mask.find(".propertySpan").removeClass("selCurrent")
             $(this).addClass("selCurrent")
             $("#changePropertyBox").remove();

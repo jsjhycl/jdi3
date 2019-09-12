@@ -1043,7 +1043,7 @@
                     var convert = $(this).parent().prev().data('convert'),
                         isCheckbox = $(this).is(':checkbox'),
                         val = !isCheckbox ? $(this).val() : $(this).is(':checked');
-                    if (/\{(.+?)\}/.test(val)) {
+                    if (/^\{(.+?)\}/.test(val)) {
                         return val;
                     } else if (convert === 'Number') {
                         return Number(val);
@@ -1064,8 +1064,6 @@
                 } else if (fnType === "系统函数") {
                     result = fnName + "("+ argsString +")"
                 }
-                
-                
 
                 if (fnType === "系统函数") {
                     that.setExpr($egExpr, $egExpr.get(0), $egExpr.html(), result, replaceResult, true);
@@ -1075,21 +1073,30 @@
                         var convert = $(this).parent().prev().data('convert'),
                             isCheckbox = $(this).is(':checkbox'),
                             val = !isCheckbox ? $(this).val() : $(this).is(':checked');
-                        if (/\{([^,]+)\}/.test(val)) {
+                        console.log(val)
+                        if (/^\{[A-Z]{4}[^}]*\}/mg.test(val)) {
+                            console.log(1)
                             return val;
                         } else if (convert === 'Number') {
+                            console.log(2)
                             return Number(val);
                         } else if (convert === 'Boolean') {
+                            console.log(3)
                             return !!val;
+                        } else if (convert === 'String') {
+                            console.log(6)
+                            return '"' + val + '"'
                         } else {
+                            console.log(4)
                             try {
                                 return JSON.parse(val);
                             } catch(err) {
-                                return val
+                                return val                                
                             }
                         };
                     }).get();
-                    $egExpr.find('.current').length > 0 && $egExpr.trigger('focus')
+                    $egExpr.find('.current').length > 0 && $egExpr.trigger('focus');
+                    console.log('result" ', result)
                     that.setExpr($egExpr, $egExpr.get(0), $egExpr.html(), that.generatExprFn(fnName, result, argsArr, isGlobal), replaceResult, null, isGlobal);
                 }
                 $(".eg .eg-function [data-type='arg'].active").removeClass("active");
@@ -1267,11 +1274,11 @@
                     cFnName = fnName + `_${ count + 1}`;
                 }
             }
-            // if (Array.isArray(args)) {
-            //     args = args.map(i => {
-            //         return DataType.isObject(i) && i[Object.keys(i)[0]].nodeType != undefined ? ('{' + Object.keys(i)[0] + '}') : i;
-            //     })
-            // };
+            if (Array.isArray(args)) {
+                args = args.map(i => {
+                    return DataType.isObject(i) && i[Object.keys(i)[0]].nodeType != undefined ? ('{' + Object.keys(i)[0] + '}') : i;
+                })
+            };
             let $span = $(`<span contenteditable="false" data-fn_name="${fnName}" data-fn_cname="${fnCname || cFnName}" data-fn=${encodeURI(fnData)} data-fn_args=${encodeURI(JSON.stringify(args))} class="expr-fn-item" ${isGlobal ? 'data-global' : ''}>${fnCname || cFnName}</span>`);
             return $span.get(0).outerHTML + " ";
         },

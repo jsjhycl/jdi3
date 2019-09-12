@@ -382,6 +382,7 @@
                             result[global_variable] = field || '';
                         });
                         $input.val(JSON.stringify(result));
+                        $content.empty();
                     });
                     $(document).on("click" + '.contact_nameSpace', '.eg .eg-function .contact-clear', function (event) {
                         $content.find('select').val("");
@@ -1073,7 +1074,6 @@
                         var convert = $(this).parent().prev().data('convert'),
                             isCheckbox = $(this).is(':checkbox'),
                             val = !isCheckbox ? $(this).val() : $(this).is(':checked');
-                        console.log(val)
                         if (/^\{[A-Z]{4}[^}]*\}/mg.test(val)) {
                             console.log(1)
                             return val;
@@ -1250,8 +1250,8 @@
             $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-function .function-remove", function (event) {
                 let result = confirm('确认删除该已配置函数？')
                 if(!result) return;
-                $('.expr-fn-item.current').remove();
                 $(this).remove();
+                $('.expr-fn-item.current').remove();
             });
         },
         setExpr: function ($elem, elem, expr, value, replaceExpr, isDom, isGlobal) {

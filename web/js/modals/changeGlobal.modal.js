@@ -50,7 +50,7 @@ ChangeGlobal.prototype = {
         var that = this,
             save = [],
             type = that.$modal.find(".nav .active a").text(),
-            $target = type == "全局" ? that.$globaltbody : that.$localVariable,
+            $target = type == "登录" ? that.$globaltbody : that.$localVariable,
             typeId = type == "局部" ? $("#workspace").attr("data-id") : "global";
         $target.find("tr").each((trIndex, trEle) => {
             if (!$(trEle).find("input:first").val() || !$(trEle).find("input:last").val()) return;

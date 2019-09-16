@@ -115,6 +115,7 @@ function NewEventsModal($modal, $elemts) {
                         ${ that.renderChangePropertyTable( event.subscribe.property ) }
                         ${ that.renderCopySendTable( event.subscribe.copySend ) }
                         ${ that.renderLinkHTMLTable(event.subscribe.linkHtml) }
+                        ${ that.renderExecuteFn(event.subscribe.executeFn)}
                     </td>
                  </tr>`;
         return str;
@@ -151,6 +152,8 @@ function NewEventsModal($modal, $elemts) {
                     <table class="table table-bordered">
                         <thead>
                             <tr>
+                                <th class="text-center">HTTP</th>
+                                <th class="text-center">跳转类型</th>
                                 <th class="text-center">跳转页面</th>
                                 <th class="text-center">跳转参数</th>
                             </tr>
@@ -168,10 +171,18 @@ function NewEventsModal($modal, $elemts) {
         if (!linkHtml) linkHtml = {
             table: ""
         };
-        console.log(linkHtml)
         str += `<tr class="linkHtmlTr">
                     <td>
-                        ${ that.renderLinkHTMLSelect(linkHtml.table) }
+                        <input type="text" class="form-control" data-save="linkHttp" value="${linkHtml.http||"http://172.18.152.111/home/model"}">
+                    </td>
+                    <td>
+                        <select class="form-control" data-save="linkType">
+                            <option value="linkhtml" ${linkHtml.type=="linkhtml"?"selected":""}>内部跳转</option>
+                            <option value="nextProcess" ${linkHtml.type=="nextProcess"?"selected":""}>下一流程</option>
+                        </select>
+                    </td>
+                    <td class="linkCustomId">
+                        ${ that.renderLinkHTMLSelect(linkHtml.customId,linkHtml.type) }
                     </td>
                     <td>
                         <table class="table table-bordered">
@@ -213,13 +224,19 @@ function NewEventsModal($modal, $elemts) {
         })
         return str;
     }
-    this.renderLinkHTMLSelect = function (link) {
+    this.renderLinkHTMLSelect = function (customId, type) {
         let that = this,
-            str = `<select class="form-control" data-save="linkTable" data-change="linkTable"><option value="">请选择跳转页面</option>`
-        that.PUBLISH_JSON.forEach(item => {
-            str += `<option value="${item.customId}" ${link==item.customId? "selected" : ""}> ${item.name}(${item.customId})</option>`
-        })
-        return `${str}</selectd>`;
+            str = "";
+        if (type == "linkhtml") {
+            str = `<select class="form-control" data-save="linkCustomId" data-change="linkCustomId"><option value="">请选择跳转页面</option>`
+            that.PUBLISH_JSON.forEach(item => {
+                str += `<option value="${item.customId}" ${customId==item.customId? "selected" : ""}> ${item.name}(${item.customId})</option>`
+            })
+            str += "</select>"
+        } else {
+            str = `<input type="text" class="form-control" value="${customId}" data-Inputchange="linkCustomId" data-save="linkCustomId" data-category="nextProcess" data-wrap="true" data-insert="true" >`
+        }
+        return str;
     }
     this.renderNextProcess = function (nextProcess) {
         let that = this,
@@ -237,6 +254,15 @@ function NewEventsModal($modal, $elemts) {
                     <span>通知元素</span>
                     <input type="text" class="form-control" data-save="notifyEl" data-category="notify" data-apply="add"  style="display:inline-block;margin-left:10px;width:500px" value='${notify||""}'>
                </div>`
+        return str;
+    }
+    this.renderExecuteFn = function (fn) {
+        let that = this,
+            str = "";
+        str = `<div class="condition executeFn" ${fn ? "" : 'style="display:none"' } >
+                    <p style="margin:0px">代码执行</p>
+                    <textarea style="width:860px;height:200px" data-save="executeFn" >${fn}</textarea>
+                </div>`
         return str;
     }
     this.renderSaveHTML = function (saveHTML) {
@@ -293,8 +319,10 @@ function NewEventsModal($modal, $elemts) {
         if (subscribe.property) checkArr.push("changeProperty");
         if (subscribe.notify) checkArr.push("notify");
         if (subscribe.saveHTML) checkArr.push("saveHTML");
-        if (subscribe.linkHtml) checkArr.push("linkHtml")
-        if (subscribe.nextProcess) checkArr.push("nextProcess")
+        if (subscribe.linkHtml) checkArr.push("linkHtml");
+        if (subscribe.nextProcess) checkArr.push("nextProcess");
+        if (subscribe.executeFn) checkArr.push("executeFn");
+        console.log(checkArr)
         subscribe.query && subscribe.query.forEach(item => {
             checkArr.push(item)
         })
@@ -821,7 +849,9 @@ function NewEventsModal($modal, $elemts) {
         let that = this,
             result = {};
         $tr.each(function () {
-            result.table = $(this).find('[data-save="linkTable"]').val()
+            result.http = $(this).find('[data-save="linkHttp"]').val()
+            result.type = $(this).find('[data-save="linkType"]').val()
+            result.customId = $(this).find('[data-save="linkCustomId"]').val()
             result.params = that.getLinkParams($(this).find(".linkHtmlParamsTr"))
         })
         return result;
@@ -892,6 +922,7 @@ NewEventsModal.prototype = {
                 timeQuery = null,
                 saveHTML = null,
                 linkHtml = null,
+                executeFn = null,
                 nextProcess = null;
             if (that.judgeCheckMehods("commonQuery", $(this).find(".triggerMethods:checked"))) {
                 query = []
@@ -925,6 +956,9 @@ NewEventsModal.prototype = {
             if (that.judgeCheckMehods("saveHTML", $(this).find(".triggerMethods:checked"))) {
                 saveHTML = $(this).find('[data-save="saveHTML"]').val()
             };
+            if (that.judgeCheckMehods("executeFn", $(this).find(".triggerMethods:checked"))) {
+                executeFn = $(this).find('[data-save="executeFn"]').val()
+            };
             if (that.judgeCheckMehods("nextProcess", $(this).find(".triggerMethods:checked"))) {
                 nextProcess = $(this).find('[data-save="nextProcess"]').val()
             };
@@ -952,7 +986,8 @@ NewEventsModal.prototype = {
                         exprMethods: exprMethods,
                         saveHTML: saveHTML,
                         linkHtml: linkHtml,
-                        nextProcess: nextProcess
+                        nextProcess: nextProcess,
+                        executeFn: executeFn
                     }
                 })
             }
@@ -995,7 +1030,7 @@ NewEventsModal.prototype = {
                 $tr = $(this).parents("tr").eq(0),
                 $op = $tr.find('[data-change="operator"]'),
                 $leftValue = $tr.find('[data-save="leftValue"]')
-                $html = that.renderOPeratorSelect(2, "operator", value, null);
+            $html = that.renderOPeratorSelect(2, "operator", value, null);
             if (value == "outerSideVariable") {
 
             }
@@ -1005,7 +1040,7 @@ NewEventsModal.prototype = {
         that.$modal.on("click" + that.NAME_SPACE, ".methods input[type='checkbox']", function () {
             let value = $(this).val(),
                 check = $(this).prop("checked");
-            let arr = ["save", "upload", "login", "checkAll", "cancelAll", "changeProperty", "copySend", "notify", "saveHTML", "linkHtml", "nextProcess"];
+            let arr = ["save", "upload", "login", "checkAll", "cancelAll", "changeProperty", "copySend", "notify", "saveHTML", "linkHtml", "nextProcess", "executeFn"];
             if (!arr.includes(value)) return;
             $target = $(this).parents("tr").find(`.${value}`)
             check ? $target.show() : $target.hide()
@@ -1065,12 +1100,29 @@ NewEventsModal.prototype = {
             }
             that.setUsingClass($target);
         });
-        that.$modal.on("change" + that.NAME_SPACE, "[data-change='linkTable']", function () {
+        that.$modal.on("change" + that.NAME_SPACE, "[data-change='linkCustomId']", function () {
             let value = $(this).val(),
                 data = that.GLOBAL_JSON[value],
-                str = that.renderLinkHTMLParmas(data);
-            $linkbody = that.$modal.find(".linkbody")
+                str = that.renderLinkHTMLParmas(data),
+                $linkbody = that.$modal.find(".linkbody");
             $linkbody.empty().append(str)
+        })
+        that.$modal.on("change" + that.NAME_SPACE, "[data-save='linkType']", function () {
+            let type = $(this).val(),
+                str = that.renderLinkHTMLSelect("", type),
+                $linkCustomId = that.$modal.find(".linkCustomId"),
+                $linkbody = that.$modal.find(".linkbody");
+            $linkCustomId.empty().append(str);
+            $linkbody.empty()
+            if (type == "nextProcess") {
+                var data = [{
+                        key: "isNext",
+                        desc: "下一流程",
+                        value: ""
+                    }],
+                    html = that.renderLinkHTMLParmas(data)
+                $linkbody.append(html)
+            }
         })
     },
     execute: function () {

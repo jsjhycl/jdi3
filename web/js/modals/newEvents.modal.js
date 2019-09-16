@@ -127,9 +127,9 @@ function NewEventsModal($modal, $elemts) {
             id = $("#property_id").val(),
             query = new Property().getValue(id, 'query');
         if (DataType.isObject(query)) {
-            if (query.db.type === "common") {
+            if (query.db && query.db.type === "common") {
                 queryTable = "通用查询"
-            } else if (query.db.type === "table") {
+            } else if (query.db && query.db.type === "table") {
                 queryTable = "表格查询"
             }
         };

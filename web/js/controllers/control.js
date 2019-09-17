@@ -5,7 +5,8 @@ function Control() {
         checkbox: '<input data-type="checkbox" type="checkbox" value="">',
         img: '<img data-type="img">',
         div: '<div data-type="div"></div>',
-        arrow: '<canvas data-type="arrow" width="60" height="40"></canvas>'
+        arrow: '<canvas data-type="arrow" width="60" height="40"></canvas>',
+        hidden: '<input data-type="hidden" type="hidden">'
     };
     this.CONTROL_HTML = {
         text: '<input data-type="text" type="text">',
@@ -13,7 +14,8 @@ function Control() {
         checkbox: '<input data-type="checkbox" type="checkbox">',
         img: '<div data-type="img"></div>',
         div: '<div data-type="div"></div>',
-        arrow: '<canvas data-type="arrow"></canvas>'
+        arrow: '<canvas data-type="arrow"></canvas>',
+        hidden: '<input data-type="hidden" type="hidden">'
     };
     this.getArrowConfig =  function(subtype, w, h) {
         var result = { dots: [], rotate: 0 },

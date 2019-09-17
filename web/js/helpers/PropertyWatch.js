@@ -46,7 +46,6 @@ var PropertyWatch = {
                 $origin = $originContainer.find("#" + id),
                 isNode = $dom.hasClass("workspace-node"),
                 $span = $(`<span data-domId = "${id}" data-change="${change}" data-property="${key}" data-name="${name}" class="propertySpan"></span>`);
-            // console.log(view,key,name)
             // if(key=="visibility"||key=="disabled"||key=="readonly"){
             //     $span = $(`<input type="checkbox">`) 
             // }
@@ -63,7 +62,7 @@ var PropertyWatch = {
                 display: "block",
                 boxSizing: "border-box",
                 cursor: "pointer",
-                lineHeight: '0'
+                // lineHeight: '0'
             })
 
             switch (view) {

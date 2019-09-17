@@ -87,7 +87,7 @@ var WorkspaceUtil = {
             var $dom = $(item), //获取对应的dom
                 id = $dom.attr('id'), //获取对应dom的id
                 $origin = $originContainer.find('#' + id), //获取工作区中对应的元素
-            isSelected = $dom.parent().hasClass('ui-draggable'), // 当前元素是否被选中;
+                isSelected = $dom.parent().hasClass('ui-draggable'), // 当前元素是否被选中;
                 isNode = $dom.hasClass('workspace-node'), // 判断是否是表格中的input
                 isFocus = $dom.hasClass('focus'); // 输入框有红色背景
             var $span = $('<span data-domId="' + id + '" data-property="' + key + '" class="property"></span>'),
@@ -124,7 +124,7 @@ var WorkspaceUtil = {
                     $span.addClass('check-fn-node').html(id); //添加类名并在里面添加id
                     break;
                 case 'sameCname':
-                    
+
                     var cnames = new Property().getArrayByKey('cname'),
                         cname = new Property().getValue(id, "cname");
                     if (cnames.indexOf(cname) != cnames.lastIndexOf(cname)) {
@@ -159,17 +159,17 @@ var WorkspaceUtil = {
         })
     },
     setValue: function () {
-        var that= this;
+        var that = this;
         var $mask = $('#mask'),
             $target = $mask.find(".chageProperty"),
             property = $target.attr("data-property"),
             id = $target.attr("data-id"),
             value = $target.val();
-        if($target.length<0) return;
+        if ($target.length < 0) return;
         $mask.find(`.property[data-domid='${id}']`).text(value);
         $mask.find(`.property[data-domid='${id}']`).attr("title", value)
         if (property == "expression" || property == "dataSource.db" || property == "events" || property == "query.db" || property == "archivePath" || Property == "query.nest") {
-            if(!value) return;
+            if (!value) return;
             value = JSON.parse(value)
         }
         try {
@@ -203,19 +203,21 @@ var WorkspaceUtil = {
             $mask.find(".chageProperty").remove();
             var id = $(this).attr("data-domid"),
                 type = $(this).attr("data-property"),
-                value =  new Property().getValue(id,type);
+                value = new Property().getValue(id, type);
             var $control = $(`#workspace #${id}`)
             new Property().load($control);
             var $input = $(`<textarea type="text" value='${value?value:""}' class="chageProperty" autofocus:"autofocus" data-id="${id}" data-property="${type}"></textarea>`)
-            if(typeof value == "object") {value=JSON.stringify(value,null,2)}
-            $input.val(value?value:"")
+            if (typeof value == "object") {
+                value = JSON.stringify(value, null, 2)
+            }
+            $input.val(value ? value : "")
             $input.css({
                 position: $(this).css("position"),
                 top: $(this).position().top,
                 left: $(this).position().left,
                 width: $(this).width(),
                 height: $(this).height(),
-                "z-index":10002
+                "z-index": 10002
             })
 
             $(this).hide()
@@ -284,7 +286,7 @@ var WorkspaceUtil = {
     // 移除模态框
     resetView: function (flag) {
         flag = !!flag || false; //flag转布尔值 
-        var that =  this;
+        var that = this;
         that.setValue();
         $('#mask').remove(); //移除元素
         $("#insertFunctionModal").hide(); //隐藏元素
@@ -453,7 +455,7 @@ function Workspace() {
         var $temp = $('<div></div>');
         $temp.css({
             "position": "relative",
-            "margin":"0 auto",
+            "margin": "0 auto",
             "width": settingData.width,
             "height": settingData.height,
             "background-color": settingData.bgColor,
@@ -543,7 +545,7 @@ function Workspace() {
     };
 }
 Workspace.prototype = {
-    init: async function (id, name, type, contactId, relTemplate, edit) {
+    init: async function (id, name, type, contactId, relTemplate, edit, setting) {
         if (!id || !name || !type) return;
         var that = this,
             text = name + '<span class="text-danger">' + "(" + id + ")" + '</span>',
@@ -560,6 +562,10 @@ Workspace.prototype = {
         }
         $("#name").empty().append(text);
         that.$workspace.empty().attr(attrs);
+        //解决文件名的问题
+        if (!setting || setting.items.length < 1) {
+            that.$workspace.append($(`<input type="hidden" class="workspace-node" data-type="hidden" value="${id}" style="display:none" id="AAAA" name="布局名">`))
+        }
         that.$phone.empty().parents("#phone_warp").hide();
         new Filter(type).set();
         id ? $("#saveAs").show() : $("#saveAs").hide();
@@ -585,12 +591,12 @@ Workspace.prototype = {
         var that = this,
             url = type === "表单" ? `./resource/${id}` : (isCreate ? `./resource/${contactId}` : `./product/${id}`);
         $.when(that.readFile(url + "/setting.json"), that.readFile(url + "/property.json")).done(function (ret1, ret2) {
-            that.init(id, name, type, contactId, relTemplate, edit);
+            that.init(id, name, type, contactId, relTemplate, edit, ret1);
+
             var settingData = ret1,
                 propertyData = ret2;
             var control = new Control(),
                 contextMenu = new ContextMenu();
-
             for (var i = 0; i < settingData.items.length; i++) { //遍历小于settingData.items.length的数
                 var item = settingData.items[i]
                 control.setControl(item.type, function ($node) { //调用control中的setControl方法
@@ -628,7 +634,13 @@ Workspace.prototype = {
                     that.$workspace.append($node);
                 });
             }
+            that.$workspace.find("#AAAA").val(id)
             GLOBAL_PROPERTY = propertyData; //赋值
+            //解决保存文件名的问题
+            console.log(GLOBAL_PROPERTY)
+            if(!GLOBAL_PROPERTY["AAAA"]){
+                new Property().setValue("AAAA",null,{cname:"布局名",name:"AAAA"})
+            }
             that.loadPhone(id, contactId, type);
             var max_h = 0,
                 max_w = 0;
@@ -779,6 +791,7 @@ Workspace.prototype = {
                         "data-id": changeId,
                         "data-name": changeName
                     })
+                    that.$workspace.find("#AAAA").val(changeId)
                     //设置新的名字
                     var text = changeName + '<span class="text-danger">' + "(" + changeId + ")" + '</span>'
                     $("#name").empty().append(text)
@@ -807,6 +820,7 @@ Workspace.prototype = {
                         "data-id": changeId,
                         "data-name": changeName
                     })
+                    that.$workspace.find("#AAAA").val(changeId)
                     var text = changeName + '<span class="text-danger">' + "(" + changeId + ")" + '</span>'
                     $("#name").empty().append(text)
 

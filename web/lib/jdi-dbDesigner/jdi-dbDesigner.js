@@ -138,6 +138,8 @@
                     })
                     propertys.push(property)
                 })
+                console.log(propertys)
+                // propertys.unshift()
                 propertys.forEach((item, ci) => {
                     if (item.db && item.db.length > 0) {
                         item.db.forEach((jitem, index) => {

@@ -84,10 +84,12 @@ DbNestQueryModal.prototype = {
         var id = $("#property_id").val();
         if (!id) return;
 
+        var relatedId = this.$queryRelated.val();
+        if (!relatedId) return;
         var that = this,
             result = that.$querier.dbQuerier("getData"),
             data = {
-                relatedId: that.$queryRelated.val(),
+                relatedId,
                 ...result
             },
         

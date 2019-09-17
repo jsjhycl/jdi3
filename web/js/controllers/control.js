@@ -124,6 +124,8 @@ Control.prototype = {
                 arrs.push(id.substring(prefix.length));
             }
         });
+        arrs.splice(arrs.indexOf("ZZZZ"),1)
+        console.log(arrs)
         var max = arrs.max("String");
         if (!max) return prefix + "AAAA";
         else return prefix + NumberHelper.idToName(NumberHelper.nameToId(max) + 1, 4);

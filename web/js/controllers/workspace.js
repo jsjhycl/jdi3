@@ -564,7 +564,7 @@ Workspace.prototype = {
         that.$workspace.empty().attr(attrs);
         //解决文件名的问题
         if (!setting || setting.items.length < 1) {
-            that.$workspace.append($(`<input type="hidden" class="workspace-node" data-type="hidden" value="${id}" style="display:none" id="AAAA" name="布局名">`))
+            that.$workspace.append($(`<input type="hidden" class="workspace-node" data-type="hidden" value="${id}" style="display:none" id="ZZZZ" name="布局名">`))
         }
         that.$phone.empty().parents("#phone_warp").hide();
         new Filter(type).set();
@@ -634,12 +634,12 @@ Workspace.prototype = {
                     that.$workspace.append($node);
                 });
             }
-            that.$workspace.find("#AAAA").val(id)
+            that.$workspace.find("#ZZZZ").val(id)
             GLOBAL_PROPERTY = propertyData; //赋值
             //解决保存文件名的问题
             console.log(GLOBAL_PROPERTY)
-            if(!GLOBAL_PROPERTY["AAAA"]){
-                new Property().setValue("AAAA",null,{cname:"布局名",name:"AAAA"})
+            if(!GLOBAL_PROPERTY["ZZZZ"]){
+                new Property().setValue("ZZZZ",null,{cname:"布局名",name:"ZZZZ"})
             }
             that.loadPhone(id, contactId, type);
             var max_h = 0,
@@ -791,7 +791,7 @@ Workspace.prototype = {
                         "data-id": changeId,
                         "data-name": changeName
                     })
-                    that.$workspace.find("#AAAA").val(changeId)
+                    that.$workspace.find("#ZZZZ").val(changeId)
                     //设置新的名字
                     var text = changeName + '<span class="text-danger">' + "(" + changeId + ")" + '</span>'
                     $("#name").empty().append(text)
@@ -820,7 +820,7 @@ Workspace.prototype = {
                         "data-id": changeId,
                         "data-name": changeName
                     })
-                    that.$workspace.find("#AAAA").val(changeId)
+                    that.$workspace.find("#ZZZZ").val(changeId)
                     var text = changeName + '<span class="text-danger">' + "(" + changeId + ")" + '</span>'
                     $("#name").empty().append(text)
 

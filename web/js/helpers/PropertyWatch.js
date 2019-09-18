@@ -4,7 +4,7 @@ var PropertyWatch = {
             $designer = $("#designer"),
             $workspace = $("#workspace"),
             $currentInput = $workspace.find(".focus"),
-            $PropertyMask = $('<div id="propertyMask"><button class="btn clearALL">清除所有</button><button class="close" data-dismiss="modal" style="color:red;opacity:1;outline:none;font-size:34px">&times;</button></div>'),
+            $PropertyMask = $('<div id="propertyMask"><button class="close" data-dismiss="modal" style="color:red;opacity:1;outline:none;font-size:34px">&times;</button><button class="btn clearALL" style="float:right;margin-right:10px;margin-top:7px;padding:0px">清除所有</button></div>'),
             $PropertyMaskContent = $('<div id="propertyMaskContent"></div>');
         $copyWorkSpace = $('<div id="copyWorkspace"></div>').html($workspace.html());
         that.resetView()

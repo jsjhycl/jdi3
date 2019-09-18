@@ -563,8 +563,16 @@ Workspace.prototype = {
         $("#name").empty().append(text);
         that.$workspace.empty().attr(attrs);
         //解决文件名的问题
-        if (!setting || setting.items.length < 1) {
+        if (!setting) {
             that.$workspace.append($(`<input type="hidden" class="workspace-node" data-type="hidden" value="${id}" style="display:none" id="ZZZZ" name="布局名">`))
+        }
+        if(setting){
+            var result = setting.items.some(function(item){
+                return item.id == "ZZZZ"
+            })
+            if(!result){
+                that.$workspace.append($(`<input type="hidden" class="workspace-node" data-type="hidden" value="${id}" style="display:none" id="ZZZZ" name="布局名">`))
+            }
         }
         that.$phone.empty().parents("#phone_warp").hide();
         new Filter(type).set();
@@ -592,7 +600,6 @@ Workspace.prototype = {
             url = type === "表单" ? `./resource/${id}` : (isCreate ? `./resource/${contactId}` : `./product/${id}`);
         $.when(that.readFile(url + "/setting.json"), that.readFile(url + "/property.json")).done(function (ret1, ret2) {
             that.init(id, name, type, contactId, relTemplate, edit, ret1);
-
             var settingData = ret1,
                 propertyData = ret2;
             var control = new Control(),

@@ -190,7 +190,7 @@
                 });
             });
         },
-        setTr: function (mode, $tbody, data, table,dbName, noExpression, reduceTypeConfig) {
+        setTr: function (mode, $tbody, data, table,dbName, noExpression, reduceTypeConfig, queryCondition) {
             var that = this,
                 $tr, $operatorSelect, operator;
             noExpression = !!noExpression;

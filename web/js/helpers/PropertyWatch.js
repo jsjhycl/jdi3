@@ -33,7 +33,7 @@ var PropertyWatch = {
             padding: "0 10px 20px 20px",
             background: "rgb(0,0,0,.6)"
         })
-        that.inputToBtn(view, $copyWorkSpace.find('input'), $workspace, key, name, change)
+        that.inputToBtn(view, $copyWorkSpace.find('input').not("[type=hidden]"), $workspace, key, name, change)
         $PropertyMaskContent.append($copyWorkSpace)
         $PropertyMask.append($PropertyMaskContent)
         $('body').append($PropertyMask)
@@ -147,7 +147,7 @@ var PropertyWatch = {
                 var value = "",
                     id = $(this).attr("data-domId"),
                     property = $(this).attr("data-property");
-                if (property == "id") return;
+                if (property == "id"||id=="ZZZZ") return;
                 $mask.find(`.propertySpan[data-domid='${id}']`).text(value);
                 $mask.find(`.propertySpan[data-domid='${id}']`).attr("title", value);
                 if (property == "expression" || property == "dataSource.db" || property == "events" || property == "query.db" || property == "archivePath" || property == "query.nest") {

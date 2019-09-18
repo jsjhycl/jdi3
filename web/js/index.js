@@ -248,7 +248,9 @@ function controlbar() {
 		$("#controlbar .control-item:not([data-type='img'],[data-type='div'])").draggable({ //给draggable传递参数可拖动的控件
 			helper: function () {
 				var type = $(this).data("type");
-				return new Control().getControl(type);
+                $node = new Control().getControl(type)
+                $node.width(151).height(27);
+                return $node;
 			},
 			cursorAt: {
 				left: 0,
@@ -585,8 +587,9 @@ function workspace() {
                 	}).css({
                 		"left": event.pageX - offset.left,
                 		"top": event.pageY - offset.top
-                	});
+                    });
                 	$workspace.append($node);
+                    console.log($node.outerWidth());
                     new Property().setDefault(number);
                     return false;
                 });

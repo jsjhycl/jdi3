@@ -4,7 +4,7 @@ var PropertyWatch = {
             $designer = $("#designer"),
             $workspace = $("#workspace"),
             $currentInput = $workspace.find(".focus"),
-            $PropertyMask = $('<div id="propertyMask"><button class="close" data-dismiss="modal" style="color:red;opacity:1;outline:none;font-size:34px">&times;</button></div>'),
+            $PropertyMask = $('<div id="propertyMask"><button class="btn clearALL">清除所有</button><button class="close" data-dismiss="modal" style="color:red;opacity:1;outline:none;font-size:34px">&times;</button></div>'),
             $PropertyMaskContent = $('<div id="propertyMaskContent"></div>');
         $copyWorkSpace = $('<div id="copyWorkspace"></div>').html($workspace.html());
         that.resetView()
@@ -141,6 +141,38 @@ var PropertyWatch = {
             var $control = $(`#workspace #${domId}`)
             new Property().load($control);
 
+        })
+        $mask.on("click", ".clearALL", function () {
+            $mask.find(".propertySpan").each(function () {
+                var value = "",
+                    id = $(this).attr("data-domId"),
+                    property = $(this).attr("data-property");
+                if (property == "id") return;
+                $mask.find(`.propertySpan[data-domid='${id}']`).text(value);
+                $mask.find(`.propertySpan[data-domid='${id}']`).attr("title", value);
+                if (property == "expression" || property == "dataSource.db" || property == "events" || property == "query.db" || property == "archivePath" || property == "query.nest") {
+                    value ? "" : (value = null);
+                    try {
+                        value = JSON.parse(value)
+                    } catch {
+                        return alert("请检查保存的数据格式是否正确?")
+                    }
+                }
+                if (property == "visibility" || property == "readonly" || property == "disabled") {
+                    if (value == "true") {
+                        value = true
+                    } else if (value == "false") {
+                        value = false
+                    } else {
+                        value = false;
+                    }
+                }
+                new Property().setValue(id, property, value)
+                if (property == "cname") {
+                    that.selectWorkspace("sameCname", "cname", "中文名", "true")
+                }
+
+            })
         })
 
         $mask.on("dblclick", ".propertySpan[data-change='true']", function (event) {

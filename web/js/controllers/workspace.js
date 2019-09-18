@@ -637,7 +637,6 @@ Workspace.prototype = {
             that.$workspace.find("#ZZZZ").val(id)
             GLOBAL_PROPERTY = propertyData; //赋值
             //解决保存文件名的问题
-            console.log(GLOBAL_PROPERTY)
             if(!GLOBAL_PROPERTY["ZZZZ"]){
                 new Property().setValue("ZZZZ",null,{cname:"布局名",name:"ZZZZ"})
             }

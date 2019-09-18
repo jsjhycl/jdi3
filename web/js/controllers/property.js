@@ -161,8 +161,8 @@ Property.prototype = {
                 )
             )
         ) {
-            that._traverseProperty($control);//调用_traverseProperty
-            AccessControl.executeControlType($("#property_controlType").val());//获取该元素的文本类型然后给数据源属性判断是否可以点击
+            that._traverseProperty($control); //调用_traverseProperty
+            AccessControl.executeControlType($("#property_controlType").val()); //获取该元素的文本类型然后给数据源属性判断是否可以点击
             AccessControl.setPagePersentVal($control);
         }
     },
@@ -204,7 +204,11 @@ Property.prototype = {
             if (!GLOBAL_PROPERTY[id].hasOwnProperty(pkey)) { //如果对应的GLOBAL_PROPERTY下面的id中没有改属性
                 GLOBAL_PROPERTY[id][pkey] = {}; //为这个id下t添加一个空的对象
             }
-            GLOBAL_PROPERTY[id][pkey][ckey] = pvalue; //如果存在这个属性则给这个属性下面对应的key赋值
+            if (ckey == "db" || ckey == "nest") {
+                pvalue ? GLOBAL_PROPERTY[id][pkey][ckey] = pvalue : delete GLOBAL_PROPERTY[id][pkey][ckey]
+            } else {
+                GLOBAL_PROPERTY[id][pkey][ckey] = pvalue; //如果存在这个属性则给这个属性下面对应的key赋值
+            }
         } else {
             GLOBAL_PROPERTY[id][pkey] = pvalue; //如果不存ckey直接给这个pkey属性赋值
         }
@@ -348,7 +352,6 @@ Property.prototype = {
             GLOBAL_PROPERTY[id] = value; //给GLOBAL_PROPERTY下面的id属性设置value
             return; //退出函数
         }
-
         if (!GLOBAL_PROPERTY.hasOwnProperty(id)) { //判断GLOBAL_PROPERTY对象中没有id
             GLOBAL_PROPERTY[id] = {}; //在GLOBAL_PROPERTY对应的id上添加一个空对象
         }
@@ -358,7 +361,11 @@ Property.prototype = {
             for (var i = 0; i < keys.length; i++) { //遍历循环数组
                 var ckey = keys[i]; //获取数组中的元素
                 if (keys.length === i + 1) { //如果是最后一个元素
-                    temp[ckey] = value;
+                    if (ckey == "db" || ckey == "nest") {
+                        value ? temp[ckey] = value : delete temp[ckey]
+                    } else {
+                        temp[ckey] = value;
+                    }
                 } else { //如果不是数组的第一个元素
                     if (!temp.hasOwnProperty(ckey)) { //temp中不存在ckey这个属性时
                         temp[ckey] = {}; //添加一个空的对应在

@@ -202,8 +202,8 @@ var PropertyWatch = {
                 $mask = $("#propertyMask");
             $mask.find(`.propertySpan[data-domid='${id}']`).text(value);
             $mask.find(`.propertySpan[data-domid='${id}']`).attr("title", value);
-            if (property == "expression" || property == "dataSource.db" || property == "events" || property == "query.db" || property == "archivePath" || Property == "query.nest") {
-                value ? "" : value = null;
+            if (property == "expression" || property == "dataSource.db" || property == "events" || property == "query.db" || property == "archivePath" || property == "query.nest") {
+                value ? "" : (value = null);
                 try {
                     value = JSON.parse(value)
                 } catch {

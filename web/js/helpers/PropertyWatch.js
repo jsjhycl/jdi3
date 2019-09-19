@@ -143,11 +143,13 @@ var PropertyWatch = {
 
         })
         $mask.on("click", ".clearALL", function () {
+            let res = window.confirm("确认清除属性吗？");
+            if (!res) return;
             $mask.find(".propertySpan").each(function () {
                 var value = "",
                     id = $(this).attr("data-domId"),
                     property = $(this).attr("data-property");
-                if (property == "id"||id=="ZZZZ") return;
+                if (property == "id" || id == "ZZZZ") return;
                 $mask.find(`.propertySpan[data-domid='${id}']`).text(value);
                 $mask.find(`.propertySpan[data-domid='${id}']`).attr("title", value);
                 if (property == "expression" || property == "dataSource.db" || property == "events" || property == "query.db" || property == "archivePath" || property == "query.nest") {

@@ -214,7 +214,7 @@
     margin-right: 10px;
 }
 .eg .eg-dialog .eg-function .query-config-content {
-    max-height: 500px;
+    max-height: 400px;
     overflow-x: hidden;
     overflow-y: scroll;
 }

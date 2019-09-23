@@ -228,7 +228,7 @@ function NewEventsModal($modal, $elemts) {
         let that = this,
             str = "";
         if (type == "linkhtml") {
-            str = `<select class="form-control" data-save="linkCustomId" data-change="linkCustomId"><option value="">请选择跳转页面</option>`
+            str = `<select class="form-control chosen" data-save="linkCustomId" data-change="linkCustomId"><option value="">请选择跳转页面</option>`
             that.PUBLISH_JSON.forEach(item => {
                 str += `<option value="${item.customId}" ${customId==item.customId? "selected" : ""}> ${item.name}(${item.customId})</option>`
             })
@@ -322,7 +322,6 @@ function NewEventsModal($modal, $elemts) {
         if (subscribe.linkHtml) checkArr.push("linkHtml");
         if (subscribe.nextProcess) checkArr.push("nextProcess");
         if (subscribe.executeFn) checkArr.push("executeFn");
-        console.log(checkArr)
         subscribe.query && subscribe.query.forEach(item => {
             checkArr.push(item)
         })
@@ -547,7 +546,7 @@ function NewEventsModal($modal, $elemts) {
     this.renderCopySendSelect = function (type, dbName, table, field, defalutOption, selected) {
         let that = this,
             data = that.getCopySendSelectData(type, dbName, table, field),
-            str = `<select class="form-control" data-save="${type}" data-change="${type}"><option value="">${defalutOption}</option>`;
+            str = `<select class="form-control chosen" data-save="${type}" data-change="${type}"><option value="">${defalutOption}</option>`;
         data.forEach(item => {
             str += `<option value="${item.value}" ${ selected==item.value? "selected" : ""}>${item.name}(${item.value})</option>`
         })
@@ -869,6 +868,15 @@ function NewEventsModal($modal, $elemts) {
         })
         return result;
     }
+    this.bindChosen = function () {
+        console.log(1)
+        $(".chosen").chosen({
+            // no_results_text: "没有找到想要的数据",
+            search_contains: true,
+            allow_single_deselect: true,
+            width: "100%"
+        })
+    }
 
 
 }
@@ -901,6 +909,19 @@ NewEventsModal.prototype = {
             str += that.renderEvents(event)
         })
         that.$eventTbody.append(str)
+        that.bindChosen();
+
+
+        // $(".moveTable").colResizable({
+        //     liveDrag: true,
+        //     resizeMode: "overflow",
+        //     disabled: true,
+        //     disabledColumns: [0, 3]
+        //     // gripInnerHtml:"<div class='grip'></div>", 
+        //     // draggingClass:"dragging", 
+        //     // resizeMode:'fit'
+        // });
+
     },
     saveData: function () {
         let that = this,
@@ -1018,6 +1039,7 @@ NewEventsModal.prototype = {
                 str = that[addType]();
             }
             $tbody.append(str)
+            that.bindChosen()
         })
         //移除一行
         that.$modal.on("click" + that.NAME_SPACE, ".del", function () {
@@ -1049,14 +1071,18 @@ NewEventsModal.prototype = {
             let $table = $(this).parents("tr").eq(0).find('[data-change="table"]'),
                 dbName = $(this).val(),
                 $html = that.renderCopySendSelect("table", dbName, null, null, "请选择抄送表", null);
-            $table.replaceWith($html)
+            $table.parent("td").empty().append($html)
+            that.bindChosen()
+
         })
         that.$modal.on("change" + that.NAME_SPACE, "[data-change='table']", function () {
             let $field = $(this).parents("tr").eq(0).find('[data-change="field"]'),
                 tableName = $(this).val(),
                 dbName = $($(this).parents("tr")[0]).find('[data-change="dbName"]').val(),
                 $html = that.renderCopySendSelect("field", dbName, tableName, null, "请选择抄送字段", null);
-            $field.replaceWith($html)
+            $field.parent("td").empty().append($html)
+            that.bindChosen()
+
         })
         that.$modal.on("change" + that.NAME_SPACE, ".changeFieldSplit [data-change='field']", function () {
             let $tr = $(this).parents("tr").eq(0),
@@ -1065,13 +1091,17 @@ NewEventsModal.prototype = {
                 field = $tr.find('[data-change="field"]').val(),
                 $fieldSplit = $tr.find('[data-change="fieldSplit"]'),
                 $html = that.renderCopySendSelect("fieldSplit", dbName, table, field, "请选择", null);
-            $fieldSplit.replaceWith($html)
+            $fieldSplit.parent("td").empty().append($html)
+            that.bindChosen()
+
         })
         that.$modal.on("change" + that.NAME_SPACE, '[data-change="value_type"]', function () {
             let value = $(this).val(),
                 $op = $(this).parents("tr").eq(0).find('[data-change="value_operator"]'),
                 $html = that.renderOPeratorSelect(3, "value_operator", value, null)
             $op.replaceWith($html)
+            that.bindChosen()
+
         })
         that.$modal.on('focusin input', ':text', function () {
             // pm-elem3 添加类名 applied;
@@ -1123,10 +1153,13 @@ NewEventsModal.prototype = {
                     html = that.renderLinkHTMLParmas(data)
                 $linkbody.append(html)
             }
+            that.bindChosen()
         })
+
     },
     execute: function () {
         let that = this
         that.basicEvents(true, that.initData, that.saveData, that.clearData)
+
     }
 }

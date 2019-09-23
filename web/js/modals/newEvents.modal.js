@@ -871,7 +871,7 @@ function NewEventsModal($modal, $elemts) {
     this.bindChosen = function () {
         console.log(1)
         $(".chosen").chosen({
-            // no_results_text: "没有找到想要的数据",
+            no_results_text: "没有找到想要的数据",
             search_contains: true,
             allow_single_deselect: true,
             width: "100%"

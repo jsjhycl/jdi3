@@ -1285,7 +1285,7 @@
         convertExpr:function(expr, cacheFns) {
             if (!expr) return "";
             let that = this;
-            return expr.replace(/[a-zA-Z]+?\(([^)]*)\)/img, function() {
+            return expr.replace(/[a-zA-Z]*?\(([^)]*)\)/img, function() {
                 let fn = arguments[0];
                 console.log(fn)
                 // 远程函数
@@ -1296,12 +1296,13 @@
                             return that.generatExprFn(args[1], fn, args.slice(4));
                         } else return fn;
                     } catch(err) {
-                        throw('解析远程函数出错: ', err)
+                        console.log('解析远程函数出错: ', err)
+                        return fn;
                     }
                 } else {
                     // 本地函数
                     let localFnName = fn.match(/(^[a-zA-Z]+)(?=\(.*\))/img);
-                    if(!localFnName) return;
+                    if(!localFnName) return fn;
                     localFnName = localFnName[0];
                     
                     if (that.isBuiltInFn(fn, localFnName, cacheFns)) {
@@ -1310,7 +1311,8 @@
                             let args = eval(fn);
                             return that.generatExprFn(localFnName, fn, args.slice(1))
                         } catch(err) {
-                            throw ('解析本地函数出错！', err);
+                            console.log('解析本地函数出错！', err);
+                            return fn
                         }
                     } else return fn;
                 }

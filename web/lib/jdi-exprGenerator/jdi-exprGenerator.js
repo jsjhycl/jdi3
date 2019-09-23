@@ -1285,9 +1285,9 @@
         convertExpr:function(expr, cacheFns) {
             if (!expr) return "";
             let that = this;
-            return expr.replace(/[a-zA-Z]*?\(([^)]*)\)/img, function() {
+            return expr.replace(/[a-zA-Z]+?\(([^)]*)\)/img, function() {
                 let fn = arguments[0];
-
+                console.log(fn)
                 // 远程函数
                 if (fn.startsWith('functions')) {
                     try {

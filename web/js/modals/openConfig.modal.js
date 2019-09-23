@@ -231,7 +231,8 @@ OpenConfigModal.prototype = {
                 name = $(this).find("option:selected").text(),
                 $tableConditionsWrap = that.$body.find('[data-name="table_conditions_wrap"]'),
                 html = '';
-            if (value && $(`[data-condition][data-name="${value}"]`).length <= 0) {
+            console.log(value, $(`[data-condition][data-name="${value}"]`))
+            if (value && that.$modal.find(`[data-condition][data-name="${value}"]`).length <= 0) {
                 html += that.renderConditionItem({col: value, value: ""}, !!that.cate[name], name)
                 $tableConditionsWrap.append(html)
             };

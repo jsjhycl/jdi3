@@ -105,6 +105,7 @@
     <link rel="stylesheet" href="../lib/jdi-dbQuerier/jdi-dbQuerier.css">
     <link rel="stylesheet" href="../lib/jdi-propModifier/jdi-propModifier.css">
     <link rel="stylesheet" href="../lib/datetimepicker/jquery.datetimepicker.css">
+    <link rel="stylesheet" href="../lib/chosen/chosen.min.css">
     <link rel="stylesheet" href="../css/index.css">
     <link rel="stylesheet" href="../css/model.css">
 
@@ -225,8 +226,8 @@
                 </button>
             </div>
             <div class="btn-group dropdown">
-                <button class="btn btn-default btn-sm">查看属性</button>
-                <button class="btn btn-default  btn-sm dropdown-toggle" data-toggle="dropdown">
+                <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">查看属性
+                    <!-- <button class="btn btn-default  btn-sm dropdown-toggle" data-toggle="dropdown"> -->
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right"">
@@ -295,8 +296,8 @@
                 </ul>
             </div>
             <div class="btn-group dropdown">
-                <button class="btn btn-default btn-sm">移动至</button>
-                <button class="btn btn-default btn-sm dropdown-toggle" data-state="3" data-toggle="dropdown">
+                <button class="btn btn-default btn-sm dropdown-toggle" data-state="3" data-toggle="dropdown">移动至
+                    <!-- <button class="btn btn-default btn-sm dropdown-toggle" data-state="3" data-toggle="dropdown"> -->
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right">
@@ -820,16 +821,16 @@
                 </div>
                 <section class="modal-body" style="overflow: scroll; max-height: 500px">
                     <!-- <table class="table table-bordered table-striped table-hover table-responsive ctable"> -->
-                    <table class="table table-bordered table-striped table-hover table-responsive ctable"
-                        style="width: 2450px;">
+                    <table style="width:2450px"
+                        class="moveTable table table-bordered table-striped table-hover table-responsive ctable">
                         <thead>
                             <tr>
-                                <th class="text-center" style="width: 50px">
-                                      <span class="add" data-add="renderEvents" style="padding:0px">＋</span>
+                                <th class="text-center" style="width: 30px">
+                                    <span class="add" data-add="renderEvents" style="padding:0px">＋</span>
                                 </th>
-                                <th class="text-center" style="width: 140px">触发类型</th>
-                                <th class="text-center" style="width: 600px">触发条件</th>
-                                <th class="text-center" style="width: 110px">方法</th>
+                                <th class="text-center" style="width:90px">触发类型</th>
+                                <th class="text-center">触发条件</th>
+                                <th class="text-center" style="width:90px">方法</th>
                                 <th class="text-center condition">配置信息</th>
 
                             </tr>

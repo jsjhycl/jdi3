@@ -869,16 +869,13 @@ function NewEventsModal($modal, $elemts) {
         return result;
     }
     this.bindChosen = function () {
-        console.log(1)
         $(".chosen").chosen({
-            // no_results_text: "没有找到想要的数据",
+            no_results_text: "没有找到想要的数据",
             search_contains: true,
             allow_single_deselect: true,
             width: "100%"
         })
     }
-
-
 }
 NewEventsModal.prototype = {
     initData: async function (data) {
@@ -910,8 +907,6 @@ NewEventsModal.prototype = {
         })
         that.$eventTbody.append(str)
         that.bindChosen();
-
-
         // $(".moveTable").colResizable({
         //     liveDrag: true,
         //     resizeMode: "overflow",

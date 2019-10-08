@@ -254,7 +254,7 @@ function controlbar() {
 			helper: function () {
 				var type = $(this).data("type");
 				$node = new Control().getControl(type)
-				$node.width(151).height(27);
+				type === 'text' && $node.width(151).height(27);
 				return $node;
 			},
 			cursorAt: {

@@ -41,13 +41,13 @@
                 inputClass = isSm ? "col-lg-12" : "col-lg-9",
                 formHtml = "";
             formHtml = `<div class="form-group">
-                            <label class = "${labelClass} control-label">请选择库:</label>
-                            <div class="${inputClass}"><select class="form-control dbName"></select></div>
-                        </div>
-                        <div class="form-group">
-                            <label class="${labelClass} control-label"> 请选择表:</label>
-                            <div class="${inputClass}"><select class="form-control tableName"></select></div >
-                        </div>`;
+                                <label class = "${labelClass} control-label">请选择库:</label>
+                                <div class="${inputClass}"><select class="form-control dbName"></select></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="${labelClass} control-label"> 请选择表:</label>
+                                <div class="${inputClass}"><select class="form-control tableName"></select></div >
+                            </div>`;
             $content ? $content.append(formHtml) : $(element).empty().append(formHtml)
         },
         setData: function (element) {

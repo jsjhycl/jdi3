@@ -1,0 +1,19 @@
+.DbQueryConfig .query-title {
+  margin: 0 15px;
+}
+
+.DbQueryConfig .form-group {
+  margin: 5px 15px !important;
+}
+
+.DbQueryConfig footer {
+  padding-bottom: 15px;
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+}
+
+.DbQueryConfig footer .db_save,
+.DbQueryConfig footer .db_clear {
+  padding: 2px 4px !important;
+  font-size: 12px !important;
+}

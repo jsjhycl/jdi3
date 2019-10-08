@@ -1,4 +1,5 @@
-;(function ($, window, document, undefined) {
+;
+(function ($, window, document, undefined) {
     /**
      * 函数配置器工具
      * @type {{clear, setArgsTbody, getArgsTbody, effect, convert, handleArgToString}}
@@ -27,7 +28,7 @@
         function _renderAddon(addonType, queryCondition) {
             if (!addonType) return '';
             let html = ''
-            switch(addonType) {
+            switch (addonType) {
                 case 'query':
                     html += `<span class="input-group-addon addon-query" data-config="query" ${queryCondition ? 'data-query_condition="' + queryCondition + '"' : ''} data-mode="multi"></span>`
                     break;
@@ -36,16 +37,19 @@
                     html += '<span class="input-group-addon addon-query" data-config="query" data-mode="column"></span>'
                     break;
                 case 'contact':
-                        html += '<span class="input-group-addon addon-contact" data-config="contact"></span>'
+                    html += '<span class="input-group-addon addon-contact" data-config="contact"></span>'
+                    break;
+                case 'Db':
+                    html += '<span class="input-group-addon addon-query" data-config="Db"></span>'
             }
             return html;
         }
 
         return {
             setArgsTbody: function (fnData, fnType, args, delBtn) {
-                if(!Object.prototype.toString.call(fnData) === '[object Object]') return
+                if (!Object.prototype.toString.call(fnData) === '[object Object]') return
                 var that = this;
-                    $functionArgs = $(".eg .eg-function .eg-function-args"),
+                $functionArgs = $(".eg .eg-function .eg-function-args"),
                     $argsTbody = $(".eg .function-table tbody"),
                     $queryConfig = $functionArgs.find(".query-config-content"),
                     $argExample = $(".eg .eg-function .function-example"),
@@ -53,7 +57,7 @@
                     target = $(".eg .eg-elem.current").data('id'),
                     renderData = Array.prototype.concat([], fnData.args),
                     hasSetArgs = Array.isArray(args);
-                    // args = this.getExprArgs(fnData.name, fnType, fnData.async, fnData.voluation, target, renderData);
+                // args = this.getExprArgs(fnData.name, fnType, fnData.async, fnData.voluation, target, renderData);
                 $functionArgs.show().next().hide();
                 $argExample.text(fnData.example || "");
 
@@ -65,15 +69,15 @@
                         let discount = args.length - renderData.length;
                         if (discount > 0) {
                             let lastArg = renderData[renderData.length - 1];
-                            while(discount > 0) {
+                            while (discount > 0) {
                                 renderData.push(lastArg);
-                                discount --;
+                                discount--;
                             }
                         }
                     }
 
-                    renderData.forEach(function(arg, idx) {
-                        var 
+                    renderData.forEach(function (arg, idx) {
+                        var
                             // val = hasSetArgs ? (args[idx] ? JSON.stringify(args[idx]) : '') : arg.default == undefined ? "" : JSON.stringify(arg.default),
                             // valHtml = /^\{[^:]+\}$/img.test(val) ? `value='${val}'` : `value=${val}`,
                             val = arg.default == undefined ? '' : JSON.stringify(arg.default),
@@ -82,41 +86,41 @@
                                             ${_renderAddon(arg.addon, arg.queryCondition)}
                                         </div>`;
                         argsHtml += '<tr>' +
-                                        '<td data-name="' + arg.cname + '">' + arg.cname + '</td>' +
-                                        '<td data-convert="' + arg.type + '">' + arg.ctype + '</td>' +
-                                        '<td>' + inputHtml +
-                                        '</td>' +
-                                    '</tr>';
+                            '<td data-name="' + arg.cname + '">' + arg.cname + '</td>' +
+                            '<td data-convert="' + arg.type + '">' + arg.ctype + '</td>' +
+                            '<td>' + inputHtml +
+                            '</td>' +
+                            '</tr>';
                     });
                     fnData.args[fnData.args.length - 1].auto ? $argsTbody.parent().addClass("manyArgs-table") : $argsTbody.parent().removeClass("manyArgs-table");
                 }
                 argsHtml += '<tr>' +
-                                '<td>是否异步</td>' +
-                                '<td>默认</td>' +
-                                '<td>' +
-                                    '<input type="hidden" class="form-control" disabled data-type="async" value="'+ fnData.async + '">' +
-                                    (fnData.async === 1 ? '是' : '否') +
-                                '</td>' +
-                            '</tr>' +
-                            '<tr>' +
-                                '<td>赋值方式</td>' +
-                                '<td>默认</td>' +
-                                '<td>' +
-                                    '<input type="hidden" class="form-control" disabled data-type="voluation" value="'+ fnData.voluation +'">' +
-                                    (fnData.voluation === 1 ? '填充下拉列表' : '赋值文本框') +
-                                '</td>' +
-                            '</tr>'
+                    '<td>是否异步</td>' +
+                    '<td>默认</td>' +
+                    '<td>' +
+                    '<input type="hidden" class="form-control" disabled data-type="async" value="' + fnData.async + '">' +
+                    (fnData.async === 1 ? '是' : '否') +
+                    '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>赋值方式</td>' +
+                    '<td>默认</td>' +
+                    '<td>' +
+                    '<input type="hidden" class="form-control" disabled data-type="voluation" value="' + fnData.voluation + '">' +
+                    (fnData.voluation === 1 ? '填充下拉列表' : '赋值文本框') +
+                    '</td>' +
+                    '</tr>'
                 $argsTbody.empty().append(argsHtml);
 
                 // 填充数据
                 if (Array.isArray(args)) {
-                    $argsTbody.find('input[data-type="arg"]').each(function(idx) {
+                    $argsTbody.find('input[data-type="arg"]').each(function (idx) {
                         (args[idx]) && $(this).val(typeof args[idx] === 'object' ? JSON.stringify(args[idx]) : args[idx])
                     })
                 }
-                
-                delBtn ? $functionArgs.find('.cfooter .function-remove').length <= 0 && $functionArgs.find('.cfooter').append('<button class="btn btn-danger function-remove">删除该函数</button>')
-                       : $functionArgs.find('.cfooter .function-remove').remove();
+
+                delBtn ? $functionArgs.find('.cfooter .function-remove').length <= 0 && $functionArgs.find('.cfooter').append('<button class="btn btn-danger function-remove">删除该函数</button>') :
+                    $functionArgs.find('.cfooter .function-remove').remove();
                 $queryConfig.empty();
                 FunctionUtil.effect("open");
             },
@@ -144,14 +148,18 @@
                     dWidth = $egDialog.width(),
                     cWidth = $egContent.width(),
                     sWidth = $egSidebar.width();
-                    fWidth = $egFunction.width();
+                fWidth = $egFunction.width();
                 if (action === "open") {
                     if ($egFunction.is(":hidden")) {
                         $egFunction.show();
-                        $egContent.animate({width: cWidth - fWidth});
+                        $egContent.animate({
+                            width: cWidth - fWidth
+                        });
                     }
                 } else if (action === "close") {
-                    $egContent.animate({width: dWidth - sWidth});
+                    $egContent.animate({
+                        width: dWidth - sWidth
+                    });
                     $egFunction.hide();
                 }
             },
@@ -162,11 +170,11 @@
                     var id = $("#property_id").val();
                     if (id) {
                         if (!isInsert) {
-                          var args1 = [id.wrap('"'), data.fname.wrap('"'), data.async, data.mode].join(","),
-                              args2 = that.handleArgToString(data.args);
-                          result = "functions(" + args1 + args2 + ")";
+                            var args1 = [id.wrap('"'), data.fname.wrap('"'), data.async, data.mode].join(","),
+                                args2 = that.handleArgToString(data.args);
+                            result = "functions(" + args1 + args2 + ")";
                         } else {
-                          result = data.name + '(' + data.args.join(',') + ')';
+                            result = data.name + '(' + data.args.join(',') + ')';
                         }
                     }
                 }
@@ -185,14 +193,15 @@
                 if (maps.length > 0) return "," + maps.join(",");
                 else return "";
             },
-            setElemSelected: function(expr, args) {
+            setElemSelected: function (expr, args) {
                 var $eg = $('.eg:visible'),
                     expr = expr || $eg.find(".eg-expr").text(),
-                    args = args || $eg.find('[data-type="arg"], .queryConfig input').map(function() {
+                    args = args || $eg.find('[data-type="arg"], .queryConfig input').map(function () {
                         let val = $(this).val();
                         let convert = $(this).parent().parent().prev().data('convert');
-                        if (/^\{([A-Z]{4})\}$/g.test(val)) { return val.replace(/[{}]/mg, '') }
-                        else if (convert && convert.includes('Element') && /^[A-Z]{4}$/mg.test(val)) {
+                        if (/^\{([A-Z]{4})\}$/g.test(val)) {
+                            return val.replace(/[{}]/mg, '')
+                        } else if (convert && convert.includes('Element') && /^[A-Z]{4}$/mg.test(val)) {
                             return val;
                         } else return '';
                     }).get().filter(i => i != ''),
@@ -210,25 +219,25 @@
             },
             getExprArgs(fnName, fnType, async, voluation, target) {
                 if (!fnName || !fnType || !target) return false;
-    
+
                 var str = '',
                     startIdx = 0;
                 if (fnType === '本地函数') {
                     startIdx = 0;
-                    str = '(?<=' + fnName + '\\("'+ target +'",)(.+?)(?=\\))'
+                    str = '(?<=' + fnName + '\\("' + target + '",)(.+?)(?=\\))'
                 } else if (fnType === '远程函数') {
                     startIdx = 4
-                    str = "(?<=functions\\("+ '"'+ target + '")' + "," + '"'+ fnName + '"' + "," + async + "," + voluation + ",(.+?)(?=\\))";
+                    str = "(?<=functions\\(" + '"' + target + '")' + "," + '"' + fnName + '"' + "," + async +"," + voluation + ",(.+?)(?=\\))";
                 }
                 var expr = $(".eg .eg-expr").val(),
                     argReg = new RegExp(str, 'g'),
                     args = expr.match(argReg);
-                
+
                 if (Array.isArray(args)) {
                     return args[0].split(/,(?=[{\w\d]+)/).slice(startIdx).map(el => {
                         var val = /^".+"$/.test(el) ? el.substring(1, el.length - 1) : el;
                         val.endsWith(',') && (val = val.slice(0, val.length - 1));
-                        return  /^[A-Z]{4,6}$/.test(val) ? `{${val}}` : val
+                        return /^[A-Z]{4,6}$/.test(val) ? `{${val}}` : val
                     })
                 }
                 return false;
@@ -237,7 +246,7 @@
                 if (!Array.isArray(fns)) return;
 
                 var html = '';
-                fns.forEach(function(el) {
+                fns.forEach(function (el) {
                     html += `<div class="btn btn-default fn-system-item" data-type="系统函数" data-name="${el.name}" data-cname="${el.cname}">${el.cname}</div>`
                 });
                 $(".eg .eg-function .eg-system-list").empty().append(html);
@@ -248,29 +257,31 @@
 
                 var $origin = $('.eg .eg-system-list'),
                     $target = $('.eg .fn-system').find(".fn-system-item"),
-                    target = $target.map(function() { return $(this).data("name") }).get();
-                $origin.find('.fn-system-item').each(function() {
+                    target = $target.map(function () {
+                        return $(this).data("name")
+                    }).get();
+                $origin.find('.fn-system-item').each(function () {
                     var name = $(this).data("name");
                     $(this).removeClass("canAdd").addClass(target.includes(name) ? "" : "canAdd");
                 });
             },
             getSystemFnOrder(fns) {
                 if (!Array.isArray(fns)) return;
-                var target = $(".eg .fn-system .fn-system-item").map(function() {
+                var target = $(".eg .fn-system .fn-system-item").map(function () {
                     return $(this).data('cname');
                 }).get();
-                fns.forEach(function(el) {
+                fns.forEach(function (el) {
                     var index = target.indexOf(el.cname);
                     el.index = index > -1 ? index : 9999;
                 });
                 return fns;
             },
             getDbData: function () {
-                new FileService().readFile("/profiles/table.json", 'utf-8', function(rst) {
+                new FileService().readFile("/profiles/table.json", 'utf-8', function (rst) {
                     dbData = rst;
                 });
             },
-            insertAtCursor: function(dom, html, notDom) {
+            insertAtCursor: function (dom, html, notDom) {
                 if (!dom) return;
                 dom.focus();
                 let sel = window.getSelection();
@@ -284,8 +295,8 @@
                 let frag = document.createDocumentFragment(),
                     lastNode,
                     node = !notDom ? $(html).get(0) : html;
-                while ((node = el.firstChild)) {  
-                    lastNode = frag.appendChild(node);  
+                while ((node = el.firstChild)) {
+                    lastNode = frag.appendChild(node);
                 }
 
                 // 光标在span上时，光标移动到该span的后面
@@ -293,32 +304,44 @@
                     range.setStartAfter(range.startContainer.parentNode)
                 }
                 range.insertNode(frag);
-                if (lastNode) {  
-                    range = range.cloneRange();  
-                    range.setStartAfter(lastNode);  
+                if (lastNode) {
+                    range = range.cloneRange();
+                    range.setStartAfter(lastNode);
                     range.collapse(true);
-                    sel.removeAllRanges();  
-                    sel.addRange(range);  
-                }  
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
                 lastEditRange = sel.getRangeAt(0)
             },
-            renderContactTable: async function(ori_data, $content, $input) {
+            renderContactTable: async function (ori_data, $content, $input) {
                 if (!ori_data || !DataType.isObject(ori_data)) return alert('当前未配置查询或查询参数不正确！');
 
-                let { dbName, table, fields = [] } = ori_data,
-                    oriFields = {},
+                let {
+                    dbName,
+                    table,
+                    fields = []
+                } = ori_data,
+                oriFields = {},
                     renderFields = [];
                 if (dbData[dbName] && dbData[dbName][table] && dbData[dbName][table].tableDetail) {
-                   dbData[dbName][table].tableDetail.forEach(i => {
+                    dbData[dbName][table].tableDetail.forEach(i => {
                         oriFields[i.id] = i.cname
                     });
                 }
 
                 // 查询字段
-                if (fields.includes('*')) renderFields = Object.keys(oriFields).map(i => { return { name: `${oriFields[i]}(${i})`, value: i} })
+                if (fields.includes('*')) renderFields = Object.keys(oriFields).map(i => {
+                    return {
+                        name: `${oriFields[i]}(${i})`,
+                        value: i
+                    }
+                })
                 else {
                     fields.forEach(i => {
-                        oriFields[i] && renderFields.push({ name: `${oriFields[i]}(${i})`, value: i })
+                        oriFields[i] && renderFields.push({
+                            name: `${oriFields[i]}(${i})`,
+                            value: i
+                        })
                     })
                 }
 
@@ -338,7 +361,7 @@
                                 </tr>
                             `
                     }).join('') : '';
-                    str = `<div class="form-group">
+                str = `<div class="form-group">
                             <table class="table table-bordered table-striped table-contact">
                                 <thead>
                                     <tr>
@@ -361,9 +384,9 @@
                 let val = $input.val();
                 try {
                     val = JSON.parse(val);
-                } catch(err) {}
+                } catch (err) {}
 
-                if(DataType.isObject(val)) {
+                if (DataType.isObject(val)) {
                     Object.keys(val).forEach(i => {
                         if (!val[i]) return;
                         $(`td[data-global="${i}"]`).next().next().find('select').val(val[i]);
@@ -371,12 +394,13 @@
                 };
 
                 // 绑定事件
-                ;(function() {
+                ;
+                (function () {
                     // 保存对应关系
                     $(document).off('.contact_nameSpace');
                     $(document).on("click" + '.contact_nameSpace', '.eg .eg-function .contact-save', function (event) {
                         let result = {}
-                        $content.find('.table-contact tbody tr').each(function() {
+                        $content.find('.table-contact tbody tr').each(function () {
                             let global_variable = $(this).find('[data-global]').data('global'),
                                 field = $(this).find('select').val();
                             result[global_variable] = field || '';
@@ -467,32 +491,32 @@
                     '</section>' +
                     '</aside>' +
                     '<section class="eg-function">' +
-                        '<div class="eg-function-args">' +
-                            '<div class="form-group">' +
-                            '<label class="control-label">使用案例：</label>' +
-                            '<p class="function-example">' +
-                            '</p>' +
-                            '</div>' +
-                            '<div class="form-group">' +
-                            '<label class="control-label">参数列表：</label>' +
-                            '<table class="table table-bordered table-hover table-responsive ctable function-table">' +
-                            '<thead><tr><th>名称</th><th>类型</th><th>值</th></tr></thead>' +
-                            '<tbody></tbody>' +
-                            '</table>' +
-                            '</div>' +
-                            '<div class="query-config-content">' +
-                            '</div>' +
-                            '<footer class="cfooter">' +
-                            '<button class="btn btn-primary function-save">保存</button>' +
-                            '<button class="btn btn-danger function-clear">清除</button>' +
-                            '</footer>' +
-                        '</div>' +
-                        '<div class="eg-system-list">' +
-                        '</div>' +
+                    '<div class="eg-function-args">' +
+                    '<div class="form-group">' +
+                    '<label class="control-label">使用案例：</label>' +
+                    '<p class="function-example">' +
+                    '</p>' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label class="control-label">参数列表：</label>' +
+                    '<table class="table table-bordered table-hover table-responsive ctable function-table">' +
+                    '<thead><tr><th>名称</th><th>类型</th><th>值</th></tr></thead>' +
+                    '<tbody></tbody>' +
+                    '</table>' +
+                    '</div>' +
+                    '<div class="query-config-content">' +
+                    '</div>' +
+                    '<footer class="cfooter">' +
+                    '<button class="btn btn-primary function-save">保存</button>' +
+                    '<button class="btn btn-danger function-clear">清除</button>' +
+                    '</footer>' +
+                    '</div>' +
+                    '<div class="eg-system-list">' +
+                    '</div>' +
                     '</section>' +
                     '</div>' +
                     '</section>'
-                    );
+                );
                 $eg.appendTo(document.body);
             } else {
                 $eg.find('.eg-expr').attr('contenteditable', isGlobal ? false : true).parent().prev().find('.cpanel-title').text(isGlobal ? '已配置全局函数' : '表达式');
@@ -581,7 +605,7 @@
             } else if (data) {
                 if (Object.prototype.toString.call(data) === '[object Function]') {
                     let html = '',
-                    methods = data();
+                        methods = data();
                     methods && methods.forEach(i => {
                         html += that.generatExprFn(i.fnName, i.expr, i.fnArgs, true, i.fnCname);
                     });
@@ -599,10 +623,10 @@
                         data = item.data,
                         style = item.style ? " " + item.style : "",
                         cpanel = '<div class="cpanel' + style + '" data-title="' + title + '">' +
-                            '<header class="cpanel-header">' +
-                            '<h4 class="cpanel-title">' + title + '</h4>' +
-                            '</header>' +
-                            '<div class="cpanel-body" data-type="' + type + '">';
+                        '<header class="cpanel-header">' +
+                        '<h4 class="cpanel-title">' + title + '</h4>' +
+                        '</header>' +
+                        '<div class="cpanel-body" data-type="' + type + '">';
                     for (var key in data) {
                         var value = data[key];
                         cpanel += '<button data-type="toolbar_btn" class="btn btn-default" value="' + value + '">' + key + '</button>';
@@ -621,74 +645,76 @@
                 $eg.find(".eg-function").hide().end().find(".eg-content").css("width", "calc(100% - 250px)");
             }
         },
-        renderToolBar: function(functions, systemFunction) {
+        renderToolBar: function (functions, systemFunction) {
             var titles = "";
             if (Array.isArray(functions)) {
-                functions.forEach(function(el, idx) {
-                    titles += '<div class="fn-types-item btn btn-default '+ (idx === 0 ? "selected" : "") +'" data-type="'+ el.title +'">'+ el.title +'</div>'
+                functions.forEach(function (el, idx) {
+                    titles += '<div class="fn-types-item btn btn-default ' + (idx === 0 ? "selected" : "") + '" data-type="' + el.title + '">' + el.title + '</div>'
                 })
             };
 
             var systemFn = "";
             if (Array.isArray(systemFunction)) {
-                systemFunction.sort(function(a, b){ return a.index > b.index})
-                systemFunction.filter(el => el.index !== 9999).forEach(function(el) {
+                systemFunction.sort(function (a, b) {
+                    return a.index > b.index
+                })
+                systemFunction.filter(el => el.index !== 9999).forEach(function (el) {
                     systemFn += `<div class="btn btn-default fn-system-item" data-type="系统函数" data-name="${el.name}" data-cname="${el.cname}">${el.cname}</div>`
                 });
                 systemFn += `<div class="fn-system-more"><div></div><div></div><div></div></div>`
             }
 
-            var html = '<div class="cpanel" data-title="配置函数">'+
-                            '<header class="cpanel-header">' +
-                                '<h4 class="cpanel-title">配置函数</h4>' +
-                            '</header>' +
-                            '<div class="cpanel-body" data-type="normal">' +
+            var html = '<div class="cpanel" data-title="配置函数">' +
+                '<header class="cpanel-header">' +
+                '<h4 class="cpanel-title">配置函数</h4>' +
+                '</header>' +
+                '<div class="cpanel-body" data-type="normal">' +
 
-                                '<section class="fn-system">' +
-                                    systemFn +
-                                '</section>' +
-                                
-                                '<section class="fn-types">' +
-                                titles +
-                                '</section>' +
-                                '<div class="fn-container">'+
-                                    '<section class="fn-search">' +
-                                        '<input type="text">' +
-                                        '<i class="icon icon-search"></i>' +
-                                    '</section>'+
-                                    '<section class="fn-category">' +
-                                        '<select class="fn-category-select"></select>' +
-                                    '</section>' +
-                                    '<section class="fn-wrap">' +
-                                    '</section>' +
-                                    '<section>' +
-                                        '<div class="fn-desc"></div>' +
-                                    '</section></div></div>' +
-                                '</div>'
-                                
+                '<section class="fn-system">' +
+                systemFn +
+                '</section>' +
+
+                '<section class="fn-types">' +
+                titles +
+                '</section>' +
+                '<div class="fn-container">' +
+                '<section class="fn-search">' +
+                '<input type="text">' +
+                '<i class="icon icon-search"></i>' +
+                '</section>' +
+                '<section class="fn-category">' +
+                '<select class="fn-category-select"></select>' +
+                '</section>' +
+                '<section class="fn-wrap">' +
+                '</section>' +
+                '<section>' +
+                '<div class="fn-desc"></div>' +
+                '</section></div></div>' +
+                '</div>'
+
             $(".eg").find(".eg-toolbar").append(html);
         },
-        setToolBarData: function(fnsData) {
+        setToolBarData: function (fnsData) {
             if (Object.prototype.toString.call(fnsData) !== '[object Object]') return;
 
             var options = '',
                 fnsHtml = '',
                 firstFn;
-            
-                fnsData.title
-                ? ($(".eg").find('[data-type="'+ fnsData.title +'"].fn-types-item').addClass("selected").siblings().removeClass("selected"))
-                : ($(".eg").find('.fn-types-item').removeClass("selected"));
-            
+
+            fnsData.title ?
+                ($(".eg").find('[data-type="' + fnsData.title + '"].fn-types-item').addClass("selected").siblings().removeClass("selected")) :
+                ($(".eg").find('.fn-types-item').removeClass("selected"));
+
             if (Array.isArray(fnsData.data.categorys)) {
-                    fnsData.data.categorys.forEach(function(el) {
-                        options += '<option value=' + el + '>' + el + '</option>'
-                    });
+                fnsData.data.categorys.forEach(function (el) {
+                    options += '<option value=' + el + '>' + el + '</option>'
+                });
             }
             if (Array.isArray(fnsData.data.items)) {
-                fnsData.data.items.forEach(function(el, index) {
+                fnsData.data.items.forEach(function (el, index) {
                     if (el.category == fnsData.data.categorys[0]) {
                         !firstFn && (firstFn = el);
-                        fnsHtml += '<div class="fn-item" data-name="'+ el.name +'" data-index="'+ index +'" data-type="'+ fnsData.title +'"  data-desc="'+ el.desc +'">'+ (el.cname || el.name) + '（' + el.name + '）</div>'
+                        fnsHtml += '<div class="fn-item" data-name="' + el.name + '" data-index="' + index + '" data-type="' + fnsData.title + '"  data-desc="' + el.desc + '">' + (el.cname || el.name) + '（' + el.name + '）</div>'
                     }
                 })
             }
@@ -718,7 +744,7 @@
             $eg.find(".eg-content,.eg-sidebar,.eg-toolbar,.eg-result,.eg-function,.eg-insertFn").css("z-index", zIndex + 1);
             $eg.find(".eg-close").css("z-index", zIndex + 2);
             $eg.find(".eg-toolbar").css("bottom", rHeight);
-            $eg.find(".eg-dialog").width(pageWidth  * .75 + sWidth * 2);
+            $eg.find(".eg-dialog").width(pageWidth * .75 + sWidth * 2);
             $eg.fadeIn();
             if (cache.onOpen) {
                 cache.onOpen();
@@ -728,18 +754,20 @@
             $(document).off("input" + EVENT_NAMESPACE);
             $(document).off("focusin" + EVENT_NAMESPACE);
             var that = this;
-            
+
             //控件元素click事件
-            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-elem", {element: element}, function (event) {
-                if($(this).hasClass("current")){
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-elem", {
+                element: element
+            }, function (event) {
+                if ($(this).hasClass("current")) {
                     var result = window.confirm("你却定获取元素本身的值吗？");
-                    if(!result) return;
+                    if (!result) return;
                 }
                 event.stopPropagation();
                 //判断是不是多选模式
                 var cache = $.data(event.data.element, CACHE_KEY),
                     isGlobal = !!cache.global;
-                
+
                 var $eg = $(".eg:visible"),
                     $arg = $eg.find("[data-type='arg'].active, .queryConfig .active"),
                     $egExpr = $eg.find(".eg-expr"),
@@ -751,9 +779,11 @@
                     value = valueType === 'ElementNoWrap' ? dataId : "{" + dataId + "}";
                     $arg.val($arg.val() === value ? "" : value).trigger("input");
                 } else {
-                    if (isGlobal) { return; }
+                    if (isGlobal) {
+                        return;
+                    }
                     value = "{" + dataId + "}";
-                    if(expr.indexOf(value) > -1) {
+                    if (expr.indexOf(value) > -1) {
                         $egExpr.val(expr.replace(new RegExp(value, "g"), ""));
                     } else {
                         that.setExpr($egExpr, $egExpr.get(0), expr, value, null, true);
@@ -762,7 +792,9 @@
                 FunctionUtil.setElemSelected();
             });
             //全局变量
-            $(document).on("click" + EVENT_NAMESPACE, '.eg .cpanel-body [data-type="toolbar_btn"].btn', {element: element}, function (event) {
+            $(document).on("click" + EVENT_NAMESPACE, '.eg .cpanel-body [data-type="toolbar_btn"].btn', {
+                element: element
+            }, function (event) {
                 event.stopPropagation();
                 var $eg = $(".eg:visible"),
                     $egExpr = $eg.find(".eg-expr"),
@@ -773,9 +805,9 @@
                     var id = $("#property_id").val();
                     value = value.replace("{ID}", id);
                 }
-                
+
                 var $list = $('.eg .eg-function').find(".eg-system-list");
-                    cache = $.data(element, CACHE_KEY);
+                cache = $.data(element, CACHE_KEY);
                 if ($list.is(":visible")) {
                     FunctionUtil.setSystemStatus(true);
                     $(this).find(".fn-system .fn-system-item").first().click();
@@ -787,11 +819,13 @@
                 that.setExpr($egExpr, $egExpr.get(0), $egExpr.val(), value);
             });
             //表达式元素input事件
-            $(document).on("input" + EVENT_NAMESPACE, ".eg .eg-expr, .eg [data-type='arg']", {element: element}, function (event) {
-                event.stopPropagation();               
+            $(document).on("input" + EVENT_NAMESPACE, ".eg .eg-expr, .eg [data-type='arg']", {
+                element: element
+            }, function (event) {
+                event.stopPropagation();
                 FunctionUtil.setElemSelected();
             });
-            
+
             //面板切换
             $(document).on("click" + EVENT_NAMESPACE, ".eg .cpanel .cpanel-header", function (event) {
                 event.stopPropagation();
@@ -799,13 +833,15 @@
             });
 
             //保存
-            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-save", {element: element}, function (event) {
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-save", {
+                element: element
+            }, function (event) {
                 event.stopPropagation();
                 var $eg = $(".eg"),
                     $expr = $eg.find(".eg-expr"),
                     children = $expr.get(0).childNodes,
                     expr = '';
-                    cache = $.data(event.data.element, CACHE_KEY),
+                cache = $.data(event.data.element, CACHE_KEY),
                     isGlobal = cache.global,
                     $result = cache.$result,
                     $resultFunction = cache.$resultFunction;
@@ -826,23 +862,23 @@
                             var args = expr.match(/(?<=functions\()(.+?)(?=\))/);
                             args && args[0] && (fnName = args[0].split(',')[1]);
                             fnName && (fnName = fnName.replace(/"/g, ""));
-                        }  else {
+                        } else {
                             var fnNames = expr.match(/([A-Za-z.]+)(?=\(.*\))/);
                             Array.isArray(fnNames) && (fnName = fnNames[0]);
                         }
                         $resultFunction.call(null, fnName, expr);
                     }
                     if (cache.onSetProperty) {
-                        let _val = isGlobal ? $expr.find('.expr-fn-item[data-global]').map(function() {
-                                                let $this = $(this);
-                                                return {
-                                                    fnCname: $this.attr('data-fn_cname'),
-                                                    fnName: $this.attr('data-fn_name'),
-                                                    fnArgs: $this.attr('data-fn_args') ? JSON.parse(decodeURI($this.attr('data-fn_args'))) : '',
-                                                    expr: decodeURI($this.attr('data-fn'))
-                                                }
-                                            }).get()
-                                            : expr;
+                        let _val = isGlobal ? $expr.find('.expr-fn-item[data-global]').map(function () {
+                                let $this = $(this);
+                                return {
+                                    fnCname: $this.attr('data-fn_cname'),
+                                    fnName: $this.attr('data-fn_name'),
+                                    fnArgs: $this.attr('data-fn_args') ? JSON.parse(decodeURI($this.attr('data-fn_args'))) : '',
+                                    expr: decodeURI($this.attr('data-fn'))
+                                }
+                            }).get() :
+                            expr;
                         cache.onSetProperty.call(null, _val);
                     }
                     $eg.fadeOut();
@@ -860,7 +896,9 @@
                 };
             });
             //清除
-            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-clear", {element: element}, function (event) {
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-clear", {
+                element: element
+            }, function (event) {
                 event.stopPropagation();
                 var result = confirm("确定要清除表达式配置数据吗？");
                 if (!result) return;
@@ -869,7 +907,9 @@
                 $(".eg .eg-dialog .eg-sidebar .eg-result .eg-expr").empty();
             });
             //关闭
-            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-close", {element: element}, function (event) {
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-close", {
+                element: element
+            }, function (event) {
                 event.stopPropagation();
                 $(".eg").fadeOut();
                 var cache = $.data(event.data.element, CACHE_KEY);
@@ -879,38 +919,48 @@
             });
 
             // 选择一级函数分类
-            $(document).on("click" + EVENT_NAMESPACE, ".eg .cpanel .fn-types-item", {element: element}, function (event) {
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .cpanel .fn-types-item", {
+                element: element
+            }, function (event) {
                 event.stopPropagation();
                 var $eg = $('.eg:visible');
                 if ($eg.find(".eg-system-list").is(":visible")) $eg.find(".fn-system-more").click();
                 var type = $(this).data('type'),
                     cache = $.data(element, CACHE_KEY);
-                    fnsData = cache.functions.filter(function(el) { return el.title == type });
+                fnsData = cache.functions.filter(function (el) {
+                    return el.title == type
+                });
                 that.clearStyle();
                 $(".fn-container").slideDown('fast');
                 that.setToolBarData(fnsData[0]);
             });
 
             // 选择二级函数分类
-            $(document).on("change" + EVENT_NAMESPACE, ".eg .cpanel .fn-category-select", {element: element}, function (event, noRenderFnList) {
+            $(document).on("change" + EVENT_NAMESPACE, ".eg .cpanel .fn-category-select", {
+                element: element
+            }, function (event, noRenderFnList) {
                 event.stopPropagation();
                 var type = $(this).data('type'),
                     val = $(this).val(),
                     cache = $.data(element, CACHE_KEY),
-                    fnsData = cache.functions.filter(function(el) { return el.title == type }),
+                    fnsData = cache.functions.filter(function (el) {
+                        return el.title == type
+                    }),
                     fnsHtml = '',
                     $fnWrap = $(".eg").find(".fn-wrap");
-                fnsData[0].data.items.filter(function(el, index) {
-                    if(el.category === val) {
-                        fnsHtml += '<div class="fn-item" data-name="'+ el.name +'" data-index="'+ index +'" data-type="'+ type +'"  data-desc="'+ el.desc +'">'+ (el.cname || el.name) + '（' + el.name + '）</div>'
+                fnsData[0].data.items.filter(function (el, index) {
+                    if (el.category === val) {
+                        fnsHtml += '<div class="fn-item" data-name="' + el.name + '" data-index="' + index + '" data-type="' + type + '"  data-desc="' + el.desc + '">' + (el.cname || el.name) + '（' + el.name + '）</div>'
                     }
                 });
-                $fnWrap.empty().append(fnsHtml)
+                $fnWrap.empty().append(fnsHtml);
                 !noRenderFnList && $fnWrap.find(".fn-item").first().click();
             });
-            
+
             // 选择三级函数分类
-            $(document).on("click" + EVENT_NAMESPACE, ".eg .cpanel .fn-item", {element: element}, function (event, args) {
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .cpanel .fn-item", {
+                element: element
+            }, function (event, args) {
                 event.stopPropagation();
                 if ($(this).hasClass('selected')) return;
 
@@ -918,27 +968,31 @@
                     functions = cache.functions,
                     type = $(this).data('type'),
                     idx = $(this).data('index'),
-                    fnsData = functions.filter(function(el) { return el.title === type })[0];
+                    fnsData = functions.filter(function (el) {
+                        return el.title === type
+                    })[0];
                 $(".eg .cpanel .fn-item").removeClass('selected');
                 $(this).addClass('selected');
                 $(".eg .fn-desc").text($(this).data('desc'));
                 FunctionUtil.setArgsTbody(fnsData.data.items[idx], type, args && args.args, args && args.delBtn);
                 FunctionUtil.setElemSelected();
             });
-            
+
             // 函数搜索
-            $(document).on("keydown" + EVENT_NAMESPACE, ".eg .cpanel .fn-search input", {element: element},function (event) {
+            $(document).on("keydown" + EVENT_NAMESPACE, ".eg .cpanel .fn-search input", {
+                element: element
+            }, function (event) {
                 event.stopPropagation();
                 if (event.keyCode === 13) {
                     var val = $(this).val().trim();
                     if (val) {
                         var functions = $.data(element, CACHE_KEY).functions,
                             html = '';
-                        functions.forEach(function(el) {
+                        functions.forEach(function (el) {
                             var title = el.title;
-                            el.data.items.forEach(function(fn, idx) {
+                            el.data.items.forEach(function (fn, idx) {
                                 if ((fn.name && fn.name.indexOf(val) > -1) || (fn.cname && fn.cname.indexOf(val) > -1)) {
-                                    html += '<div class="fn-item" data-type="'+ title +'" data-name="'+ fn.name +'" data-index="'+ idx +'" data-desc="'+ fn.desc +'">'+ '（'+ el.title +'）' + (fn.cname || fn.name) + '（' + fn.name + '）</div>'
+                                    html += '<div class="fn-item" data-type="' + title + '" data-name="' + fn.name + '" data-index="' + idx + '" data-desc="' + fn.desc + '">' + '（' + el.title + '）' + (fn.cname || fn.name) + '（' + fn.name + '）</div>'
                                 }
                             })
                         });
@@ -953,7 +1007,7 @@
 
             // 插入函数的参数中有...，表示有多个相同参数
             // 重复写是因为事件无法关闭。
-            $(document).on("input" + EVENT_NAMESPACE, ".manyArgs-table tbody tr input[data-type='arg']:last", function(event) {
+            $(document).on("input" + EVENT_NAMESPACE, ".manyArgs-table tbody tr input[data-type='arg']:last", function (event) {
                 var $ev = $(event.currentTarget),
                     val = $ev.val();
                 if (!$ev) return;
@@ -962,7 +1016,7 @@
                     $clone.insertAfter($(this).parents('tr')).find("input").val("").removeClass("active");
                 }
             });
-            $(document).on("focusin" + EVENT_NAMESPACE, ".manyArgs-table tbody tr input[data-type='arg']:last", function(event) {
+            $(document).on("focusin" + EVENT_NAMESPACE, ".manyArgs-table tbody tr input[data-type='arg']:last", function (event) {
                 var $ev = $(event.currentTarget),
                     val = $ev.val();
                 if (!$ev) return;
@@ -971,7 +1025,7 @@
                     $clone.insertAfter($(this).parents('tr')).find("input").val("").removeClass("active");
                 }
             });
-            
+
 
             //文本框focusin、focusout事件
             $(document).on("focusin" + EVENT_NAMESPACE, ".eg .eg-expr, .eg .eg-function [data-type='arg'], .queryConfig input", function (event) {
@@ -1024,7 +1078,9 @@
             });
 
             //保存函数配置
-            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-function .function-save", {element: element}, function (event) {
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-function .function-save", {
+                element: element
+            }, function (event) {
                 event.stopPropagation();
                 var cache = $.data(element, CACHE_KEY),
                     replaceResult = !!cache.replaceResult,
@@ -1033,14 +1089,14 @@
                     $egExpr = $eg.find(".eg-expr"),
                     target = $eg.find('.eg-elem.current').data('id') || $('#property_id').val(),
                     fnType = $eg.find(".fn-item.selected").data('type') || $eg.find(".fn-system-item.selected").data('type'),
-                    fnName = $eg.find(".fn-item.selected").data('name') ||  $eg.find(".fn-system-item.selected").data('name'),
+                    fnName = $eg.find(".fn-item.selected").data('name') || $eg.find(".fn-system-item.selected").data('name'),
                     isManyArgsTable = $eg.find(".eg-function-args table").hasClass("manyArgs-table"),
                     result = "";
                 if (!isGlobal && !target) return;
-                if(!fnName) return alert('无选中函数！');
+                if (!fnName) return alert('无选中函数！');
 
                 // 参数为对象时，不转换
-                var args = $eg.find('[data-type="arg"]').map(function() {
+                var args = $eg.find('[data-type="arg"]').map(function () {
                     var convert = $(this).parent().prev().data('convert'),
                         isCheckbox = $(this).is(':checkbox'),
                         val = !isCheckbox ? $(this).val() : $(this).is(':checked');
@@ -1057,20 +1113,20 @@
                 argsString = args.join(',');
 
                 if (fnType === "本地函数") {
-                    result = fnName + "("+ '"'+ target + '"' + "," + argsString +")";
-                } else if (fnType === "远程函数"){
+                    result = fnName + "(" + '"' + target + '"' + "," + argsString + ")";
+                } else if (fnType === "远程函数") {
                     var async = $eg.find('[data-type="async"]').val(),
                         voluation = $eg.find('[data-type="voluation"]').val();
-                    result = "functions("+ '"'+ target + '"' + "," + '"'+ fnName + '"' + "," + async + "," + voluation + "," + argsString +")";
+                    result = "functions(" + '"' + target + '"' + "," + '"' + fnName + '"' + "," + async +"," + voluation + "," + argsString + ")";
                 } else if (fnType === "系统函数") {
-                    result = fnName + "("+ argsString +")"
+                    result = fnName + "(" + argsString + ")"
                 }
 
                 if (fnType === "系统函数") {
                     that.setExpr($egExpr, $egExpr.get(0), $egExpr.html(), result, replaceResult, true);
                 } else {
                     // 参数为对象时，不转换，（待优化，没空写）
-                    let argsArr = $eg.find('[data-type="arg"]').map(function() {
+                    let argsArr = $eg.find('[data-type="arg"]').map(function () {
                         var convert = $(this).parent().prev().data('convert'),
                             isCheckbox = $(this).is(':checkbox'),
                             val = !isCheckbox ? $(this).val() : $(this).is(':checked');
@@ -1090,13 +1146,12 @@
                             console.log(4)
                             try {
                                 return JSON.parse(val);
-                            } catch(err) {
-                                return val                                
+                            } catch (err) {
+                                return val
                             }
                         };
                     }).get();
                     $egExpr.find('.current').length > 0 && $egExpr.trigger('focus');
-                    console.log('result" ', result)
                     that.setExpr($egExpr, $egExpr.get(0), $egExpr.html(), that.generatExprFn(fnName, result, argsArr, isGlobal), replaceResult, null, isGlobal);
                 }
                 $(".eg .eg-function [data-type='arg'].active").removeClass("active");
@@ -1104,18 +1159,22 @@
 
             //清除插入函数配置
             $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-function .function-clear", function (event) {
-                $(".eg:visible .eg-function [data-type='arg']").each(function() {
+                $(".eg:visible .eg-function [data-type='arg']").each(function () {
                     $(this).val("").removeClass('active');
                 });
             });
 
             // 选择系统函数
-            $(document).on("click" + EVENT_NAMESPACE, ".eg .fn-system .fn-system-item", {element: element}, function (event) {
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .fn-system .fn-system-item", {
+                element: element
+            }, function (event) {
                 if ($('.eg .eg-system-list').is(":visible")) return;
 
                 var cname = $(this).data('cname'),
                     cache = $.data(element, CACHE_KEY),
-                    fnData = cache.systemFunction.filter(function(el) { return el.cname === cname });
+                    fnData = cache.systemFunction.filter(function (el) {
+                        return el.cname === cname
+                    });
                 that.clearStyle();
                 $(".fn-container").slideUp('fast');
                 $(this).addClass("selected");
@@ -1123,7 +1182,7 @@
             });
 
             // 依赖  插件
-            (function() {
+            (function () {
                 $(".eg:visible .eg-dialog").resizable({
                     handles: 'all'
                 });
@@ -1132,9 +1191,11 @@
                 // $(".eg:visible .eg-dialog").draggable();
 
             })();
-            
+
             // 切换配置函数
-            $(document).on("click" + EVENT_NAMESPACE, ".eg .fn-system .fn-system-more", {element: element}, function (event) {
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .fn-system .fn-system-more", {
+                element: element
+            }, function (event) {
                 var $list = $('.eg .eg-function').find(".eg-system-list");
                 cache = $.data(element, CACHE_KEY);
                 if ($list.is(":visible")) {
@@ -1158,13 +1219,17 @@
             });
 
             // 移除系统函数
-            $(document).on("click" + EVENT_NAMESPACE, ".eg .fn-system .canDel", {element: element}, function (event) {
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .fn-system .canDel", {
+                element: element
+            }, function (event) {
                 var name = $(this).remove().data('cname');
-                $(".eg .eg-system-list").find('[data-cname="'+ name +'"]').addClass("canAdd");
+                $(".eg .eg-system-list").find('[data-cname="' + name + '"]').addClass("canAdd");
             });
 
             // 添加系统函数
-            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-system-list .fn-system-item.canAdd", {element: element}, function (event) {
+            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-system-list .fn-system-item.canAdd", {
+                element: element
+            }, function (event) {
                 var $clone = $(this).clone(true),
                     $target = $(".eg .fn-system"),
                     remove;
@@ -1173,11 +1238,13 @@
                 }
                 $(this).removeClass("canAdd");
                 $clone.addClass("canDel").removeClass("canAdd").insertBefore($target.find(".fn-system-more"));
-                remove && $(".eg .eg-system-list").find('[data-cname="'+ remove +'"]').addClass("canAdd");
+                remove && $(".eg .eg-system-list").find('[data-cname="' + remove + '"]').addClass("canAdd");
             });
 
             // 数据源
-            $(document).on("click" + EVENT_NAMESPACE, '.eg .eg-function [data-config="query"]', {element: element}, function (event) {
+            $(document).on("click" + EVENT_NAMESPACE, '.eg .eg-function [data-config="query"]', {
+                element: element
+            }, function (event) {
                 var $this = $(this),
                     $input = $this.prev('input'),
                     mode = $this.attr('data-mode'),
@@ -1185,32 +1252,58 @@
                     $content = $('.eg:visible .query-config-content'),
                     val = $input.val(),
                     data = null;
-                try{
+                try {
                     data = JSON.parse(val);
-                }catch(err) {};
-                
-                $content.is(":empty")
-                    ? $(this).dbQuerier2({
-                            $target: $input,
-                            data: data || {},
-                            $content: $content,
-                            fieldMode: mode,
-                            queryCondition: queryCondition
-                        })
-                    : $content.empty();
+                } catch (err) {};
+
+                $content.is(":empty") ?
+                    $(this).dbQuerier2({
+                        $target: $input,
+                        data: data || {},
+                        $content: $content,
+                        fieldMode: mode,
+                        queryCondition: queryCondition
+                    }) :
+                    $content.empty();
             });
 
             // 全局变量对应关系
-            $(document).on("click" + EVENT_NAMESPACE, '.eg .eg-function [data-config="contact"]', {element: element}, function (event) {
+            $(document).on("click" + EVENT_NAMESPACE, '.eg .eg-function [data-config="contact"]', {
+                element: element
+            }, function (event) {
                 var $this = $(this),
                     $input = $this.prev('input'),
                     $content = $('.eg:visible .query-config-content'),
                     val = $input.val(),
                     data = $this.parents('tr').prev().find('[data-type="arg"]').val();
-                try{
+                try {
                     data = JSON.parse(data);
-                }catch(err) {};
+                } catch (err) {};
                 FunctionUtil.renderContactTable(data, $content, $input)
+            });
+            $(document).on("click" + EVENT_NAMESPACE, '.eg .eg-function [data-config="Db"]', {
+                element: element
+            }, function (event) {
+                var $this = $(this),
+                    $input = $this.prev('input'),
+                    mode = $this.attr('data-mode'),
+                    queryCondition = $this.attr('data-query_condition'),
+                    $content = $('.eg:visible .query-config-content'),
+                    val = $input.val(),
+                    data = null;
+                console.log(data)
+                try {
+                    data = JSON.parse(val);
+                } catch (err) {};
+                $content.is(":empty") ? $(this).Db({
+                        $target: $input,
+                        data: data || {},
+                        $content: $content,
+                        isSm: true,
+                        Db: AllDbName
+                    }) :
+                    $content.empty();
+
             });
 
             // // 参数弹窗
@@ -1218,20 +1311,24 @@
             //     let $this = $(this),
             //         trIdx = $this.data('resulttr'),
             //         val = $this.parents('.popover-content').find('[data-select="result"]').val();
-                
+
             //     $(this).parents(".popover").prev().popover('hide')
             //         .parents('table').find('tbody tr').eq(trIdx).find('input[data-type="arg"]').val(val);
             // });
 
             // 表达式中的函数点击查看参数
-            $(document).on('click' + EVENT_NAMESPACE, '.eg-expr .expr-fn-item', {element: element}, function(event) {
+            $(document).on('click' + EVENT_NAMESPACE, '.eg-expr .expr-fn-item', {
+                element: element
+            }, function (event) {
                 let $eg = $(".eg"),
                     $this = $(this),
                     fnName = $this.data('fn_name'),
                     fnType = decodeURI($this.data('fn')).startsWith('functions') ? '远程函数' : '本地函数',
                     functions = $.data(element, CACHE_KEY).functions,
                     searchData = functions.filter(i => i.title === fnType)[0].data,
-                    fnIdx = searchData.items.findIndex(i => { return i.name === fnName }),
+                    fnIdx = searchData.items.findIndex(i => {
+                        return i.name === fnName
+                    }),
                     fnCate = searchData.items[fnIdx].category,
                     args = decodeURI($this.data('fn_args'));
                 try {
@@ -1243,13 +1340,16 @@
                 $this.addClass('current').siblings().removeClass('current');
                 $eg.find(`.fn-types-item[data-type="${fnType}"]`).trigger('click');
                 $eg.find('.fn-category-select').val(fnCate).trigger('change', true);
-                $eg.find(`.fn-item[data-name="${fnName}"]`).trigger('click', {args: args, delBtn: true});
+                $eg.find(`.fn-item[data-name="${fnName}"]`).trigger('click', {
+                    args: args,
+                    delBtn: true
+                });
             });
 
             // 删除表达式中的函数
             $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-function .function-remove", function (event) {
                 let result = confirm('确认删除该已配置函数？')
-                if(!result) return;
+                if (!result) return;
                 $(this).remove();
                 $('.expr-fn-item.current').remove();
             });
@@ -1257,16 +1357,16 @@
         setExpr: function ($elem, elem, expr, value, replaceExpr, isDom, isGlobal) {
             if (!$elem || $elem.length <= 0 || !elem) return;
             expr = $elem.html();
-            !isGlobal ? FunctionUtil.insertAtCursor(elem, value, isDom)
-                      : $elem.append(value);
+            !isGlobal ? FunctionUtil.insertAtCursor(elem, value, isDom) :
+                $elem.append(value);
         },
-        generatExprFn: function(fnName, fnData, args, isGlobal, fnCname) {
+        generatExprFn: function (fnName, fnData, args, isGlobal, fnCname) {
             if (!fnName || !fnData) return;
 
             let cFnName = fnName;
             if (isGlobal && !fnCname) {
                 // let len = $(".eg-expr").find(`span[data-fn_name="${fnName}"]`).length;
-                sameFns = $(".eg-expr").find(`span[data-fn_name="${fnName}"]`).map(function() {
+                sameFns = $(".eg-expr").find(`span[data-fn_name="${fnName}"]`).map(function () {
                     return $(this).data('fn_cname')
                 }).sort();
                 if (sameFns.length > 0) {
@@ -1282,12 +1382,11 @@
             let $span = $(`<span contenteditable="false" data-fn_name="${fnName}" data-fn_cname="${fnCname || cFnName}" data-fn=${encodeURI(fnData)} data-fn_args=${encodeURI(JSON.stringify(args))} class="expr-fn-item" ${isGlobal ? 'data-global' : ''}>${fnCname || cFnName}</span>`);
             return $span.get(0).outerHTML + " ";
         },
-        convertExpr:function(expr, cacheFns) {
+        convertExpr: function (expr, cacheFns) {
             if (!expr) return "";
             let that = this;
-            return expr.replace(/[a-zA-Z]*?\(([^)]*)\)/img, function() {
+            return expr.replace(/[a-zA-Z]*?\(([^)]*)\)/img, function () {
                 let fn = arguments[0];
-                console.log(fn)
                 // 远程函数
                 if (fn.startsWith('functions')) {
                     try {
@@ -1295,22 +1394,22 @@
                         if (Array.isArray(args) && args[1] && that.isBuiltInFn(fn, args[1], cacheFns)) {
                             return that.generatExprFn(args[1], fn, args.slice(4));
                         } else return fn;
-                    } catch(err) {
+                    } catch (err) {
                         console.log('解析远程函数出错: ', err)
                         return fn;
                     }
                 } else {
                     // 本地函数
                     let localFnName = fn.match(/(^[a-zA-Z]+)(?=\(.*\))/img);
-                    if(!localFnName) return fn;
+                    if (!localFnName) return fn;
                     localFnName = localFnName[0];
-                    
+
                     if (that.isBuiltInFn(fn, localFnName, cacheFns)) {
                         try {
                             eval('function ' + localFnName + '(...args) { return args }');
                             let args = eval(fn);
                             return that.generatExprFn(localFnName, fn, args.slice(1))
-                        } catch(err) {
+                        } catch (err) {
                             console.log('解析本地函数出错！', err);
                             return fn
                         }
@@ -1318,7 +1417,7 @@
                 }
             })
         },
-        isBuiltInFn: function(fn, fnName, cacheFns) {
+        isBuiltInFn: function (fn, fnName, cacheFns) {
             let isRemote = fn.startsWith('functions'),
                 fns = cacheFns.filter(i => i.title === (isRemote ? '远程函数' : '本地函数'));
             return fns && fns[0].data.items.findIndex(i => {
@@ -1339,24 +1438,20 @@
 
     $.fn.exprGenerator.defaults = {
         disabled: false,
-        top: 20,//eg对话框上偏移量
-        zIndex: 1050,//eg对话框z-index值
-        width: null,//eg对话框宽度
-        height: null,//eg对话框高度
-        multi: false,//多选模式
-        hasBrace: true,//表达式是否包含大括号
-        hasSelf: false,//是否包含自身控件元素
-        $source: null,//page数据来源的DOM
-        $result: null,//接收表达式的DOM
-        toolbar: [],//[{title: "全局变量", show: "normal", data: global},{title: "日期表达式", show: "normal", data: expression}]
-        onOpen: function () {
-        },
-        onClose: function () {
-        },
-        onSetProperty: function (expr) {
-        },
-        onClearProperty: function () {
-        }
+        top: 20, //eg对话框上偏移量
+        zIndex: 1050, //eg对话框z-index值
+        width: null, //eg对话框宽度
+        height: null, //eg对话框高度
+        multi: false, //多选模式
+        hasBrace: true, //表达式是否包含大括号
+        hasSelf: false, //是否包含自身控件元素
+        $source: null, //page数据来源的DOM
+        $result: null, //接收表达式的DOM
+        toolbar: [], //[{title: "全局变量", show: "normal", data: global},{title: "日期表达式", show: "normal", data: expression}]
+        onOpen: function () {},
+        onClose: function () {},
+        onSetProperty: function (expr) {},
+        onClearProperty: function () {}
     };
 
     $.fn.exprGenerator.methods = {
@@ -1365,12 +1460,16 @@
         },
         enable: function (elements) {
             return elements.each(function () {
-                $(this).exprGenerator({disabled: false});
+                $(this).exprGenerator({
+                    disabled: false
+                });
             });
         },
         disable: function (elements) {
             return elements.each(function () {
-                $(this).exprGenerator({disabled: true});
+                $(this).exprGenerator({
+                    disabled: true
+                });
             });
         }
     };

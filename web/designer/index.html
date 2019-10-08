@@ -829,7 +829,7 @@
                                     <span class="add" data-add="renderEvents" style="padding:0px">＋</span>
                                 </th>
                                 <th class="text-center" style="width:90px">触发类型</th>
-                                <th class="text-center">触发条件</th>
+                                <th class="text-center" style="width: 820px">触发条件</th>
                                 <th class="text-center" style="width:90px">方法</th>
                                 <th class="text-center condition">配置信息</th>
 
@@ -911,6 +911,23 @@
                         </div>
                     </div>
                     <div class="querier"></div>
+                </section>
+                <footer class="modal-footer">
+                    <button class="btn btn-primary save">保存</button>
+                    <button class="btn btn-danger clear">删除</button>
+                </footer>
+            </div>
+        </div>
+    </section>
+    <section class="modal fade" id="deleteDb_modal">
+        <div class="modal-dialog w800px">
+            <div class="modal-content">
+                <header class="modal-header">
+                    <button class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">数据库删除配置</h4>
+                </header>
+                <section class="modal-body">
+                    <div class="querier form-horizontal"></div>
                 </section>
                 <footer class="modal-footer">
                     <button class="btn btn-primary save">保存</button>

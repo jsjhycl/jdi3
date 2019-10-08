@@ -46,26 +46,26 @@
                 inputClass = isSm ? "col-lg-12" : "col-lg-9",
                 isColumn = cache.fieldMode === 'column',
                 tableHtml = '<div class="form-group">' +
-                    `<label class="${labelClass} control-label">查询数据库：</label>` +
-                    `<div class="${inputClass}"><select class="form-control querier-dbName"></select></div>` +
-                    '</div>' +
-                    '<div class="form-group">' +
-                        `<label class="${labelClass} control-label">查询表格：</label>` +
-                        `<div class="${inputClass}"><select class="form-control querier-table"></select></div>` +
-                    '</div>',
+                `<label class="${labelClass} control-label">查询数据库：</label>` +
+                `<div class="${inputClass}"><select class="form-control querier-dbName"></select></div>` +
+                '</div>' +
+                '<div class="form-group">' +
+                `<label class="${labelClass} control-label">查询表格：</label>` +
+                `<div class="${inputClass}"><select class="form-control querier-table"></select></div>` +
+                '</div>',
                 querierRate = !noTimeQuery ? '<div class="form-group">' +
-                                                    `<label class="${labelClass} control-label">查询频率/秒：</label>` +
-                                                '<div class="col-lg-3"><input class="form-control" data-name="query_time" placeHolder="根据查询频率进行数据查询" /></div>' +
-                                            '</div>' : "",
+                `<label class="${labelClass} control-label">查询频率/秒：</label>` +
+                '<div class="col-lg-3"><input class="form-control" data-name="query_time" placeHolder="根据查询频率进行数据查询" /></div>' +
+                '</div>' : "",
                 renderTable = !renderTable ? '<div class="form-group">' +
-                                                `<label class="${labelClass} control-label">数据渲染表：</label>` +
-                                                '<div class="col-lg-3"><select class="form-control" data-name="render_table"><select></div>' +
-                                            '</div>' : "",
+                `<label class="${labelClass} control-label">数据渲染表：</label>` +
+                '<div class="col-lg-3"><select class="form-control" data-name="render_table"><select></div>' +
+                '</div>' : "",
                 conditionsHtml = !isColumn ? '<div class="form-group">' +
-                    `<label class="${labelClass} control-label">查询条件：</label>` +
-                    `<div class="${inputClass} querier-conditions"></div>` +
-                    '</div>' : '';
-            $(element).empty().append(tableHtml + querierRate + renderTable + that.renderFields(element) + conditionsHtml ).addClass("form-horizontal querier");
+                `<label class="${labelClass} control-label">查询条件：</label>` +
+                `<div class="${inputClass} querier-conditions"></div>` +
+                '</div>' : '';
+            $(element).empty().append(tableHtml + querierRate + renderTable + that.renderFields(element) + conditionsHtml).addClass("form-horizontal querier");
         },
         renderFields: function (element) {
             var cache = $.data(element, CACHE_KEY),
@@ -87,13 +87,13 @@
                     '</div>';
             } else if (fieldMode === 'column') {
                 return '<div class="form-group">' +
-                            `<label class="${isSm ? "col-sm-12 text-left" : "col-lg-2"} control-label">列名：</label>` +
-                            `<div class="${isSm ? "col-sm-12" : "col-lg-2"} querier-fields-column" data-name="querier_fields_column"></div>` +
-                        '</div>'
+                    `<label class="${isSm ? "col-sm-12 text-left" : "col-lg-2"} control-label">列名：</label>` +
+                    `<div class="${isSm ? "col-sm-12" : "col-lg-2"} querier-fields-column" data-name="querier_fields_column"></div>` +
+                    '</div>'
             }
         },
         //设置数据
-        setData:  function (element) {
+        setData: function (element) {
             var that = this,
                 cache = $.data(element, CACHE_KEY),
                 $querierDbName = $(element).find(".querier-dbName"),
@@ -127,26 +127,40 @@
                 tableOptions = [],
                 fieldsoptions = [],
                 renderTableOptions = [];
-            
-            Object.keys(AllDbName).forEach(function(item){
-                dbOptions.push({name:item,value:item})
-            })
-            Common.fillSelect($querierDbName,{name:"请选择数据库",value:""},dbOptions,dbName,true)
-            if(dbName && AllDbName[dbName]){
-                Object.keys(AllDbName[dbName]).forEach(function(item){
-                    (AllDbName[dbName][item].key !== 0 && AllDbName[dbName][item].key !== 1) && tableOptions.push({name:AllDbName[dbName][item]["tableDesc"],value:item})
+            Object.keys(AllDbName).forEach(function (item) {
+                dbOptions.push({
+                    name: item,
+                    value: item
                 })
-                if(table){
-                    AllDbName[dbName][table].tableDetail.forEach(function(item){
-                        fieldsoptions.push({name:item.cname,value:item.id})
+            })
+            Common.fillSelect($querierDbName, {
+                name: "请选择数据库",
+                value: ""
+            }, dbOptions, dbName, true)
+            if (dbName && AllDbName[dbName]) {
+                Object.keys(AllDbName[dbName]).forEach(function (item) {
+                    (AllDbName[dbName][item].key !== 0 && AllDbName[dbName][item].key !== 1) && tableOptions.push({
+                        name: AllDbName[dbName][item]["tableDesc"],
+                        value: item
+                    })
+                })
+                if (table) {
+                    AllDbName[dbName][table].tableDetail.forEach(function (item) {
+                        fieldsoptions.push({
+                            name: item.cname,
+                            value: item.id
+                        })
                     });
                 }
             }
-            Common.fillSelect($querierTable,{name:"请选择表",value:""},tableOptions,table,true)
+            Common.fillSelect($querierTable, {
+                name: "请选择表",
+                value: ""
+            }, tableOptions, table, true)
             that.setFields($querierFields, fieldMode, fieldsoptions, fields);
             $querierConditions.conditions({
                 mode: 1,
-                dbName:dbName,
+                dbName: dbName,
                 table: table,
                 data: conditions,
                 noExpression: noExpression,
@@ -154,12 +168,18 @@
                 queryCondition: queryCondition,
             });
             $queryTime.val(queryTime || "");
-            $("#workspace").find('[data-type="div"]').each(function() {
+            $("#workspace").find('[data-type="div"]').each(function () {
                 var $this = $(this),
                     id = $this.attr('id');
-                if ($this.find('table').length > 0) renderTableOptions.push({ name: id, value: id })
+                if ($this.find('table').length > 0) renderTableOptions.push({
+                    name: id,
+                    value: id
+                })
             });
-            Common.fillSelect($renderTable, {name:"请选择渲染表", value:""}, renderTableOptions, renderTable, true)
+            Common.fillSelect($renderTable, {
+                name: "请选择渲染表",
+                value: ""
+            }, renderTableOptions, renderTable, true)
         },
         setFields: function ($fieldsDiv, fieldMode, fields, data) {
             if (!$fieldsDiv || $fieldsDiv.length <= 0) return;
@@ -176,10 +196,10 @@
                         '<input type="' + type + '" name="' + name + '" value="' + item.value + '">' +
                         item.name + '</label>';
                 });
-                if(fieldMode=="multi"){
-                    html +='<label class="checkbox-inline">' +
-                    '<input class="all" type="' + "checkbox" + '" name="' + name + '" value="' + "*" + '">' +
-                    "*(所有)" + '</label>'
+                if (fieldMode == "multi") {
+                    html += '<label class="checkbox-inline">' +
+                        '<input class="all" type="' + "checkbox" + '" name="' + name + '" value="' + "*" + '">' +
+                        "*(所有)" + '</label>'
                 }
                 $(this).append(html);
             });
@@ -209,23 +229,23 @@
                         }
                     }
                 });
-            } else if (fieldMode === 'column'){
+            } else if (fieldMode === 'column') {
                 $fieldsDiv.find(':input[value="' + data + '"]').prop("checked", true);
             }
         },
-        setQuerierDate: function($date, autoCreate, times) {
+        setQuerierDate: function ($date, autoCreate, times) {
             var config = {
-                yearOffset: 0,
-                lang: 'ch',
-                timepicker: false,
-                format: "",
-                formatDate: "",
-            },
-            timeHtml = '<div class="col-lg-3"><input type="text" class="form-control querier-starttime" placeholder="查询开始日期" /></div>' +
-                        '<div class="col-lg-3"><input type="text" class="form-control querier-endtime" placeholder="查询截止日期" /></div>',
-            config1,
-            config2;
-            switch(autoCreate) {
+                    yearOffset: 0,
+                    lang: 'ch',
+                    timepicker: false,
+                    format: "",
+                    formatDate: "",
+                },
+                timeHtml = '<div class="col-lg-3"><input type="text" class="form-control querier-starttime" placeholder="查询开始日期" /></div>' +
+                '<div class="col-lg-3"><input type="text" class="form-control querier-endtime" placeholder="查询截止日期" /></div>',
+                config1,
+                config2;
+            switch (autoCreate) {
                 case 'A':
                     config["format"] = "Y";
                     config["formatDate"] = "Y";
@@ -241,8 +261,12 @@
                     break;
             }
             if (config["format"]) {
-                config1 = times["starttime"] ? $.extend({}, config, { "value": times["starttime"] }) : config;
-                config2 = times["endtime"] ? $.extend({}, config, { "value": times["endtime"] }) : config;
+                config1 = times["starttime"] ? $.extend({}, config, {
+                    "value": times["starttime"]
+                }) : config;
+                config2 = times["endtime"] ? $.extend({}, config, {
+                    "value": times["endtime"]
+                }) : config;
                 $(".querier-starttime").length <= 0 && $date.after(timeHtml);
                 $(".querier-starttime").attr('data-format', config["format"]).datetimepicker(config1);
                 $(".querier-endtime").attr('data-format', config["format"]).datetimepicker(config2);
@@ -253,20 +277,30 @@
         //绑定事件
         bindEvents: function (element) {
             var that = this;
-            $(element).on("change"+ EVENT_NAMESPACE, ".querier-dbName",{element:element}, async function(event){
+            $(element).on("change" + EVENT_NAMESPACE, ".querier-dbName", {
+                element: element
+            }, async function (event) {
                 event.stopPropagation();
                 var dbName = $(this).val(),
-                AllDbName = that.AllDbName,
-                tableOptions = [],
-                $querierTable = $(element).find(".querier-table");
-                if(dbName){
-                   Object.keys(AllDbName[dbName]).forEach(function(item){
-                    (AllDbName[dbName][item].key !== 0 && AllDbName[dbName][item].key !== 1) && tableOptions.push({name:AllDbName[dbName][item]["tableDesc"],value:item})
-                   }) 
+                    AllDbName = that.AllDbName,
+                    tableOptions = [],
+                    $querierTable = $(element).find(".querier-table");
+                if (dbName) {
+                    Object.keys(AllDbName[dbName]).forEach(function (item) {
+                        (AllDbName[dbName][item].key !== 0 && AllDbName[dbName][item].key !== 1) && tableOptions.push({
+                            name: AllDbName[dbName][item]["tableDesc"],
+                            value: item
+                        })
+                    })
                 }
-                Common.fillSelect($querierTable,{name:"请选择表",value:""},tableOptions,null,true)
+                Common.fillSelect($querierTable, {
+                    name: "请选择表",
+                    value: ""
+                }, tableOptions, null, true)
             })
-            $(element).on("change" + EVENT_NAMESPACE, ".querier-table", {element: element}, async function (event) {
+            $(element).on("change" + EVENT_NAMESPACE, ".querier-table", {
+                element: element
+            }, async function (event) {
                 event.stopPropagation();
                 var table = $(this).val(),
                     celement = event.data.element,
@@ -279,13 +313,16 @@
                     data = cache.data,
                     fieldsoptions = [],
                     tableAutoCreate;
-                    dbName = $(celement).find(".querier-dbName").val();
-                    if(dbName&&table){
-                        AllDbName[dbName][table].tableDetail.forEach(function(item){
-                            fieldsoptions.push({name:item.cname,value:item.id})
+                dbName = $(celement).find(".querier-dbName").val();
+                if (dbName && table) {
+                    AllDbName[dbName][table].tableDetail.forEach(function (item) {
+                        fieldsoptions.push({
+                            name: item.cname,
+                            value: item.id
                         })
-                        tableAutoCreate = AllDbName[dbName][table].autoCreate || 'Z';
-                    }
+                    })
+                    tableAutoCreate = AllDbName[dbName][table].autoCreate || 'Z';
+                }
                 if (fieldMode === "single") {
                     $querierFields = $(celement).find(".querier-fields-show,.querier-fields-real");
                 } else if (fieldMode === "column") {
@@ -295,7 +332,7 @@
                     that.setFields($querierFields, fieldMode, fieldsoptions, data.fields);
                     $querierConditions.conditions({
                         mode: 1,
-                        dbName:dbName,
+                        dbName: dbName,
                         table: table,
                         data: data.conditions,
                         queryCondition: queryCondition,
@@ -304,7 +341,7 @@
                     that.setFields($querierFields, fieldMode, fieldsoptions, null);
                     $querierConditions.conditions({
                         mode: 1,
-                        dbName:dbName,
+                        dbName: dbName,
                         table: table,
                         data: null,
                         queryCondition: queryCondition,
@@ -312,9 +349,11 @@
                 }
                 that.setQuerierDate($(element).find(".querier-date").parent(), tableAutoCreate);
             });
-            $(element).on("click" + EVENT_NAMESPACE, ".check-all", {element:element}, function () {
+            $(element).on("click" + EVENT_NAMESPACE, ".check-all", {
+                element: element
+            }, function () {
                 var checkAll = $(this).is(":checked")
-                $(this).parents(".form-group").find("input").not($('.all')).prop("checked",checkAll)
+                $(this).parents(".form-group").find("input").not($('.all')).prop("checked", checkAll)
             })
         }
     };
@@ -344,22 +383,30 @@
         },
         enable: function (elements) {
             return elements.each(function () {
-                $(this).dbQuerier({disabled: false});
+                $(this).dbQuerier({
+                    disabled: false
+                });
             });
         },
         disable: function (elements) {
             return elements.each(function () {
-                $(this).dbQuerier({disabled: true});
+                $(this).dbQuerier({
+                    disabled: true
+                });
             });
         },
         setData: function (elements, data) {
             return elements.each(function () {
-                $(this).dbQuerier({data: data[0]});
+                $(this).dbQuerier({
+                    data: data[0]
+                });
             });
         },
         clearData: function (elements) {
             return elements.each(function () {
-                $(this).dbQuerier({data: null});
+                $(this).dbQuerier({
+                    data: null
+                });
             });
         },
         getData: function (elements) {
@@ -390,7 +437,7 @@
             }
 
             let result = {
-                dbName:$querier.find(".querier-dbName").val(),
+                dbName: $querier.find(".querier-dbName").val(),
                 table: $querier.find(".querier-table").val(),
                 fields: fields,
                 // querierTime: $querierStartTime.length > 0 ? { starttime: $querierStartTime.val() || now, endtime: $querierEndTime.val() || now } : {},

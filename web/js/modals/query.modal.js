@@ -77,6 +77,7 @@ DbQueryModal.prototype = {
             that.$modal.modal("hide");
         }
     },
+    bindEvent: function () {},
     execute: function () {
         var that = this;
         that.basicEvents(true, that.initData, that.saveData, that.clearData);

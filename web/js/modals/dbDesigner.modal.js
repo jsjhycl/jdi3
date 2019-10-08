@@ -13,6 +13,14 @@ function DbDesignerModal($modal) {
     this.$modal = $modal;
 
     this.$db = $("#dbDesignerModal")
+    this.bindChosen = function () {
+        $(".chosen").chosen({
+            no_results_text: "没有找到想要的数据",
+            search_contains: true,
+            allow_single_deselect: true,
+            width: "100%"
+        })
+    }
     // this.setData = function(rowIndex,columnIndex,key,type){
     //     var that = this;
     //     var $tbody = that.$db.find(".dbdesigner tbody");
@@ -79,7 +87,7 @@ DbDesignerModal.prototype = {
                     key: "db.dbName",
                     group: true,
                     template: function (value) {
-                        var $select = $('<select class="form-control" data-key="dbName"></select>')
+                        var $select = $('<select class="form-control chosen" data-key="dbName"></select>')
                         Common.fillSelect($select, {
                             name: "请选择库",
                             value: ""
@@ -92,7 +100,7 @@ DbDesignerModal.prototype = {
                     key: "db.table",
                     group: true,
                     template: function (value, options) {
-                        var $select = $('<select class="form-control" data-key="table"></select>');
+                        var $select = $('<select class="form-control chosen" data-key="table"></select>');
                         Common.fillSelect($select, {
                             name: "请选择表",
                             value: ""
@@ -105,7 +113,7 @@ DbDesignerModal.prototype = {
                     key: "db.field",
                     group: true,
                     template: function (value, options) {
-                        var $select = $('<select class="form-control" data-key="selectField"></select>');
+                        var $select = $('<select class="form-control chosen" data-key="selectField"></select>');
                         Common.fillSelect($select, {
                             name: "请选择字段",
                             value: ""
@@ -119,7 +127,7 @@ DbDesignerModal.prototype = {
                     key: "db.fieldSplit",
                     group: true,
                     template: function (value, options) {
-                        var $select = $('<select class="form-control" data-key="selectFieldSplit"></select>')
+                        var $select = $('<select class="form-control chosen" data-key="selectFieldSplit"></select>')
                         Common.fillSelect($select, {
                             name: "请选择第几段",
                             value: ""
@@ -164,6 +172,7 @@ DbDesignerModal.prototype = {
             $(this).find('[data-key="cname"]').css("display", "none")
             // $(this).find('[data-key="isSave"]').css("display","none")
         })
+        that.bindChosen()
     },
     saveData: function () {
         var that = this,
@@ -226,6 +235,7 @@ DbDesignerModal.prototype = {
                 name: "请选择表",
                 value: ""
             }, arrTableNames, null, true)
+            $select.trigger("chosen:updated")
 
             var rowIndex = $(this).parent('td').index(),
                 columnIndex = $(this).parents('tr').index();
@@ -251,6 +261,7 @@ DbDesignerModal.prototype = {
                 name: "请选择字段",
                 value: ""
             }, arrFieldsNames, null, true)
+            $select.trigger("chosen:updated")
             var rowIndex = $(this).parent('td').index(),
                 columnIndex = $(this).parents('tr').index();
 
@@ -282,6 +293,7 @@ DbDesignerModal.prototype = {
                 name: "请选择第几段",
                 value: ""
             }, fieldSplit, null, true)
+            $select.trigger("chosen:updated")
 
             var rowIndex = $(this).parent('td').index(),
                 columnIndex = $(this).parents('tr').index();
@@ -294,6 +306,7 @@ DbDesignerModal.prototype = {
             var target = $(this).parent("td").parent("tr"),
                 html = target.clone(),
                 html = $.extend(html, {});
+            $(html).find(".chosen-container").remove()
             html.addClass("addtr")
 
             $(html).find('[data-key="id"]').css("display", "none")
@@ -309,6 +322,8 @@ DbDesignerModal.prototype = {
                     $(this).parents('tr').find('td').eq(1).attr("rowspan", rowspan + 1)
                 }
             })
+
+            that.bindChosen()
         })
         //移除一段
         that.$db.on("click" + that.NAME_SPACE, "#dbDesignerRemove", function (event) {
@@ -345,9 +360,10 @@ DbDesignerModal.prototype = {
             if ($(this).is(":checked")) {
                 dbnames.forEach(function (item) {
                     if (table[item][id]) {
-                        $dbName.val(item).trigger("change")
-                        $table.val(id).trigger("change")
-                        $field.val($id.val()).trigger("change")
+                        $dbName.val(item).trigger("change").trigger("chosen:updated")
+                        $table.val(id).trigger("change").trigger("chosen:updated")
+                        $field.val($id.val()).trigger("change").trigger("chosen:updated")
+
                     }
                 })
             } else {
@@ -366,17 +382,17 @@ DbDesignerModal.prototype = {
                 $checkbox.prop("checked", !isChecked).trigger("click")
             })
         })
-        that.$db.on("mouseover" + that.NAME_SPACE, "tbody tr",function(){
+        that.$db.on("mouseover" + that.NAME_SPACE, "tbody tr", function () {
             var $this = $(this),
                 dataId = $this.attr("data-id"),
                 $target = that.$db.find(`tbody tr[data-id="${dataId}"]`);
-            $target.css("background","#eee")
+            $target.css("background", "#eee")
         })
-        that.$db.on("mouseleave" + that.NAME_SPACE, "tbody tr",function(){
+        that.$db.on("mouseleave" + that.NAME_SPACE, "tbody tr", function () {
             var $this = $(this),
                 dataId = $this.attr("data-id"),
                 $target = that.$db.find(`tbody tr[data-id="${dataId}"]`);
-            $target.css("background","")
+            $target.css("background", "")
         })
     }
 };

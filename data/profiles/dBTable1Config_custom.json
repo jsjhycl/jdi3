@@ -1,1 +1,1 @@
-{"db":"jdi_1","table":"newProducts","condition":[],"fields":[{"name":"资源名称","value":"name"},{"name":"编号","value":"customId"},{"name":"表单分类","value":"basicInfo.category"}]}
+{"db":"jdi_1","table":"newProducts","condition":[{"col":"name","value":"qzw","isReg":true,"cate":"资源名称"}],"fields":[{"name":"资源名称","value":"name"},{"name":"编号","value":"customId"},{"name":"表单分类","value":"basicInfo.category"}]}

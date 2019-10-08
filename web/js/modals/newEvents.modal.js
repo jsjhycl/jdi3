@@ -224,7 +224,7 @@ function NewEventsModal($modal, $elemts) {
         })
         return str;
     }
-    this.renderLinkHTMLSelect = function (customId, type) {
+    this.renderLinkHTMLSelect = function (customId, type = "linkhtml") {
         let that = this,
             str = "";
         if (type == "linkhtml") {

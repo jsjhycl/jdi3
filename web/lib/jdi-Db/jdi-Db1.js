@@ -41,13 +41,14 @@
                 $content = cache.$content,
                 $input = cache.$target,
                 queryCondition = cache.queryCondition,
-                html = `<section class="DbQueryConfig">
+                html = `<section class="Db2 queryConfig">
                             <div>
                                 <h5 class="query-title">数据库查询配置</h5>
                                 <section class="row">
                                     <div class="form-horizontal"></div>
                                     <div class="Db-content">
                                         <div class="Db"></div>
+                                        <div class="condition form-group"></div>
                                     </div>
                                 </section>
                                 <footer class="row" style="margin-top:10px">
@@ -58,25 +59,48 @@
                         </section>`;
 
             $content.find(".queryConfig").remove().end().append(html)
-            $(".DbQueryConfig").find(".Db-content .Db").Db({
+            $(".queryConfig").find(".Db-content .Db").Db({
                 $target: $input,
                 data: data || {},
                 $content: $content.find(".Db-content .Db"),
                 isSm: true,
                 Db: AllDbName
             })
+            $(".queryConfig").find(".Db-content .condition").conditions({
+                mode: 4,
+                dbName: data.dbName,
+                table: data.table,
+                data: data.conditions,
+                queryCondition: queryCondition,
+            })
         },
         bindEvents: function (element) {
             var that = this;
-            $(document).on("click" + EVENT_NAMESPACE, ".DbQueryConfig .db_save", {
+            $(document).on("click" + EVENT_NAMESPACE, ".Db2.queryConfig .db_save", {
                 element: element
             }, function () {
                 var cache = $.data(element, CACHE_KEY),
                     $target = cache.$target;
                 if ($target && $target.length > 0) {
-                    var data = $(".DbQueryConfig .Db").Db("getData")
+                    var data = $(".queryConfig .Db").Db("getData")
+                    var condition = $(".queryConfig .condition").conditions("getData")
+                    data.conditions = condition;
+                    console.log(data)
                     $target.val(JSON.stringify(data))
                 }
+            })
+            $(document).on("change" + EVENT_NAMESPACE, ".tableName", {
+                element: element
+            }, function () {
+                var dbName = $(document).find(".dbName").val(),
+                    tableName = $(this).val();
+                $(".queryConfig").find(".Db-content .condition").conditions({
+                    mode: 4,
+                    dbName: dbName,
+                    table: tableName,
+                    data: null,
+                    queryCondition: null,
+                })
             })
 
         }

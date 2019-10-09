@@ -34,7 +34,7 @@
             $.data(element, CACHE_KEY, cache);
             return cache;
         },
-        clear: function() {
+        clear: function () {
             $(document).off(EVENT_NAMESPACE);
         },
         //渲染DOM
@@ -43,10 +43,10 @@
                 cache = $.data(element, CACHE_KEY),
                 data = cache.data,
                 fieldMode = cache.fieldMode
-                $content = cache.$content,
+            $content = cache.$content,
                 queryCondition = cache.queryCondition,
                 html = `
-                <section class="queryConfig">
+                <section class="query queryConfig">
                     <div>
                         <div>
                             <h5 class="query-title">数据库查询配置</h5>
@@ -63,7 +63,7 @@
                     </div>
                 </section>
                 `;
-            
+
             $content.find('.queryConfig').remove().end().append(html);
             $(".queryConfig").find(".querier-content").dbQuerier({
                 fieldMode: fieldMode || "multi",
@@ -79,7 +79,9 @@
         //绑定事件
         bindEvents: function (element) {
             var that = this;
-            $(document).on("click" + EVENT_NAMESPACE, ".queryConfig .db_save", {element:element}, function () {
+            $(document).on("click" + EVENT_NAMESPACE, ".query.queryConfig .db_save", {
+                element: element
+            }, function () {
                 var cache = $.data(element, CACHE_KEY);
                 var $target = cache.$target;
                 if ($target && $target.length > 0) {
@@ -88,7 +90,9 @@
                 };
                 $(".queryConfig").hide();
             });
-            $(document).on("click" + EVENT_NAMESPACE, ".queryConfig .db_clear", {element:element}, function () {
+            $(document).on("click" + EVENT_NAMESPACE, ".queryConfig .db_clear", {
+                element: element
+            }, function () {
                 var result = confirm("确定要清除数据库查询配置数据吗？");
                 if (!result) return;
                 $(".queryConfig").find(".querier-content").dbQuerier("clearData");
@@ -121,22 +125,30 @@
         },
         enable: function (elements) {
             return elements.each(function () {
-                $(this).dbQuerier2({disabled: false});
+                $(this).dbQuerier2({
+                    disabled: false
+                });
             });
         },
         disable: function (elements) {
             return elements.each(function () {
-                $(this).dbQuerier2({disabled: true});
+                $(this).dbQuerier2({
+                    disabled: true
+                });
             });
         },
         setData: function (elements, data) {
             return elements.each(function () {
-                $(this).dbQuerier2({data: data[0]});
+                $(this).dbQuerier2({
+                    data: data[0]
+                });
             });
         },
         clearData: function (elements) {
             return elements.each(function () {
-                $(this).dbQuerier2({data: null});
+                $(this).dbQuerier2({
+                    data: null
+                });
             });
         },
         getData: function (elements) {
@@ -163,9 +175,12 @@
                 });
             }
             return {
-                dbName:$querier.find(".querier-dbName").val(),
+                dbName: $querier.find(".querier-dbName").val(),
                 table: $querier.find(".querier-table").val(),
-                querierTime: $querierStartTime.length > 0 ? { starttime: $querierStartTime.val() || now, endtime: $querierEndTime.val() || now } : {},
+                querierTime: $querierStartTime.length > 0 ? {
+                    starttime: $querierStartTime.val() || now,
+                    endtime: $querierEndTime.val() || now
+                } : {},
                 fields: fields,
                 conditions: $querier.find(".querier-conditions").conditions("getData"),
                 queryTime: queryTime

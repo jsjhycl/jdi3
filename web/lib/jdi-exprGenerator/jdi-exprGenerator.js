@@ -1292,7 +1292,6 @@
                     $content = $('.eg:visible .query-config-content'),
                     val = $input.val(),
                     data = null;
-                console.log(data)
                 try {
                     data = JSON.parse(val);
                 } catch (err) {};

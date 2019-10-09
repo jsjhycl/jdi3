@@ -120,7 +120,6 @@
                     cache = $.data(element, CACHE_KEY),
                     // AllDbName = cache.Db,
                     $tableName = $(element).find(".tableName");
-                console.log(cache)
                 tableOptions = that.getDbDateOptions("table", dbName, "", AllDbName);
                 Common.fillSelect($tableName, {
                     name: "请选择表",

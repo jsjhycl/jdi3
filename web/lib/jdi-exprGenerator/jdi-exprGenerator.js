@@ -1108,10 +1108,11 @@
                         return !!val;
                     } else return '"' + val + '"';
                 }).get();
+                // console.log("args", args)
 
                 isManyArgsTable && args[args.length - 1] === '""' && args.splice(args.length - 1, 1)
                 argsString = args.join(',');
-
+                // console.log(fnName, fnType, target, argsString)
                 if (fnType === "本地函数") {
                     result = fnName + "(" + '"' + target + '"' + "," + argsString + ")";
                 } else if (fnType === "远程函数") {
@@ -1291,11 +1292,10 @@
                     $content = $('.eg:visible .query-config-content'),
                     val = $input.val(),
                     data = null;
-                console.log(data)
                 try {
                     data = JSON.parse(val);
                 } catch (err) {};
-                $content.is(":empty") ? $(this).Db({
+                $content.is(":empty") ? $(this).Db1({
                         $target: $input,
                         data: data || {},
                         $content: $content,

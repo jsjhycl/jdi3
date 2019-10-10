@@ -45,10 +45,14 @@
                             <div>
                                 <h5 class="query-title">数据库查询配置</h5>
                                 <section class="row">
-                                    <div class="form-horizontal"></div>
+                                    <div class="form-horizontal">
                                     <div class="Db-content">
                                         <div class="Db"></div>
-                                        <div class="condition form-group"></div>
+                                        <div class="form-group">
+                                            <div class="col-lg-12 condition">
+                                            </div>
+                                        </div>
+                                    </div>
                                     </div>
                                 </section>
                                 <footer class="row" style="margin-top:10px">
@@ -82,12 +86,22 @@
                 var cache = $.data(element, CACHE_KEY),
                     $target = cache.$target;
                 if ($target && $target.length > 0) {
-                    var data = $(".queryConfig .Db").Db("getData")
-                    var condition = $(".queryConfig .condition").conditions("getData")
+                    var data = $(".Db2.queryConfig .Db").Db("getData")
+                    var condition = $(".Db2.queryConfig .condition").conditions("getData")
                     data.conditions = condition;
-                    console.log(data)
                     $target.val(JSON.stringify(data))
                 }
+                $(".queryConfig").hide();
+            })
+            $(document).on("click" + EVENT_NAMESPACE, ".Db2.queryConfig .db_clear", {
+                element: element
+            }, function () {
+                var result = confirm("确定要清除数据库查询配置数据吗？");
+                if (!result) return;
+                var cache = $.data(element, CACHE_KEY),
+                    $target = cache.$target;
+                $target.val("")
+                $(".queryConfig").hide()
             })
             $(document).on("change" + EVENT_NAMESPACE, ".tableName", {
                 element: element

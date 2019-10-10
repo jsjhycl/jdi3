@@ -51,7 +51,6 @@
             $content ? $content.append(formHtml) : $(element).empty().append(formHtml)
         },
         setData: function (element) {
-            console.log(element)
             let that = this,
                 cache = $.data(element, CACHE_KEY),
                 $content = cache.$content,
@@ -156,6 +155,7 @@
         },
         clearData: function (elements) {
             return elements.each(function () {
+                console.log($(this))
                 $(this).Db({
                     data: null
                 })

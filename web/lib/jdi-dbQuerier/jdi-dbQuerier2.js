@@ -90,7 +90,7 @@
                 };
                 $(".queryConfig").hide();
             });
-            $(document).on("click" + EVENT_NAMESPACE, ".queryConfig .db_clear", {
+            $(document).on("click" + EVENT_NAMESPACE, ".query.queryConfig .db_clear", {
                 element: element
             }, function () {
                 var result = confirm("确定要清除数据库查询配置数据吗？");

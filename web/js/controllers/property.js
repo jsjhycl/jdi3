@@ -16,7 +16,7 @@ function Property() {
         isArrow = $elem.data('type') === 'arrow';
         if (id === "workspace") { //如果id值为workspace
             id = that.BODY; //id赋值为BODY
-            that.setDefault(id); //调用setDefault方法 设置一下默认的属性
+            !GLOBAL_PROPERTY[that.BODY] && that.setDefault(id); //调用setDefault方法 设置一下默认的属性
         }
         // 清空属性
         this.$propertybar.find("[id^=property_]").val("");

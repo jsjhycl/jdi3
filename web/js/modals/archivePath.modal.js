@@ -11,6 +11,7 @@ function ArchivePathModal($modal, $element) {
     this.$archiveTable = this.$modalBody.find('[data-key="table"]');//获取存档表格
     this.$archiveField = this.$modalBody.find('[data-key="field"]');//获取存单字段
     this.$archiveModelId = this.$modalBody.find('[data-key="modelId"]');//获取表单编号
+    this.$archiveRepeat = this.$modalBody.find('[data-key="repeat"]');
 
     const TYPE_CONFIG = [//定义type类型
         {name: "通用查询", value: 0},
@@ -36,6 +37,7 @@ function ArchivePathModal($modal, $element) {
         Common.fillSelect(that.$archiveField, {name: "请选择存档字段", value: ""}, null, null, true);//调用Common中的fillSelect
         Common.fillSelect(that.$archiveModelId, {name: "请选择表单编号", value: ""}, null, null, true);//调用Common中的fillSelect
         Common.fillSelect(that.$archiveDbName,{name:"请选择数据库",value:""},null,null,null,true)//清空存档的数据库为空
+        that.$archiveRepeat.prop('checked', false);
     };
 }
 
@@ -69,13 +71,16 @@ ArchivePathModal.prototype = {
                 }
             }
             Common.fillSelect(that.$archiveTable, {name: "请选择存档表格", value: ""}, tableOptions,data.table, true)//填充存档表格下拉选项
-            Common.fillSelect(that.$archiveField, {name:"请选择存档字段",value:""},fieldsoptions,data.field,true)//填充存档字段下拉选项  
+            Common.fillSelect(that.$archiveField, {name:"请选择存档字段",value:""},fieldsoptions,data.field,true)//填充存档字段下拉选项
+            that.$archiveRepeat.prop('checked', !!data.repeat)
+                            
         } else {
             //填充数据库下拉框
             that._setTypeSelect(that.$archiveType, null);//调用_setTypeSelect
             Common.fillSelect(that.$archiveDbName,{name:"请选择存档数据库",value:""},dbs,null,true)//填充存档数据库下拉选项
             Common.fillSelect(that.$archiveTable,{name:"请选择存档表",value:""},null,null,true)//填充存档表格下拉选项
             Common.fillSelect(that.$archiveField,{name:"请选择存档字段",value:""},null,null,true)//填充存档字段下拉选项
+            that.$archiveRepeat.prop('checked', false);
         }
     },
     saveData: function () {
@@ -87,12 +92,13 @@ ArchivePathModal.prototype = {
         var that = this,
             data = {},
             $control = $("#workspace").find("#" + id);//获取工作区中的对应id的元素
-        that.$modal.find(".modal-body .form-control").each(function () {//获取元素遍历
+        that.$modal.find(".modal-body [data-key]").each(function () {//获取元素遍历
             var key = $(this).attr("data-key"),//获取当前元素的data-key
                 type = $(this).attr("data-type"),//获取当前元素的data-type
-                value = $(this).val();//获取当前元素的值
+                value = !$(this).is(':checkbox') ? $(this).val() : $(this).is(':checked');//获取当前元素的值
             data[key] = DataType.convert(type, value);//调用DataType的convert方法
         });
+        
         that.$element.val(JSON.stringify(data));//给元素设置值
         new Property().save($control, that.$element);//调用property的save方法
     },

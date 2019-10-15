@@ -555,6 +555,11 @@ function propertybar() {
 	eventmodal.bindEvents();
 	eventmodal.execute();
 
+	//事件导向
+	var eventGuideModal = new EventsGuide($("#eventGuide_modal"), $("#property_events"))
+	eventGuideModal.bindEvents();
+	eventGuideModal.execute();
+
 
 	//数据库查询
 	var dbQueryModal = new DbQueryModal($("#query_db_modal"), $("#property_query_db"));

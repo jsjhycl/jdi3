@@ -79,9 +79,9 @@ Propertybar.prototype = {
                     attaches = dataType + attrOrStyle + readonly + disabled,
                     modal = ' data-toggle="modal" data-target="#' + jvalue + '_modal"',
                     control = "";
-                if (jvalue == "events") {
-                    console.log("事件")
-                }
+                // if (jvalue == "events") {
+                //     modal = `id="event_btn"`
+                // }
                 switch (jitem.controlType) { //判断controlType的类型
                     case "textbox": //为文本输入框时
                         control = '<input id="' + jid + '" type="text"' + attaches + '>'; //赋值html
@@ -208,6 +208,9 @@ Propertybar.prototype = {
                 target = $this.data('belong');
             $("#" + target).val($this.val()).focus().trigger("blur");
             $this.val("#FFFFFF");
+        })
+        that.$container.on("click" + that.NAME_SPACE, "#event_btn", function (event) {
+            $("#eventGuide_modal").modal("show")
         })
     }
 };

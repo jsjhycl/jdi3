@@ -873,7 +873,7 @@ function NewEventsModal($modal, $elemts) {
             no_results_text: "没有找到想要的数据",
             search_contains: true,
             allow_single_deselect: true,
-            width: "100%"
+            width: "100%",
         })
     }
 }

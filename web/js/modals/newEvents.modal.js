@@ -723,7 +723,7 @@ function NewEventsModal($modal, $elemts) {
         return conditions
     }
     this.getTriggerCustomMethods = function (triggerMethods) {
-        let customs = ["save", "copySend", "upload", "login", "checkAll", "cancelAll"],
+        let customs = ["save", "copySend", "upload", "login", "checkAll", "cancelAll", "batchSave"],
             result = [];
         triggerMethods.each(function () {
             var value = $(this).val();

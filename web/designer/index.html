@@ -1007,8 +1007,12 @@
                         <select class="form-control" data-key="modelId" data-type="String"></select>
                     </div>
                     <div class="form-group">
-                        <label class="control-label">重复字段：</label>
+                        <label class="control-label">重复字段（根据查询字段的值，重复渲染，并将值设为1）：</label>
                         <input type="checkbox" data-key="repeat" data-type="Boolean" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">自增字段（根据重复字段查询的值，生成自增序号）：</label>
+                        <input type="checkbox" data-key="increase" data-type="Boolean" />
                     </div>
                 </section>
                 <footer class="modal-footer">

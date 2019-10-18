@@ -300,6 +300,10 @@ var ConditionsHelper = (function () {
                 value: "Number"
             },
             {
+                name: "动态数据",
+                value: "notSure"
+            },
+            {
                 name: "查询字符串",
                 value: "QueryString"
             },

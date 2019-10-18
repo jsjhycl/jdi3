@@ -476,7 +476,7 @@ function NewEventsModal($modal, $elemts) {
                             ${ that.copySendConfigTypeOfValue("condition_type",item.type)}
                         </td>
                         <td>
-                           <input type="text" data-category="copySend_conditions" data-save="condition_value" class="form-control" value="${item.value||""}">
+                           <input type="text" data-category="copySend_conditions" data-wrap="true" data-save="condition_value" class="form-control" value="${item.value||""}">
                         </td>
                         <td>
                             <span class="del">×</span>
@@ -523,7 +523,7 @@ function NewEventsModal($modal, $elemts) {
                             ${ that.copySendConfigTypeOfValue("value_type",item.value.type)}
                         </td>
                         <td>
-                            <input type="text" data-save="element" class="form-control" data-category="copySend" value="${item.element||""}"></input>
+                            <input type="text" data-save="element" data-wrap="true" class="form-control" data-category="copySend" value="${item.element||""}"></input>
                         </td>
                         <td>
                             ${that.renderOPeratorSelect(3, "value_operator", item.value.type, item.value.operator)}

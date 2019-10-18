@@ -162,8 +162,13 @@ Control.prototype = {
     renderHtml: function (id, basic, subtype) {
         var that = this,
             $node = $(that.CONTROL_HTML[basic.type]),
-            $ori = $('#' + basic.id);
+            $ori = $('#' + basic.id),
+            type = new Property().getValue(basic.id, 'controlType');
+        
         $node.attr({"id": basic.id, "name": basic.name, value: basic.value || ""});
+
+        if (type === '签名控件') $node.attr('control-type', '签名控件');
+
         basic.type === 'checkbox' && $ori.is(":checked") ? $node.attr('checked', 'checked') : $node.removeAttr('checked');
         $node.css({
             "position": "absolute",

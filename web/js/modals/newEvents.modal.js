@@ -109,6 +109,7 @@ function NewEventsModal($modal, $elemts) {
                     </td>
                     <td>
                         ${ that.renderSaveHTML( event.subscribe.saveHTML ) }
+                        ${that.renderImportExcel(event.subscribe.importExcel)}
                         ${ that.renderNextProcess( event.subscribe.nextProcess ) }
                         ${ that.renderNotify( event.subscribe.notify ) }
                         ${ that.renderTimeQuery(event.subscribe.timeQuery)}
@@ -116,6 +117,7 @@ function NewEventsModal($modal, $elemts) {
                         ${ that.renderCopySendTable( event.subscribe.copySend ) }
                         ${ that.renderLinkHTMLTable(event.subscribe.linkHtml) }
                         ${ that.renderExecuteFn(event.subscribe.executeFn)}
+                        ${ that.renderImportDb(event.subscribe.importDb)}
                     </td>
                  </tr>`;
         return str;
@@ -163,6 +165,45 @@ function NewEventsModal($modal, $elemts) {
                         </tbody>
                     </table>
                 </div>`
+        return str;
+    }
+    this.renderImportDb = function (ImportDbData) {
+        let that = this,
+            str = '';
+        str = `<div class="conditoion importDb"  ${ImportDbData ? "" : 'style="display:none"' }>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center">导入的库名</th>
+                                <th class="text-center">导入表名</th>
+                                <th class="text-center">excel区域</th>
+                                <th class="text-center">数据库区域</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${that.renderImportDbTr(ImportDbData)}
+                        </tbody>
+                    </table>
+                </div>`
+        return str;
+    }
+    this.renderImportDbTr = function (ImportDbData = {}) {
+        let that = this,
+            str = '';
+        str += `<tr class="importDbTr">
+            <td>
+                <input type="text" class="form-control" data-save="importDbName" value="${ImportDbData.dbName||""}" data-wrap="true" data-category="linkHtml">
+            </td>
+            <td>
+                <input type="text" class="form-control" data-save="importTableName" value="${ImportDbData.tableName||""}" data-wrap="true" data-category="linkHtml">
+            </td>
+            <td>
+                <input type="text" class="form-control" data-save="excelArea" value="${ImportDbData.excelArea||""}" >
+            </td>
+            <td>
+                <input type="text" class="form-control" data-save="dbArea" value="${ImportDbData.dbArea||""}" >
+            </td>
+        </tr>`
         return str;
     }
     this.renderLinkHTML = function (linkHtml = {}) {
@@ -274,6 +315,15 @@ function NewEventsModal($modal, $elemts) {
             </div>`
         return str;
     }
+    this.renderImportExcel = function (importArea) {
+        let that = this,
+            str = "";
+        str = `<div class="condition importExcel" ${importArea ? "" : 'style="display:none"' }>
+                <span>导入EXCEL的区域</span>
+                <input type="text" class="form-control" style="display:inline-block;margin-left:10px;width:500px" value='${importArea||""}' data-save="importExcel">
+            </div>`
+        return str;
+    }
     this.renderTypeOfValue = function (typekey, type, selected) {
         let defaultType = {
                 name: type,
@@ -322,6 +372,8 @@ function NewEventsModal($modal, $elemts) {
         if (subscribe.linkHtml) checkArr.push("linkHtml");
         if (subscribe.nextProcess) checkArr.push("nextProcess");
         if (subscribe.executeFn) checkArr.push("executeFn");
+        if (subscribe.importExcel) checkArr.push("importExcel");
+        if (subscribe.importDb) checkArr.push("importDb");
         subscribe.query && subscribe.query.forEach(item => {
             checkArr.push(item)
         })
@@ -855,6 +907,17 @@ function NewEventsModal($modal, $elemts) {
         })
         return result;
     }
+    this.getImportDb = function ($tr) {
+        let that = this,
+            result = {};
+        $tr.each(function () {
+            result.dbName = $(this).find('[data-save="importDbName"]').val()
+            result.tableName = $(this).find('[data-save="importTableName"]').val()
+            result.excelArea = $(this).find('[data-save="excelArea"]').val()
+            result.dbArea = $(this).find('[data-save="dbArea"]').val()
+        })
+        return result
+    }
     this.getLinkParams = function ($tr) {
         let that = this,
             result = [];
@@ -939,10 +1002,15 @@ NewEventsModal.prototype = {
                 saveHTML = null,
                 linkHtml = null,
                 executeFn = null,
-                nextProcess = null;
+                nextProcess = null,
+                importExcel = null,
+                importDb = null;
             if (that.judgeCheckMehods("commonQuery", $(this).find(".triggerMethods:checked"))) {
                 query = []
                 query.push("commonQuery")
+            }
+            if (that.judgeCheckMehods("importExcel", $(this).find(".triggerMethods:checked"))) {
+                importExcel = $(this).find('[data-save="importExcel"]').val()
             }
             if (that.judgeCheckMehods("tableQuery", $(this).find(".triggerMethods:checked"))) {
                 query = []
@@ -956,6 +1024,9 @@ NewEventsModal.prototype = {
             }
             if (that.judgeCheckMehods("linkHtml", $(this).find(".triggerMethods:checked"))) {
                 linkHtml = that.getLinkHtml($(this).find('.linkHtmlTr'))
+            }
+            if (that.judgeCheckMehods("importDb", $(this).find(".triggerMethods:checked"))) {
+                importDb = that.getImportDb($(this).find(".importDbTr"))
             }
             if (that.judgeCheckMehods("notify", $(this).find(".triggerMethods:checked"))) {
                 var arr = $(this).find('[data-save="notifyEl"]').val().split(",")
@@ -1003,7 +1074,9 @@ NewEventsModal.prototype = {
                         saveHTML: saveHTML,
                         linkHtml: linkHtml,
                         nextProcess: nextProcess,
-                        executeFn: executeFn
+                        executeFn: executeFn,
+                        importExcel: importExcel,
+                        importDb: importDb
                     }
                 })
             }
@@ -1057,7 +1130,7 @@ NewEventsModal.prototype = {
         that.$modal.on("click" + that.NAME_SPACE, ".methods input[type='checkbox']", function () {
             let value = $(this).val(),
                 check = $(this).prop("checked");
-            let arr = ["save", "upload", "login", "checkAll", "cancelAll", "changeProperty", "copySend", "notify", "saveHTML", "linkHtml", "nextProcess", "executeFn"];
+            let arr = ["save", "upload", "login", "checkAll", "cancelAll", "changeProperty", "copySend", "notify", "saveHTML", "linkHtml", "nextProcess", "executeFn", "importExcel", "importDb"];
             if (!arr.includes(value)) return;
             $target = $(this).parents("tr").find(`.${value}`)
             check ? $target.show() : $target.hide()

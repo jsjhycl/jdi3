@@ -188,6 +188,7 @@ function NewEventsModal($modal, $elemts) {
         return str;
     }
     this.renderImportDbTr = function (ImportDbData = {}) {
+        ImportDbData = ImportDbData || {}
         let that = this,
             str = '';
         str += `<tr class="importDbTr">

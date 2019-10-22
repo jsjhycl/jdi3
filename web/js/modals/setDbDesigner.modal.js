@@ -263,9 +263,9 @@ SetDbDesignerModal.prototype = {
 
         })
         that.$modal.on("change" + that.NAME_SPACE, '[data-type="dbName"]', function () {
-           var dbName = $(this).val()
-           that.initTableHeader(dbName)
-           that.initTable(dbName)
+            var dbName = $(this).val()
+            that.initTableHeader(dbName)
+            that.initTable(dbName)
         })
     }
 }

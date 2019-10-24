@@ -1,18 +1,30 @@
 function ChangeGlobal($modal) {
     BaseModal.call(this, $modal);
     this.$globaltbody = $modal.find("#gLobalVariable tbody");
-    this.$localVariable = $modal.find("#localVariable tbody")
+    this.$localVariable = $modal.find("#localVariable tbody");
+    this.$customizeVariable = $modal.find("#customizeVariable tbody");
     this.NAME_SPACE = ".CHANGEGLOBAL";
     this.path = "./profiles/global.json";
     this.renderTr = function (key, value, isAppend, appendTo) {
         isAppend = !!isAppend;
         var html = `<tr>
-                    <td><input type="text" class="form-control" value="${key || ""}" /></td>
-                    <td><input type="text" class="form-control" value="${value || ""}" /></td>
-                    <td><span class="del">X</span></td>
+                <td><input type="text" class="form-control" value="${key || ""}" /></td>
+                <td><input type="text" class="form-control" value="${value || ""}" /></td>
+                <td><span class="del">X</span></td>
                 </tr>`
         isAppend && appendTo.append(html);
         return html;
+    }
+    this.renderCustomTr = function (key, desc, value, isAppend, appendTo) {
+        isAppend = !!isAppend;
+        var html = `<tr>
+                        <td class="text-center"><input type="text" class="form-control" value="${key||''}" /></td>
+                        <td class="text-center"><input type="text" class="form-control" value="${desc||''}" /></td>
+                        <td class="text-center"><input type="text" class="form-control" value="${value||''}" /></td>
+                        <td class="text-center"><span class="del">X</span></td>                
+                    </tr>`
+        isAppend && appendTo.append(html)
+        return html
     }
     this.data = {};
 }
@@ -34,6 +46,7 @@ ChangeGlobal.prototype = {
         that.$modal.off(this.NAME_SPACE)
         that.$globaltbody.empty()
         that.$localVariable.empty()
+        that.$customizeVariable.empty()
     },
 
     setData: function ($target, data) {
@@ -73,7 +86,11 @@ ChangeGlobal.prototype = {
         that.$modal.on('click' + that.NAME_SPACE, ".localadd", function () {
             that.renderTr('', '', true, that.$localVariable);
         });
+        that.$modal.on('click' + that.NAME_SPACE, ".customizeadd", function () {
+            that.renderCustomTr("", "", "", true, that.$customizeVariable)
+        })
         that.$modal.on('click' + that.NAME_SPACE, ".del", function () {
+            console.log(123)
             $(this).parents('tr').remove();
         });
         that.$modal.on("click" + that.NAME_SPACE, "a", function (e) {

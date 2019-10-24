@@ -663,6 +663,7 @@ function workspace() {
 
 	//jresizable
 	$workspace.on("click", ".workspace-node", function (event) {
+		console.log(123)
 		$workspace.jresizable("destroy");
 		$workspace.removeClass("focus").css("overflow", "visible");
 		$("#delete").css('color', 'red');

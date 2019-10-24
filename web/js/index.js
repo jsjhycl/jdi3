@@ -186,7 +186,7 @@ function navbar() {
 			if (!id) return alert("未保存！");
 			var subtype = $("#workspace").attr("data-type");
 			subtype = subtype == "布局" ? 1 : 0;
-			var href = jdi.fileApi.getConfigUrl().serverUrl + "/home/model?customId=" + id + "&type=" + subtype + "&isPreview=preview"; //拼接路径
+			var href = jdi.fileApi.getConfigUrl().displayUrl + "/home/model?customId=" + id + "&type=" + subtype + "&isPreview=preview"; //拼接路径
 			require('electron').shell.openExternal(href); //使用electron打开默认浏览器   
 		});
 	})();

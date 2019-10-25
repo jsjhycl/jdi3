@@ -1,4 +1,5 @@
-;(function ($, window, document, undefined) {
+;
+(function ($, window, document, undefined) {
     /**
      *  PS：以下源码注释中，
      *  1、pm表示属性修改器元素（类名.pm）；
@@ -52,7 +53,7 @@
             //     $pm.appendTo(document.body);
             // }
         },
-        
+
         setData: function (element) {
             var $pm = $(".pm2");
             // new Propertybar($pm.find(".pm-propertybar")).init(true, "_copy");
@@ -60,49 +61,84 @@
             //填充页面元素
             var cache = $.data(element, CACHE_KEY),
                 $source = cache.$source;
-                $element = cache.$element
+            $element = cache.$element
             if ($source && $source.length > 0) {
                 var temp = {},
                     $pmPage = $element;
                 $pmPage.html($source.html()).outerWidth($source.outerWidth()).outerHeight($source.outerHeight());
-                $source.find("input, canvas").each(function () {
-                    var id = this.id,
-                        position = $(this).position();
-                    if (!temp.hasOwnProperty(id) && position) {
-                        temp[id] = {
-                            position: $(this).css("position"),
-                            top: position.top,
-                            left: position.left,
-                            zIndex: $(this).css("z-index"),
-                            width: $(this).width(),
-                            height: $(this).height(),
-                            isFocus: $(this).hasClass('focus')
-                        };
-                    }
-                });
-                $pmPage.find("input, canvas").each(function () {
-                    var id = this.id,
-                        item = temp[id];
-                    if (item) {
-                        var $new = $('<a class="pm-elem3" data-id="' + id + '">' + id + '</a>');
-                        $new.css({
-                            "position": item.position,
-                            "top": item.top,
-                            "left": item.left,
-                            "z-index": item.zIndex,
-                            "width": item.width,
-                            "height": item.height
-                        });
-                        item.isFocus && $new.addClass('selected');
-                        $(this).replaceWith($new);
-                    }
-                });
+                if (cache.type == "defalut") {
+                    $source.find("input, canvas").each(function () {
+                        var id = this.id,
+                            position = $(this).position();
+                        if (!temp.hasOwnProperty(id) && position) {
+                            temp[id] = {
+                                position: $(this).css("position"),
+                                top: position.top,
+                                left: position.left,
+                                zIndex: $(this).css("z-index"),
+                                width: $(this).width(),
+                                height: $(this).height(),
+                                isFocus: $(this).hasClass('focus')
+                            };
+                        }
+                    });
+                    $pmPage.find("input, canvas").each(function () {
+                        var id = this.id,
+                            item = temp[id];
+                        if (item) {
+                            var $new = $('<a class="pm-elem3" data-id="' + id + '">' + id + '</a>');
+                            $new.css({
+                                "position": item.position,
+                                "top": item.top,
+                                "left": item.left,
+                                "z-index": item.zIndex,
+                                "width": item.width,
+                                "height": item.height
+                            });
+                            item.isFocus && $new.addClass('selected');
+                            $(this).replaceWith($new);
+                        }
+                    });
+                } else {
+                    $source.find("div[id^='DIV']").each(function () {
+                        var id = this.id,
+                            position = $(this).position();
+                        if (!temp.hasOwnProperty(id) && position) {
+                            temp[id] = {
+                                position: $(this).css("position"),
+                                top: position.top,
+                                left: position.left,
+                                zIndex: $(this).css("z-index"),
+                                width: $(this).width(),
+                                height: $(this).height(),
+                                isFocus: $(this).hasClass('focus')
+                            };
+                        }
+                    });
+                    $pmPage.find("div[id^='DIV']").each(function () {
+                        var id = this.id,
+                            item = temp[id];
+                        if (item) {
+                            var $new = $('<a class="pm-elem3" data-id="' + id + '">' + id + '</a>');
+                            $new.css({
+                                "position": item.position,
+                                "top": item.top,
+                                "left": item.left,
+                                "z-index": item.zIndex,
+                                "width": item.width,
+                                "height": item.height
+                            });
+                            item.isFocus && $new.addClass('selected');
+                            $(this).replaceWith($new);
+                        }
+                    });
+                }
             }
 
             //填充data数据样式
             var data = cache.data;
             if (data && Array.isArray(data)) {
-                data.forEach(function(i) {
+                data.forEach(function (i) {
                     $('.pm3 .pm-elem3[data-id="' + i + '"]').addClass("applied");
                 });
                 $pm.find('.pm-textarea').val(data.join(','));
@@ -138,11 +174,13 @@
         bindEvents: function (element) {
             var that = this;
             //加载
-            $(document).on("click" + EVENT_NAMESPACE, ".pm3 .pm-elem3", {element: element}, function (event) {
+            $(document).on("click" + EVENT_NAMESPACE, ".pm3 .pm-elem3", {
+                element: element
+            }, function (event) {
                 // var $this = $(this);
 
                 // if($this.hasClass('selected')) return;
-                
+
                 // var id = $this.data('id'),
                 //     $textarea = $('.pm-textarea'),
                 //     textarea = $textarea.val();
@@ -155,9 +193,11 @@
                 //     textarea ? ($textarea.val(textarea+','+id)) : $textarea.val(id);
                 // }
             });
-           
+
             //关闭
-            $(document).on("click" + EVENT_NAMESPACE, ".pm2 .pm-close", {element: element}, function (event) {
+            $(document).on("click" + EVENT_NAMESPACE, ".pm2 .pm-close", {
+                element: element
+            }, function (event) {
                 $(".pm2:visible").fadeOut();
             });
         }
@@ -175,13 +215,13 @@
 
     $.fn.propModifier3.defaults = {
         disabled: false,
-        top: 20,//pm对话框上偏移量
-        zIndex: 1050,//pm对话框z-index值
-        width: null,//pm对话框宽度
-        height: null,//pm对话框高度
-        $source: null,//page数据来源的DOM
-        $element:null,
-        $result: null,//接收结果数据的DOM
+        top: 20, //pm对话框上偏移量
+        zIndex: 1050, //pm对话框z-index值
+        width: null, //pm对话框宽度
+        height: null, //pm对话框高度
+        $source: null, //page数据来源的DOM
+        $element: null,
+        $result: null, //接收结果数据的DOM
         data: null
     };
 
@@ -191,12 +231,16 @@
         },
         enable: function (elements) {
             return elements.each(function () {
-                $(this).propModifier2({disabled: false});
+                $(this).propModifier2({
+                    disabled: false
+                });
             });
         },
         disable: function (elements) {
             return elements.each(function () {
-                $(this).propModifier2({disabled: true});
+                $(this).propModifier2({
+                    disabled: true
+                });
             });
         }
     };

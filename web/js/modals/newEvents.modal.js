@@ -16,6 +16,7 @@ function NewEventsModal($modal, $elemts) {
     this.LINKHTML_DATA = null
     this.globalVariable = null;
     this.outerSideVariable = null;
+    this.events = [];
     this.$eventTbody = this.$modalBody.find(".table .events_tbbody")
     //获取已经发布的布局
     this.GET_PUBLISH_JSON = async function () {
@@ -199,10 +200,10 @@ function NewEventsModal($modal, $elemts) {
                 <input type="text" class="form-control" data-save="importTableName" value="${ImportDbData.tableName||""}" data-wrap="true" data-category="linkHtml">
             </td>
             <td>
-                <input type="text" class="form-control" data-save="excelArea" value="${ImportDbData.excelArea||""}" >
+                <input type="text" class="form-control" data-save="excelArea" data-category="linkHtml" value="${ImportDbData.excelArea||""}" >
             </td>
             <td>
-                <input type="text" class="form-control" data-save="dbArea" value="${ImportDbData.dbArea||""}" >
+                <input type="text" class="form-control" data-save="dbArea" data-category="linkHtml" value="${ImportDbData.dbArea||""}" >
             </td>
         </tr>`
         return str;
@@ -320,8 +321,8 @@ function NewEventsModal($modal, $elemts) {
         let that = this,
             str = "";
         str = `<div class="condition importExcel" ${importArea ? "" : 'style="display:none"' }>
-                <span>导入EXCEL的区域</span>
-                <input type="text" class="form-control" style="display:inline-block;margin-left:10px;width:500px" value='${importArea||""}' data-save="importExcel">
+                <span>导入XLSX的区域</span>
+                <input type="text" class="form-control" style="display:inline-block;margin-left:10px;width:500px" value='${importArea||""}' data-category="linkHtml" data-save="importExcel">
             </div>`
         return str;
     }
@@ -948,6 +949,7 @@ NewEventsModal.prototype = {
             events = data,
             str = "";
         that.clearData()
+        that.events = events
         try {
             await that.GET_PUBLISH_JSON();
             await that.GET_METHODS();
@@ -963,7 +965,8 @@ NewEventsModal.prototype = {
             $source: $("#workspace"),
             $element: $("#events_modal").find(".clickModal"),
             $result: null,
-            data: events
+            data: events,
+            type: "defalut"
         })
         if (!DataType.isArray(events)) return;
         events.forEach(event => {
@@ -1190,6 +1193,7 @@ NewEventsModal.prototype = {
                 val = isWrap ? "{" + id + "}" : $(this).data("id"),
                 isExist = originVal.isExist(null, val),
                 isAdd = !!$target.data('apply');
+            console.log(id)
             if (isInsert) {
                 Common.insertAfterText($target.get(0), val);
             } else if ($(this).hasClass("applied") && isExist) {
@@ -1223,6 +1227,27 @@ NewEventsModal.prototype = {
                 $linkbody.append(html)
             }
             that.bindChosen()
+        })
+        that.$modal.on("click" + that.NAME_SPACE, '.changeView', function () {
+            var Viewflag = $(this).is(':checked')
+            if (Viewflag) {
+                $(that).propModifier3({
+                    $source: $("#workspace"),
+                    $element: $("#events_modal").find(".clickModal"),
+                    $result: null,
+                    data: that.events,
+                    type: "area"
+                })
+            } else {
+                $(that).propModifier3({
+                    $source: $("#workspace"),
+                    $element: $("#events_modal").find(".clickModal"),
+                    $result: null,
+                    data: that.events,
+                    type: "defalut"
+                })
+            }
+
         })
 
     },

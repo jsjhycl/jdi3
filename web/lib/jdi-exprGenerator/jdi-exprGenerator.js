@@ -472,6 +472,7 @@
                     '<div class="eg-page"></div>' +
                     '</article>' +
                     '<aside class="eg-sidebar">' +
+                    '<span class="change-mode" data-mode="0">切换显示</span>' +
                     '<i class="eg-close">&times;</i>' +
                     '<section class="eg-toolbar"></section>' +
                     '<section class="eg-result">' +
@@ -534,22 +535,15 @@
             $(".eg .queryConfig :text.active").removeClass("active");
             $(".fn-system-item.selected, .fn-types-item.selected, .fn-item.selected").removeClass('selected');
         },
-        setData: function (element) {
-            var that = this,
-                cache = $.data(element, CACHE_KEY),
-                $source = cache.$source,
-                $result = cache.$result,
-                data = cache.data,
-                toolbar = cache.toolbar,
-                functions = cache.functions,
-                systemFunction = cache.systemFunction,
-                $eg = $(".eg");
+        renderElementSelector: function($source, mode, hasSelf) {
             //填充$source来源DOM数据
             if ($source && $source.length > 0) {
+                var $eg = $(".eg");
+                selector = mode == 0 ? 'input, canvas' : '[id^=DIV_]';
                 var temp = {},
                     $egPage = $eg.find(".eg-page");
-                $egPage.html($source.html()).outerWidth($source.outerWidth()).outerHeight($source.outerHeight());
-                $source.find("input, canvas").each(function () {
+                $egPage.empty().html($source.html()).outerWidth($source.outerWidth()).outerHeight($source.outerHeight());
+                $source.find(selector).each(function () {
                     var id = this.id,
                         position = $(this).position();
                     if (!temp.hasOwnProperty(id) && position) {
@@ -564,11 +558,11 @@
                     }
                 });
                 var cid = $("#property_id").val();
-                $egPage.find("input, canvas").each(function () {
+                $egPage.find(selector).each(function () {
                     var id = this.id,
                         item = temp[id];
                     if (item) {
-                        var styles = id === cid && !cache.hasSelf ? "eg-elem current" : "eg-elem",
+                        var styles = id === cid && !hasSelf ? "eg-elem current" : "eg-elem",
                             $new = $('<a class="' + styles + '" data-id="' + id + '">' + id + '</a>');
                         $new.css({
                             "position": item.position,
@@ -582,6 +576,57 @@
                     }
                 });
             }
+        },
+        setData: function (element, selector) {
+            selector = selector || 'input, canvas'
+            var that = this,
+                cache = $.data(element, CACHE_KEY),
+                $source = cache.$source,
+                $result = cache.$result,
+                data = cache.data,
+                toolbar = cache.toolbar,
+                functions = cache.functions,
+                systemFunction = cache.systemFunction,
+                $eg = $(".eg");
+            //填充$source来源DOM数据
+            that.renderElementSelector($source, 0, cache.hasSelf)
+            // if ($source && $source.length > 0) {
+            //     var temp = {},
+            //         $egPage = $eg.find(".eg-page");
+            //     $egPage.html($source.html()).outerWidth($source.outerWidth()).outerHeight($source.outerHeight());
+            //     $source.find("input, canvas").each(function () {
+            //         var id = this.id,
+            //             position = $(this).position();
+            //         if (!temp.hasOwnProperty(id) && position) {
+            //             temp[id] = {
+            //                 position: $(this).css("position"),
+            //                 top: position.top,
+            //                 left: position.left,
+            //                 zIndex: $(this).css("z-index"),
+            //                 width: $(this).width(),
+            //                 height: $(this).height()
+            //             };
+            //         }
+            //     });
+            //     var cid = $("#property_id").val();
+            //     $egPage.find("input, canvas").each(function () {
+            //         var id = this.id,
+            //             item = temp[id];
+            //         if (item) {
+            //             var styles = id === cid && !cache.hasSelf ? "eg-elem current" : "eg-elem",
+            //                 $new = $('<a class="' + styles + '" data-id="' + id + '">' + id + '</a>');
+            //             $new.css({
+            //                 "position": item.position,
+            //                 "top": item.top,
+            //                 "left": item.left,
+            //                 "z-index": item.zIndex,
+            //                 "width": item.width,
+            //                 "height": item.height
+            //             });
+            //             $(this).replaceWith($new);
+            //         }
+            //     });
+            // }
             //填充$result结果数据
             if ($result && $result.length > 0) {
                 var hasBrace = cache.hasBrace,
@@ -791,6 +836,24 @@
                 }
                 FunctionUtil.setElemSelected();
             });
+
+            // 元素选择切换
+            $(document).on("click" + EVENT_NAMESPACE, ".change-mode", { element: element }, function (event) {
+                event.stopPropagation();
+                
+                var currMode = $(this).attr('data-mode'),
+                    cache = $.data(element, CACHE_KEY);
+                if (Number(currMode) == 0) {
+                    $(this).attr('data-mode', '1');
+                    that.renderElementSelector(cache.$source, 1, cache.hasSelf)
+                } else {
+                    $(this).attr('data-mode', '0');
+                    that.renderElementSelector(cache.$source, 0, cache.hasSelf)
+                }
+                
+
+            });
+
             //全局变量
             $(document).on("click" + EVENT_NAMESPACE, '.eg .cpanel-body [data-type="toolbar_btn"].btn', {
                 element: element
@@ -1132,19 +1195,14 @@
                             isCheckbox = $(this).is(':checkbox'),
                             val = !isCheckbox ? $(this).val() : $(this).is(':checked');
                         if (/^\{[A-Z]{4}[^}]*\}/mg.test(val)) {
-                            console.log(1)
                             return val;
                         } else if (convert === 'Number') {
-                            console.log(2)
                             return Number(val);
                         } else if (convert === 'Boolean') {
-                            console.log(3)
                             return !!val;
                         } else if (convert === 'String') {
-                            console.log(6)
                             return '"' + val + '"'
                         } else {
-                            console.log(4)
                             try {
                                 return JSON.parse(val);
                             } catch (err) {

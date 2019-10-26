@@ -522,8 +522,19 @@
     margin-top: 5px;
     float: right;
 }
-
-.cfooter {
+.eg .cfooter {
     padding: 10px 0;
     text-align: center;
+}
+
+.eg .eg-dialog .change-mode {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 60px;
+    height: 24px;
+    color: #fff;
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
 }

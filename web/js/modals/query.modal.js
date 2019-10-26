@@ -39,7 +39,11 @@ DbQueryModal.prototype = {
             fieldMode: "multi",
             data: queryData,
             renderTable: true,
-        });
+        }).then(function() {
+            if (data && data.type === "foldmenu") {
+                that.$querier.find('.form-group').eq(1).nextAll().hide();
+            }
+        })
     },
     saveData: function () {
         var id = $("#property_id").val();
@@ -77,7 +81,18 @@ DbQueryModal.prototype = {
             that.$modal.modal("hide");
         }
     },
-    bindEvent: function () {},
+    bindEvents: function () {
+        var that = this;
+
+        //  切换查询类型
+        that.$modal.on('change', '.modal-body [data-key="type"]', function() {
+            if ($(this).val() === "foldmenu") {
+                that.$querier.find('.form-group').eq(1).nextAll().hide();
+            } else {
+                that.$querier.find('.form-group').eq(1).nextAll().show();
+            }
+        })
+    },
     execute: function () {
         var that = this;
         that.basicEvents(true, that.initData, that.saveData, that.clearData);

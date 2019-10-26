@@ -565,6 +565,7 @@ function propertybar() {
 	//数据库查询
 	var dbQueryModal = new DbQueryModal($("#query_db_modal"), $("#property_query_db"));
 	dbQueryModal.execute();
+	dbQueryModal.bindEvents();
 
 	//存档路径
 	var archivePathModal = new ArchivePathModal($("#archivePath_modal"), $("#property_archivePath"));

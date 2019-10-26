@@ -76,7 +76,11 @@ function NewEventsModal($modal, $elemts) {
                     value: 'timeQuery'
                 }]
             };
-        that.METHODS = [...that.METHODS, ...methods[type]]
+        if (methods[type]) {
+            that.METHODS = [...that.METHODS, ...methods[type]]
+        } else {
+            that.METHODS = [...that.METHODS]
+        }
     }
     //获取表达式函数方法
     this.getExprMethods = function () {

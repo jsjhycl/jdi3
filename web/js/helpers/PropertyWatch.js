@@ -11,8 +11,9 @@ var PropertyWatch = {
         $PropertyMaskContent.css({
             // width: $designer.width(),
             // height: $workspace.height(),
-            width: "1434px",
-            height: "915px",
+
+            width: $('body').width() - 25,
+            height: $('body').height() - 45,
             overflow: "scroll",
             margin: "auto",
             position: "relative"

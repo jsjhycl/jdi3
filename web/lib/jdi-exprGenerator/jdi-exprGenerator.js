@@ -841,7 +841,6 @@
                         resultHTML = that.convertExpr(preExpress, cache.functions),
                         preFnName = $(resultHTML).text(),
                         result = decodeURI($(resultHTML).attr('data-fn_args'));
-                    console.log(preFnName, result)
                     if (preFnName == "executeQuery" || preFnName == "conBox") {
                         result = JSON.parse(result)
                         var dbCon = result[0],

@@ -29,7 +29,7 @@ var PropertyWatch = {
             display: "none"
         })
         $PropertyMask.css({
-            width: "1458px",
+            width: $('body').width() - 10,
             height: $designer.find("#ruler").height(),
             padding: "0 10px 20px 20px",
             background: "rgb(0,0,0,.6)"

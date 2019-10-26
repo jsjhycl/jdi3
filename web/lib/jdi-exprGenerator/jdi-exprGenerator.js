@@ -535,7 +535,7 @@
             $(".eg .queryConfig :text.active").removeClass("active");
             $(".fn-system-item.selected, .fn-types-item.selected, .fn-item.selected").removeClass('selected');
         },
-        renderElementSelector: function($source, mode, hasSelf) {
+        renderElementSelector: function ($source, mode, hasSelf) {
             //填充$source来源DOM数据
             if ($source && $source.length > 0) {
                 var $eg = $(".eg");
@@ -841,7 +841,8 @@
                         resultHTML = that.convertExpr(preExpress, cache.functions),
                         preFnName = $(resultHTML).text(),
                         result = decodeURI($(resultHTML).attr('data-fn_args'));
-                    if (preFnName == "executeQuery") {
+                    console.log(preFnName, result)
+                    if (preFnName == "executeQuery" || preFnName == "conBox") {
                         result = JSON.parse(result)
                         var dbCon = result[0],
                             preDbName = dbCon.dbName,
@@ -862,8 +863,8 @@
                     function renderfieldSpan(data) {
                         if (!Array.isArray(data)) return;
                         var str = "";
-                        data.forEach(function (item) {
-                            str += `<div class="label label-primary" style="margin:5px;display:inline-block">${item}</div>`
+                        data.forEach(function (item, index) {
+                            str += `<div class="label label-success" style="margin:5px;display:inline-block">${item}(${index})</div>`
                         })
                         return str;
                     }
@@ -874,9 +875,11 @@
             });
 
             // 元素选择切换
-            $(document).on("click" + EVENT_NAMESPACE, ".change-mode", { element: element }, function (event) {
+            $(document).on("click" + EVENT_NAMESPACE, ".change-mode", {
+                element: element
+            }, function (event) {
                 event.stopPropagation();
-                
+
                 var currMode = $(this).attr('data-mode'),
                     cache = $.data(element, CACHE_KEY);
                 if (Number(currMode) == 0) {
@@ -886,7 +889,7 @@
                     $(this).attr('data-mode', '0');
                     that.renderElementSelector(cache.$source, 0, cache.hasSelf)
                 }
-                
+
 
             });
 
@@ -1425,8 +1428,6 @@
                     }),
                     fnCate = searchData.items[fnIdx].category,
                     args = decodeURI($this.data('fn_args'));
-                console.log(args)
-                console.log(fnCate)
                 try {
                     let _args = JSON.parse(args);
                     args = _args;
@@ -1479,7 +1480,6 @@
             return $span.get(0).outerHTML + " ";
         },
         convertExpr: function (expr, cacheFns) {
-            console.log(expr, cacheFns)
             if (!expr) return "";
             let that = this;
             // return expr.replace(/[a-zA-Z]+?\(([^)]*)\)/img, function () {

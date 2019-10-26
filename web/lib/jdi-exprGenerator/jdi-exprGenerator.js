@@ -773,6 +773,7 @@
                     $egExpr = $eg.find(".eg-expr"),
                     expr = $egExpr.val(),
                     dataId = $(this).attr("data-id"),
+                    fnName = $eg.find(".fn-item.selected").data('name') || $eg.find(".fn-system-item.selected").data('name'),
                     value = '';
                 if ($arg.length > 0) {
                     var valueType = $arg.parent().parent().prev().attr('data-convert');
@@ -788,6 +789,41 @@
                     } else {
                         that.setExpr($egExpr, $egExpr.get(0), expr, value, null, true);
                     }
+                }
+                //对getAttr函数进行特殊处理
+                if (fnName == "getAttr") {
+                    var preExpress = GLOBAL_PROPERTY[dataId]["expression"],
+                        resultHTML = that.convertExpr(preExpress, cache.functions),
+                        preFnName = $(resultHTML).text(),
+                        result = decodeURI($(resultHTML).attr('data-fn_args'));
+                    if (preFnName == "executeQuery") {
+                        result = JSON.parse(result)
+                        var dbCon = result[0],
+                            preDbName = dbCon.dbName,
+                            preTable = dbCon.table,
+                            prefields = dbCon.fields,
+                            nowTableDetail = AllDbName[preDbName][preTable]["tableDetail"],
+                            fieldNameArr = [],
+                            $content = $('.eg:visible .query-config-content');
+                        nowTableDetail.forEach(function (item) {
+                            if (prefields.includes(item.id)) {
+                                fieldNameArr.push(item.cname)
+                            }
+                        })
+                        var fieldHtml = renderfieldSpan(fieldNameArr);
+                        $content.empty().append(fieldHtml)
+                    }
+
+                    function renderfieldSpan(data) {
+                        if (!Array.isArray(data)) return;
+                        var str = "";
+                        data.forEach(function (item) {
+                            str += `<div class="label label-primary" style="margin:5px;display:inline-block">${item}</div>`
+                        })
+                        return str;
+                    }
+                    // console.log(GLOBAL_PROPERTY[dataId]["expression"])
+                    // console.log(GLOBAL_PROPERTY[dataId], AllDbName)
                 }
                 FunctionUtil.setElemSelected();
             });
@@ -1132,19 +1168,14 @@
                             isCheckbox = $(this).is(':checkbox'),
                             val = !isCheckbox ? $(this).val() : $(this).is(':checked');
                         if (/^\{[A-Z]{4}[^}]*\}/mg.test(val)) {
-                            console.log(1)
                             return val;
                         } else if (convert === 'Number') {
-                            console.log(2)
                             return Number(val);
                         } else if (convert === 'Boolean') {
-                            console.log(3)
                             return !!val;
                         } else if (convert === 'String') {
-                            console.log(6)
                             return '"' + val + '"'
                         } else {
-                            console.log(4)
                             try {
                                 return JSON.parse(val);
                             } catch (err) {
@@ -1331,6 +1362,8 @@
                     }),
                     fnCate = searchData.items[fnIdx].category,
                     args = decodeURI($this.data('fn_args'));
+                console.log(args)
+                console.log(fnCate)
                 try {
                     let _args = JSON.parse(args);
                     args = _args;
@@ -1383,6 +1416,7 @@
             return $span.get(0).outerHTML + " ";
         },
         convertExpr: function (expr, cacheFns) {
+            console.log(expr, cacheFns)
             if (!expr) return "";
             let that = this;
             // return expr.replace(/[a-zA-Z]+?\(([^)]*)\)/img, function () {

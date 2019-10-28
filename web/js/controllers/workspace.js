@@ -452,15 +452,17 @@ function Workspace() {
             phoneHtml +
             '</div></body></html>';
 
-        var $temp = $('<div></div>');
-        $temp.css({
-            "position": "relative",
-            "margin": "0 auto",
-            "width": settingData.width,
-            "height": settingData.height,
-            "background-color": settingData.bgColor,
-            "overflow": "hidden"
-        }).append(html); //插入到html中
+        var $temp = $('<div></div>'),
+            $temp_contain = $('<div></div>'),
+            css_obj = {
+                "position": "relative",
+                "margin": "0 auto",
+                "width": settingData.width,
+                "height": settingData.height,
+                "background-color": settingData.bgColor,
+                "overflow": "hidden"
+            };
+        $temp.css(css_obj).append($temp_contain.css(css_obj).append(html)); //插入到html中
         modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
             '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
             $temp.get(0).outerHTML;

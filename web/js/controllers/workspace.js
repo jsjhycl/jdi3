@@ -459,8 +459,7 @@ function Workspace() {
                 "margin": "0 auto",
                 "width": settingData.width,
                 "height": settingData.height,
-                "background-color": settingData.bgColor,
-                "overflow": "hidden"
+                "background-color": settingData.bgColor
             };
         $temp.css(css_obj).append($temp_contain.css(css_obj).append(html)); //插入到html中
         modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +

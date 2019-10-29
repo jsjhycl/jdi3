@@ -452,7 +452,7 @@ function Workspace() {
             phoneHtml +
             '</div></body></html>';
 
-        var $temp = $('<div></div>'),
+        var $temp = $('<div id="modal_contain"></div>'),
             $temp_contain = $('<div></div>'),
             css_obj = {
                 "position": "relative",

@@ -78,7 +78,6 @@ DbNestQueryModal.prototype = {
             data: data || {},
             renderTable: false,
             noTimeQuery: true,
-            noExpression: true,
         });
     },
     saveData: function () {

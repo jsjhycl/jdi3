@@ -52,6 +52,7 @@
 }
 .queryConfig footer {
     padding-bottom: 15px;
+    margin-left: -8px;
     text-align: center;
     border-bottom: 1px solid #ccc;
 }
@@ -59,4 +60,7 @@
 .queryConfig footer .db_clear {
     padding: 2px 4px !important;
     font-size: 12px !important;
+}
+.queryConfig footer .db_clear {
+    margin-left: 10px;
 }

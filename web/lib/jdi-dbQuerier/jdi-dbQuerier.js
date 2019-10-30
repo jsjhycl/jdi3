@@ -183,7 +183,7 @@
         },
         setFields: function ($fieldsDiv, fieldMode, fields, data) {
             if (!$fieldsDiv || $fieldsDiv.length <= 0) return;
-
+            console.log($fieldsDiv, fields)
             $fieldsDiv.empty();
             if (!Array.isArray(fields)) return;
 
@@ -192,9 +192,9 @@
                     type = fieldMode === "multi" ? "checkbox" : "radio",
                     html = "";
                 fields.forEach(function (item) {
-                    html += '<label class="checkbox-inline">' +
+                    html += '<label title="'+ item.value +'" class="checkbox-inline">' +
                         '<input type="' + type + '" name="' + name + '" value="' + item.value + '">' +
-                        item.name + '</label>';
+                        item.name + '(' + item.value + ')' + '</label>';
                 });
                 if (fieldMode == "multi") {
                     html += '<label class="checkbox-inline">' +

@@ -7,7 +7,7 @@ var PropertyWatch = {
             $PropertyMask = $('<div id="propertyMask"><button class="close" data-dismiss="modal" style="color:red;opacity:1;outline:none;font-size:34px">&times;</button><button class="btn clearALL" style="float:right;margin-right:10px;margin-top:7px;padding:0px">清除所有</button></div>'),
             $PropertyMaskContent = $('<div id="propertyMaskContent"></div>');
         $copyWorkSpace = $('<div id="copyWorkspace"></div>').html($workspace.html());
-        that.resetView()
+        that.resetView();
         $PropertyMaskContent.css({
             // width: $designer.width(),
             // height: $workspace.height(),
@@ -27,6 +27,7 @@ var PropertyWatch = {
         })
         $designer.css({
             display: "none"
+            // visibility: "hidden"
         })
         $PropertyMask.css({
             width: $('body').width() - 10,
@@ -112,6 +113,7 @@ var PropertyWatch = {
         })
     },
     resetView: function () {
+        $("#designer").show();
         $("#propertyMask").remove()
         $("#changePropertyBox").remove()
     },

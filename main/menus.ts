@@ -6,6 +6,7 @@ import { Menu, MenuItemConstructorOptions, shell } from 'electron';
 import fs from 'fs';
 import { openFileDialog } from './utils';
 let xml2html =require('../services/excel2html');// 引用了Excel转HTML方法
+let config = require("../config.json");
 
 const appMenuTemplate: MenuItemConstructorOptions[] = [
     {
@@ -38,7 +39,10 @@ const appMenuTemplate: MenuItemConstructorOptions[] = [
                 type: "separator"
             },
             {
-                label: '1.0.0.2(开发版本)'
+                label: '1.0.0.2(开发版本)',
+                click:()=>{
+                    shell.openExternal(config.displayUrl + "/edition.txt");
+                }
             },
             {
                 label: '关闭',

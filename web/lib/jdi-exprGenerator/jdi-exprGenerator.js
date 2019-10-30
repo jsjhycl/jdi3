@@ -30,8 +30,11 @@
             let html = ''
             switch (addonType) {
                 case 'query':
-                    html += `<span class="input-group-addon addon-query" data-config="query" ${queryCondition ? 'data-query_condition="' + queryCondition + '"' : ''} data-mode="multi"></span>`
+                case 'queryNoConditions':
+                    html += `<span class="input-group-addon addon-query" data-config="${addonType}" ${queryCondition ? 'data-query_condition="' + queryCondition + '"' : ''} data-mode="multi"></span>`
                     break;
+                
+                    // html += '<span class="input-group-addon addon-query" data-config="queryNoConditions"></span>'
                 case 'queryColumn':
                     // html += '<span class="input-group-addon addon-data"  data-placement="left" data-toggle="popover" data-tirgger="click" data-type="'+ addonType +'"></span>'
                     html += '<span class="input-group-addon addon-query" data-config="query" data-mode="column"></span>'
@@ -784,7 +787,7 @@
                 "top": top,
                 "z-index": zIndex + 1,
                 "width": width,
-                "height": height
+                "height": height > 783 ? height : 783
             });
             $eg.find(".eg-content,.eg-sidebar,.eg-toolbar,.eg-result,.eg-function,.eg-insertFn").css("z-index", zIndex + 1);
             $eg.find(".eg-close").css("z-index", zIndex + 2);
@@ -867,8 +870,6 @@
                         })
                         return str;
                     }
-                    // console.log(GLOBAL_PROPERTY[dataId]["expression"])
-                    // console.log(GLOBAL_PROPERTY[dataId], AllDbName)
                 }
                 FunctionUtil.setElemSelected();
             });
@@ -1339,12 +1340,13 @@
             });
 
             // 数据源
-            $(document).on("click" + EVENT_NAMESPACE, '.eg .eg-function [data-config="query"]', {
+            $(document).on("click" + EVENT_NAMESPACE, '.eg .eg-function [data-config="query"], .eg-function [data-config="queryNoConditions"]', {
                 element: element
             }, function (event) {
                 var $this = $(this),
                     $input = $this.prev('input'),
                     mode = $this.attr('data-mode'),
+                    noConditions = $this.attr('data-config') === 'queryNoConditions',
                     queryCondition = $this.attr('data-query_condition'),
                     $content = $('.eg:visible .query-config-content'),
                     val = $input.val(),
@@ -1353,15 +1355,16 @@
                     data = JSON.parse(val);
                 } catch (err) {};
 
-                $content.is(":empty") ?
-                    $(this).dbQuerier2({
+                $content.is(":empty") 
+                    ? $(this).dbQuerier2({
                         $target: $input,
                         data: data || {},
                         $content: $content,
                         fieldMode: mode,
+                        noConditions: noConditions,
                         queryCondition: queryCondition
-                    }) :
-                    $content.empty();
+                    })
+                    : $content.empty();
             });
 
             // 全局变量对应关系
@@ -1377,29 +1380,6 @@
                     data = JSON.parse(data);
                 } catch (err) {};
                 FunctionUtil.renderContactTable(data, $content, $input)
-            });
-            $(document).on("click" + EVENT_NAMESPACE, '.eg .eg-function [data-config="Db"]', {
-                element: element
-            }, function (event) {
-                var $this = $(this),
-                    $input = $this.prev('input'),
-                    mode = $this.attr('data-mode'),
-                    queryCondition = $this.attr('data-query_condition'),
-                    $content = $('.eg:visible .query-config-content'),
-                    val = $input.val(),
-                    data = null;
-                try {
-                    data = JSON.parse(val);
-                } catch (err) {};
-                $content.is(":empty") ? $(this).Db1({
-                        $target: $input,
-                        data: data || {},
-                        $content: $content,
-                        isSm: true,
-                        Db: AllDbName
-                    }) :
-                    $content.empty();
-
             });
 
             // // 参数弹窗

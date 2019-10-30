@@ -10,7 +10,7 @@
     DbQuerier2.prototype.constructor = DbQuerier2;
 
     DbQuerier2.prototype = {
-        init: function () {
+        init: async function () {
             var that = this;
             return that.$elements.each(function () {
                 var cache = that.cacheData(this);
@@ -42,8 +42,9 @@
             var that = this,
                 cache = $.data(element, CACHE_KEY),
                 data = cache.data,
-                fieldMode = cache.fieldMode
-            $content = cache.$content,
+                fieldMode = cache.fieldMode,
+                noConditions = cache.noConditions,
+                $content = cache.$content,
                 queryCondition = cache.queryCondition,
                 html = `
                 <section class="query queryConfig">
@@ -72,6 +73,12 @@
                 isSm: true,
                 noExpression: true,
                 queryCondition: queryCondition
+            }).then(function() {
+                if (noConditions) {
+                    $content.find('.querier-content').find('.form-group').eq(1).nextAll().hide()
+                } else {
+                    $content.find('.querier-content').find('.form-group').eq(1).nextAll().show()
+                }
             })
             $(".queryConfig").show();
         },

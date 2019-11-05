@@ -89,7 +89,7 @@ function NewEventsModal($modal, $elemts) {
         if (DataType.isArray(exprMethods)) {
             exprMethods.forEach(item => {
                 that.METHODS.push({
-                    name: item.fnCname,
+                    name: item.fnCname + '('+ item.fnChineseName +')',
                     value: item.expr,
                     type: 1
                 })

@@ -762,7 +762,7 @@
                 fnsData.data.items.forEach(function (el, index) {
                     if (el.category == fnsData.data.categorys[0]) {
                         !firstFn && (firstFn = el);
-                        fnsHtml += '<div class="fn-item" data-name="' + el.name + '" data-index="' + index + '" data-type="' + fnsData.title + '"  data-desc="' + el.desc + '">' + (el.cname || el.name) + '（' + el.name + '）</div>'
+                        fnsHtml += '<div class="fn-item" data-cname="'+ el.cname +'" data-name="' + el.name + '" data-index="' + index + '" data-type="' + fnsData.title + '"  data-desc="' + el.desc + '">' + (el.cname || el.name) + '（' + el.name + '）</div>'
                     }
                 })
             }
@@ -975,6 +975,7 @@
                                 let $this = $(this);
                                 return {
                                     fnCname: $this.attr('data-fn_cname'),
+                                    fnChineseName: $this.attr('data-chinesename'),
                                     fnName: $this.attr('data-fn_name'),
                                     fnArgs: $this.attr('data-fn_args') ? JSON.parse(decodeURI($this.attr('data-fn_args'))) : '',
                                     expr: decodeURI($this.attr('data-fn'))
@@ -1052,7 +1053,7 @@
                     $fnWrap = $(".eg").find(".fn-wrap");
                 fnsData[0].data.items.filter(function (el, index) {
                     if (el.category === val) {
-                        fnsHtml += '<div class="fn-item" data-name="' + el.name + '" data-index="' + index + '" data-type="' + type + '"  data-desc="' + el.desc + '">' + (el.cname || el.name) + '（' + el.name + '）</div>'
+                        fnsHtml += '<div class="fn-item" data-cname="'+ el.cname +'" data-name="' + el.name + '" data-index="' + index + '" data-type="' + type + '"  data-desc="' + el.desc + '">' + (el.cname || el.name) + '（' + el.name + '）</div>'
                     }
                 });
                 $fnWrap.empty().append(fnsHtml);
@@ -1192,6 +1193,7 @@
                     target = $eg.find('.eg-elem.current').data('id') || $('#property_id').val(),
                     fnType = $eg.find(".fn-item.selected").data('type') || $eg.find(".fn-system-item.selected").data('type'),
                     fnName = $eg.find(".fn-item.selected").data('name') || $eg.find(".fn-system-item.selected").data('name'),
+                    chineseName = $eg.find(".fn-item.selected").data('cname') || $eg.find(".fn-system-item.selected").data('name'),
                     isManyArgsTable = $eg.find(".eg-function-args table").hasClass("manyArgs-table"),
                     result = "";
                 if (!isGlobal && !target) return;
@@ -1250,7 +1252,7 @@
                         };
                     }).get();
                     $egExpr.find('.current').length > 0 && $egExpr.trigger('focus');
-                    that.setExpr($egExpr, $egExpr.get(0), $egExpr.html(), that.generatExprFn(fnName, result, argsArr, isGlobal), replaceResult, null, isGlobal);
+                    that.setExpr($egExpr, $egExpr.get(0), $egExpr.html(), that.generatExprFn(fnName, result, argsArr, isGlobal, undefined, chineseName), replaceResult, null, isGlobal);
                 }
                 $(".eg .eg-function [data-type='arg'].active").removeClass("active");
             });
@@ -1436,7 +1438,7 @@
             !isGlobal ? FunctionUtil.insertAtCursor(elem, value, isDom) :
                 $elem.append(value);
         },
-        generatExprFn: function (fnName, fnData, args, isGlobal, fnCname) {
+        generatExprFn: function (fnName, fnData, args, isGlobal, fnCname, chineseName) {
             if (!fnName || !fnData) return;
 
             let cFnName = fnName;
@@ -1455,7 +1457,7 @@
                     return DataType.isObject(i) && i[Object.keys(i)[0]].nodeType != undefined ? ('{' + Object.keys(i)[0] + '}') : i;
                 })
             };
-            let $span = $(`<span contenteditable="false" data-fn_name="${fnName}" data-fn_cname="${fnCname || cFnName}" data-fn=${encodeURI(fnData)} data-fn_args=${encodeURI(JSON.stringify(args))} class="expr-fn-item" ${isGlobal ? 'data-global' : ''}>${fnCname || cFnName}</span>`);
+            let $span = $(`<span contenteditable="false" data-chinesename="${chineseName}" data-fn_name="${fnName}" data-fn_cname="${fnCname || cFnName}" data-fn=${encodeURI(fnData)} data-fn_args=${encodeURI(JSON.stringify(args))} class="expr-fn-item" ${isGlobal ? 'data-global' : ''}>${fnCname || cFnName}</span>`);
             return $span.get(0).outerHTML + " ";
         },
         convertExpr: function (expr, cacheFns) {

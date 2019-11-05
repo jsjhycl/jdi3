@@ -21,8 +21,8 @@ async function init() {
 
 	//子模块设计器的位置，全局变量
 	submodulesOffset = {
-		top: "5",
-		left: "5",
+		top: "0",
+		left: "0",
 	};
 
 	//右键菜单
@@ -615,7 +615,6 @@ function workspace() {
 						"top": event.pageY - offset.top
 					});
 					$workspace.append($node);
-					console.log($node.outerWidth());
 					new Property().setDefault(number);
 					return false;
 				});

@@ -1248,8 +1248,13 @@
                     <form class="form-inline">
                         <div class="form-group col-lg-3" style="margin-bottom: 5px">
                             <label class="control-label col-lg-3">数据库名</label>
-                            <select class="form-control col-lg-3" style="width: 194px" data-type="dbName"></select>
-                            <!-- <input class="form-control col-lg-3" type="text" data-type="dbName"> -->
+                            <!-- <select class="form-control col-lg-3" style="width: 194px" data-type="dbName"></select> -->
+                            <input class="col-lg-3 form-control" list="setDbDbName" data-type="dbName">
+                            <datalist id="setDbDbName">
+                                <!-- <option value="jdi_1">jdi_1</option>
+                                <option value="jdi_2">jdi_2</option>
+                                <option value="jdi_3">jdi_3</option> -->
+                            </datalist>
                         </div>
                         <div class="form-group col-lg-3" style="margin-bottom: 5px">
                             <label class="control-label col-lg-3">表名</label>

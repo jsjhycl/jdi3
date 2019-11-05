@@ -2,9 +2,22 @@ function Service() {
     this.baseUrl = "/dbApi/dbOperate";
     this.routerTable = "router"
     this.createTableURL = "/dataApi/api/dataportal/createtable"
+    this.queryDb = "/dataApi/api/dataportal/query" //查询所有的数据库所有表的数据
     this.publishURl = "/home/dirCopy"
     //获取远程数据库配置
     this.getRemoterTableURl = "/funApi/getDbData"
+    this.queryDbConfig = {
+        dbName: "jdi",
+        id: "数据库名",
+        conditions: [],
+        fields: ["dbname"],
+    }
+    this.queryTableConfig = {
+        dbName: "jdi",
+        id: "数据库目录",
+        condition: [],
+        fields: []
+    }
     this.errmsg = {
         "already exists": "已存在",
         "Table": "表格"
@@ -200,5 +213,39 @@ Service.prototype = {
             })
         })
 
-    }
+    },
+    //查询数据库中的元素
+    queryPromise: function (type, conditions, fields) {
+        if (!type) return reject(Common.errMsg("无效的指令参数！"));
+        console.log(type)
+        var that = this,
+            data = {};
+        if (type == "db") {
+            data = that.queryDbConfig;
+            conditions && (data['conditions'] = conditions)
+            fields && (data['fields'] = fields)
+        }
+        if (type == 'table') {
+            data = that.queryTableConfig;
+            conditions && (data['conditions'] = conditions)
+            fields && (data['fields'] = fields)
+        }
+
+        return new Promise(function (resolve, reject) {
+            console.log(that.queryDb)
+            $.cajax({
+                url: that.queryDb,
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify(data),
+                dataType: "json",
+                success: function (result, status, xhr) {
+                    return result.errno === 0 ? resolve(result.data) : reject(Common.errMsg(result.errmsg));
+                },
+                error: function (error) {
+                    return reject(Common.errMsg(result.errmsg))
+                }
+            });
+        })
+    },
 }

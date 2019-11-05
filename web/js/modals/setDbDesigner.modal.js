@@ -6,6 +6,7 @@ function SetDbDesignerModal($modal) {
     this.$setDbDesigner = this.$modalBody.find("#setDbDesigner");
     this.NAME_SPACE = ".setdbDesigner"
     this.$dbName = this.$modalBody.find('[data-type="dbName"]'); //获取数据库名输入框
+    this.$dbNameList = this.$modalBody.find("#setDbDbName")
     this.$tableName = this.$modalBody.find('[data-type="tableName"]'); //获取表格名输入框
     this.$tabeleDesc = this.$modalBody.find('[data-type="tableDesc"]'); //获取表格描述输入框
     this.$reserveOne = this.$modalBody.find('[data-type="reserveOne"]'); //获取备用1输入框
@@ -42,19 +43,26 @@ function SetDbDesignerModal($modal) {
     }
     this.setDboptions = function () {
         var that = this;
-        new FileService().readFile("./profiles/table.json", 'utf-8').then(res => {
-            this.localData = res;
-            var AllDbName = res || {},
-                dbName = Object.keys(AllDbName);
-            var options = [];
-            dbName.forEach(item => {
-                options.push({
-                    name: item,
-                    value: item
-                })
+        new Service().queryPromise('db').then(res => {
+            var $options = ""
+            res.forEach(item => {
+                $options += `<option value="${item.DBNAME}">${item.DBNAME}</option>`
             })
-            Common.fillSelect(that.$dbName, null, options, dbName[0])
+            that.$dbNameList.empty().append($options)
         })
+        // new FileService().readFile("./profiles/table.json", 'utf-8').then(res => {
+        //     this.localData = res;
+        //     var AllDbName = res || {},
+        //         dbName = Object.keys(AllDbName);
+        //     var options = [];
+        //     dbName.forEach(item => {
+        //         options.push({
+        //             name: item,
+        //             value: item
+        //         })
+        //     })
+        //     Common.fillSelect(that.$dbName, null, options, dbName[0])
+        // })
 
     }
     this.localData = null

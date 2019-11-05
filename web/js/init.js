@@ -98,6 +98,7 @@ Loader.prototype = {
                 that.JS_PATH + "/modals/prompt.modal.js",
                 that.JS_PATH + "/modals/query.modal.js",
                 that.JS_PATH + "/modals/queryNest.modal.js",
+                that.JS_PATH + "/modals/dbApply.modal.js",
                 that.JS_PATH + "/modals/archivePath.modal.js",
                 that.JS_PATH + "/modals/archivePathBatch.modal.js",
                 that.JS_PATH + "/modals/conditions.modal.js",

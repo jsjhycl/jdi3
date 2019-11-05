@@ -96,6 +96,11 @@ function navbar() {
 	dbDesignerModal.execute();
 	dbDesignerModal.bindEvents();
 
+	//数据库应用配置
+	var dbApplyModal = new DbApplyModal($("#dbApplyModal"));
+	dbApplyModal.execute();
+	dbApplyModal.bindEvents();
+
 	//数据库设计器
 	var setDbDesignerModal = new SetDbDesignerModal($("#setDbDesignerModal"))
 	setDbDesignerModal.execute();

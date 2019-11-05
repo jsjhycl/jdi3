@@ -216,7 +216,8 @@ SetDbDesignerModal.prototype = {
             var obj = {
                 name: item.id,
                 type: item.type,
-                cname: item.cname
+                cname: item.cname,
+                fieldSplit: item.fieldSplit.trim()
             }
             if (item.type == "string") {
                 obj.maxlength = item.maxlength
@@ -230,6 +231,7 @@ SetDbDesignerModal.prototype = {
             description: tableDesc,
             columns: bingocolumns
         }
+        //修改接口
         new Service().createTable(bingoData).then(res => {
             this._clearData()
             that._uploderDb(localData).then(res => {

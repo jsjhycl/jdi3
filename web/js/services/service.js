@@ -3,9 +3,11 @@ function Service() {
     this.routerTable = "router"
     this.createTableURL = "/dataApi/api/dataportal/createtable"
     this.publishURl = "/home/dirCopy"
+    //获取远程数据库配置
+    this.getRemoterTableURl = "/funApi/getDbData"
     this.errmsg = {
-        "already exists":"已存在",
-        "Table":"表格"
+        "already exists": "已存在",
+        "Table": "表格"
     }
 }
 Service.prototype = {
@@ -112,11 +114,11 @@ Service.prototype = {
         }], callBack);
     },
 
-    getRouter: function(callBack) {
+    getRouter: function (callBack) {
         return this.query(this.routerTable, [], [], null, null, callBack);
     },
-    
-    removeRouters: function(callBack) {
+
+    removeRouters: function (callBack) {
         let config = {
             command: "remove",
             table: this.routerTable,
@@ -125,11 +127,11 @@ Service.prototype = {
         return this.base(config, callBack);
     },
 
-    addRouter: function(save, callBack) {
+    addRouter: function (save, callBack) {
         if (!save || !Array.isArray(save)) return;
         return this.insert(this.routerTable, save, callBack)
     },
-
+    //创建表
     createTable: function (data) {
         var that = this;
         return new Promise(function (resolve, reject) {
@@ -139,7 +141,7 @@ Service.prototype = {
                 data: JSON.stringify(data),
                 contentType: "application/json",
                 dataType: "json",
-                success:rst=>{
+                success: rst => {
                     var failedMsg = "操作失败！\n消息：";
                     if (DataType.isObject(rst)) {
                         var data = rst.errmsg;
@@ -147,10 +149,10 @@ Service.prototype = {
                             resolve(rst);
                         } else {
                             var flag = false;
-                            Object.keys(that.errmsg).forEach((item)=>{
+                            Object.keys(that.errmsg).forEach((item) => {
                                 flag = new RegExp(item).test(data)
-                                if(flag){
-                                    data = data.replace(new RegExp(item),that.errmsg[item])
+                                if (flag) {
+                                    data = data.replace(new RegExp(item), that.errmsg[item])
                                 }
                             })
                             alert(failedMsg + JSON.stringify(data, null, 2));
@@ -160,16 +162,33 @@ Service.prototype = {
                         reject("服务器数据获取异常！");
                     };
                 },
-                error:err=>reject(err)
+                error: err => reject(err)
             })
         })
     },
-    publish:function(customId){
+    getRemoteTable: function (data) {
         var that = this;
-        return new Promise(function(resolve,reject){
+        return new Promise(function (resolve, reject) {
             $.cajax({
-                url:that.publishURl+"?customId="+customId,
-                type:"GET",
+                url: that.getRemoterTableURl,
+                type: 'post',
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: 'json',
+                success: rst => {
+                    return resolve(rst)
+                },
+                error: err => reject(err)
+            })
+        })
+    },
+
+    publish: function (customId) {
+        var that = this;
+        return new Promise(function (resolve, reject) {
+            $.cajax({
+                url: that.publishURl + "?customId=" + customId,
+                type: "GET",
                 cache: false,
                 dataType: "json",
                 success: function (result) {

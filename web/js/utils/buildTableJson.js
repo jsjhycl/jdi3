@@ -128,19 +128,22 @@ BuildTableJson.prototype = {
                     "cname": "自动分表"
                 }]
             },
-            "jdi": {
-                "数据库目录": {
-                    "tableDesc": "数据库目录",
-                    "tableDetail": [{
-                        "id": "数据库名"
-                    }, {
-                        "id": "表名"
-                    }, {
-                        "id": "表注解"
-                    }]
-                }
-            },
+            "数据库目录": {
+                "tableDesc": "数据库目录",
+                "tableDetail": [{
+                    "id": "数据库名",
+                    "cname": "数据库名"
+                }, {
+                    "id": "表名",
+                    "cname": "表名"
+                }, {
+                    "id": "表注解",
+                    "cname": "表注解"
+                }]
+            }
+
         }
+        console.log(tablejson)
         return tablejson
     },
     getFields: function (table) {

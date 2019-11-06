@@ -145,6 +145,8 @@ OpenConfigModal.prototype = {
             name: i,
             value: i
         }));
+        console.log("data :", data)
+        console.log("customData:", customData)
         tableSelect = customData["db"] ?
             Object.keys(data[customData["db"]]).map(el => {
                 if (data[customData["db"]][el].key === this.key) return {
@@ -160,8 +162,7 @@ OpenConfigModal.prototype = {
             })
 
         fields = customData["table"] ?
-            data[customData["db"]][customData["table"]].tableDetail :
-            [];
+            data[customData["db"]][customData["table"]].tableDetail : [];
 
         Common.fillSelect($dbName, null, dbSelect, customData["db"]);
         Common.fillSelect($tableName, {

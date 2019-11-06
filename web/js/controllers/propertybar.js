@@ -22,7 +22,8 @@ Propertybar.prototype = {
         isPM = !!isPM; //对isPM转换为正则
         suffix = suffix || ""; //如果suffix存在则用suffix否则为空
         var that = this,
-            AllDbName = await new FileService().readFile("./profiles/table.json", 'utf-8'),
+            // AllDbName = await new FileService().readFile("./profiles/table.json", 'utf-8'),
+            AllDbName = await new BuildTableJson().get(),
             result = await new FileService().readFile("./profiles/propertybar.json", 'utf-8');
         that.AllDbName = AllDbName;
         if (!result) return; //如果没有退出函数

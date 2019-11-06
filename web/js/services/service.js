@@ -15,7 +15,7 @@ function Service() {
     this.queryTableConfig = {
         dbName: "jdi",
         id: "数据库目录",
-        condition: [],
+        conditions: [],
         fields: []
     }
     this.errmsg = {
@@ -217,7 +217,6 @@ Service.prototype = {
     //查询数据库中的元素
     queryPromise: function (type, conditions, fields) {
         if (!type) return reject(Common.errMsg("无效的指令参数！"));
-        console.log(type)
         var that = this,
             data = {};
         if (type == "db") {
@@ -232,7 +231,6 @@ Service.prototype = {
         }
 
         return new Promise(function (resolve, reject) {
-            console.log(that.queryDb)
             $.cajax({
                 url: that.queryDb,
                 type: "POST",
@@ -240,10 +238,10 @@ Service.prototype = {
                 data: JSON.stringify(data),
                 dataType: "json",
                 success: function (result, status, xhr) {
-                    return result.errno === 0 ? resolve(result.data) : reject(Common.errMsg(result.errmsg));
+                    return result.errno === 0 ? resolve(result.data) : reject(console.log(result.errmsg));
                 },
                 error: function (error) {
-                    return reject(Common.errMsg(result.errmsg))
+                    return reject(console.log(result.errmsg))
                 }
             });
         })

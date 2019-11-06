@@ -33,7 +33,7 @@
                 case 'queryNoConditions':
                     html += `<span class="input-group-addon addon-query" data-config="${addonType}" ${queryCondition ? 'data-query_condition="' + queryCondition + '"' : ''} data-mode="multi"></span>`
                     break;
-                
+
                     // html += '<span class="input-group-addon addon-query" data-config="queryNoConditions"></span>'
                 case 'queryColumn':
                     // html += '<span class="input-group-addon addon-data"  data-placement="left" data-toggle="popover" data-tirgger="click" data-type="'+ addonType +'"></span>'
@@ -280,9 +280,10 @@
                 return fns;
             },
             getDbData: function () {
-                new FileService().readFile("/profiles/table.json", 'utf-8', function (rst) {
-                    dbData = rst;
-                });
+                dbData = new BuildTableJson().get()
+                // new FileService().readFile("/profiles/table.json", 'utf-8', function (rst) {
+                //     dbData = rst;
+                // });
             },
             insertAtCursor: function (dom, html, notDom) {
                 if (!dom) return;
@@ -762,7 +763,7 @@
                 fnsData.data.items.forEach(function (el, index) {
                     if (el.category == fnsData.data.categorys[0]) {
                         !firstFn && (firstFn = el);
-                        fnsHtml += '<div class="fn-item" data-cname="'+ el.cname +'" data-name="' + el.name + '" data-index="' + index + '" data-type="' + fnsData.title + '"  data-desc="' + el.desc + '">' + (el.cname || el.name) + '（' + el.name + '）</div>'
+                        fnsHtml += '<div class="fn-item" data-cname="' + el.cname + '" data-name="' + el.name + '" data-index="' + index + '" data-type="' + fnsData.title + '"  data-desc="' + el.desc + '">' + (el.cname || el.name) + '（' + el.name + '）</div>'
                     }
                 })
             }
@@ -1053,7 +1054,7 @@
                     $fnWrap = $(".eg").find(".fn-wrap");
                 fnsData[0].data.items.filter(function (el, index) {
                     if (el.category === val) {
-                        fnsHtml += '<div class="fn-item" data-cname="'+ el.cname +'" data-name="' + el.name + '" data-index="' + index + '" data-type="' + type + '"  data-desc="' + el.desc + '">' + (el.cname || el.name) + '（' + el.name + '）</div>'
+                        fnsHtml += '<div class="fn-item" data-cname="' + el.cname + '" data-name="' + el.name + '" data-index="' + index + '" data-type="' + type + '"  data-desc="' + el.desc + '">' + (el.cname || el.name) + '（' + el.name + '）</div>'
                     }
                 });
                 $fnWrap.empty().append(fnsHtml);
@@ -1357,16 +1358,16 @@
                     data = JSON.parse(val);
                 } catch (err) {};
 
-                $content.is(":empty") 
-                    ? $(this).dbQuerier2({
+                $content.is(":empty") ?
+                    $(this).dbQuerier2({
                         $target: $input,
                         data: data || {},
                         $content: $content,
                         fieldMode: mode,
                         noConditions: noConditions,
                         queryCondition: queryCondition
-                    })
-                    : $content.empty();
+                    }) :
+                    $content.empty();
             });
 
             // 全局变量对应关系

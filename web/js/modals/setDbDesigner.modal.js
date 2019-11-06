@@ -19,9 +19,6 @@ function SetDbDesignerModal($modal) {
 
         });
     }
-    this._downloadDB = async function () {
-        return await new FileService().readFile("./profiles/table.json", 'utf-8')
-    }
     this._getTableValue = function () {
         var value = $("#name .text-danger").text()
         return value.slice(1, value.length - 1)
@@ -41,28 +38,38 @@ function SetDbDesignerModal($modal) {
         this.$reserveFour.val("");
         this.$reserveFive.val("");
     }
-    this.setDboptions = function () {
+    this.setDboptions = async function () {
         var that = this;
-        new Service().queryPromise('db').then(res => {
-            var $options = ""
+        new Service().queryPromise('table', [], ["数据库名"]).then(res => {
+            var data = [];
             res.forEach(item => {
-                $options += `<option value="${item.DBNAME}">${item.DBNAME}</option>`
+                if (data.indexOf(item["数据库名"]) == -1) {
+                    data.push(item["数据库名"])
+
+                }
+            })
+
+            var $options = ""
+            data.forEach(item => {
+                $options += `<option value="${item}">${item}</option>`
             })
             that.$dbNameList.empty().append($options)
         })
+        this.localData = await new BuildTableJson().get()
         // new FileService().readFile("./profiles/table.json", 'utf-8').then(res => {
         //     this.localData = res;
-        //     var AllDbName = res || {},
-        //         dbName = Object.keys(AllDbName);
-        //     var options = [];
-        //     dbName.forEach(item => {
-        //         options.push({
-        //             name: item,
-        //             value: item
-        //         })
+        // var AllDbName = res || {},
+        //     dbName = Object.keys(AllDbName);
+        // var options = [];
+        // dbName.forEach(item => {
+        //     options.push({
+        //         name: item,
+        //         value: item
         //     })
-        //     Common.fillSelect(that.$dbName, null, options, dbName[0])
         // })
+        // Common.fillSelect(that.$dbName, null, options, dbName[0])
+        // })
+        console.log(this.localData)
 
     }
     this.localData = null
@@ -73,9 +80,10 @@ SetDbDesignerModal.prototype = {
     initData: async function () {
         var that = this;
         that._clearData();
-        that.dbList = await new FileService().readFile("./profiles/table.json", 'utf-8') || {};
-        that.setDboptions()
-
+        // that.dbList = await new FileService().readFile("./profiles/table.json", 'utf-8') || {};
+        that.dbList = await new BuildTableJson().get()
+        await that.setDboptions()
+        // console.log(new BuildTableJson().get())
         //设置默认的表名
         that._setDefaultTableName();
         that.tableName = that._getTableValue()
@@ -274,6 +282,7 @@ SetDbDesignerModal.prototype = {
         })
         that.$modal.on("change" + that.NAME_SPACE, '[data-type="dbName"]', function () {
             var dbName = $(this).val()
+            if (!dbName) return;
             that.initTableHeader(dbName)
             that.initTable(dbName)
         })

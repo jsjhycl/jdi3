@@ -13,7 +13,8 @@
     DbQuerier.prototype = {
         init: async function () {
             var that = this;
-            that.AllDbName = await new FileService().readFile("/profiles/table.json")
+            // that.AllDbName = await new FileService().readFile("/profiles/table.json")
+            that.AllDbName = await new BuildTableJson().get()
             return that.$elements.each(function () {
                 var cache = that.cacheData(this);
                 if (!cache.disabled) {
@@ -192,7 +193,7 @@
                     type = fieldMode === "multi" ? "checkbox" : "radio",
                     html = "";
                 fields.forEach(function (item) {
-                    html += '<label title="'+ item.value +'" class="checkbox-inline">' +
+                    html += '<label title="' + item.value + '" class="checkbox-inline">' +
                         '<input type="' + type + '" name="' + name + '" value="' + item.value + '">' +
                         item.name + '(' + item.value + ')' + '</label>';
                 });

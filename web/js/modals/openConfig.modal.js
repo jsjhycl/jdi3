@@ -8,7 +8,7 @@ function OpenConfigModal($modal, key) {
 
     this.configFile = key === 0 ? 'dBTable0Config_custom.json' : 'dBTable1Config_custom.json'
 
-    this.renderCondition = async function($node, fields, $conditions, defaultData) {
+    this.renderCondition = async function ($node, fields, $conditions, defaultData) {
         try {
             !this.cate && (this.cate = await new FileService().readFile('./profiles/category.json', 'utf-8'));
         } catch (err) {
@@ -16,20 +16,28 @@ function OpenConfigModal($modal, key) {
         }
         if (!this.cate) alert('获取配置文件失败！')
         if (!$node || !Array.isArray(fields)) return;
-        
+
         var that = this,
             html = '';
-        fields = fields.map(el => { return { name: el.cname, value: el.id } });
+        fields = fields.map(el => {
+            return {
+                name: el.cname,
+                value: el.id
+            }
+        });
         if (Array.isArray(defaultData)) {
             defaultData.forEach(i => {
                 html += that.renderConditionItem(i, !i.isReg);
             })
         }
-       
-        Common.fillSelect($node, { name:"选择查询字段", value: "" }, fields);
+
+        Common.fillSelect($node, {
+            name: "选择查询字段",
+            value: ""
+        }, fields);
         $conditions.empty().append(html);
     };
-    this.renderConditionItem = function(condition, isSelect, category) {
+    this.renderConditionItem = function (condition, isSelect, category) {
         var that = this,
             html = "",
             id = condition.col,
@@ -37,8 +45,16 @@ function OpenConfigModal($modal, key) {
         category = condition.cate || category
         if (isSelect) {
             var options = that.cate[category].slice(0);
-            !DataType.isObject(options[0]) && (options = options.map(el => { return { name: el.name || el.value || el, value: el.value || el.name || el } }));
-            options.unshift({ name: '全部', value: '' });
+            !DataType.isObject(options[0]) && (options = options.map(el => {
+                return {
+                    name: el.name || el.value || el,
+                    value: el.value || el.name || el
+                }
+            }));
+            options.unshift({
+                name: '全部',
+                value: ''
+            });
             html += `
                     <label class="col-lg-3 control-label">${category}：</label>
                     <div class="col-lg-9">
@@ -55,12 +71,12 @@ function OpenConfigModal($modal, key) {
         }
         return html;
     }
-    this.renderFields = function($node, fields, defaultData) {
+    this.renderFields = function ($node, fields, defaultData) {
         if (!$node || !Array.isArray(fields)) return;
         var html = '';
-            fields.forEach(i => {
-                html += `<label class="checkbox-inline"><input type="checkbox" ${defaultData && defaultData.findIndex(el => el.value == i.id) > -1 ? "checked" : ""} data-field data-name="${i.cname}" value="${i.id}">${i.cname}</label>`
-            })
+        fields.forEach(i => {
+            html += `<label class="checkbox-inline"><input type="checkbox" ${defaultData && defaultData.findIndex(el => el.value == i.id) > -1 ? "checked" : ""} data-field data-name="${i.cname}" value="${i.id}">${i.cname}</label>`
+        })
         $node.empty().append(html);
     };
 }
@@ -104,11 +120,12 @@ OpenConfigModal.prototype = {
         this.$body.empty().append(str);
     },
 
-    setData: async function() {
+    setData: async function () {
         try {
-            var data = await new FileService().readFile("./profiles/table.json", 'utf-8'),
+            // var data = await new FileService().readFile("./profiles/table.json", 'utf-8'),
+            var data = await new BuildTableJson().get(),
                 customData = jdi.fileApi.getProfile(this.configFile);
-        } catch(err) {
+        } catch (err) {
             !customData && jdi.fileApi.setProfile(this.configFile, "{}");
             customData = {}
         }
@@ -123,18 +140,34 @@ OpenConfigModal.prototype = {
             $tableConditionsWrap = this.$body.find('[data-name="table_conditions_wrap"]'),
             $tableFields = this.$body.find('[data-name="table_fields"]'),
             fields;
-        
-        Object.keys(data).forEach(i => dbSelect.push({ name: i, value: i }));
-        tableSelect = customData["db"]
-                    ? Object.keys(data[customData["db"]]).map(el => { if (data[customData["db"]][el].key === this.key) return { name: el, value: el } })
-                    : Object.keys(data[dbSelect[0].value]).map(el => { if (data[dbSelect[0].value][el].key === this.key) return { name: el, value: el } })
 
-        fields = customData["table"]
-                    ? data[customData["db"]][customData["table"]].tableDetail
-                    : [];
-                    
+        Object.keys(data).forEach(i => dbSelect.push({
+            name: i,
+            value: i
+        }));
+        tableSelect = customData["db"] ?
+            Object.keys(data[customData["db"]]).map(el => {
+                if (data[customData["db"]][el].key === this.key) return {
+                    name: el,
+                    value: el
+                }
+            }) :
+            Object.keys(data[dbSelect[0].value]).map(el => {
+                if (data[dbSelect[0].value][el].key === this.key) return {
+                    name: el,
+                    value: el
+                }
+            })
+
+        fields = customData["table"] ?
+            data[customData["db"]][customData["table"]].tableDetail :
+            [];
+
         Common.fillSelect($dbName, null, dbSelect, customData["db"]);
-        Common.fillSelect($tableName, { name: "全部", value: "" }, tableSelect.filter(el => !!el), customData["table"]);
+        Common.fillSelect($tableName, {
+            name: "全部",
+            value: ""
+        }, tableSelect.filter(el => !!el), customData["table"]);
         this.renderCondition($tableConditions, fields, $tableConditionsWrap, customData["condition"]);
         this.renderFields($tableFields, fields, customData["fields"]);
     },
@@ -151,11 +184,11 @@ OpenConfigModal.prototype = {
             alert("至少选中一个显示字段！");
             return -1
         }
-        
+
         data['db'] = dbName;
         data['table'] = tableName || Object.keys(this.data[dbName]).filter(table => this.data[dbName][table].key === that.key);
         data['condition'] = [];
-        $tableConditions.each(function() {
+        $tableConditions.each(function () {
             var $this = $(this),
                 val = $this.val();
             val && data['condition'].push({
@@ -166,7 +199,7 @@ OpenConfigModal.prototype = {
             });
         });
         data['fields'] = [];
-        $tableFields.each(function() {
+        $tableFields.each(function () {
             var $this = $(this);
             data['fields'].push({
                 name: $this.data('name'),
@@ -176,25 +209,28 @@ OpenConfigModal.prototype = {
         jdi.fileApi.setProfile(this.configFile, JSON.stringify(data))
     },
 
-    clearData: function() {
+    clearData: function () {
         var result = window.confirm("确认清除配置数据？"),
             that = this;
         if (result) {
             var db = that.$body.find('[data-name="dbName"] option').attr('value'),
-                tables = Object.keys(that.data[db]).filter(i => that.data[db][i].key === that.key )
+                tables = Object.keys(that.data[db]).filter(i => that.data[db][i].key === that.key)
             var data = {
                 "db": db,
                 "table": tables[0],
-                "fields": [{ value: that.data[db][tables[0]].tableDetail[0].id, name: that.data[db][tables[0]].tableDetail[0].cname}]
+                "fields": [{
+                    value: that.data[db][tables[0]].tableDetail[0].id,
+                    name: that.data[db][tables[0]].tableDetail[0].cname
+                }]
             }
             jdi.fileApi.setProfile(this.configFile, JSON.stringify(data));
             return result;
         }
     },
 
-    bindEvents: function() {
+    bindEvents: function () {
         var that = this;
-        this.$modal.on('change', '[data-name="dbName"]', function() {
+        this.$modal.on('change', '[data-name="dbName"]', function () {
             var value = $(this).val(),
                 tables = that.data[value],
                 $tableName = that.$body.find('[data-name="tableName"]'),
@@ -205,35 +241,44 @@ OpenConfigModal.prototype = {
 
             if (DataType.isObject(tables)) {
                 Object.keys(tables).forEach(table => {
-                    tables[table].key === that.key && tableSelect.push({ name: table, value: table });
+                    tables[table].key === that.key && tableSelect.push({
+                        name: table,
+                        value: table
+                    });
                 });
             }
-            Common.fillSelect($tableName, { name: "全部", value: "" }, tableSelect);
+            Common.fillSelect($tableName, {
+                name: "全部",
+                value: ""
+            }, tableSelect);
             that.renderCondition($tableConditions, [], $tableConditionsWrap);
             that.renderFields($tableFields, []);
         });
 
-        this.$modal.on('change', '[data-name="tableName"]', function() {
+        this.$modal.on('change', '[data-name="tableName"]', function () {
             var value = $(this).val(),
                 db = that.$body.find('[data-name="dbName"]').val(),
                 $tableConditions = that.$body.find('[data-name="table_conditions"]'),
                 $tableConditionsWrap = that.$body.find('[data-name="table_conditions_wrap"]'),
                 $tableFields = that.$body.find('[data-name="table_fields"]'),
                 table = that.data[db][value];
-                fields = [];
+            fields = [];
             fields = table && Array.isArray(table.tableDetail) ? table.tableDetail : [];
             that.renderCondition($tableConditions, fields, $tableConditionsWrap);
             that.renderFields($tableFields, fields);
         });
 
-        this.$modal.on('change', '[data-name="table_conditions"]', function() {
+        this.$modal.on('change', '[data-name="table_conditions"]', function () {
             var value = $(this).val(),
                 name = $(this).find("option:selected").text(),
                 $tableConditionsWrap = that.$body.find('[data-name="table_conditions_wrap"]'),
                 html = '';
             console.log(value, $(`[data-condition][data-name="${value}"]`))
             if (value && that.$modal.find(`[data-condition][data-name="${value}"]`).length <= 0) {
-                html += that.renderConditionItem({col: value, value: ""}, !!that.cate[name], name)
+                html += that.renderConditionItem({
+                    col: value,
+                    value: ""
+                }, !!that.cate[name], name)
                 $tableConditionsWrap.append(html)
             };
             that.$body.find(`[data-condition][data-name="${value}"]`).focus()
@@ -242,6 +287,6 @@ OpenConfigModal.prototype = {
 
     execute: function () {
         var that = this;
-        that.basicEvents(true, that.initData, that.saveData, that.clearData);//绑定基础事件
+        that.basicEvents(true, that.initData, that.saveData, that.clearData); //绑定基础事件
     },
 }

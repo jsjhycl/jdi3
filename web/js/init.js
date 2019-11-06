@@ -39,6 +39,7 @@ Loader.prototype = {
                 that.JS_PATH + "/utils/common.js",
                 that.JS_PATH + "/utils/clipboard.js",
                 that.JS_PATH + "/utils/observer.js",
+                that.JS_PATH + "/utils/buildTableJson.js",
                 that.JS_PATH + "/helpers/numberHelper.js",
                 that.JS_PATH + "/helpers/domHelper.js",
                 that.JS_PATH + "/helpers/conditionsHelper.js",

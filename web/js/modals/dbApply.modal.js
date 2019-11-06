@@ -19,7 +19,7 @@ function DbApplyModal($modal) {
         this.$IPArea.val("172.18.184.9")
         this.$dbName.val("KAOQIN")
         this.$tableName.val("CHECKINOUT")
-        this.$port.val("")
+        this.$port.val("1433")
         this.$userName.val("sa")
         this.$password.val("Cepg2016")
         this.$dbType.val("sqlserver")

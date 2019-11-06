@@ -567,11 +567,11 @@ Workspace.prototype = {
         if (!setting) {
             that.$workspace.append($(`<input type="hidden" class="workspace-node" data-type="hidden" value="${id}" style="display:none" id="ZZZZ" name="布局名">`))
         }
-        if(setting){
-            var result = setting.items.some(function(item){
+        if (setting) {
+            var result = setting.items.some(function (item) {
                 return item.id == "ZZZZ"
             })
-            if(!result){
+            if (!result) {
                 that.$workspace.append($(`<input type="hidden" class="workspace-node" data-type="hidden" value="${id}" style="display:none" id="ZZZZ" name="布局名">`))
             }
         }
@@ -583,7 +583,8 @@ Workspace.prototype = {
         GLOBAL_PROPERTY = {}; //全局属性值空
         LAST_SELECTED_ID = null; // 最后一次被选中的元素id
         LAST_POSITION = {}; // 选中元素的初始位置
-        var db = await new FileService().readFile("./profiles/table.json", "utf-8")
+        // var db = await new FileService().readFile("./profiles/table.json", "utf-8")
+        var db = await new BuildTableJson().get()
         for (dbName in db) {
             for (table in db[dbName]) {
                 if (db[dbName][table]["key"] == 0 || db[dbName][table]["key"] == 1) {
@@ -645,8 +646,11 @@ Workspace.prototype = {
             that.$workspace.find("#ZZZZ").val(id)
             GLOBAL_PROPERTY = propertyData; //赋值
             //解决保存文件名的问题
-            if(!GLOBAL_PROPERTY["ZZZZ"]){
-                new Property().setValue("ZZZZ",null,{cname:"布局名",name:"ZZZZ"})
+            if (!GLOBAL_PROPERTY["ZZZZ"]) {
+                new Property().setValue("ZZZZ", null, {
+                    cname: "布局名",
+                    name: "ZZZZ"
+                })
             }
             that.loadPhone(id, contactId, type);
             var max_h = 0,

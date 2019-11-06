@@ -334,7 +334,10 @@ function Workspace() {
         var tableData = null;
         if (subtype === "布局" && customId) { //如果type是产品或则是数据库定义subtype是布局且customid存在
             tableData = new Property().getDbProperty(customId, name); //实例化property调用getDbproperty
-            tableData = {...tableData,...new Property().getSaveDbProperty(customId, name)}
+            tableData = {
+                ...tableData,
+                ...new Property().getSaveDbProperty(customId, name)
+            }
         }
 
         var phoneData = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="ie=edge"><title>手机页面</title></head><body>' +
@@ -422,12 +425,16 @@ function Workspace() {
                     }
                     // new Propertybar($("#propertybar")).init(false,null);
                     $("#workspace").empty()
-                    $("#workspace").css({"width": "0px", "height": "0px", "background-color": "rgb(242, 242, 242)"})
-                    $("#workspace").attr("data-id","")
-                    $("#workspace").attr("data-name","")
-                    $("#workspace").attr("data-subtype","")
-                    $("#workspace").attr("data-concat","")
-                    $("#workspace").attr("data-reltemplate","")
+                    $("#workspace").css({
+                        "width": "0px",
+                        "height": "0px",
+                        "background-color": "rgb(242, 242, 242)"
+                    })
+                    $("#workspace").attr("data-id", "")
+                    $("#workspace").attr("data-name", "")
+                    $("#workspace").attr("data-subtype", "")
+                    $("#workspace").attr("data-concat", "")
+                    $("#workspace").attr("data-reltemplate", "")
                     $("#name").empty()
                     new Filter(subtype).set()
                 }).fail(function () {
@@ -467,46 +474,66 @@ function Workspace() {
             value: id
         }], params)
     }
-    this._setData = function (isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData,saveAs) {
+    this._setData = function (isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, saveAs) {
         var that = this;
         if (!subtype) return; //如果id或则type或则subtype都不存在则退出函数
-        if(saveAs){
+        if (saveAs) {
             var flag = subtype == "表单" ? 0 : 1,
                 queryid = id.replace(/\((.*)\)/img, ""),
                 dbCollection = subtype == "布局" ? "newProducts" : "newResources";
-            new Service().query(dbCollection,[{col:"customId",value:queryid}]).then(res=>{
-                if(res.length < 1) return alert("获取数据错误,请检查原文件是否已经删除");
-                    var data = res[0];
-                    var params = [
-                        {col: "name", value: data.name},
-                        {col: "createor", value:"admin"},
-                        {col: "createTime",value:new Date().toFormatString(null, true)},
-                        {col: "_id", value: id},
-                        {col: "customId", value:id},
-                        {col: "basicInfo",value:data.basicInfo }
-                    ];
-                    this._saveDb(subtype,params)
-                    var $temp = $('<div></div>');
-                    $temp.css({
-                        "position": "absolute",
-                        "width": settingData.width,
-                        "height": settingData.height,
-                        "background-color": settingData.bgColor,
-                        "overflow": "hidden"
-                    }).append(modelData); //插入到html中
-                    modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
-                        '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
-                        $temp.get(0).outerHTML;
-                    return that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, flag)    
+            new Service().query(dbCollection, [{
+                col: "customId",
+                value: queryid
+            }]).then(res => {
+                if (res.length < 1) return alert("获取数据错误,请检查原文件是否已经删除");
+                var data = res[0];
+                var params = [{
+                        col: "name",
+                        value: data.name
+                    },
+                    {
+                        col: "createor",
+                        value: "admin"
+                    },
+                    {
+                        col: "createTime",
+                        value: new Date().toFormatString(null, true)
+                    },
+                    {
+                        col: "_id",
+                        value: id
+                    },
+                    {
+                        col: "customId",
+                        value: id
+                    },
+                    {
+                        col: "basicInfo",
+                        value: data.basicInfo
+                    }
+                ];
+                this._saveDb(subtype, params)
+                var $temp = $('<div></div>');
+                $temp.css({
+                    "position": "absolute",
+                    "width": settingData.width,
+                    "height": settingData.height,
+                    "background-color": settingData.bgColor,
+                    "overflow": "hidden"
+                }).append(modelData); //插入到html中
+                modelData = '<input id="modelId" type="hidden" name="modelId" value="' + id + '">' +
+                    '<input id="modelName" type="hidden" name="modelName" value="' + name + '">' +
+                    $temp.get(0).outerHTML;
+                return that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, flag)
             })
 
-        }else{
+        } else {
             isPrompt = !!isPrompt; //对isPrompt进行取布尔值
-    
+
             var property = {}
             phone_property = {},
                 USER = 'admin';
-    
+
             for (var i in GLOBAL_PROPERTY) {
                 i.startsWith('phone_') ? phone_property[i] = GLOBAL_PROPERTY[i] : property[i] = GLOBAL_PROPERTY[i];
             }
@@ -523,13 +550,13 @@ function Workspace() {
                 basicInfo["autoCreate"] = $('[name="model_autoCreate"]').val();
                 basicInfo["spare1"] = $('[name = "model_spare1"]').val();
                 basicInfo["spare2"] = $('[name = "model_spare2"]').val();
-                basicInfo["contactId"] = this.$workspace.attr('data-concat') || (id && id.slice(id.length - 3, id.length )) || "";
+                basicInfo["contactId"] = this.$workspace.attr('data-concat') || (id && id.slice(id.length - 3, id.length)) || "";
             } else {
                 name = $('[name="template_name"]').val() || this.$workspace.attr('data-name');
                 basicInfo["category"] = $('[name="template_category"]').val();
                 basicInfo["subCategory"] = $('[name="template_subCategory"]:checked').val();
             }
-    
+
             var params = [{
                 col: "name",
                 value: name
@@ -576,7 +603,7 @@ function Workspace() {
                     }).catch(err => {})
                 }
                 if (subtype == "布局") {
-                    id = basicInfo.autoCreate +  basicInfo.userGrade + basicInfo.feature + basicInfo.category + basicInfo.area  + "00" + basicInfo.contactId.replace(/\((.*)\)/img, "")  ;
+                    id = basicInfo.autoCreate + basicInfo.userGrade + basicInfo.feature + basicInfo.category + basicInfo.area + "00" + basicInfo.contactId.replace(/\((.*)\)/img, "");
                     params.push({
                         col: '_id',
                         value: id
@@ -607,10 +634,13 @@ function Workspace() {
                 });
                 // 修改
                 var flag = subtype == "表单" ? 0 : 1;
-                var  dbCollection = subtype == "布局" ? "newProducts" : "newResources";
-                new Service().remove(dbCollection,[{col:"customId",value:id}])
-                if(subtype=="表单"){
-                    this._getMaxId(subtype).then(res=>{
+                var dbCollection = subtype == "布局" ? "newProducts" : "newResources";
+                new Service().remove(dbCollection, [{
+                    col: "customId",
+                    value: id
+                }])
+                if (subtype == "表单") {
+                    this._getMaxId(subtype).then(res => {
                         id = res;
                         params.push({
                             col: '_id',
@@ -634,9 +664,15 @@ function Workspace() {
                             return that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, flag)
                         });
                     })
-                }else{
-                    id = basicInfo.autoCreate +  basicInfo.userGrade + basicInfo.feature + basicInfo.category + basicInfo.area  + "00" + basicInfo.contactId.replace(/\((.*)\)/img, "");
-                    params.push({ col: '_id',value: id }, {col: 'customId',value: id});
+                } else {
+                    id = basicInfo.autoCreate + basicInfo.userGrade + basicInfo.feature + basicInfo.category + basicInfo.area + "00" + basicInfo.contactId.replace(/\((.*)\)/img, "");
+                    params.push({
+                        col: '_id',
+                        value: id
+                    }, {
+                        col: 'customId',
+                        value: id
+                    });
                     return this._saveDb(subtype, params).then(res => {
                         var $temp = $('<div></div>');
                         $temp.css({
@@ -652,7 +688,7 @@ function Workspace() {
                         return that._savefile(isPrompt, id, subtype, flow, settingData, modelData, tableData, phoneData, phoneSettingData, flag)
                     });
                 }
-                
+
             }
         }
     };
@@ -692,13 +728,14 @@ Workspace.prototype = {
         GLOBAL_PROPERTY = {}; //全局属性值空
         LAST_SELECTED_ID = null; // 最后一次被选中的元素id
         LAST_POSITION = {}; // 选中元素的初始位置
-        var db = await new FileService().readFile("./profiles/table.json","utf-8")
-        for( dbName in  db){
-            for( table in db[dbName]){
-                if(db[dbName][table]["key"]==0||db[dbName][table]["key"]==1){
+        // var db = await new FileService().readFile("./profiles/table.json","utf-8")
+        var db = await new BuildTableJson().get();
+        for (dbName in db) {
+            for (table in db[dbName]) {
+                if (db[dbName][table]["key"] == 0 || db[dbName][table]["key"] == 1) {
                     delete db[dbName][table]
                 }
-                
+
             }
         }
         AllDbName = db;
@@ -823,7 +860,7 @@ Workspace.prototype = {
      * @param {*} saveAs //另存
      * @param {*} isFinsh 是否是最后流程99
      */
-    save: function (isPrompt, saveAsId, isFinsh,saveAs) {
+    save: function (isPrompt, saveAsId, isFinsh, saveAs) {
         var that = this,
             isValidate = that._sameNameValidate(); //调用_sameNameValidate
         if (!isValidate) return; //如果isValidate退出函数
@@ -845,7 +882,7 @@ Workspace.prototype = {
 
         if (data) { //如果data为true
             //保存数据
-            return that._setData(isPrompt, id, subtype, flow, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData,saveAs); //调用_setdata
+            return that._setData(isPrompt, id, subtype, flow, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData, saveAs); //调用_setdata
 
         }
     },

@@ -64,7 +64,8 @@
             return cache;
         },
         getDbData: async function () {
-            var _tableP = new FileService().readFile("./profiles/table.json"),
+            // var _tableP = new FileService().readFile("./profiles/table.json"),
+            var _tableP = new BuildTableJson().get(),
                 _globalP = new FileService().readFile("./profiles/global.json"),
                 data = await _tableP,
                 global = await _globalP;

@@ -44,7 +44,8 @@ DbDesignerModal.prototype = {
     initData: async function () {
         var that = this;
 
-        var dbList = await new FileService().readFile("./profiles/table.json", 'utf-8') || {},
+        // var dbList = await new FileService().readFile("./profiles/table.json", 'utf-8') || {},
+        var dbList = await new BuildTableJson().get(),
             dbNames = [];
         that.AllDbName = dbList;
         Object.keys(dbList).forEach(function (item) {

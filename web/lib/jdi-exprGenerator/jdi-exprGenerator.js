@@ -656,7 +656,7 @@
                     let html = '',
                         methods = data();
                     methods && methods.forEach(i => {
-                        html += that.generatExprFn(i.fnName, i.expr, i.fnArgs, true, i.fnCname);
+                        html += that.generatExprFn(i.fnName, i.expr, i.fnArgs, true, i.fnCname, i.fnChineseName);
                     });
                     $eg.find(".eg-expr").html(html);
                 }

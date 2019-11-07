@@ -24,6 +24,10 @@ function OpenResource($openModal) {
         }
         delete query['db'];
         Array.isArray(query['fields']) ? query['fields'].push({ value: "customId" }) : query['fields'] = [{ name: "布局名称", value: "name" }, { value: "customId" }]
+        query['fields'].push({
+            name: '版本号',
+            value: 'version'
+        })
         return query;
     };
     this.getTheadFields = function(fields) {
@@ -35,9 +39,20 @@ function OpenResource($openModal) {
                         type: 0,
                         func: idx === 0 && "detail",
                         template: function (value) {
-                            return idx === 0
-                                    ? '<a>' + value + '</a>'
-                                    : '<span>' + value + '</span>';
+                            console.log(i, value)
+                            if (idx === 0) {
+                                return '<a>' + value + '</a>' 
+                            } else if (idx === fields.length - 1) {
+                                var str = '';
+                                if (Array.isArray(value)) {
+                                    str += '<select>' +value.map(i => {
+                                        return `<option value="${i}">${i}</option>`
+                                    }).join('') + '</select>'
+                                }
+                                return str
+                            } else {
+                                return '<span>' + value + '</span>'
+                            }
                         }
                     }
             }

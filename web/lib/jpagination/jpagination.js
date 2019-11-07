@@ -263,8 +263,13 @@
                                 value = item[firstKey] || item[fitem.pkey];
                             }
 
-                            secondKey && typeof value === 'object' && (value = that.recurseObject(value, secondKey))
+                            console.log(value, secondKey)
+                            
+                            secondKey && DataType.isObject(value) && (value = that.recurseObject(value, secondKey))
+
+                            console.log(value)
                             var template = fitem.template || function (value) {
+                                console.log(value)
                                         return value;
                                     },
                                 str = template(value);

@@ -143,7 +143,6 @@ BuildTableJson.prototype = {
             }
 
         }
-        console.log(tablejson)
         return tablejson
     },
     getFields: function (table) {
@@ -157,7 +156,7 @@ BuildTableJson.prototype = {
                         cname: value['c'],
                         type: value['t'],
                         mapId: value['m'],
-                        maxLength: value['l'],
+                        maxlength: value['l'],
                         isSave: true,
                         fieldSplit: value['f']
                     })

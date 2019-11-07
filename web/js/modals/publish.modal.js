@@ -10,7 +10,6 @@ function PublishModal($modal) {
 PublishModal.prototype = {
     initData: function () {
         var that = this;
-        new Workspace().save(false)
         new Service().query("newProducts", [{
             col: 'basicInfo.subCategory',
             value: "基本"
@@ -49,10 +48,28 @@ PublishModal.prototype = {
                     col: "status",
                     value: "10"
                 }];
-            new Service().update("newProducts", condition, save).then(result => {
-                result.n === 1 && result.ok === 1 ? alert('发布成功') : alert('发布失败')
-                new Service().publish(id)
-                that.$modal.modal("hide");
+            new Service().query("newProducts", condition, ["version"]).then(res => {
+                var version = 1;
+                if (!res[0]['version']) {
+                    console.log(res[0],"不存在")
+                    save.push({col: "version", value: [1]})
+                    save.push({col: "isActive", value: 1 })
+                    var version = 1;
+                } else {
+                    version = (res[0]['version']).length + 1;
+                    console.log(res[0]['version'],"版本数组")
+                    var versionArr = res[0]['version'];
+                    versionArr.push(version)
+                    save.push({col: "version", value:versionArr})
+                    save.push({col: "isActive", value:version})
+                }
+                new Workspace().save(false)
+                new Workspace().save(false, undefined, undefined, undefined, undefined, version)
+                new Service().update("newProducts", condition, save).then(result => {
+                    result.n === 1 && result.ok === 1 ? alert('发布成功') : alert('发布失败')
+                    new Service().publish(id)
+                    that.$modal.modal("hide");
+                })
             })
         });
         //删除布局

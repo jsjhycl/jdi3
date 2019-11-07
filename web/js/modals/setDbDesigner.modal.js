@@ -69,7 +69,7 @@ function SetDbDesignerModal($modal) {
         // })
         // Common.fillSelect(that.$dbName, null, options, dbName[0])
         // })
-        console.log(this.localData)
+        // console.log(this.localData)
 
     }
     this.localData = null
@@ -95,6 +95,7 @@ SetDbDesignerModal.prototype = {
         var that = this;
         if (that.dbList[dbName][that.tableName]) {
             var tabledetail = that.dbList[dbName][that.tableName];
+            that.$dbName.val(dbName)
             that.$tabeleDesc.val(tabledetail.tableDesc)
             that.$reserveOne.val(tabledetail.reserveOne)
             that.$reserveTwo.val(tabledetail.reserveTwo)

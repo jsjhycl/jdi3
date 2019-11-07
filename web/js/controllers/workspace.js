@@ -474,7 +474,7 @@ function Workspace() {
         }
 
     }
-    this._setData = function (isPrompt, id, type, settingData, modelData, tableData, phoneData, phoneSettingData) {
+    this._setData = function (isPrompt, id, type, settingData, modelData, tableData, phoneData, phoneSettingData,version) {
         var that = this,
             property = {},
             phone_property = {};
@@ -513,7 +513,7 @@ function Workspace() {
                 data: JSON.stringify(tableData)
             });
         }
-        var router = type == "布局" ? `./product/${id}` : `./resource/${id}`;
+        var router = type == "布局" ? `./product/${id}${version?'.'+version:""}` : `./resource/${id}`;
         that.judgeFile(router).then(res => {
             //文件夹不存在
             if (!res) {
@@ -717,7 +717,7 @@ Workspace.prototype = {
         }).fail(function (err) { //如果失败
         });
     },
-    save: function (isPrompt, saveAsId, changeId, changeData, changeName) {
+    save: function (isPrompt, saveAsId, changeId, changeData, changeName,version) {
         var that = this;
         if (isPrompt) {
             var isValidate = that._sameNameValidate(); //调用_sameNameValidate
@@ -773,7 +773,7 @@ Workspace.prototype = {
             })
             var data = that._getData(saveId, name, type, contactId)
             if (data) {
-                that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
+                that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData, version)
             }
 
         }
@@ -795,7 +795,7 @@ Workspace.prototype = {
                     that.inserDb(dbCollection, changeData) //插入新的数据
                     var data = that._getData(saveId, name, type, contactId)
                     if (data) {
-                        that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
+                        that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData, version)
                     }
                     //设置新的属性
                     that.$workspace.attr({
@@ -825,7 +825,7 @@ Workspace.prototype = {
                     that.removeFile(`/resource/${id}`)
                     that.inserDb(dbCollection, changeData)
                     if (data) {
-                        that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
+                        that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData, version)
                     }
                     that.$workspace.attr({
                         "data-id": changeId,
@@ -842,7 +842,7 @@ Workspace.prototype = {
         if (!saveAsId && !changeId && !changeData) {
             var data = that._getData(saveId, name, type, contactId)
             if (data) {
-                that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData)
+                that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData, version)
                 var dbcondition = [{
                         col: "_id",
                         value: saveId

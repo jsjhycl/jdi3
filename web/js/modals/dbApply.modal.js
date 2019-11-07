@@ -128,7 +128,7 @@ DbApplyModal.prototype = {
                     server: IPArea,
                     database: dbName,
                     table: tableName,
-                    port: port
+                    port: Number(port)
                 }
             }
             new Service().getRemoteTable(postData).then(res => {

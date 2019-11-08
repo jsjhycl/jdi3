@@ -22,7 +22,7 @@ function ArchivePathModal($modal, $element) {
 
     //设置存档类型的下拉框
     this._setTypeSelect = function ($typeSelect, type) {
-        ModalHelper.setSelectData($typeSelect, {name: "请选择存档类型", value: ""}, TYPE_CONFIG, type, false);//调用ModalHelper中的setSelectData方法设置下拉抗
+        ModalHelper.setSelectData($typeSelect, {name: "请选择查询类型", value: ""}, TYPE_CONFIG, type, false);//调用ModalHelper中的setSelectData方法设置下拉抗
         var that = this,
             $formGroup = that.$archiveModelId.parent();//获取表单编号的父集元素
         if (type === 2) $formGroup.show();//如果type等于2给表单编号显示
@@ -32,8 +32,8 @@ function ArchivePathModal($modal, $element) {
     this._resetData = function () {
         var that = this;
         that.$archiveType.val(0);//获取$archiveType
-        Common.fillSelect(that.$archiveTable, {name: "请选择存档表格", value: ""}, null, null, true);//调用Common中的fillSelect
-        Common.fillSelect(that.$archiveField, {name: "请选择存档字段", value: ""}, null, null, true);//调用Common中的fillSelect
+        Common.fillSelect(that.$archiveTable, {name: "请选择查询表格", value: ""}, null, null, true);//调用Common中的fillSelect
+        Common.fillSelect(that.$archiveField, {name: "请选择查询字段", value: ""}, null, null, true);//调用Common中的fillSelect
         Common.fillSelect(that.$archiveModelId, {name: "请选择表单编号", value: ""}, null, null, true);//调用Common中的fillSelect
         Common.fillSelect(that.$archiveDbName,{name:"请选择数据库",value:""},null,null,null,true)//清空存档的数据库为空
         that.$archiveRepeat.prop('checked', false);
@@ -58,7 +58,7 @@ ArchivePathModal.prototype = {
                 fieldsoptions = [];//字段下拉选项
                 
             that._setTypeSelect(that.$archiveType, data.type);//调用_setTypeSelect
-            Common.fillSelect(that.$archiveDbName,{name:"请选择存档数据库",value:""},dbs,data.dbName,true)//生成数据库下拉框填充默认选项
+            Common.fillSelect(that.$archiveDbName,{name:"请选择查询数据库",value:""},dbs,data.dbName,true)//生成数据库下拉框填充默认选项
             if(dbName){//如果数据库是选中的
                 Object.keys(AllDbName[dbName]).forEach(function(item){//遍历数据库下面所有的表生成，表的下拉选项
                     tableOptions.push({name:AllDbName[dbName][item]["tableDesc"],value:item})
@@ -70,17 +70,17 @@ ArchivePathModal.prototype = {
                     })
                 }
             }
-            Common.fillSelect(that.$archiveTable, {name: "请选择存档表格", value: ""}, tableOptions,data.table, true)//填充存档表格下拉选项
-            Common.fillSelect(that.$archiveField, {name:"请选择存档字段",value:""},fieldsoptions,data.field,true)//填充存档字段下拉选项
+            Common.fillSelect(that.$archiveTable, {name: "请选择查询表格", value: ""}, tableOptions,data.table, true)//填充存档表格下拉选项
+            Common.fillSelect(that.$archiveField, {name:"请选择查询字段",value:""},fieldsoptions,data.field,true)//填充存档字段下拉选项
             that.$archiveRepeat.prop('checked', !!data.repeat)
             that.$archiveIncrease.prop('checked', !!data.increase)
                             
         } else {
             //填充数据库下拉框
             that._setTypeSelect(that.$archiveType, null);//调用_setTypeSelect
-            Common.fillSelect(that.$archiveDbName,{name:"请选择存档数据库",value:""},dbs,null,true)//填充存档数据库下拉选项
-            Common.fillSelect(that.$archiveTable,{name:"请选择存档表",value:""},null,null,true)//填充存档表格下拉选项
-            Common.fillSelect(that.$archiveField,{name:"请选择存档字段",value:""},null,null,true)//填充存档字段下拉选项
+            Common.fillSelect(that.$archiveDbName,{name:"请选择查询数据库",value:""},dbs,null,true)//填充存档数据库下拉选项
+            Common.fillSelect(that.$archiveTable,{name:"请选择查询表",value:""},null,null,true)//填充存档表格下拉选项
+            Common.fillSelect(that.$archiveField,{name:"请选择查询字段",value:""},null,null,true)//填充存档字段下拉选项
             that.$archiveRepeat.prop('checked', false);
             that.$archiveIncrease.prop('checked', false);
         }
@@ -89,7 +89,7 @@ ArchivePathModal.prototype = {
         var id = $("#property_id").val();//获取$("#property_id")的值
         if (!id) return;//如果没有退出函数
 
-        if (id === "BODY") return alert("页面属性中不可以配置存档路径！");//如果id等于BODY退出函数并提示
+        if (id === "BODY") return alert("页面属性中不可以配置查询结果显示路径！");//如果id等于BODY退出函数并提示
 
         var that = this,
             data = {},
@@ -141,7 +141,7 @@ ArchivePathModal.prototype = {
                     tableOptions.push({name:AllDbName[dbName][item]["tableDesc"],value:item})
                 })
             }
-            Common.fillSelect($select,{name:"请选择存档表格",value:""},tableOptions,null,true)
+            Common.fillSelect($select,{name:"请选择查询表格",value:""},tableOptions,null,true)
         })
 
         that.$archiveTable.change(function () {//当存单表格值发生变化
@@ -154,7 +154,7 @@ ArchivePathModal.prototype = {
                         fieldsoptions.push({name:item.cname,value:item.id})
                     })
                 }
-                Common.fillSelect($select,{name:"请选择存档字段",value:""},fieldsoptions,null,true)
+                Common.fillSelect($select,{name:"请选择查询字段",value:""},fieldsoptions,null,true)
         });
     }
 };

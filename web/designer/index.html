@@ -291,7 +291,7 @@
                         <a href="#">查询属性</a>
                         <ul class="dropdown-menu">
                             <li><a data-type="propertyViewer" data-viewer="query.db" data-change="true">数据库查询</a></li>
-                            <li><a data-type="propertyViewer" data-viewer="archivePath" data-change="true">存档路径</a></li>
+                            <li><a data-type="propertyViewer" data-viewer="archivePath" data-change="true">显示路径</a></li>
                             <li><a data-type="propertyViewer" data-viewer="query.nest" data-change="true">嵌套查询</a></li>
                         </ul>
                     </li>
@@ -993,28 +993,28 @@
             <div class="modal-content">
                 <header class="modal-header">
                     <button class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">存档路径配置</h4>
+                    <h4 class="modal-title">查询结果显示路径配置</h4>
                 </header>
                 <section class="modal-body">
                     <div class="form-group">
-                        <label class="control-label">存档类型：</label>
+                        <label class="control-label">查询类型：</label>
                         <select class="form-control" data-key="type" data-type="Int">
-                            <option value="">请选择存档类型</option>
+                            <option value="">请选择查询类型</option>
                             <option value="0">通用查询</option>
                             <option value="1">表格查询</option>
                             <option value="2">详情链接</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="control-label">存档数据库：</label>
+                        <label class="control-label">查询数据库：</label>
                         <select class="form-control" data-key="dbName" data-type="String"></select>
                     </div>
                     <div class="form-group">
-                        <label class="control-label">存档表格：</label>
+                        <label class="control-label">查询表格：</label>
                         <select class="form-control" data-key="table" data-type="String"></select>
                     </div>
                     <div class="form-group">
-                        <label class="control-label">存档字段：</label>
+                        <label class="control-label">查询字段：</label>
                         <select class="form-control" data-key="field" data-type="String"></select>
                     </div>
                     <div class="form-group">
@@ -1044,13 +1044,14 @@
             <div class="modal-content">
                 <header class="modal-header">
                     <button class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">存档路径配置</h4>
+                    <h4 class="modal-title">查询结果显示路径配置</h4>
                 </header>
                 <section class="modal-body">
                     <div class="archive-title">
                         <div class="meta">查询数据库：<span class="meta-content" data-type="dbname"></span></div>
                         <div class="meta">查询表：<span class="meta-content" data-type="tablename"></span></div>
                         <div class="meta">查询类型：<span class="meta-content" data-type="querytype"></span></div>
+                        <span class="meta auto-match">字段匹配（寻找相同字段）</span>
                     </div>
                     <div class="archive_content">
                         <div class="archive-left">
@@ -1060,7 +1061,7 @@
                                 <thead>
                                     <tr>
                                         <th>查询字段</th>
-                                        <th>存档元素（页面元素）</th>
+                                        <th>存放元素（页面元素）</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>

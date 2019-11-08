@@ -1078,7 +1078,10 @@ li {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
-    
+}
+#archivePathBatch_modal .auto-match {
+    cursor: pointer;
+    text-decoration: underline;
 }
 #archivePathBatch_modal .archive_content .archive-left {
     padding: 15px;

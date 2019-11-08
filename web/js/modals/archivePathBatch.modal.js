@@ -192,5 +192,42 @@ ArchivePathBatch.prototype = {
             $target.parents('tbody').find(`.related-control[data-id="${controlId}"]`).attr('data-id', "").val('')
                 .end().end().attr('data-id', controlId).val($this.text())
         });
+
+        this.$modal.on('click', '.archive-title .auto-match', function() {
+            var workspaceNode = {};
+            that.$right.find('.control-item').each(function() {
+                var id = $(this).attr('data-id');
+                if (id === 'zzzz') return;
+                workspaceNode[id] = {
+                    text: $(this).text(),
+                    $dom: $(this)
+                };
+            })
+
+            console.log(workspaceNode)
+
+            that.$left.find('.related-control').each(function() {
+                var $this = $(this),
+                    field = $this.attr('data-field');
+
+                console.log(field)
+                if (workspaceNode[field]) {
+                    $this.attr('data-id', field).val(workspaceNode[field].text);
+                    workspaceNode[field].$dom.attr('data-field', field)
+                    // .siblings(`[data-field="${field}"]`).removeAttr('data-field');
+                    delete workspaceNode[field];
+                } else {
+                    $this.val('').attr('data-id', '')
+                }
+            });
+
+            var nodeKeys = Object.keys(workspaceNode);
+            if (nodeKeys.length > 0) {
+                nodeKeys.forEach(i => {
+                    workspaceNode[i].$dom.removeAttr('data-field')
+                })
+            }
+
+        })
     }
 };

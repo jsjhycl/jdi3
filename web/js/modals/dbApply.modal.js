@@ -118,7 +118,7 @@ DbApplyModal.prototype = {
                 userName = that.$userName.val(),
                 password = that.$password.val(),
                 dbType = that.$dbType.val();
-            // 172.18.184.9 KAOQIN CHECKINOUT sa Cepg2016 sqlserver
+            // 172.18.184.9 KAOQIN CHECKINOUT 1433 sa Cepg2016 sqlserver
             if (!IPArea || !dbName || !tableName || !port || !userName || !password || !dbType) return alert("请填写完整的数据");
             let postData = {
                 type: dbType,

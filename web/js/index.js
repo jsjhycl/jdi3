@@ -131,7 +131,10 @@ function navbar() {
 					return flag = true;
 				}
 			})
-			console.log($("#AAAA"))
+			if($("#AAAA").length==0){
+				return alert("布局不是从AAAA编号开始的");
+			}
+			
 			if (flag) {
 				var sure = window.confirm("你还有元素没有配置中文名,是否确认配置数据库？")
 				if (!sure) return;

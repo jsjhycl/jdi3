@@ -131,6 +131,7 @@ function navbar() {
 					return flag = true;
 				}
 			})
+			console.log($("#AAAA"))
 			if (flag) {
 				var sure = window.confirm("你还有元素没有配置中文名,是否确认配置数据库？")
 				if (!sure) return;
@@ -192,7 +193,7 @@ function navbar() {
 			var subtype = $("#workspace").attr("data-type");
 			subtype = subtype == "布局" ? 1 : 0;
 			var urlConfig = jdi.fileApi.getConfigUrl();
-			var href = (urlConfig.displayUrl || urlConfig.serverUrl) + `/home/model?customId=${id}${VERSION?("."+VERSION):""}&type=${subtype}&isPreview=preview`;
+			var href = (urlConfig.displayUrl || urlConfig.serverUrl) + `/home/model?customId=${id}${VERSION?'&version='+VERSION:""}&type=${subtype}&isPreview=preview`;
 			// "/home/model?customId=" + id + "&type=" + subtype + "&isPreview=preview"; //拼接路径
 			require('electron').shell.openExternal(href); //使用electron打开默认浏览器   
 		});

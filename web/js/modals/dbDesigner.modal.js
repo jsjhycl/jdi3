@@ -21,23 +21,23 @@ function DbDesignerModal($modal) {
             width: "100%"
         })
     }
-    // this.setData = function(rowIndex,columnIndex,key,type){
-    //     var that = this;
-    //     var $tbody = that.$db.find(".dbdesigner tbody");
-    //     var $tr = $tbody.find("tr")
-    //     $tr.each(function(index,item){
-    //         if(index>columnIndex){
-    //             if(!$(this).find('[data-key="isSave"]').is(":checked")){                 
-    //                 $(this).find(`td:eq(${rowIndex}) select`).val(key).trigger("change")
-    //                 if(type=="field"){
-    //                     var value = $(this).find('[data-key="id"]').val()
-    //                     $(this).find(`td:eq(${rowIndex}) select`).val(value).trigger("change")
-    //                 }
-    //             }
+    this.setData = function(rowIndex,columnIndex,key,type){
+        var that = this;
+        var $tbody = that.$db.find(".dbdesigner tbody");
+        var $tr = $tbody.find("tr")
+        $tr.each(function(index,item){
+            if(index>columnIndex){
+                if(!$(this).find('[data-key="isSave"]').is(":checked")){                 
+                    $(this).find(`td:eq(${rowIndex}) select`).val(key).trigger("change")
+                    if(type=="field"){
+                        var value = $(this).find('[data-key="id"]').val()
+                        $(this).find(`td:eq(${rowIndex}) select`).val(value).trigger("change")
+                    }
+                }
 
-    //         }
-    //     })
-    // }
+            }
+        })
+    }
 }
 
 DbDesignerModal.prototype = {
@@ -128,6 +128,7 @@ DbDesignerModal.prototype = {
                     key: "db.fieldSplit",
                     group: true,
                     template: function (value, options) {
+                        console.log(value,options)
                         var $select = $('<select class="form-control chosen" data-key="selectFieldSplit"></select>')
                         Common.fillSelect($select, {
                             name: "请选择第几段",
@@ -290,10 +291,12 @@ DbDesignerModal.prototype = {
                 })
             }
             var $select = $(event.target).parents("tr").find('[data-key="selectFieldSplit"]')
+            console.log(fieldSplit)
             Common.fillSelect($select, {
                 name: "请选择第几段",
                 value: ""
             }, fieldSplit, null, true)
+
             $select.trigger("chosen:updated")
 
             var rowIndex = $(this).parent('td').index(),

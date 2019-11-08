@@ -16,13 +16,13 @@ function DbApplyModal($modal) {
 
     this.$queryDb = this.$modalBody.find('.queryDb')
     this.clearData = function () {
-        this.$IPArea.val("172.18.184.9")
-        this.$dbName.val("KAOQIN")
-        this.$tableName.val("CHECKINOUT")
-        this.$port.val("1433")
-        this.$userName.val("sa")
-        this.$password.val("Cepg2016")
-        this.$dbType.val("sqlserver")
+        this.$IPArea.val()
+        this.$dbName.val()
+        this.$tableName.val()
+        this.$port.val()
+        this.$userName.val()
+        this.$password.val()
+        this.$dbType.val()
         this.$dbApply.empty()
     }
 
@@ -45,7 +45,6 @@ DbApplyModal.prototype = {
     renderTr: function (dataTr) {
         $tr = "<tr>"
         Object.keys(dataTr).forEach(key => {
-            console.log()
             $tr += `<td><input class="form-control" ${key =="cname"|| key == "id" ? "" : 'disabled="disabled"' } type="text" data-save="${key}" value="${dataTr[key]}"></td>`
         })
         return `${$tr}</tr>`;
@@ -97,6 +96,7 @@ DbApplyModal.prototype = {
             },
             columns: arr
         }
+        console.log(arr)
 
         new Service().createTable(postData).then(res => {
             console.log(res)
@@ -119,7 +119,7 @@ DbApplyModal.prototype = {
                 password = that.$password.val(),
                 dbType = that.$dbType.val();
             // 172.18.184.9 KAOQIN CHECKINOUT sa Cepg2016 sqlserver
-            // if (!IPArea || !dbName || !tableName || !port || !userName || !passWord || !dbType) return alert("请填写完整的数据");
+            if (!IPArea || !dbName || !tableName || !port || !userName || !password || !dbType) return alert("请填写完整的数据");
             let postData = {
                 type: dbType,
                 option: {
@@ -133,6 +133,7 @@ DbApplyModal.prototype = {
             }
             new Service().getRemoteTable(postData).then(res => {
                 if (res.status === 0) {
+
                     var data = that.transformData(res.result),
                         html = that.renderTable(data);
                     that.$dbApply.empty().append(html)
@@ -140,59 +141,6 @@ DbApplyModal.prototype = {
                     alert(res.result)
                 }
             })
-            // let data = [{
-            //         id: "USERID",
-            //         type: "int",
-            //         maxLength: "",
-            //         cname: "用户名",
-            //     },
-            //     {
-            //         id: "CHECKTIME",
-            //         type: "datetime",
-            //         maxLength: "",
-            //         cname: "记录时间",
-            //     },
-            //     {
-            //         id: "VERIFYCODE",
-            //         type: "varchar",
-            //         maxLength: "1",
-            //         cname: "验证码",
-            //     },
-            //     {
-            //         id: "SENSORID",
-            //         type: "int",
-            //         maxLength: "",
-            //         cname: "关联ID",
-            //     },
-            //     {
-            //         id: "Menoinfo",
-            //         type: "varchar",
-            //         maxLength: "5",
-            //         cname: "用户信息",
-            //     },
-            //     {
-            //         id: "WorkCode",
-            //         type: "varchar",
-            //         maxLength: "30",
-            //         cname: "用户信息",
-            //     },
-            //     {
-            //         id: "Sn",
-            //         type: "varchar",
-            //         maxLength: "5",
-            //         cname: "用户信息",
-            //     },
-            //     {
-            //         id: "UserEXFmt",
-            //         type: "smallint",
-            //         maxLength: "",
-            //         cname: "用户信息",
-            //     }
-            // ]
-            // data = that.transformData(data)
-            // var html = that.renderTable(data)
-            // that.$dbApply.empty().append(html)
-
         })
     }
 }

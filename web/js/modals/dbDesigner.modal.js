@@ -128,7 +128,6 @@ DbDesignerModal.prototype = {
                     key: "db.fieldSplit",
                     group: true,
                     template: function (value, options) {
-                        console.log(value,options)
                         var $select = $('<select class="form-control chosen" data-key="selectFieldSplit"></select>')
                         Common.fillSelect($select, {
                             name: "请选择第几段",
@@ -291,7 +290,6 @@ DbDesignerModal.prototype = {
                 })
             }
             var $select = $(event.target).parents("tr").find('[data-key="selectFieldSplit"]')
-            console.log(fieldSplit)
             Common.fillSelect($select, {
                 name: "请选择第几段",
                 value: ""

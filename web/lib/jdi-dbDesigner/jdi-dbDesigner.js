@@ -104,9 +104,11 @@
                     })
 
                     setTableDetail.tableDetail.some(n => {
-                        if(!ids.find((item)=>{return item == n.id})){
-                           alert("数据库中的元素的当前布局不匹配")
-                           return true;
+                        if (!ids.find((item) => {
+                                return item == n.id
+                            })) {
+                            alert("数据库中的元素的当前布局不匹配")
+                            return true;
                         }
                     })
                 } else {
@@ -382,8 +384,9 @@
                 if (dbName && table) {
                     var fields = dbList[dbName][table].tableDetail,
                         fieldSplits = '';
+                   
                     fields.forEach(function (item) {
-                        if (data.id == item.id) {
+                        if (field== item.id) {
                             fieldSplits = Number(item.fieldSplit)
                         }
                     })

@@ -39,14 +39,15 @@ function OpenResource($openModal) {
                         type: 0,
                         func: idx === 0 && "detail",
                         template: function (value) {
-                            console.log(i, value)
                             if (idx === 0) {
                                 return '<a>' + value + '</a>' 
                             } else if (idx === fields.length - 1) {
                                 var str = '';
-                                if (Array.isArray(value)) {
-                                    str += '<select>' +value.map(i => {
-                                        return `<option value="${i}">${i}</option>`
+                                if (DataType.isObject(value)) {
+                                    var selected = value.isActive;
+                                    value = value.info||[];
+                                    str += '<select class="form-control version">' +value.map(i => {
+                                        return `<option value="${i}" ${i==selected?"selected":""}>${i}</option>`
                                     }).join('') + '</select>'
                                 }
                                 return str
@@ -88,7 +89,10 @@ function OpenResource($openModal) {
                 fields: that.getTheadFields(query["fields"]),
             },
             onDetail: async function () {
-                var id = $(this).parents("tr").attr("data-id");
+                var id = $(this).parents("tr").attr("data-id"),
+                    version = $(this).parents("tr").find(".version").val();
+                console.log(version)
+
 
                 var resources = await new Service().query(query['table'], [{ col: 'customId', value: id }], ['basicInfo.contactId', 'basicInfo.contactTable', 'basicInfo.contactDb', 'name', 'edit']),
                     resource = Array.isArray(resources) && resources[0];
@@ -96,7 +100,7 @@ function OpenResource($openModal) {
                     var customId = Common.recurseObject(resource, 'basicInfo.contactId'),
                         templates = await new Service().query(resource['basicInfo.contactId'] || 'newResources', [{ col: 'customId', value: customId }]);
                         relTemplate = Array.isArray(templates) && templates[0];
-                    new Workspace().load(id, resource.name, "布局", relTemplate ? relTemplate.customId : '', relTemplate, resource.edit);
+                    new Workspace().load(id, resource.name, "布局", relTemplate ? relTemplate.customId : '', relTemplate, resource.edit,undefined,version);
                     that.$openModal.modal("hide");
                     new Main().open();
                 } else {

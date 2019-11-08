@@ -113,7 +113,7 @@ CreateResource.prototype = {
                         spare2: spare2,
                         contactId: contactId
                     }},
-                    {col:"version",value:[]}
+                    {col:"version",value:{info:[]}}
 
                 ],
                 condition = [{col:"customId", value:id}];

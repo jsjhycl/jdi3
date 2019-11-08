@@ -52,16 +52,16 @@ PublishModal.prototype = {
                 var version = 1;
                 if (!res[0]['version']) {
                     console.log(res[0],"不存在")
-                    save.push({col: "version", value: [1]})
-                    save.push({col: "isActive", value: 1 })
+                    save.push({col: "version.info", value: [1]})
+                    save.push({col: "version.isActive", value: 1 })
                     var version = 1;
                 } else {
-                    version = (res[0]['version']).length + 1;
-                    console.log(res[0]['version'],"版本数组")
-                    var versionArr = res[0]['version'];
+                    version = (res[0]['version']['info']).length + 1;
+                    console.log(res[0]['version']['info'],"版本数组")
+                    var versionArr = res[0]['version']['info'];
                     versionArr.push(version)
-                    save.push({col: "version", value:versionArr})
-                    save.push({col: "isActive", value:version})
+                    save.push({col: "version.info", value:versionArr})
+                    save.push({col: "version.isActive", value:version})
                 }
                 new Workspace().save(false)
                 new Workspace().save(false, undefined, undefined, undefined, undefined, version)

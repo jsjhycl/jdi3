@@ -150,6 +150,7 @@ SubmitModal.prototype = {
             that.initData()
         })
         that.$modal.find(".save").on("click", function () {
+            console.log("保存",VERSION)
             var type = $("#workspace").attr("data-type"),
                 oldId = $("#workspace").attr("data-id")
             id = "",

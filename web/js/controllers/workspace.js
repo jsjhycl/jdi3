@@ -546,7 +546,7 @@ function Workspace() {
     };
 }
 Workspace.prototype = {
-    init: async function (id, name, type, contactId, relTemplate, edit, setting) {
+    init: async function (id, name, type, contactId, relTemplate, edit, setting, version) {
         if (!id || !name || !type) return;
         var that = this,
             text = name + '<span class="text-danger">' + "(" + id + ")" + '</span>',
@@ -583,6 +583,8 @@ Workspace.prototype = {
         GLOBAL_PROPERTY = {}; //全局属性值空
         LAST_SELECTED_ID = null; // 最后一次被选中的元素id
         LAST_POSITION = {}; // 选中元素的初始位置
+        VERSION = version;
+
         // var db = await new FileService().readFile("./profiles/table.json", "utf-8")
         var db = await new BuildTableJson().get()
         for (dbName in db) {
@@ -594,14 +596,15 @@ Workspace.prototype = {
             }
         }
         AllDbName = db;
-        that.save(false, null, null)
+        that.save(false, null, null, null, null, VERSION)
     },
-    load: function (id, name, type, contactId, relTemplate, edit, isCreate) {
+    load: function (id, name, type, contactId, relTemplate, edit, isCreate, version) {
         if (!id || !type || !name) return;
+        console.log(isCreate,version)
         var that = this,
-            url = type === "表单" ? `./resource/${id}` : (isCreate ? `./resource/${contactId}` : `./product/${id}`);
+            url = type === "表单" ? `./resource/${id}` : (isCreate ? `./resource/${contactId}` : `./product/${id}${version ? ("." + version) :""}`);
         $.when(that.readFile(url + "/setting.json"), that.readFile(url + "/property.json")).done(function (ret1, ret2) {
-            that.init(id, name, type, contactId, relTemplate, edit, ret1);
+            that.init(id, name, type, contactId, relTemplate, edit, ret1, version);
             var settingData = ret1,
                 propertyData = ret2;
             var control = new Control(),
@@ -717,7 +720,7 @@ Workspace.prototype = {
         }).fail(function (err) { //如果失败
         });
     },
-    save: function (isPrompt, saveAsId, changeId, changeData, changeName,version) {
+    save: function (isPrompt, saveAsId, changeId, changeData, changeName, version) {
         var that = this;
         if (isPrompt) {
             var isValidate = that._sameNameValidate(); //调用_sameNameValidate

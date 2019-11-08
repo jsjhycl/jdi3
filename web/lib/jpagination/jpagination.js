@@ -263,13 +263,14 @@
                                 value = item[firstKey] || item[fitem.pkey];
                             }
 
-                            console.log(value, secondKey)
+                            // console.log(secondKey,value,"1")
+                            if(secondKey =="version"){
+                                value = value
+                            }else{
+                                secondKey && DataType.isObject(value) && (value = that.recurseObject(value, secondKey))
+                            }
                             
-                            secondKey && DataType.isObject(value) && (value = that.recurseObject(value, secondKey))
-
-                            console.log(value)
                             var template = fitem.template || function (value) {
-                                console.log(value)
                                         return value;
                                     },
                                 str = template(value);

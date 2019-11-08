@@ -117,7 +117,7 @@ function navbar() {
 
 	(function save() {
 		$("#submit").click(function () {
-			new Workspace().save(true, null, null)
+			new Workspace().save(true, null, null, null, null, VERSION)
 		})
 	})();
 
@@ -173,7 +173,7 @@ function navbar() {
 					value: id
 				}], null, null, null, function (rst) {
 					if (Array.isArray(rst) && rst[0]) {
-						new Workspace().load(id, name, "布局", null, null, null); //加载工作区
+						new Workspace().load(id, name, "布局", null, null, null,null,VERSION); //加载工作区
 						new Main().open();
 					} else {
 						return alert("调用失败！");
@@ -186,13 +186,14 @@ function navbar() {
 	//预览
 	(function preview() {
 		$("#preview").click(function () { //绑定事件
-			new Workspace().save(false, null, null, null, null)
+			new Workspace().save(false, null, null, null, null, VERSION)
 			var id = $("#workspace").attr("data-id"); //获取工作区id
 			if (!id) return alert("未保存！");
 			var subtype = $("#workspace").attr("data-type");
 			subtype = subtype == "布局" ? 1 : 0;
 			var urlConfig = jdi.fileApi.getConfigUrl();
-			var href = (urlConfig.displayUrl || urlConfig.serverUrl) + "/home/model?customId=" + id + "&type=" + subtype + "&isPreview=preview"; //拼接路径
+			var href = (urlConfig.displayUrl || urlConfig.serverUrl) + `/home/model?customId=${id}${VERSION?("."+VERSION):""}&type=${subtype}&isPreview=preview`;
+			// "/home/model?customId=" + id + "&type=" + subtype + "&isPreview=preview"; //拼接路径
 			require('electron').shell.openExternal(href); //使用electron打开默认浏览器   
 		});
 	})();

@@ -235,7 +235,11 @@
 .eg .eg-dialog .eg-function .form-group {
     margin: 15px;
 }
-
+.eg .eg-dialog .eg-function-args > .form-group:nth-child(2) {
+    max-height: 345px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
 .eg .eg-dialog .eg-function .control-label,
 .eg .eg-dialog .eg-insertFn .control-label {
     font-size: 12px;
@@ -383,7 +387,7 @@
 }
 .cpanel .cpanel-body .fn-wrap {
     width: 100%;
-    height: 240px;
+    height: 300px;
     padding-bottom: 10px;
     background: #fff;
     overflow: auto;

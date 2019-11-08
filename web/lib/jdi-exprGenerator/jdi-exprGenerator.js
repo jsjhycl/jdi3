@@ -1285,7 +1285,8 @@
             // 依赖  插件
             (function () {
                 $(".eg:visible .eg-dialog").resizable({
-                    handles: 'all'
+                    handles: 'all',
+                    minHeight: 875
                 });
 
                 /* 和 contenteditable 冲突 */

@@ -405,7 +405,7 @@ var AccessControl = (function () {
 
         setPagePersentVal: function ($control, Value) {
             let customId = $("#workspace").attr('data-id');
-            if (!customId || !(customId.slice(2, 3) === 'K') || !$control || $control.length <= 0) return;
+            if (!customId || !(customId.slice(2, 3) === 'W') || !$control || $control.length <= 0) return;
 
             let id = $control.attr('id');
             if (!id) return;

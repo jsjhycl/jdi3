@@ -204,13 +204,10 @@ ArchivePathBatch.prototype = {
                 };
             })
 
-            console.log(workspaceNode)
-
             that.$left.find('.related-control').each(function() {
                 var $this = $(this),
                     field = $this.attr('data-field');
 
-                console.log(field)
                 if (workspaceNode[field]) {
                     $this.attr('data-id', field).val(workspaceNode[field].text);
                     workspaceNode[field].$dom.attr('data-field', field)

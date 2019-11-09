@@ -575,7 +575,7 @@ function NewEventsModal($modal, $elemts) {
                             ${ that.renderCopySendSelect( 'field', dbName, table, item.field, "请选择抄送列" ,item.field) }
                         </td>
                         <td>
-                            ${ that.renderCopySendSelect( 'fieldSplit', item.dbName, item.table, item.fieldSplit, "请选择抄送段", item.fieldSplit) }
+                            ${ that.renderCopySendSelect( 'fieldSplit', dbName, table, item.field, "请选择抄送段", item.fieldSplit) }
                         </td>
                         <td>
                             ${ that.copySendConfigTypeOfValue("value_type",item.value.type)}
@@ -602,9 +602,11 @@ function NewEventsModal($modal, $elemts) {
         return `${str}</select>`
     }
     this.renderCopySendSelect = function (type, dbName, table, field, defalutOption, selected) {
+        
         let that = this,
             data = that.getCopySendSelectData(type, dbName, table, field),
             str = `<select class="form-control chosen" data-save="${type}" data-change="${type}"><option value="">${defalutOption}</option>`;
+            
         data.forEach(item => {
             str += `<option value="${item.value}" ${ selected==item.value? "selected" : ""}>${item.name}(${item.value})</option>`
         })
@@ -1162,11 +1164,14 @@ NewEventsModal.prototype = {
         })
         that.$modal.on("change" + that.NAME_SPACE, ".changeFieldSplit [data-change='field']", function () {
             let $tr = $(this).parents("tr").eq(0),
-                dbName = $tr.find('[data-change="dbName"]').val(),
-                table = $tr.find('[data-change="table"]').val(),
+                $tr1 = $(this).parents("tr").eq(1),
+                dbName = $tr1.find('[data-change="dbName"]').val(),
+                table = $tr1.find('[data-change="table"]').val(),
                 field = $tr.find('[data-change="field"]').val(),
                 $fieldSplit = $tr.find('[data-change="fieldSplit"]'),
                 $html = that.renderCopySendSelect("fieldSplit", dbName, table, field, "请选择", null);
+               
+                console.log($html,$fieldSplit)
             $fieldSplit.parent("td").empty().append($html)
             that.bindChosen()
 

@@ -22,6 +22,7 @@ function Service() {
         "already exists": "已存在",
         "Table": "表格"
     }
+    this.qrUrl = '/secureApi/canSave'
 }
 Service.prototype = {
     base: function (data, callBack) {
@@ -214,6 +215,7 @@ Service.prototype = {
         })
 
     },
+
     //查询数据库中的元素
     queryPromise: function (type, conditions, fields) {
         if (!type) return reject(Common.errMsg("无效的指令参数！"));
@@ -244,6 +246,31 @@ Service.prototype = {
                     return reject(console.log(result.errmsg))
                 }
             });
+        })
+    },
+
+    // cansave
+    canSave: function (uid) {
+        var that = this;
+        return new Promise(function (resolve, reject) {
+            $.cajax({
+                url: that.qrUrl,
+                type: "GET",
+                data: {
+                    uid: uid
+                },
+                noloading: true,
+                contentType: "application/json",
+                dataType: "json",
+                success: rst => {
+                    if (rst.status === 0) {
+                        resolve(!!rst.result)
+                    } else {
+                        reject(rst.result)
+                    }
+                },
+                error: err => reject(err)
+            })
         })
     },
 }

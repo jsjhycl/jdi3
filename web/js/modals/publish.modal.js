@@ -38,39 +38,49 @@ PublishModal.prototype = {
     bindEvents: function () {
         var that = this;
         //发布布局
-        that.$modal.on("click", ".modal-body .table .publish", function () {
-            var id = $(this).parents("tr").attr("data-id"),
-                condition = [{
-                    col: "customId",
-                    value: id
-                }],
-                save = [{
-                    col: "status",
-                    value: "10"
-                }];
-            new Service().query("newProducts", condition, ["version"]).then(res => {
-                var version = 1;
-                if (!res[0]['version']) {
-                    console.log(res[0],"不存在")
-                    save.push({col: "version.info", value: [1]})
-                    save.push({col: "version.isActive", value: 1 })
+        that.$modal.on("click", ".modal-body .table .publish", function (event) {
+            event.stopPropagation();
+            that.$modal.hide().modal('hide');
+            var $this = $(this);
+            renderQrModal({
+                action: 'sign/auth',
+                title: "扫码验证权限发布",
+                data: new Date().valueOf()
+            }, function() {
+                var id = $this.parents("tr").attr("data-id"),
+                    condition = [{
+                        col: "customId",
+                        value: id
+                    }],
+                    save = [{
+                        col: "status",
+                        value: "10"
+                    }];
+                new Service().query("newProducts", condition, ["version"]).then(res => {
                     var version = 1;
-                } else {
-                    version = (res[0]['version']['info']).length + 1;
-                    console.log(res[0]['version']['info'],"版本数组")
-                    var versionArr = res[0]['version']['info'];
-                    versionArr.push(version)
-                    save.push({col: "version.info", value:versionArr})
-                    save.push({col: "version.isActive", value:version})
-                }
-                new Workspace().save(false)
-                new Workspace().save(false, undefined, undefined, undefined, undefined, version)
-                new Service().update("newProducts", condition, save).then(result => {
-                    result.n === 1 && result.ok === 1 ? alert('发布成功') : alert('发布失败')
-                    new Service().publish(id)
-                    that.$modal.modal("hide");
+                    if (!res[0]['version']) {
+                        console.log(res[0],"不存在")
+                        save.push({col: "version.info", value: [1]})
+                        save.push({col: "version.isActive", value: 1 })
+                        var version = 1;
+                    } else {
+                        version = (res[0]['version']['info']).length + 1;
+                        console.log(res[0]['version']['info'],"版本数组")
+                        var versionArr = res[0]['version']['info'];
+                        versionArr.push(version)
+                        save.push({col: "version.info", value:versionArr})
+                        save.push({col: "version.isActive", value:version})
+                    }
+                    new Workspace().save(false)
+                    new Workspace().save(false, undefined, undefined, undefined, undefined, version)
+                    new Service().update("newProducts", condition, save).then(result => {
+                        result.n === 1 && result.ok === 1 ? alert('发布成功') : alert('发布失败')
+                        new Service().publish(id)
+                        that.$modal.modal("hide");
+                    })
                 })
             })
+
         });
         //删除布局
         that.$modal.on("click", ".modal-body .table .remove", function () {

@@ -1192,3 +1192,49 @@ li {
 #copyWorkspace .selCurrent{
     border: 1px solid red;
 }
+
+/* 二维码弹窗 */
+.qr-modal {
+    content: '';
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+.qr-modal .qr-title {
+    margin-bottom: 15px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.qr-modal .qr-box {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    width: 250px;
+    z-index: 1000;
+    padding: 25px;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    box-shadow: 0 0 4px rgba(0, 0, 0, .2);
+    border-radius: 5px;
+}
+@media screen and (max-height: 500px) {
+    .qr-modal .qr-box {
+        top: 200px;
+    }
+}
+.qr-modal .qr-box .qr-code {
+    height: 200px;
+}
+.qr-modal .qr-box .btn-qr {
+    width: 100%;
+}
+.qr-modal .qr-box .qr-result {
+    min-height: 30px;
+    font-size: 12px;
+    line-height: 20px;
+    word-break: break-all;
+}

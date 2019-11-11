@@ -1,10 +1,13 @@
 $.cajax = function (options, isPrompt) {
     options = options || {};
+    noloading = !! options.noloading
+
+    delete options.noloading
+
     isPrompt = !!isPrompt;
 
     var $loader = $(".loader");
-    $loader.show();
-
+    !noloading && $loader.show();
     options.error = function (xhr, status, error) {
         $loader.hide();
         if (isPrompt) {

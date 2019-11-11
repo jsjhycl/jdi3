@@ -1238,3 +1238,8 @@ li {
     line-height: 20px;
     word-break: break-all;
 }
+
+/* 发布弹窗样式 */
+#publishModal tr td .btn:not(:first-child){
+    margin-left: 10px;
+}

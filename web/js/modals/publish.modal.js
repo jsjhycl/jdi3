@@ -24,7 +24,7 @@ PublishModal.prototype = {
                     html += `<tr data-id="${item.customId}">
                     <td>${item.name}</td>
                     <td style="color:${item.status==10?"black":"red"}">${item.status == "10"?"已发布":"未发布"}</td>
-                    <td class="text-center"><a class="btn btn-default btn-sm publish">发布</a> <a class="btn btn-danger btn-sm remove">删除</a></td>
+                    <td class="text-center"><a class="btn btn-default btn-sm publish">发布</a><a class="${item.status == 10 ? "" : "disabled"} btn btn-primary btn-sm cancel">取消发布</a><a class="btn btn-danger btn-sm remove">删除</a></td>
                 </tr>`
                 }
             })
@@ -97,7 +97,25 @@ PublishModal.prototype = {
                 result.n === 1 && result.ok === 1 ? alert('删除成功') : alert('删除失败')
                 that.$modal.modal("hide");
             })
-        })
+        });
+
+        // 取消发布 
+        that.$modal.on("click", ".modal-body .table .cancel", function () {
+            var id = $(this).parents("tr").attr("data-id"),
+                condition = [{
+                    col: "customId",
+                    value: id
+                }],
+                save = [{
+                    col: "status",
+                    value: "0"
+                }];
+            new Service().update("newProducts", condition, save).then(result => {
+                result.n === 1 && result.ok === 1 ? alert('取消发布成功！') : alert('取消发布失败！')
+                that.$modal.modal("hide");
+            })
+        });
+        
 
     }
 };

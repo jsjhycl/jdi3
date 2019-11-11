@@ -615,7 +615,7 @@ ContextMenu.prototype = {
                         },
                         {
                             type: "menuitem",
-                            text: "批量设置存档路径",
+                            text: "批量设置查询显示路径",
                             handler: function () {
                                 let id = $("#property_id").val(),
                                     query = new Property().getValue(id, 'query.db');

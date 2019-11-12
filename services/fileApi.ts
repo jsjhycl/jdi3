@@ -14,7 +14,7 @@ let config = {
 }
 
 /**
- * 获取配置中的url1
+ * 获取配置中的url
  * return  返回配置中的url
  */
 function getConfigUrl() {

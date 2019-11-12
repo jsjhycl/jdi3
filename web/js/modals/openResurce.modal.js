@@ -91,7 +91,6 @@ function OpenResource($openModal) {
             onDetail: async function () {
                 var id = $(this).parents("tr").attr("data-id"),
                     version = $(this).parents("tr").find(".version").val();
-                console.log(version)
 
 
                 var resources = await new Service().query(query['table'], [{ col: 'customId', value: id }], ['basicInfo.contactId', 'basicInfo.contactTable', 'basicInfo.contactDb', 'name', 'edit']),

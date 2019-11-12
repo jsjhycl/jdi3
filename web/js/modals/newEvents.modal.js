@@ -89,7 +89,7 @@ function NewEventsModal($modal, $elemts) {
         if (DataType.isArray(exprMethods)) {
             exprMethods.forEach(item => {
                 that.METHODS.push({
-                    name: item.fnCname + '('+ item.fnChineseName +')',
+                    name: item.fnCname + '(' + item.fnChineseName + ')',
                     value: item.expr,
                     type: 1
                 })
@@ -554,7 +554,10 @@ function NewEventsModal($modal, $elemts) {
                             <th>数据类型</th>
                             <th>元素</th>
                             <th>运算符</th>
-                            <th><span class="add" data-add="renderCopySendConfig">＋</span></th>
+                            <th style="width:90px">
+                                <span class="add" data-add="renderCopySendConfig">＋</span>
+                                <span style="color:red;" class="autoCopySend">批量配置</span>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -602,11 +605,11 @@ function NewEventsModal($modal, $elemts) {
         return `${str}</select>`
     }
     this.renderCopySendSelect = function (type, dbName, table, field, defalutOption, selected) {
-        
+
         let that = this,
             data = that.getCopySendSelectData(type, dbName, table, field),
             str = `<select class="form-control chosen" data-save="${type}" data-change="${type}"><option value="">${defalutOption}</option>`;
-            
+
         data.forEach(item => {
             str += `<option value="${item.value}" ${ selected==item.value? "selected" : ""}>${item.name}(${item.value})</option>`
         })
@@ -1170,10 +1173,50 @@ NewEventsModal.prototype = {
                 field = $tr.find('[data-change="field"]').val(),
                 $fieldSplit = $tr.find('[data-change="fieldSplit"]'),
                 $html = that.renderCopySendSelect("fieldSplit", dbName, table, field, "请选择", null);
-               
-                console.log($html,$fieldSplit)
+
             $fieldSplit.parent("td").empty().append($html)
             that.bindChosen()
+
+        })
+        //批量设置抄送
+        that.$modal.on("click" + that.NAME_SPACE, '.autoCopySend', function () {
+            
+            let $tr = $(this).parents("tr").eq(1),
+                $table = $(this).parents("table").eq(0),
+                dbName = $tr.find('[data-change="dbName"]').val(),
+                table = $tr.find('[data-change="table"]').val(),
+                element = $("#workspace").find("input"),
+                fields = [],
+                elementId = [],
+                fieldsId = [];
+            element.each(function () {
+                var id = $(this).attr("id");
+                if (id != 'ZZZZ') {
+                    elementId.push(id)
+                }
+            })
+            if (dbName && table) {
+               AllDbName[dbName][table]['tableDetail'].forEach(item=>{
+                   fieldsId.push(item.id)
+               })
+            }
+            elementId.forEach((id) => {
+                if(fieldsId.includes(id)){
+                    var obj = {
+                        "field": id,
+                        "fieldSplit": 0,
+                        "element": "{"+id+"}",
+                        "value": {
+                            "type": "Element",
+                            "operator": "="
+                        }
+                    }
+                    fields.push(obj)
+                }
+
+            })
+           var html =  that.renderCopySendConfig(dbName,table,fields)
+           $table.find("tbody").empty().append(html)
 
         })
         that.$modal.on("change" + that.NAME_SPACE, '[data-change="value_type"]', function () {
@@ -1258,6 +1301,7 @@ NewEventsModal.prototype = {
             }
 
         })
+
 
     },
     execute: function () {

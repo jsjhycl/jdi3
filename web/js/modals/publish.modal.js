@@ -9,10 +9,16 @@ function PublishModal($modal) {
 
 PublishModal.prototype = {
     initData: function () {
-        var that = this;
+        var that = this,
+            id = $("#workspace").attr("data-id");
+        console.log(id)
         new Service().query("newProducts", [{
             col: 'basicInfo.subCategory',
             value: "基本"
+        },{
+            col: "customId",
+            value:id
+
         }], ["customId", "name", "status", "lastEditTime", "basicInfo.subCategory"]).then(data => {
             if (!Array.isArray(data)) return;
             var html = "";

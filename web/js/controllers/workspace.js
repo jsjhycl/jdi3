@@ -597,10 +597,10 @@ Workspace.prototype = {
         }
         AllDbName = db;
         that.save(false, null, null, null, null, VERSION)
+        
     },
     load: function (id, name, type, contactId, relTemplate, edit, isCreate, version) {
         if (!id || !type || !name) return;
-        console.log(isCreate,version)
         var that = this,
             url = type === "表单" ? `./resource/${id}` : (isCreate ? `./resource/${contactId}` : `./product/${id}${version ? ("." + version) :""}`);
         $.when(that.readFile(url + "/setting.json"), that.readFile(url + "/property.json")).done(function (ret1, ret2) {

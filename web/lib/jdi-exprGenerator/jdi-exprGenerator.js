@@ -916,7 +916,7 @@
                     $(this).find(".fn-system .fn-system-item").first().click();
                     $list.hide().prev().show();
                     var newFn = FunctionUtil.getSystemFnOrder(cache.systemFunction);
-                    new FileService().writeFile('system_functions.json', JSON.stringify(newFn));
+                    new FileService().writeFile('/profiles/system_functions', JSON.stringify(newFn));
                 }
                 FunctionUtil.effect("close");
                 that.setExpr($egExpr, $egExpr.get(0), $egExpr.val(), value);
@@ -1305,7 +1305,7 @@
                     $(this).find(".fn-system .fn-system-item").first().click();
                     $list.hide().prev().show();
                     var newFn = FunctionUtil.getSystemFnOrder(cache.systemFunction);
-                    new FileService().writeFile('system_functions.json', JSON.stringify(newFn));
+                    new FileService().writeFile('/profiles/system_functions.json', JSON.stringify(newFn));
                     $(".fn-container").slideDown('fast');
                     $(".fn-types .fn-types-item").first().click();
                 } else {

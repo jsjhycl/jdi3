@@ -114,7 +114,8 @@ function NewEventsModal($modal, $elemts) {
                     </td>
                     <td>
                         ${ that.renderSaveHTML( event.subscribe.saveHTML ) }
-                        ${that.renderImportExcel(event.subscribe.importExcel)}
+                        ${ that.renderImportExcel(event.subscribe.importExcel)}
+                        ${ that.renderKeySave(event.subscribe.keySave)}
                         ${ that.renderNextProcess( event.subscribe.nextProcess ) }
                         ${ that.renderNotify( event.subscribe.notify ) }
                         ${ that.renderTimeQuery(event.subscribe.timeQuery)}
@@ -330,6 +331,15 @@ function NewEventsModal($modal, $elemts) {
             </div>`
         return str;
     }
+    this.renderKeySave = function(key){
+         let that = this,
+             str = "";
+         str = `<div class="condition keySave" ${key ? "" : 'style="display:none"' }>
+                <span>指定主键</span>
+                <input type="text" class="form-control" data-wrap="true" style="display:inline-block;margin-left:10px;width:500px" value='${key||""}' data-category="linkHtml" data-save="keySave">
+            </div>`
+         return str;
+    },
     this.renderTypeOfValue = function (typekey, type, selected) {
         let defaultType = {
                 name: type,
@@ -380,6 +390,8 @@ function NewEventsModal($modal, $elemts) {
         if (subscribe.executeFn) checkArr.push("executeFn");
         if (subscribe.importExcel) checkArr.push("importExcel");
         if (subscribe.importDb) checkArr.push("importDb");
+        if (subscribe.keySave) checkArr.push("keySave");
+
         subscribe.query && subscribe.query.forEach(item => {
             checkArr.push(item)
         })
@@ -999,6 +1011,7 @@ NewEventsModal.prototype = {
             id = $("#property_id").val();
         if (!id) return;
         let result = [];
+
         that.$modal.find(".eventsTr").each(function (index) {
             let trigger_type = $(this).find('[data-key="trigger_type"]:checked').val(),
                 trigger_key = [id, trigger_type, "SPP" + index].join("_"),
@@ -1017,6 +1030,7 @@ NewEventsModal.prototype = {
                 executeFn = null,
                 nextProcess = null,
                 importExcel = null,
+                keySave = null,
                 importDb = null;
             if (that.judgeCheckMehods("commonQuery", $(this).find(".triggerMethods:checked"))) {
                 query = []
@@ -1024,6 +1038,9 @@ NewEventsModal.prototype = {
             }
             if (that.judgeCheckMehods("importExcel", $(this).find(".triggerMethods:checked"))) {
                 importExcel = $(this).find('[data-save="importExcel"]').val()
+            }
+            if (that.judgeCheckMehods("keySave", $(this).find(".triggerMethods:checked"))) {
+                keySave = $(this).find('[data-save="keySave"]').val()
             }
             if (that.judgeCheckMehods("tableQuery", $(this).find(".triggerMethods:checked"))) {
                 query = []
@@ -1089,7 +1106,8 @@ NewEventsModal.prototype = {
                         nextProcess: nextProcess,
                         executeFn: executeFn,
                         importExcel: importExcel,
-                        importDb: importDb
+                        importDb: importDb,
+                        keySave: keySave
                     }
                 })
             }
@@ -1143,7 +1161,7 @@ NewEventsModal.prototype = {
         that.$modal.on("click" + that.NAME_SPACE, ".methods input[type='checkbox']", function () {
             let value = $(this).val(),
                 check = $(this).prop("checked");
-            let arr = ["save", "upload", "login", "checkAll", "cancelAll", "changeProperty", "copySend", "notify", "saveHTML", "linkHtml", "nextProcess", "executeFn", "importExcel", "importDb"];
+            let arr = ["save", "upload", "login", "checkAll", "cancelAll", "changeProperty", "copySend", "notify", "saveHTML", "linkHtml", "nextProcess", "executeFn", "importExcel", "importDb","keySave"];
             if (!arr.includes(value)) return;
             $target = $(this).parents("tr").find(`.${value}`)
             check ? $target.show() : $target.hide()
@@ -1180,7 +1198,7 @@ NewEventsModal.prototype = {
         })
         //批量设置抄送
         that.$modal.on("click" + that.NAME_SPACE, '.autoCopySend', function () {
-            
+
             let $tr = $(this).parents("tr").eq(1),
                 $table = $(this).parents("table").eq(0),
                 dbName = $tr.find('[data-change="dbName"]').val(),
@@ -1196,16 +1214,16 @@ NewEventsModal.prototype = {
                 }
             })
             if (dbName && table) {
-               AllDbName[dbName][table]['tableDetail'].forEach(item=>{
-                   fieldsId.push(item.id)
-               })
+                AllDbName[dbName][table]['tableDetail'].forEach(item => {
+                    fieldsId.push(item.id)
+                })
             }
             elementId.forEach((id) => {
-                if(fieldsId.includes(id)){
+                if (fieldsId.includes(id)) {
                     var obj = {
                         "field": id,
                         "fieldSplit": 0,
-                        "element": "{"+id+"}",
+                        "element": "{" + id + "}",
                         "value": {
                             "type": "Element",
                             "operator": "="
@@ -1215,8 +1233,8 @@ NewEventsModal.prototype = {
                 }
 
             })
-           var html =  that.renderCopySendConfig(dbName,table,fields)
-           $table.find("tbody").empty().append(html)
+            var html = that.renderCopySendConfig(dbName, table, fields)
+            $table.find("tbody").empty().append(html)
 
         })
         that.$modal.on("change" + that.NAME_SPACE, '[data-change="value_type"]', function () {

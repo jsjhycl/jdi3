@@ -29,6 +29,10 @@ var ConditionsHelper = (function () {
                 {
                     name: "小于等于",
                     value: "<="
+                },
+                {
+                    name: "存在",
+                    value: "in"
                 }
             ];
             if (type === "String") {
@@ -285,6 +289,10 @@ var ConditionsHelper = (function () {
             {
                 name: "变量",
                 value: "outerSideVariable"
+            },
+            {
+                name: "动态数据",
+                value: "notSure"
             }
         ],
         copySendConfig: [{

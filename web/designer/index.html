@@ -47,7 +47,7 @@
                 <ul class="dropdown-menu">
                     <li><a id="openSetDB" href="#setDbDesignerModal" data-first-filter="db">数据库设计器</a></li>
                     <li><a data-toggle="modal" href="#dbDesignerModal" data-first-filter="db">本表数据配置</a></li>
-                    <li><a data-toggle="modal" href="#dbApplyModal">数据库应用</a></li>
+                    <li><a data-toggle="modal" href="#dbApplyModal" data-first-filter="db">数据库应用</a></li>
                     <li><a href="javascript:void(0)" id="globalExprMethods" data-first-filter="db">全局函数配置</a></li>
                     <li><a data-toggle="modal" href="#change_category_moda">分类选项编辑</a></li>
                     <li><a data-toggle="modal" href="#change_router_modal">路由配置编辑</a></li>
@@ -1022,6 +1022,19 @@
                         <select class="form-control" data-key="modelId" data-type="String"></select>
                     </div>
                     <div class="form-group">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <label class="control-label">字段分割符：</label>
+                                <input type="text" class="form-control" data-key="fieldSplit" data-type="String" value=")">
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="control-label">字段选取位置(从0开始)：</label>
+                                <input type="text" class="form-control" data-key="fieldIndex" data-type="String">
+                            </div>
+                        </div>
+                            
+                        </div>
+                    <div class="form-group">
                         <label class="control-label">重复字段（根据查询字段的值，重复渲染，并将值设为1）：</label>
                         <input type="checkbox" data-key="repeat" data-type="Boolean" />
                     </div>
@@ -1176,40 +1189,43 @@
                 </header>
                 <section class="modal-body">
                     <form class="form-inline">
-                        <div class="form-group col-lg-3" style="margin-bottom: 5px">
-                            <label class="control-label col-lg-3">IP地址</label>
-                            <input class="form-control col-lg-3" type="text" data-type="IPArea">
+                        <div class="form-group" style="margin-bottom: 5px">
+                            <label class="fromlable">表名</label>
+                            <input class="form-control " type="text" disabled="true" data-type="tableName">
                         </div>
-                        <div class="form-group col-lg-3" style="margin-bottom: 5px">
-                            <label class="control-label col-lg-3">数据库名</label>
-                            <input class="form-control col-lg-3" type="text" data-type="dbName">
+                        <div class="form-group" style="margin-bottom: 5px">
+                            <label class="fromlable">表描述</label>
+                            <input class="form-control " type="text" data-type="description">
                         </div>
-                        <div class="form-group col-lg-3" style="margin-bottom: 5px">
-                            <label class="control-label col-lg-3">数据表名</label>
-                            <input class="form-control col-lg-3" type="text" data-type="tableName">
+                        <div class="form-group" style="margin-bottom: 5px">
+                            <label class="fromlable">IP地址</label>
+                            <input class="form-control" type="text" data-type="IPArea">
                         </div>
-                        <div class="form-group col-lg-3" style="margin-bottom: 5px">
-                            <label class="control-label col-lg-3">表描述</label>
-                            <input class="form-control  col-lg-3" type="text" data-type="description">
+                        <div class="form-group" style="margin-bottom: 5px">
+                            <label class="fromlable">数据库名</label>
+                            <input class="form-control" type="text" data-type="dbName">
                         </div>
-                        <div class="form-group col-lg-3" style="margin-bottom: 5px">
-                            <label class="control-label col-lg-3">端口</label>
-                            <input class="form-control  col-lg-3" type="text" data-type="port">
+                        <div class="form-group" style="margin-bottom: 5px">
+                            <label class="fromlable">映射表名</label>
+                            <input class="form-control" type="text" data-type="mapTableName">
                         </div>
-                        <div class="form-group col-lg-3" style="margin-bottom: 5px">
-                            <label class="control-label col-lg-3">用户名</label>
-                            <input class="form-control  col-lg-3" type="text" data-type="userName">
+                        <div class="form-group" style="margin-bottom: 5px">
+                            <label class="fromlable">端口</label>
+                            <input class="form-control " type="text" data-type="port">
                         </div>
-                        <div class="form-group col-lg-3" style="margin-bottom: 5px">
-                            <label class="control-label col-lg-3">密码</label>
-                            <input class="form-control  col-lg-3" type="text" data-type="passWord">
+                        <div class="form-group" style="margin-bottom: 5px">
+                            <label class="fromlable">用户名</label>
+                            <input class="form-control " type="text" data-type="userName">
                         </div>
-                        <div class="form-group col-lg-3" style="margin-bottom: 5px">
-                            <label class="control-label col-lg-3">库类型</label>
-                            <input class="form-control  col-lg-3" type="text" data-type="dbType">
+                        <div class="form-group" style="margin-bottom: 5px">
+                            <label class="fromlable">密码</label>
+                            <input class="form-control " type="text" data-type="passWord">
                         </div>
-
-                        <button class="btn queryDb btn-sm" style="float: right;">查询</button>
+                        <div class="form-group" style="margin-bottom: 5px">
+                            <label class="fromlable">库类型</label>
+                            <input class="form-control " type="text" data-type="dbType">
+                        </div>
+                        <button class="btn queryDb btn-sm" style="float: right;">查询</button>        
                     </form>
                     <div>
                         <table class="table table-bordered table-striped">

@@ -10,7 +10,7 @@
         this.outerSideVariable = null;
         this.globalVariable = null;
 
-        this._renderVariableSelect = function ($replace, varibale, queryCondition) {
+        this._renderVariableSelect = function ($replace, varibale, queryCondition, multiple) {
             let $select = $('<select data-key="value" class="form-control" style="width: 83%"></select>')
             localOptions = this.outerSideVariable && this.outerSideVariable.map(i => {
                     return {

@@ -1205,7 +1205,7 @@
                     var convert = $(this).parent().prev().data('convert'),
                         isCheckbox = $(this).is(':checkbox'),
                         val = !isCheckbox ? $(this).val() : $(this).is(':checked');
-                    if (/^\{(.+?)\}/.test(val)) {
+                    if (/^\{(.+?)\}$/.test(val)) {
                         return val;
                     } else if (convert === 'Number') {
                         return Number(val);
@@ -1236,7 +1236,7 @@
                         var convert = $(this).parent().prev().data('convert'),
                             isCheckbox = $(this).is(':checkbox'),
                             val = !isCheckbox ? $(this).val() : $(this).is(':checked');
-                        if (/^\{[A-Z]{4}[^}]*\}/mg.test(val)) {
+                        if (/^\{[A-Z]{4}[^}]*\}$/mg.test(val)) {
                             return val;
                         } else if (convert === 'Number') {
                             return Number(val);

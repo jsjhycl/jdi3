@@ -13,6 +13,8 @@ function ArchivePathModal($modal, $element) {
     this.$archiveModelId = this.$modalBody.find('[data-key="modelId"]');//获取表单编号
     this.$archiveRepeat = this.$modalBody.find('[data-key="repeat"]');
     this.$archiveIncrease = this.$modalBody.find('[data-key="increase"]');
+    this.$archiveFieldSplitor = this.$modalBody.find('[data-key="fieldSplit"]');
+    this.$archiveFieldIndex = this.$modalBody.find('[data-key="fieldIndex"]');
 
     const TYPE_CONFIG = [//定义type类型
         {name: "通用查询", value: 0},
@@ -38,6 +40,8 @@ function ArchivePathModal($modal, $element) {
         Common.fillSelect(that.$archiveDbName,{name:"请选择数据库",value:""},null,null,null,true)//清空存档的数据库为空
         that.$archiveRepeat.prop('checked', false);
         that.$archiveIncrease.prop('checked', false);
+        that.$archiveFieldSplitor.val("")
+        that.$archiveFieldIndex.val("")
     };
 }
 
@@ -74,6 +78,8 @@ ArchivePathModal.prototype = {
             Common.fillSelect(that.$archiveField, {name:"请选择查询字段",value:""},fieldsoptions,data.field,true)//填充存档字段下拉选项
             that.$archiveRepeat.prop('checked', !!data.repeat)
             that.$archiveIncrease.prop('checked', !!data.increase)
+            that.$archiveFieldSplitor.val(data.fieldSplit)
+            that.$archiveFieldIndex.val(data.fieldIndex)
                             
         } else {
             //填充数据库下拉框
@@ -83,6 +89,8 @@ ArchivePathModal.prototype = {
             Common.fillSelect(that.$archiveField,{name:"请选择查询字段",value:""},null,null,true)//填充存档字段下拉选项
             that.$archiveRepeat.prop('checked', false);
             that.$archiveIncrease.prop('checked', false);
+            that.$archiveFieldSplitor.val("");
+            that.$archiveFieldIndex.val("");
         }
     },
     saveData: function () {

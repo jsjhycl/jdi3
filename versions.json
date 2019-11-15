@@ -1,0 +1,11 @@
+{
+  "name":"jditest",
+  "version":"1.1.1",
+  "list":[
+    {
+    "version":"1.1.1",
+    "files":["temp.html","test.html"],
+    "detail":["1、测试","2、测试行"]
+    }
+  ]
+}

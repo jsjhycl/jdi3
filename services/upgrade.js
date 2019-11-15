@@ -17,7 +17,7 @@ function requestPromise(url) {
     });
 }
 exports.requestPromise = requestPromise;
-const gitUrl = 'https://raw.githubusercontent.com/jsjhycl/jdi3/official/', localPath = '', //'./resources/app'
+const gitUrl = 'https://raw.githubusercontent.com/jsjhycl/jdi3/official/', localPath = './resources/app', //'./resources/app'
 versionPath = 'versions.json';
 /* 获取版本信息是否需要升级 */
 async function getVersion() {

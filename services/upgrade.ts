@@ -14,7 +14,7 @@ function requestPromise(url: string) {
 }
 
 const gitUrl: string = 'https://raw.githubusercontent.com/jsjhycl/jdi3/official/',
-    localPath: string = '',//'./resources/app'
+    localPath: string = './resources/app',//'./resources/app'
     versionPath: string = 'versions.json';
 
 /* 获取版本信息是否需要升级 */

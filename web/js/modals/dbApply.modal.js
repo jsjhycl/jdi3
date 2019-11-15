@@ -6,7 +6,8 @@ function DbApplyModal($modal) {
 
     this.$IPArea = this.$modalBody.find('[data-type="IPArea"]')
     this.$dbName = this.$modalBody.find('[data-type="dbName"]')
-    this.$tableName = this.$modalBody.find('[data-type="tableName"]')
+    this.$mapTableName = this.$modalBody.find('[data-type="mapTableName"]')
+    this.$table = this.$modalBody.find('[data-type="tableName"]')
     this.$tableDesc = this.$modalBody.find('[data-type="description"]')
     this.$port = this.$modalBody.find('[data-type="port"]')
     this.$userName = this.$modalBody.find('[data-type="userName"]')
@@ -16,14 +17,17 @@ function DbApplyModal($modal) {
 
     this.$queryDb = this.$modalBody.find('.queryDb')
     this.clearData = function () {
-        this.$IPArea.val()
-        this.$dbName.val()
-        this.$tableName.val()
-        this.$port.val()
-        this.$userName.val()
-        this.$password.val()
-        this.$dbType.val()
+        this.$table.val($("#workspace").attr("data-id"))
+        this.$tableDesc.val($("#workspace").attr("data-name"))
+        this.$IPArea.val("")
+        this.$dbName.val("")
+        this.$mapTableName.val("")
+        this.$port.val("")
+        this.$userName.val("")
+        this.$password.val("")
+        this.$dbType.val("")
         this.$dbApply.empty()
+         // 172.18.184.9 KAOQIN CHECKINOUT 1433 sa Cepg2016 sqlserver
     }
 
     this.dataArr = ["id", "type", "maxLength", "cname", "mapId"]
@@ -71,7 +75,8 @@ DbApplyModal.prototype = {
             arr.push(obj)
         })
         var database = that.$dbName.val(),
-            table = that.$tableName.val(),
+            table = that.$table.val(),
+            mapTable = that.$mapTableName.val(),
             description = that.$tableDesc.val(),
             ip = that.$IPArea.val(),
             port = that.$port.val(),
@@ -92,12 +97,12 @@ DbApplyModal.prototype = {
                 port: port,
                 userName: userName,
                 password: password,
-                dbtype: dbtype
+                dbtype: dbtype,
+                mapTable:mapTable
             },
             columns: arr
         }
-        console.log(arr)
-
+        console.log(postData)
         new Service().createTable(postData).then(res => {
             console.log(res)
         })
@@ -109,17 +114,19 @@ DbApplyModal.prototype = {
     },
     bindEvents: function () {
         var that = this;
+        //获取数据库结构
         that.$queryDb.on("click" + that.NAME_SPACE, function () {
             event.preventDefault()
             var IPArea = that.$IPArea.val(),
                 dbName = that.$dbName.val(),
-                tableName = that.$tableName.val(),
+                mapTableName = that.$mapTableName.val(),
                 port = that.$port.val(),
                 userName = that.$userName.val(),
                 password = that.$password.val(),
                 dbType = that.$dbType.val();
             // 172.18.184.9 KAOQIN CHECKINOUT 1433 sa Cepg2016 sqlserver
-            if (!IPArea || !dbName || !tableName || !port || !userName || !password || !dbType) return alert("请填写完整的数据");
+            console.log(IPArea,dbName,mapTableName,port,userName,password,dbType)
+            if (!IPArea || !dbName || !mapTableName || !port || !userName || !password || !dbType) return alert("请填写完整的数据");
             let postData = {
                 type: dbType,
                 option: {
@@ -127,7 +134,7 @@ DbApplyModal.prototype = {
                     password: password,
                     server: IPArea,
                     database: dbName,
-                    table: tableName,
+                    table: mapTableName,
                     port: Number(port)
                 }
             }

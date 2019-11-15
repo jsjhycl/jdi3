@@ -1243,3 +1243,7 @@ li {
 #publishModal tr td .btn:not(:first-child){
     margin-left: 10px;
 }
+#dbApplyModal .fromlable {
+    width: 60px;
+    text-align: center;
+}

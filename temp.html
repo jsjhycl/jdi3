@@ -1,0 +1,106 @@
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>系统升级</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: apple-system, SF UI Text, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;
+            font-size: 14px;
+            line-height: 1.42857143;
+            color: #333;
+            background-color: #fff;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+        }
+
+        .header .title {
+            display: inline-block;
+            margin-top: 3px;
+            padding: 5px 10px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .header .close {
+            float: right;
+            padding: 0 10px;
+            font-size: 1.2em;
+            line-height: 25px;
+            cursor: pointer;
+        }
+
+        .header .close:hover {
+            background-color: red;
+            color: white;
+        }
+
+        .contain {
+            margin-top: 30px;
+            margin-bottom: 40px;
+            padding: 5px 10px;
+        }
+
+        .contain-title {
+            margin: 5px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .contain-title .version {
+            display: inline-block;
+            margin-right: 15px;
+            font-size: 1.1em;
+            font-weight: normal;
+        }
+
+        .remote {
+            color: orangered;
+        }
+
+        .contain-body {
+            margin: 5px;
+            color: #999;
+        }
+
+        .contain-body p {
+            line-height: 20px;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+        }
+
+        #upgrade {
+            float: right;
+            padding: 8px 20px;
+            border: 0;
+            background-color: RGB(0, 165, 224);
+            color: white;
+            border-radius: 3px;
+            font-size: 1.1em;
+            margin: 5px 10px;
+        }
+
+        .upgrade-file {
+            display: none;
+            margin-top: 15px;
+            margin-left: 10px;
+            font-size: 12px;
+            color: gray;
+        }
+    </style>

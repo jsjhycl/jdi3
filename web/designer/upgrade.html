@@ -158,7 +158,7 @@
         function upgrade() {
             $("#upgrade").click(async function() {
                 try {
-                    $("#upgrade").val("升级中...").css({ cursor: "wait" }).attr("disabled", true);
+                    $("#upgrade").hide();
                     var result = await upgradeApi.upgrade();
                     if (result.status == 0) {
                         var files = result.result;
@@ -167,17 +167,15 @@
                             $(".upgrade-file span").text(files[i]);
                             var uresult = await upgradeApi.remote2local(files[i]);
                             if (uresult.status != 0) {
-                                window.close();
-                                alert("下载文件失败：" + uresult.result);
+                                $(".upgrade-file").css({ color: "red" }).text("下载文件失败：" + uresult.result);
                                 break;
                             }
                         }
-                        window.close();
-                        alert("升级成功，请重启客户端");
+                        $(".upgrade-file").css({ color: "green" }).text("升级成功，请重启客户端");
                     } else
-                        alert(result.result);
+                        $(".upgrade-file").css({ color: "red" }).text(result.result);
                 } catch (err) {
-                    alert(err.toString());
+                    $(".upgrade-file").css({ color: "red" }).text(err.toString());
                 }
             })
         }

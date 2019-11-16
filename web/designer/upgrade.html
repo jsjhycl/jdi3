@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>系统升级</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: apple-system, SF UI Text, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;
+            font-size: 14px;
+            line-height: 1.42857143;
+            color: #333;
+            background-color: #fff;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+        }
+
+        .header .title {
+            display: inline-block;
+            margin-top: 3px;
+            padding: 5px 10px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .header .close {
+            float: right;
+            padding: 0 10px;
+            font-size: 1.2em;
+            line-height: 25px;
+            cursor: pointer;
+        }
+
+        .header .close:hover {
+            background-color: red;
+            color: white;
+        }
+
+        .contain {
+            margin-top: 30px;
+            margin-bottom: 40px;
+            padding: 5px 10px;
+        }
+
+        .contain-title {
+            margin: 5px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .contain-title .version {
+            display: inline-block;
+            margin-right: 15px;
+            font-size: 1.1em;
+            font-weight: normal;
+        }
+
+        .remote {
+            color: orangered;
+        }
+
+        .contain-body {
+            margin: 5px;
+            color: #999;
+        }
+
+        .contain-body p {
+            line-height: 20px;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+        }
+
+        #upgrade {
+            float: right;
+            padding: 8px 20px;
+            border: 0;
+            background-color: RGB(0, 165, 224);
+            color: white;
+            border-radius: 3px;
+            font-size: 1.1em;
+            margin: 5px 10px;
+            cursor: pointer;
+        }
+
+        .upgrade-file {
+            display: none;
+            margin-top: 15px;
+            margin-left: 10px;
+            font-size: 12px;
+            color: gray;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <p class="title">新版功能</p>
+        <p class="close">&times;</p>
+    </div>
+    <div class="contain">
+        <div class="contain-title">
+            已装：<span class="version local"></span>升级：<span class="version remote"></span>
+        </div>
+        <div class="contain-body"></div>
+    </div>
+    <div class="footer">
+        <p class="upgrade-file"><span></span>获取中...</p>
+        <button id="upgrade">确定</button>
+    </div>
+
+    <script>
+        window.$ = window.jQuery = require("jquery");
+        window.upgradeApi = require("../../services/upgrade.js");
+    </script>
+    <script>
+        $(function() {
+            newVersionInfo();
+            upgrade();
+            windowClose();
+        })
+
+        // 填充版本信息
+        function newVersionInfo() {
+            upgradeApi.getVersion().then(data => {
+                if (data.status == 0 && data.result) {
+                    data = data.result;
+                    $(".local").text(data.localVersion);
+                    $(".remote").text(data.remoteVersion);
+                    var html = '';
+                    data.newVersion.detail.forEach(v => {
+                        html += `<p>${v}</p>`;
+                    })
+                    $(".contain-body").html(html);
+                }
+            })
+        }
+
+        // 升级文件
+        function upgrade() {
+            $("#upgrade").click(async function() {
+                try {
+                    $("#upgrade").hide();
+                    var result = await upgradeApi.upgrade();
+                    if (result.status == 0) {
+                        var files = result.result;
+                        for (var i = 0; i < files.length; i++) {
+                            $(".upgrade-file").css({ display: "inline-block" });
+                            $(".upgrade-file span").text(files[i]);
+                            var uresult = await upgradeApi.remote2local(files[i]);
+                            if (uresult.status != 0) {
+                                $(".upgrade-file").css({ color: "red" }).text("下载文件失败：" + uresult.result);
+                                break;
+                            }
+                        }
+                        $(".upgrade-file").css({ color: "green" }).text("升级成功，请重启客户端");
+                    } else
+                        $(".upgrade-file").css({ color: "red" }).text(result.result);
+                } catch (err) {
+                    $(".upgrade-file").css({ color: "red" }).text(err.toString());
+                }
+            })
+        }
+
+        // 关闭窗口
+        function windowClose() {
+            $(".close").click(function() {
+                window.close();
+            })
+        }
+    </script>
+</body>
+
+</html>

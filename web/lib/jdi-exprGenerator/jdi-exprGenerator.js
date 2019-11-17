@@ -279,8 +279,8 @@
                 });
                 return fns;
             },
-            getDbData: function () {
-                dbData = new BuildTableJson().get()
+            getDbData: async function () {
+                dbData = await new BuildTableJson().get()
                 // new FileService().readFile("/profiles/table.json", 'utf-8', function (rst) {
                 //     dbData = rst;
                 // });
@@ -348,6 +348,8 @@
                         })
                     })
                 }
+
+                console.log(renderFields)
 
                 let globalData = await new FileService().readFile('./profiles/global.json'),
                     global;
@@ -1380,9 +1382,13 @@
                     $content = $('.eg:visible .query-config-content'),
                     val = $input.val(),
                     data = $this.parents('tr').prev().find('[data-type="arg"]').val();
+
+                
                 try {
                     data = JSON.parse(data);
                 } catch (err) {};
+
+                console.log($input, data)
                 FunctionUtil.renderContactTable(data, $content, $input)
             });
 

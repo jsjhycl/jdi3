@@ -184,7 +184,6 @@ SetDbDesignerModal.prototype = {
         })
     },
     saveData: async function () {
-        console.log(111)
         var that = this;
         that.$modal.hide().modal('hide');
         renderQrModal({

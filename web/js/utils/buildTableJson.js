@@ -141,12 +141,18 @@ BuildTableJson.prototype = {
                     "cname": "表注解"
                 }]
             }
-
         }
         return tablejson
     },
     getFields: function (table) {
+        
         var fields = [];
+        if(!table["备用1"]){
+            fields.push({
+                "id":"ID",
+                "cname":"主键ID不可修改"
+            })
+        }
         for (key in table) {
             if (table[key] && key.includes("A")) {
                 try {

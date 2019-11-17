@@ -21,15 +21,15 @@ function DbDesignerModal($modal) {
             width: "100%"
         })
     }
-    this.setData = function(rowIndex,columnIndex,key,type){
+    this.setData = function (rowIndex, columnIndex, key, type) {
         var that = this;
         var $tbody = that.$db.find(".dbdesigner tbody");
         var $tr = $tbody.find("tr")
-        $tr.each(function(index,item){
-            if(index>columnIndex){
-                if(!$(this).find('[data-key="isSave"]').is(":checked")){                 
+        $tr.each(function (index, item) {
+            if (index > columnIndex) {
+                if (!$(this).find('[data-key="isSave"]').is(":checked")) {
                     $(this).find(`td:eq(${rowIndex}) select`).val(key).trigger("change")
-                    if(type=="field"){
+                    if (type == "field") {
                         var value = $(this).find('[data-key="id"]').val()
                         $(this).find(`td:eq(${rowIndex}) select`).val(value).trigger("change")
                     }
@@ -154,6 +154,14 @@ DbDesignerModal.prototype = {
                         return '<input class="form-control" data-key="desc" type="text" style="width:90px" value="' + value + '">';
                     }
                 }, {
+                    name:"fieldSlice",
+                    text:"字段截取",
+                    key: "db.fieldSlice",
+                    group:true,
+                    template:function(value){
+                        return '<input class="form-control" data-key="fieldSlice" type="text" style="width:90px" value="' + value + '">';
+                    }
+                }, {
                     name: "operation",
                     text: "操作",
                     key: "db.op",
@@ -178,6 +186,7 @@ DbDesignerModal.prototype = {
     saveData: function () {
         var that = this,
             data = that.$dbDesigner.dbDesigner("getData"); //调用getData方法
+            console.log(data)
         if (!Array.isArray(data)) return alert("无效的数据类型！"); //如果data不是数组退出函数提示
         var property = new Property();
         data.forEach(item => {
@@ -192,6 +201,7 @@ DbDesignerModal.prototype = {
                 field: item.selectField,
                 fieldSplit: item.selectFieldSplit, //新增加
                 desc: item.desc,
+                fieldSlice: item.fieldSlice
             })
         })
     },
@@ -265,7 +275,6 @@ DbDesignerModal.prototype = {
             $select.trigger("chosen:updated")
             var rowIndex = $(this).parent('td').index(),
                 columnIndex = $(this).parents('tr').index();
-
             // that.setData(rowIndex,columnIndex,key)
         })
         //切换字段

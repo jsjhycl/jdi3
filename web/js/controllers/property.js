@@ -278,8 +278,9 @@ Property.prototype = {
                         if (table) { //如果表存在
                             var field = db.field, //字段名称
                                 fieldSplit = db.fieldSplit, //字段分段
+                                dbName = db.dbName,
+                                fieldSlice = db.fieldSlice,
                                 desc = db.desc; //字段描述
-                            dbName = db.dbName
                             if (result.hasOwnProperty(table)) { //result对象中是存在table这个属性
                                 var fields = result[table]["fields"];
                                 if (!Array.isArray(fields)) { //如果fields不是一个数组
@@ -291,7 +292,8 @@ Property.prototype = {
                                     name: field,
                                     desc: desc,
                                     type: "String",
-                                    fieldSplit: fieldSplit
+                                    fieldSplit: fieldSplit,
+                                    fieldSlice: fieldSlice
                                 }); //向fields中添加一条对象
                             } else { //reslut中不存在这个table
                                 result[table] = { //新增加一个table属性
@@ -304,7 +306,8 @@ Property.prototype = {
                                     name: field,
                                     desc: desc,
                                     type: "String",
-                                    fieldSplit: fieldSplit
+                                    fieldSplit: fieldSplit,
+                                    fieldSlice: fieldSlice
                                 }); //向fields中添加一条对象
                             }
                         }

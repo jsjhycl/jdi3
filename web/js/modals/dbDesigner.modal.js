@@ -134,7 +134,7 @@ function DbDesignerModal($modal) {
             $target = that.$keyInfo.find("tbody tr");
         $target.each((trIndx, trEle) => {
             var obj = {};
-            $(trEle).find("input").each((index, ele) => {
+            $(trEle).find("select").each((index, ele) => {
                 var type = $(ele).attr('data-save');
                 if ($(ele).val()) {
                     obj[type] = $(ele).val()
@@ -156,7 +156,7 @@ DbDesignerModal.prototype = {
         var dbList = await new BuildTableJson().get(),
             dbNames = [],
             property = new Property(),
-            savekeyInfo = property.getValue("saveInfo", "keyInfo"),
+            savekeyInfo = property.getValue("BODY", "keyInfo"),
             html = "";
         that.AllDbName = dbList;
         console.log(savekeyInfo)
@@ -314,7 +314,8 @@ DbDesignerModal.prototype = {
         data.forEach(item => {
             property.setValue(item.id, "db", [])
         })
-        property.setValue("saveInfo", "keyInfo", savekeyInfo)
+        // property.setValue("saveInfo", "keyInfo", savekeyInfo)
+        GLOBAL_PROPERTY.BODY.keyInfo = savekeyInfo
         data.forEach(function (item) {
             if (!item.isSave) return true;
             var db = {

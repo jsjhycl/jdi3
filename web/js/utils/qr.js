@@ -56,14 +56,17 @@ function renderQrModal(data, callBack) {
     }
 
     function _bindEvent() {
-        var nameSpace = '.qrModal',
-            $qrModal = $('.qr-modal');
+        var nameSpace = '.qrModal';
 
         $(document).off(nameSpace);
         $(document).on('click' + nameSpace, function (event) {
-            _cancel = true;
-            event.stopPropagation();
-            $(event.target).hasClass('qr-modal') && $qrModal.remove();
+            if ($(event.target).hasClass('qr-modal')) {
+                event.stopPropagation();
+                clearTimeout(qrTimer);
+                uid = null;
+                _cancel = true;
+                $('.qr-modal').remove();
+            }
         });
     }
 
@@ -74,7 +77,7 @@ function renderQrModal(data, callBack) {
             if (_cancel) return clearTimeout(qrTimer);
 
             var result = await new Service().canSave(uid)
-            // clearTimeout(timer);
+
             if (result) {
                     
                 // 扫描成功

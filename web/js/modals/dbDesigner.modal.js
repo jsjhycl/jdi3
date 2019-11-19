@@ -49,6 +49,12 @@ function DbDesignerModal($modal) {
         //     <td><input type="text" class="form-control" data-save="key" value="${key||""}"></td>
         //     <td><input type="text" class="form-control" data-save="value" value="${value||""}"></td>
         //     <td class="text-center"><span class="del">X</span></td>
+        // <select class="form-control chosen" data-save="dbName" value="${dbName||""}">
+        //                         ${that.renderOptions('dbName',item)}
+        //                     </select>
+        //  <select class="form-control chosen" data-save="tableName" value="${tableName||""}">
+        //                         ${that.renderOptions('table',item)}
+        //                     </select>
         // </tr>`;
         var item = {
             dbName: dbName,
@@ -57,26 +63,25 @@ function DbDesignerModal($modal) {
         }
         var html = `<tr>
                         <td>
-                            <select class="form-control chosen" data-save="dbName" value="${dbName||""}">
+                            <select class="form-control" data-save="dbName" disabled value="${dbName||""}">
                                 ${that.renderOptions('dbName',item)}
                             </select>
                         </td>
                         <td>
-                            <select class="form-control chosen" data-save="tableName" value="${tableName||""}">
+                          <select class="form-control" data-save="tableName" disabled value="${tableName||""}">
                                 ${that.renderOptions('table',item)}
                             </select>
                         </td>
                         <td>
-                            <select class="form-control chosen" data-save="key" value="${key||""}">
+                            <select class="form-control" data-save="key" value="${key||""}">
                                 ${that.renderOptions('field',item)}
                             </select>
                         </td>
                         <td>
-                            <select class="form-control chosen" data-save="value" value="${value||""}">
+                            <select class="form-control" data-save="value" value="${value||""}">
                                 ${that.renderValueSelect(value)}
                             </select>
                         </td>
-                        <td class="text-center"><span class="del">X</span></td >
                     </tr>`;
         isAppend && appendTo.append(html)
         return html
@@ -110,19 +115,19 @@ function DbDesignerModal($modal) {
                 obj.value = id;
             data.push(obj)
         })
-        return that.renderOptionsByData(data,selected)
+        return that.renderOptionsByData(data, selected)
 
     }
 
-    this.renderOptionsByData = function (data,select) {
+    this.renderOptionsByData = function (data, select) {
         var html = "";
-        if(!select){
+        if (!select) {
 
             data.forEach(function (item) {
                 html += `<option value="${item.value}" >${item.name} ${item.value ? "("+item.value+")" : ""}</option>`
             })
-        }else{
-            data.forEach(function(item){
+        } else {
+            data.forEach(function (item) {
                 html += `<option value="${item.value}" ${ select == item.value ? "selected" : ""}>${item.name} ${item.value ? "("+item.value+")" : ""}</option>`
             })
         }
@@ -145,6 +150,68 @@ function DbDesignerModal($modal) {
             }
         })
         return result;
+    }
+    //判断是不是有新加的表
+    this.judgeNewTable = function () {
+        var that = this,
+            data = that.$dbDesigner.dbDesigner("getData"),
+            saveInfo = [],
+            keyInfo = that.getKeyInfo();
+        //得到指定的数组
+        data.forEach(item => {
+            if (item.isSave) {
+                saveInfo.push(JSON.stringify({
+                    dbName: item.dbName,
+                    tableName: item.table
+                }))
+            }
+        })
+
+        var saveData = Array.from(new Set(saveInfo)),
+            keyData = [];
+
+        keyInfo.forEach(item => {
+            var keyObj = {
+                dbName: item.dbName,
+                tableName: item.tableName
+            }
+            keyData.push(JSON.stringify(keyObj))
+        })
+        console.log(saveData, "saveData")
+        console.log(keyData, "keyData")
+
+        if (keyData.length > saveData.length) {
+            keyData.forEach((item, index) => {
+                if (!saveData.includes(item)) {
+                    that.$keyInfo.find("tbody tr").eq(index).remove()
+                }
+            })
+
+        }
+        if (keyData.length = saveData.length) {
+            keyData.forEach((item,index)=>{
+                if(!saveData.includes(item)){
+                     that.$keyInfo.find("tbody tr").eq(index).remove()
+                }
+            })
+            saveData.forEach(item => {
+                if (!keyData.includes(item)) {
+                    var obj = JSON.parse(item)
+                    that.renderKeyInfo(obj.dbName, obj.tableName, "", "", true, that.$keyInfo.find("tbody"))
+                }
+            })
+        }
+        if (saveData.length > keyData.length) {
+            saveData.forEach(item => {
+                if (!keyData.includes(item)) {
+                    var obj = JSON.parse(item)
+                    that.renderKeyInfo(obj.dbName, obj.tableName, "", "", true, that.$keyInfo.find("tbody"))
+                }
+            })
+        }
+
+
+
     }
 }
 
@@ -314,7 +381,6 @@ DbDesignerModal.prototype = {
         data.forEach(item => {
             property.setValue(item.id, "db", [])
         })
-        // property.setValue("saveInfo", "keyInfo", savekeyInfo)
         GLOBAL_PROPERTY.BODY.keyInfo = savekeyInfo
         data.forEach(function (item) {
             if (!item.isSave) return true;
@@ -384,28 +450,7 @@ DbDesignerModal.prototype = {
                 columnIndex = $(this).parents('tr').index();
             // that.setData(rowIndex,columnIndex,key)
         })
-        that.$db.on("change" + that.NAME_SPACE, "[data-save='dbName']", function (event) {
-            var dbName = $(this).val(),
-                $tableSelect = $(event.target).parents("tr").find('[data-save="tableName"]'),
-                $fieldSelect = $(event.target).parents('tr').find('[data-save="key"]'),
 
-                data = {
-                    dbName: dbName
-                },
-                options = new BuildTableJson().getOptions(that.AllDbName, "table", data);
-            options.unshift({
-                name: "请选择",
-                value: ""
-            })
-            var html = that.renderOptionsByData(options);
-            $tableSelect.val("")
-            $tableSelect.find('option').remove()
-            $fieldSelect.find('option').remove()
-            $tableSelect.append(html)
-            $tableSelect.trigger("chosen:updated")
-            $fieldSelect.trigger("chosen:updated")
-
-        })
         //切换表格时
         that.$db.on("change" + that.NAME_SPACE, "[data-key='table']", function (event) {
             var $selectDbVal = $(event.target).parents("tr").find('[data-key="dbName"]').val(),
@@ -425,31 +470,12 @@ DbDesignerModal.prototype = {
                 value: ""
             }, arrFieldsNames, null, true)
             $select.trigger("chosen:updated")
+            that.judgeNewTable()
             var rowIndex = $(this).parent('td').index(),
                 columnIndex = $(this).parents('tr').index();
             // that.setData(rowIndex,columnIndex,key)
         })
-        that.$db.on("change" + that.NAME_SPACE, '[data-save="tableName"]', function (event) {
-            var tableName = $(this).val(),
-                $dbSlecet = $(event.target).parents("tr").find('[data-save="dbName"]'),
-                dbName = $dbSlecet.val(),
-                $fieldSelect = $(event.target).parents("tr").find('[data-save="key"]'),
-                data = {
-                    dbName: dbName,
-                    table: tableName
-                },
-                options = new BuildTableJson().getOptions(that.AllDbName, 'field', data);
-            options.unshift({
-                name: "请选择",
-                value: ""
-            })
-            var html = that.renderOptionsByData(options);
-            $fieldSelect.val("")
-            $fieldSelect.find('option').remove()
-            $fieldSelect.append(html)
-            $fieldSelect.trigger("chosen:updated")
 
-        })
         //切换字段
         that.$db.on("change" + that.NAME_SPACE, "[data-key='selectField']", function (event) {
             var selectDbVal = $(event.target).parents("tr").find('[data-key="dbName"]').val(),
@@ -512,11 +538,11 @@ DbDesignerModal.prototype = {
         //添加一条新的主键配置
         that.$db.on("click" + that.NAME_SPACE, ".savekeyInfoAdd", function () {
             that.renderKeyInfo("", "", "", "", true, that.$keyInfo.find("tbody"))
-            that.bindChosen()
         })
         //移除一条新的主键配置
         that.$db.on("click" + that.NAME_SPACE, ".del", function () {
             $(this).parents('tr').remove()
+            that.judgeNewTable()
         })
         //移除一段
         that.$db.on("click" + that.NAME_SPACE, "#dbDesignerRemove", function (event) {
@@ -564,7 +590,12 @@ DbDesignerModal.prototype = {
                 $dbName.val("")
                 $table.val("")
                 $field.val("")
+                $dbName.trigger("chosen:updated")
+                $table.trigger("chosen:updated")
+                $field.trigger("chosen:updated")
             }
+            that.judgeNewTable()
+
         })
         //点击全部入库
         that.$db.on("click" + that.NAME_SPACE, "thead th .check-all", function () {

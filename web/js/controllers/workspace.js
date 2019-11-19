@@ -586,7 +586,8 @@ Workspace.prototype = {
         VERSION = version;
 
         // var db = await new FileService().readFile("./profiles/table.json", "utf-8")
-        var db = await new BuildTableJson().get()
+        var db = await new BuildTableJson().get(),
+            db = new BuildTableJson().removeData(db);
         for (dbName in db) {
             for (table in db[dbName]) {
                 if (db[dbName][table]["key"] == 0 || db[dbName][table]["key"] == 1) {

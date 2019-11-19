@@ -56,6 +56,7 @@ function SetDbDesignerModal($modal) {
             that.$dbNameList.empty().append($options)
         })
         this.localData = await new BuildTableJson().get()
+        this.localData = new BuildTableJson().removeData(this.localData)
         // new FileService().readFile("./profiles/table.json", 'utf-8').then(res => {
         //     this.localData = res;
         // var AllDbName = res || {},
@@ -82,6 +83,7 @@ SetDbDesignerModal.prototype = {
         that._clearData();
         // that.dbList = await new FileService().readFile("./profiles/table.json", 'utf-8') || {};
         that.dbList = await new BuildTableJson().get()
+        that.dbList = new BuildTableJson().removeData(that.dbList)
         await that.setDboptions()
         // console.log(new BuildTableJson().get())
         //设置默认的表名

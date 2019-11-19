@@ -106,7 +106,7 @@ function DbDesignerModal($modal) {
     }
     this.renderValueSelect = function (selected) {
         var that = this,
-            data = [];
+            data = [{name:"请选择",value:""}];
         $("#workspace").find("input").each(function () {
             var obj = {},
                 id = $(this).attr("id");
@@ -177,9 +177,6 @@ function DbDesignerModal($modal) {
             }
             keyData.push(JSON.stringify(keyObj))
         })
-        console.log(saveData, "saveData")
-        console.log(keyData, "keyData")
-
         if (keyData.length > saveData.length) {
             keyData.forEach((item, index) => {
                 if (!saveData.includes(item)) {
@@ -221,12 +218,13 @@ DbDesignerModal.prototype = {
 
         // var dbList = await new FileService().readFile("./profiles/table.json", 'utf-8') || {},
         var dbList = await new BuildTableJson().get(),
+            dbList = new BuildTableJson().removeData(dbList),//移除一些不要的数据
             dbNames = [],
             property = new Property(),
             savekeyInfo = property.getValue("BODY", "keyInfo"),
             html = "";
         that.AllDbName = dbList;
-        console.log(savekeyInfo)
+        console.log(dbList)
 
         //填充主键配置信息
         savekeyInfo && savekeyInfo.forEach(item => {

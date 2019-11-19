@@ -281,6 +281,7 @@
             },
             getDbData: async function () {
                 dbData = await new BuildTableJson().get()
+                dbData = new BuildTableJson().removeData(dbData)
                 // new FileService().readFile("/profiles/table.json", 'utf-8', function (rst) {
                 //     dbData = rst;
                 // });

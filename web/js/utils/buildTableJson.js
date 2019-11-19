@@ -173,10 +173,11 @@ BuildTableJson.prototype = {
         }
         return fields;
     },
+    //获取对应的options
     getOptions: function (dbList, ckey, data) {
-        var dbName =  data.dbName || "",
+        var dbName = data.dbName || "",
             table = data.table || "",
-            field =  data.field || "",
+            field = data.field || "",
             options = [];
         if (ckey == "dbName") {
             Object.keys(dbList).forEach(function (item) {
@@ -233,4 +234,14 @@ BuildTableJson.prototype = {
 
         return options;
     },
+    //移除newResources和newProducts的数据
+    removeData: function (data) {
+        var table = $.extend({}, data),
+            dbNames = Object.keys(table);
+        dbNames.forEach(dbName=>{
+            delete table[dbName]["newProducts"]
+            delete table[dbName]["newResources"]
+        })
+        return table;
+    }
 }

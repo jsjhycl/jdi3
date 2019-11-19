@@ -65,10 +65,9 @@
         },
         getDbData: async function () {
             // var _tableP = new FileService().readFile("./profiles/table.json"),
-            var _tableP = new BuildTableJson().get(),
-                _tableP = new BuildTableJson().removeData(_tableP),
-                _globalP = new FileService().readFile("./profiles/global.json"),
-                data = await _tableP,
+            var _tableP = await new BuildTableJson().get(),
+                _globalP = new FileService().readFile("./profiles/global.json"), 
+                data = await new BuildTableJson().removeData(_tableP),
                 global = await _globalP;
             if (DataType.isObject(data)) this.AllDbName = data;
             if (DataType.isObject(global)) {

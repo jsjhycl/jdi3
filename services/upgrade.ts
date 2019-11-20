@@ -77,10 +77,7 @@ async function remote2local(filePath: string) {
 }
 
 /* 创建文件夹 */
-function createDirectorySync(p: string, dirname?: string) {
-    dirname = dirname || path.dirname(__dirname);
-    if (!path.isAbsolute(p))
-        p = path.resolve(dirname, p);
+function createDirectorySync(p: string) {
     let parts = path.dirname(path.normalize(p)).split(path.sep);
     //@ts-ignore
     let current = path.join(parts.shift(), path.sep);

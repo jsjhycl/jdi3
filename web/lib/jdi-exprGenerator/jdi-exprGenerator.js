@@ -279,8 +279,9 @@
                 });
                 return fns;
             },
-            getDbData: function () {
-                dbData = new BuildTableJson().get()
+            getDbData: async function () {
+                dbData = await new BuildTableJson().get()
+                dbData = new BuildTableJson().removeData(dbData)
                 // new FileService().readFile("/profiles/table.json", 'utf-8', function (rst) {
                 //     dbData = rst;
                 // });
@@ -348,6 +349,8 @@
                         })
                     })
                 }
+
+                console.log(renderFields)
 
                 let globalData = await new FileService().readFile('./profiles/global.json'),
                     global;
@@ -793,7 +796,7 @@
             $eg.find(".eg-content,.eg-sidebar,.eg-toolbar,.eg-result,.eg-function,.eg-insertFn").css("z-index", zIndex + 1);
             $eg.find(".eg-close").css("z-index", zIndex + 2);
             $eg.find(".eg-toolbar").css("bottom", rHeight);
-            $eg.find(".eg-dialog").width(pageWidth * .75 + sWidth * 2);
+            $eg.find(".eg-dialog").width(pageWidth * .75 + sWidth * 2 > 551 ? pageWidth * .75 + sWidth * 2 : 551);
             $eg.fadeIn();
             if (cache.onOpen) {
                 cache.onOpen();
@@ -814,6 +817,7 @@
                 }
                 event.stopPropagation();
                 //判断是不是多选模式
+                console.log(event.data.element)
                 var cache = $.data(event.data.element, CACHE_KEY),
                     isGlobal = !!cache.global;
 
@@ -845,6 +849,7 @@
                         resultHTML = that.convertExpr(preExpress, cache.functions),
                         preFnName = $(resultHTML).text(),
                         result = decodeURI($(resultHTML).attr('data-fn_args'));
+                    console.log(cache.functions)
                     if (preFnName == "executeQuery" || preFnName == "conBox") {
                         result = JSON.parse(result)
                         var dbCon = result[0],
@@ -1068,6 +1073,7 @@
                 event.stopPropagation();
                 if ($(this).hasClass('selected')) return;
 
+
                 var cache = $.data(element, CACHE_KEY),
                     functions = cache.functions,
                     type = $(this).data('type'),
@@ -1286,7 +1292,8 @@
             (function () {
                 $(".eg:visible .eg-dialog").resizable({
                     handles: 'all',
-                    minHeight: 875
+                    minHeight: 875,
+                    minWidth: 550
                 });
 
                 /* 和 contenteditable 冲突 */
@@ -1380,9 +1387,13 @@
                     $content = $('.eg:visible .query-config-content'),
                     val = $input.val(),
                     data = $this.parents('tr').prev().find('[data-type="arg"]').val();
+
+
                 try {
                     data = JSON.parse(data);
                 } catch (err) {};
+
+                console.log($input, data)
                 FunctionUtil.renderContactTable(data, $content, $input)
             });
 
@@ -1424,6 +1435,41 @@
                     args: args,
                     delBtn: true
                 });
+                if (fnName == "getAttr") {
+                    var dataId = args[1],
+                        
+                        preExpress = GLOBAL_PROPERTY[dataId]["expression"],
+                        resultHTML = that.convertExpr(preExpress, functions),
+                        preFnName = $(resultHTML).text(),
+                        result = decodeURI($(resultHTML).attr('data-fn_args'));
+                         if (preFnName == "executeQuery" || preFnName == "conBox") {
+                         result = JSON.parse(result)
+                         var dbCon = result[0],
+                             preDbName = dbCon.dbName,
+                             preTable = dbCon.table,
+                             prefields = dbCon.fields,
+                             nowTableDetail = AllDbName[preDbName][preTable]["tableDetail"],
+                             fieldNameArr = [],
+                             $content = $('.eg:visible .query-config-content');
+                         nowTableDetail.forEach(function (item) {
+                             if (prefields.includes(item.id)) {
+                                 fieldNameArr.push(item.cname)
+                             }
+                         })
+                         var fieldHtml = renderfieldSpan(fieldNameArr);
+                         $content.empty().append(fieldHtml)
+                     }
+
+                     function renderfieldSpan(data) {
+                         if (!Array.isArray(data)) return;
+                         var str = "";
+                         data.forEach(function (item, index) {
+                             str += `<div class="label label-success" style="margin:5px;display:inline-block">${item}(${index})</div>`
+                         })
+                         return str;
+                     }
+
+                }
             });
 
             // 删除表达式中的函数

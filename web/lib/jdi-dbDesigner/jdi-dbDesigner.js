@@ -102,7 +102,10 @@
                         });
                         tbody += "</tr>";
                     })
-
+                    if (!setTableDetail.reserveOne){//解决本表数据带主键ID的文题
+                        var setTableDetail = $.extend( {}, setTableDetail)
+                        setTableDetail.tableDetail.shift()
+                    }
                     setTableDetail.tableDetail.some(n => {
                         if (!ids.find((item) => {
                                 return item == n.id

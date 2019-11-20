@@ -70,6 +70,7 @@ exports.upgrade = upgrade;
 async function remote2local(filePath) {
     try {
         let requestData = await requestPromise(gitUrl + filePath);
+        createDirectorySync(path_1.default.join(localPath, filePath));
         //@ts-ignore
         fs_1.default.writeFileSync(path_1.default.join(localPath, filePath), requestData);
         return { status: 0, result: true };
@@ -79,3 +80,18 @@ async function remote2local(filePath) {
     }
 }
 exports.remote2local = remote2local;
+/* 创建文件夹 */
+function createDirectorySync(p, dirname) {
+    dirname = dirname || path_1.default.dirname(__dirname);
+    if (!path_1.default.isAbsolute(p))
+        p = path_1.default.resolve(dirname, p);
+    let parts = path_1.default.dirname(path_1.default.normalize(p)).split(path_1.default.sep);
+    //@ts-ignore
+    let current = path_1.default.join(parts.shift(), path_1.default.sep);
+    while (parts.length > 0) {
+        //@ts-ignore
+        current = path_1.default.join(current, parts.shift());
+        if (!fs_1.default.existsSync(current))
+            fs_1.default.mkdirSync(current);
+    }
+}

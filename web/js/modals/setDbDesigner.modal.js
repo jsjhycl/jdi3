@@ -56,6 +56,7 @@ function SetDbDesignerModal($modal) {
             that.$dbNameList.empty().append($options)
         })
         this.localData = await new BuildTableJson().get()
+        this.localData = new BuildTableJson().removeData(this.localData)
         // new FileService().readFile("./profiles/table.json", 'utf-8').then(res => {
         //     this.localData = res;
         // var AllDbName = res || {},
@@ -82,6 +83,7 @@ SetDbDesignerModal.prototype = {
         that._clearData();
         // that.dbList = await new FileService().readFile("./profiles/table.json", 'utf-8') || {};
         that.dbList = await new BuildTableJson().get()
+        that.dbList = new BuildTableJson().removeData(that.dbList)
         await that.setDboptions()
         // console.log(new BuildTableJson().get())
         //设置默认的表名
@@ -184,39 +186,33 @@ SetDbDesignerModal.prototype = {
         })
     },
     saveData: async function () {
-        var that = this,
-            data = that.$setDbDesigner.dbDesigner("getData"),
-            dbName = that.$dbName.val(),
-            tableName = that.$tableName.val(),
-            tableDesc = that.$tabeleDesc.val(),
-            reserveOne = that.$reserveOne.val(),
-            reserveTwo = that.$reserveTwo.val(),
-            reserveThere = that.$reserveThere.val(),
-            reserveFour = that.$reserveFour.val(),
-            reserveFive = that.$reserveFive.val(),
-            uploderTime = new Date(),
-            localData = that.localData || {},
-            tabledetail = [];
-        data.forEach(function (item) {
-            if (!item.isSave) return true;
-            tabledetail.push(item)
-        })
-        if (tabledetail.length < 1) return alert("请选择入库的字段");
-        if (!dbName || !tableName || !tableDesc) return alert("数据库名和表名,表注解为必填选项")
-        if (localData[dbName]) {
-            localData[dbName][tableName] = {
-                "tableDesc": tableDesc,
-                "reserveOne": reserveOne,
-                "reserveTwo": reserveTwo,
-                "reserveThere": reserveThere,
-                "reserveFour": reserveFour,
-                "reserveFive": reserveFive,
-                "uploderTime": uploderTime,
-                "tableDetail": tabledetail
-            }
-        } else {
-            localData[dbName] = {
-                [tableName]: {
+        var that = this;
+        that.$modal.hide().modal('hide');
+        renderQrModal({
+            action: 'sign/auth',
+            title: "扫码验证权限建表",
+            data: new Date().valueOf()
+        }, function() {
+                var data = that.$setDbDesigner.dbDesigner("getData"),
+                dbName = that.$dbName.val(),
+                tableName = that.$tableName.val(),
+                tableDesc = that.$tabeleDesc.val(),
+                reserveOne = that.$reserveOne.val(),
+                reserveTwo = that.$reserveTwo.val(),
+                reserveThere = that.$reserveThere.val(),
+                reserveFour = that.$reserveFour.val(),
+                reserveFive = that.$reserveFive.val(),
+                uploderTime = new Date(),
+                localData = that.localData || {},
+                tabledetail = [];
+            data.forEach(function (item) {
+                if (!item.isSave) return true;
+                tabledetail.push(item)
+            })
+            if (tabledetail.length < 1) return alert("请选择入库的字段");
+            if (!dbName || !tableName || !tableDesc) return alert("数据库名和表名,表注解为必填选项")
+            if (localData[dbName]) {
+                localData[dbName][tableName] = {
                     "tableDesc": tableDesc,
                     "reserveOne": reserveOne,
                     "reserveTwo": reserveTwo,
@@ -226,35 +222,49 @@ SetDbDesignerModal.prototype = {
                     "uploderTime": uploderTime,
                     "tableDetail": tabledetail
                 }
+            } else {
+                localData[dbName] = {
+                    [tableName]: {
+                        "tableDesc": tableDesc,
+                        "reserveOne": reserveOne,
+                        "reserveTwo": reserveTwo,
+                        "reserveThere": reserveThere,
+                        "reserveFour": reserveFour,
+                        "reserveFive": reserveFive,
+                        "uploderTime": uploderTime,
+                        "tableDetail": tabledetail
+                    }
+                }
             }
-        }
-        var bingocolumns = []
-        tabledetail.forEach(function (item) {
-            var obj = {
-                name: item.id,
-                type: item.type,
-                cname: item.cname,
-                fieldSplit: item.fieldSplit.trim()
-            }
-            if (item.type == "string") {
-                obj.maxlength = item.maxlength
-            }
-            bingocolumns.push(obj)
-        })
+            var bingocolumns = []
+            tabledetail.forEach(function (item) {
+                var obj = {
+                    name: item.id,
+                    type: item.type,
+                    cname: item.cname,
+                    fieldSplit: item.fieldSplit.trim()
+                }
+                if (item.type == "string") {
+                    obj.maxlength = item.maxlength
+                }
+                bingocolumns.push(obj)
+            })
 
-        var bingoData = {
-            database: dbName,
-            table: tableName,
-            description: tableDesc,
-            columns: bingocolumns
-        }
-        //修改接口
-        new Service().createTable(bingoData).then(res => {
-            this._clearData()
-            that._uploderDb(localData).then(res => {
-                that.$modal.modal("hide")
+            var bingoData = {
+                database: dbName,
+                table: tableName,
+                description: tableDesc,
+                columns: bingocolumns
+            }
+            //修改接口
+            new Service().createTable(bingoData).then(res => {
+                that._clearData()
+                that._uploderDb(localData).then(res => {
+                    that.$modal.modal("hide")
+                })
             })
         })
+            
     },
 
     execute: function () {
@@ -265,7 +275,8 @@ SetDbDesignerModal.prototype = {
         that.$modal.find(".modal-header .close").on("click", function () {
             that.$modal.modal("hide")
         })
-        that.$modal.find(".modal-footer .save").on("click", function () {
+        that.$modal.find(".modal-footer .save").on("click", function (event) {
+            event.stopPropagation();
             that.saveData()
 
         })

@@ -618,8 +618,9 @@ ContextMenu.prototype = {
                             text: "批量设置查询显示路径",
                             handler: function () {
                                 let id = $("#property_id").val(),
-                                    query = new Property().getValue(id, 'query.db');
-                                query ? $("#archivePathBatch_modal").modal('show')
+                                    query = new Property().getValue(id, 'query.db'),
+                                    nestQuery = new Property().getValue(id, 'query.nest');
+                                (query || nestQuery) ? $("#archivePathBatch_modal").modal('show')
                                     : alert('当前控件未设置查询属性！')
                             }
                         }

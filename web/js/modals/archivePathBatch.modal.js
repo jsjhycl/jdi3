@@ -13,6 +13,8 @@ function ArchivePathBatch($modal, $element) {
     //     {name: "详情链接", value: 2}
     // ];
 
+    this.isNest = false;
+
     this.TYPE_CONFIG = {
         common: {
             name: '通用查询',
@@ -82,6 +84,7 @@ function ArchivePathBatch($modal, $element) {
         this.$queryType.text('无');
         this.$left.empty();
         this.$right.empty();
+        this.isNest = false;
     };
 }
 
@@ -92,6 +95,10 @@ ArchivePathBatch.prototype = {
         if (!id) return ;
 
         let query = new Property().getValue(id, 'query.db');
+        if (!query) {
+            this.isNest = true;
+            query = new Property().getValue(id, 'query.nest');
+        }
         if (!query) return alert('当前控件未设置查询属性'); ;
 
         let dbData = await new FileService().readFile('/profiles/table.json');
@@ -99,7 +106,7 @@ ArchivePathBatch.prototype = {
 
         let dbName = query.dbName,
             tableName = query.table,
-            queryType = this.TYPE_CONFIG[query.type] && this.TYPE_CONFIG[query.type].name || '无',
+            queryType = this.TYPE_CONFIG[query.type] && this.TYPE_CONFIG[query.type].name || (this.isNest ? '嵌套查询' :'无'),
             queryTypeValue = this.TYPE_CONFIG[query.type] && this.TYPE_CONFIG[query.type].value,
             fields = query.fields,
             ori_fields = {};

@@ -141,12 +141,18 @@ BuildTableJson.prototype = {
                     "cname": "表注解"
                 }]
             }
-
         }
         return tablejson
     },
     getFields: function (table) {
+
         var fields = [];
+        if (!table["备用1"]) {
+            fields.push({
+                "id": "ID",
+                "cname": "主键ID不可修改"
+            })
+        }
         for (key in table) {
             if (table[key] && key.includes("A")) {
                 try {
@@ -166,5 +172,76 @@ BuildTableJson.prototype = {
             }
         }
         return fields;
+    },
+    //获取对应的options
+    getOptions: function (dbList, ckey, data) {
+        var dbName = data.dbName || "",
+            table = data.table || "",
+            field = data.field || "",
+            options = [];
+        if (ckey == "dbName") {
+            Object.keys(dbList).forEach(function (item) {
+                options.push({
+                    name: item,
+                    value: item
+                })
+            })
+        }
+        if (ckey == "table") {
+            if (dbName) {
+                var arr = [];
+                var table = Object.keys(dbList[dbName]).forEach(function (item) {
+                    if (dbList[dbName][item]["key"] == undefined) {
+                        arr.push(item)
+                    }
+                })
+                arr.forEach(function (item) {
+                    options.push({
+                        name: dbList[dbName][item]["tableDesc"],
+                        value: item
+                    })
+                })
+            }
+        }
+        if (ckey == "field") {
+            if (dbName && table) {
+                var fields = dbList[dbName][table].tableDetail;
+                fields.forEach(function (item) {
+                    options.push({
+                        name: item.cname,
+                        value: item.id
+                    })
+                })
+            }
+        }
+        if (ckey == "fieldSplit") {
+            if (dbName && table) {
+                var fields = dbList[dbName][table].tableDetail,
+                    fieldSplits = '';
+                fields.forEach(function (item) {
+                    if (data.id == item.id) {
+                        fieldSplits = Number(item.fieldSplit)
+                    }
+                })
+                for (i = 1; i <= fieldSplits; i++) {
+                    options.push({
+                        name: "插入",
+                        value: String(i)
+                    })
+                }
+            }
+        }
+
+        return options;
+    },
+    //移除newResources和newProducts的数据
+    removeData: function (data) {
+        var table = $.extend({}, data),
+            dbNames = Object.keys(table);
+        dbNames.forEach(dbName=>{
+            delete table[dbName]["newProducts"]
+            delete table[dbName]["newResources"]
+        })
+        return table;
     }
 }

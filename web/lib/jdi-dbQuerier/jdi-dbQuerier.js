@@ -15,6 +15,7 @@
             var that = this;
             // that.AllDbName = await new FileService().readFile("/profiles/table.json")
             that.AllDbName = await new BuildTableJson().get()
+            that.AllDbName = new BuildTableJson().removeData(that.AllDbName)
             return that.$elements.each(function () {
                 var cache = that.cacheData(this);
                 if (!cache.disabled) {

@@ -10,6 +10,7 @@ function DbDesignerModal($modal) {
     this.NAME_SPACE = ".dbDesigner"
 
     this.$dbDesigner = this.$modalBody.find("#dbDesigner"); //获取数据库设计器
+    this.$keyInfo = this.$modalBody.find("#keyInfo")
     this.$modal = $modal;
 
     this.$db = $("#dbDesignerModal")
@@ -21,15 +22,15 @@ function DbDesignerModal($modal) {
             width: "100%"
         })
     }
-    this.setData = function(rowIndex,columnIndex,key,type){
+    this.setData = function (rowIndex, columnIndex, key, type) {
         var that = this;
         var $tbody = that.$db.find(".dbdesigner tbody");
         var $tr = $tbody.find("tr")
-        $tr.each(function(index,item){
-            if(index>columnIndex){
-                if(!$(this).find('[data-key="isSave"]').is(":checked")){                 
+        $tr.each(function (index, item) {
+            if (index > columnIndex) {
+                if (!$(this).find('[data-key="isSave"]').is(":checked")) {
                     $(this).find(`td:eq(${rowIndex}) select`).val(key).trigger("change")
-                    if(type=="field"){
+                    if (type == "field") {
                         var value = $(this).find('[data-key="id"]').val()
                         $(this).find(`td:eq(${rowIndex}) select`).val(value).trigger("change")
                     }
@@ -37,6 +38,179 @@ function DbDesignerModal($modal) {
 
             }
         })
+    }
+    //渲染配置数据入库主键设置
+    this.renderKeyInfo = function (dbName, tableName, key, value, isAppend, appendTo) {
+        var that = this;
+        isAppend = !!isAppend;
+        // var html = `<tr>
+        //     <td><input type="text" class="form-control" data-save="dbName" value="${dbName||""}"></td>
+        //     <td><input type="text" class="form-control" data-save="tableName" value="${tableName||""}"></td>
+        //     <td><input type="text" class="form-control" data-save="key" value="${key||""}"></td>
+        //     <td><input type="text" class="form-control" data-save="value" value="${value||""}"></td>
+        //     <td class="text-center"><span class="del">X</span></td>
+        // <select class="form-control chosen" data-save="dbName" value="${dbName||""}">
+        //                         ${that.renderOptions('dbName',item)}
+        //                     </select>
+        //  <select class="form-control chosen" data-save="tableName" value="${tableName||""}">
+        //                         ${that.renderOptions('table',item)}
+        //                     </select>
+        // </tr>`;
+        var item = {
+            dbName: dbName,
+            table: tableName,
+            field: key
+        }
+        var html = `<tr>
+                        <td>
+                            <select class="form-control" data-save="dbName" disabled value="${dbName||""}">
+                                ${that.renderOptions('dbName',item)}
+                            </select>
+                        </td>
+                        <td>
+                          <select class="form-control" data-save="tableName" disabled value="${tableName||""}">
+                                ${that.renderOptions('table',item)}
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control" data-save="key" value="${key||""}">
+                                ${that.renderOptions('field',item)}
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control" data-save="value" value="${value||""}">
+                                ${that.renderValueSelect(value)}
+                            </select>
+                        </td>
+                    </tr>`;
+        isAppend && appendTo.append(html)
+        return html
+    }
+    this.renderOptions = function (type, data) {
+        var that = this,
+            dbList = that.AllDbName,
+            result = new BuildTableJson().getOptions(dbList, type, data);
+        if (!Array.isArray(result)) return;
+        var html = '',
+            selected = data[type];
+        result.unshift({
+            name: "请选择",
+            value: ""
+        });
+        result.forEach(function (item) {
+            html += `<option value="${item.value}" ${ selected == item.value ? "selected" : ""}>${item.name} ${item.value ? "("+item.value+")" : ""}</option>`
+        })
+        return html
+
+
+    }
+    this.renderValueSelect = function (selected) {
+        var that = this,
+            data = [{name:"请选择",value:""}];
+        $("#workspace").find("input").each(function () {
+            var obj = {},
+                id = $(this).attr("id");
+            cname = new Property().getValue(id, 'cname');
+            obj.name = cname,
+                obj.value = id;
+            data.push(obj)
+        })
+        return that.renderOptionsByData(data, selected)
+
+    }
+
+    this.renderOptionsByData = function (data, select) {
+        var html = "";
+        if (!select) {
+
+            data.forEach(function (item) {
+                html += `<option value="${item.value}" >${item.name} ${item.value ? "("+item.value+")" : ""}</option>`
+            })
+        } else {
+            data.forEach(function (item) {
+                html += `<option value="${item.value}" ${ select == item.value ? "selected" : ""}>${item.name} ${item.value ? "("+item.value+")" : ""}</option>`
+            })
+        }
+        return html;
+    }
+    this.getKeyInfo = function () {
+        var that = this,
+            result = [],
+            $target = that.$keyInfo.find("tbody tr");
+        $target.each((trIndx, trEle) => {
+            var obj = {};
+            $(trEle).find("select").each((index, ele) => {
+                var type = $(ele).attr('data-save');
+                if ($(ele).val()) {
+                    obj[type] = $(ele).val()
+                }
+            })
+            if (Object.keys(obj).length) {
+                result.push(obj)
+            }
+        })
+        return result;
+    }
+    //判断是不是有新加的表
+    this.judgeNewTable = function () {
+        var that = this,
+            data = that.$dbDesigner.dbDesigner("getData"),
+            saveInfo = [],
+            keyInfo = that.getKeyInfo();
+        //得到指定的数组
+        data.forEach(item => {
+            if (item.isSave) {
+                if(item.dbName&&item.table){
+                    saveInfo.push(JSON.stringify({
+                        dbName: item.dbName,
+                        tableName: item.table
+                    }))
+                }
+            }
+        })
+
+        var saveData = Array.from(new Set(saveInfo)),
+            keyData = [];
+
+        keyInfo.forEach(item => {
+            var keyObj = {
+                dbName: item.dbName,
+                tableName: item.tableName
+            }
+            keyData.push(JSON.stringify(keyObj))
+        })
+        if (keyData.length > saveData.length) {
+            keyData.forEach((item, index) => {
+                if (!saveData.includes(item)) {
+                    that.$keyInfo.find("tbody tr").eq(index).remove()
+                }
+            })
+
+        }
+        if (keyData.length = saveData.length) {
+            keyData.forEach((item,index)=>{
+                if(!saveData.includes(item)){
+                     that.$keyInfo.find("tbody tr").eq(index).remove()
+                }
+            })
+            saveData.forEach(item => {
+                if (!keyData.includes(item)) {
+                    var obj = JSON.parse(item)
+                    that.renderKeyInfo(obj.dbName, obj.tableName, "", "", true, that.$keyInfo.find("tbody"))
+                }
+            })
+        }
+        if (saveData.length > keyData.length) {
+            saveData.forEach(item => {
+                if (!keyData.includes(item)) {
+                    var obj = JSON.parse(item)
+                    that.renderKeyInfo(obj.dbName, obj.tableName, "", "", true, that.$keyInfo.find("tbody"))
+                }
+            })
+        }
+
+
+
     }
 }
 
@@ -46,8 +220,19 @@ DbDesignerModal.prototype = {
 
         // var dbList = await new FileService().readFile("./profiles/table.json", 'utf-8') || {},
         var dbList = await new BuildTableJson().get(),
-            dbNames = [];
+            dbList = new BuildTableJson().removeData(dbList),//移除一些不要的数据
+            dbNames = [],
+            property = new Property(),
+            savekeyInfo = property.getValue("BODY", "keyInfo"),
+            html = "";
         that.AllDbName = dbList;
+
+        //填充主键配置信息
+        savekeyInfo && savekeyInfo.forEach(item => {
+            html += that.renderKeyInfo(item.dbName, item.tableName, item.key, item.value, false, false)
+        })
+        that.$keyInfo.find('tbody').html(html)
+
         Object.keys(dbList).forEach(function (item) {
             dbNames.push({
                 "name": item,
@@ -154,6 +339,14 @@ DbDesignerModal.prototype = {
                         return '<input class="form-control" data-key="desc" type="text" style="width:90px" value="' + value + '">';
                     }
                 }, {
+                    name: "fieldSlice",
+                    text: "字段截取",
+                    key: "db.fieldSlice",
+                    group: true,
+                    template: function (value) {
+                        return '<input class="form-control" data-key="fieldSlice" type="text" style="width:90px" value="' + value + '">';
+                    }
+                }, {
                     name: "operation",
                     text: "操作",
                     key: "db.op",
@@ -174,31 +367,45 @@ DbDesignerModal.prototype = {
             // $(this).find('[data-key="isSave"]').css("display","none")
         })
         that.bindChosen()
+
     },
     saveData: function () {
         var that = this,
             data = that.$dbDesigner.dbDesigner("getData"); //调用getData方法
         if (!Array.isArray(data)) return alert("无效的数据类型！"); //如果data不是数组退出函数提示
         var property = new Property();
+        //获取信息
+        var savekeyInfo = that.getKeyInfo();
+
         data.forEach(item => {
             property.setValue(item.id, "db", [])
         })
+        GLOBAL_PROPERTY.BODY.keyInfo = savekeyInfo
         data.forEach(function (item) {
             if (!item.isSave) return true;
-            property.pushValue(item.id, "db", {
+            var db = {
+
                 isSave: item.isSave, //是否入库
                 dbName: item.dbName, //存档数据库
                 table: item.table, //存档表格
                 field: item.selectField,
                 fieldSplit: item.selectFieldSplit, //新增加
                 desc: item.desc,
+                fieldSlice: item.fieldSlice,
+            }
+            savekeyInfo.forEach(citem => {
+                if (citem.dbName == item.dbName && citem.tableName == item.table) {
+                    db.queryKey = citem.key
+                    db.queryValue = citem.value
+                }
             })
+
+            property.pushValue(item.id, "db", db)
         })
     },
     execute: function () {
         var that = this;
         // that.$modal.on("show.bs.modal", function () {
-        //     console.log("显示")
         //     that.initData()
         // })
         // that.$modal.find(".modal-header .close").on("click", function () {
@@ -243,7 +450,6 @@ DbDesignerModal.prototype = {
             // that.setData(rowIndex,columnIndex,key)
         })
 
-
         //切换表格时
         that.$db.on("change" + that.NAME_SPACE, "[data-key='table']", function (event) {
             var $selectDbVal = $(event.target).parents("tr").find('[data-key="dbName"]').val(),
@@ -263,11 +469,12 @@ DbDesignerModal.prototype = {
                 value: ""
             }, arrFieldsNames, null, true)
             $select.trigger("chosen:updated")
+            that.judgeNewTable()
             var rowIndex = $(this).parent('td').index(),
                 columnIndex = $(this).parents('tr').index();
-
             // that.setData(rowIndex,columnIndex,key)
         })
+
         //切换字段
         that.$db.on("change" + that.NAME_SPACE, "[data-key='selectField']", function (event) {
             var selectDbVal = $(event.target).parents("tr").find('[data-key="dbName"]').val(),
@@ -327,6 +534,15 @@ DbDesignerModal.prototype = {
 
             that.bindChosen()
         })
+        //添加一条新的主键配置
+        that.$db.on("click" + that.NAME_SPACE, ".savekeyInfoAdd", function () {
+            that.renderKeyInfo("", "", "", "", true, that.$keyInfo.find("tbody"))
+        })
+        //移除一条新的主键配置
+        that.$db.on("click" + that.NAME_SPACE, ".del", function () {
+            $(this).parents('tr').remove()
+            that.judgeNewTable()
+        })
         //移除一段
         that.$db.on("click" + that.NAME_SPACE, "#dbDesignerRemove", function (event) {
 
@@ -350,6 +566,7 @@ DbDesignerModal.prototype = {
 
 
         })
+        //点击是否入库
         that.$db.on("click" + that.NAME_SPACE, "[data-key='isSave']", function (evetn) {
             var id = $("#workspace").attr("data-id"), //工作区的id
                 table = $.extend(that.AllDbName, {}), //所有的tablejson
@@ -372,8 +589,14 @@ DbDesignerModal.prototype = {
                 $dbName.val("")
                 $table.val("")
                 $field.val("")
+                $dbName.trigger("chosen:updated")
+                $table.trigger("chosen:updated")
+                $field.trigger("chosen:updated")
             }
+            that.judgeNewTable()
+
         })
+        //点击全部入库
         that.$db.on("click" + that.NAME_SPACE, "thead th .check-all", function () {
             var rowIndex = $(this).parent('th').index();
             var $tbody = that.$db.find(".dbdesigner tbody");
@@ -384,12 +607,14 @@ DbDesignerModal.prototype = {
                 $checkbox.prop("checked", !isChecked).trigger("click")
             })
         })
+        //鼠标悬浮上去
         that.$db.on("mouseover" + that.NAME_SPACE, "tbody tr", function () {
             var $this = $(this),
                 dataId = $this.attr("data-id"),
                 $target = that.$db.find(`tbody tr[data-id="${dataId}"]`);
             $target.css("background", "#eee")
         })
+        //鼠标移除
         that.$db.on("mouseleave" + that.NAME_SPACE, "tbody tr", function () {
             var $this = $(this),
                 dataId = $this.attr("data-id"),

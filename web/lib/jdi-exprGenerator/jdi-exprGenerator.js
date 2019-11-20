@@ -796,7 +796,7 @@
             $eg.find(".eg-content,.eg-sidebar,.eg-toolbar,.eg-result,.eg-function,.eg-insertFn").css("z-index", zIndex + 1);
             $eg.find(".eg-close").css("z-index", zIndex + 2);
             $eg.find(".eg-toolbar").css("bottom", rHeight);
-            $eg.find(".eg-dialog").width(pageWidth * .75 + sWidth * 2);
+            $eg.find(".eg-dialog").width(pageWidth * .75 + sWidth * 2 > 551 ? pageWidth * .75 + sWidth * 2 : 551);
             $eg.fadeIn();
             if (cache.onOpen) {
                 cache.onOpen();
@@ -1292,7 +1292,8 @@
             (function () {
                 $(".eg:visible .eg-dialog").resizable({
                     handles: 'all',
-                    minHeight: 875
+                    minHeight: 875,
+                    minWidth: 550
                 });
 
                 /* 和 contenteditable 冲突 */

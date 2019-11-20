@@ -226,7 +226,6 @@ DbDesignerModal.prototype = {
             savekeyInfo = property.getValue("BODY", "keyInfo"),
             html = "";
         that.AllDbName = dbList;
-        console.log(dbList)
 
         //填充主键配置信息
         savekeyInfo && savekeyInfo.forEach(item => {

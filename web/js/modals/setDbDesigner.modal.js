@@ -258,7 +258,7 @@ SetDbDesignerModal.prototype = {
             }
             //修改接口
             new Service().createTable(bingoData).then(res => {
-                this._clearData()
+                that._clearData()
                 that._uploderDb(localData).then(res => {
                     that.$modal.modal("hide")
                 })

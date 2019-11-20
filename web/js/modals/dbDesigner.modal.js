@@ -160,10 +160,12 @@ function DbDesignerModal($modal) {
         //得到指定的数组
         data.forEach(item => {
             if (item.isSave) {
-                saveInfo.push(JSON.stringify({
-                    dbName: item.dbName,
-                    tableName: item.table
-                }))
+                if(item.dbName&&item.table){
+                    saveInfo.push(JSON.stringify({
+                        dbName: item.dbName,
+                        tableName: item.table
+                    }))
+                }
             }
         })
 

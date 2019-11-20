@@ -7,7 +7,7 @@
         "detail": []
     }, {
         "version": "1.1.1",
-        "files": ["test.ts", "test.js"],
-        "detail": ["测试", "测试1"]
+        "files": ["web/designer/error.html"],
+        "detail": ["测试"]
     }]
 }

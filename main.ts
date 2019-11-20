@@ -16,7 +16,7 @@ function createMainWindow() {
     }
   });
   win.loadFile("./web/designer/index.html"); // 首页
-  // win.loadURL('https://xcv.jingkan.net');
+  // win.loadURL('https://xcv.jingkan.net');123
   // win.loadFile('./index.html');
   // 关闭
   win.on("closed", () => {

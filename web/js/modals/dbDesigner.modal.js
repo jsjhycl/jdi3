@@ -380,6 +380,7 @@ DbDesignerModal.prototype = {
         data.forEach(item => {
             property.setValue(item.id, "db", [])
         })
+        GLOBAL_PROPERTY.BODY ? "" : GLOBAL_PROPERTY.BODY ={};
         GLOBAL_PROPERTY.BODY.keyInfo = savekeyInfo
         data.forEach(function (item) {
             if (!item.isSave) return true;

@@ -817,6 +817,7 @@
                 }
                 event.stopPropagation();
                 //判断是不是多选模式
+                console.log(event.data.element)
                 var cache = $.data(event.data.element, CACHE_KEY),
                     isGlobal = !!cache.global;
 
@@ -848,6 +849,7 @@
                         resultHTML = that.convertExpr(preExpress, cache.functions),
                         preFnName = $(resultHTML).text(),
                         result = decodeURI($(resultHTML).attr('data-fn_args'));
+                    console.log(cache.functions)
                     if (preFnName == "executeQuery" || preFnName == "conBox") {
                         result = JSON.parse(result)
                         var dbCon = result[0],
@@ -1070,6 +1072,7 @@
             }, function (event, args) {
                 event.stopPropagation();
                 if ($(this).hasClass('selected')) return;
+
 
                 var cache = $.data(element, CACHE_KEY),
                     functions = cache.functions,
@@ -1384,7 +1387,7 @@
                     val = $input.val(),
                     data = $this.parents('tr').prev().find('[data-type="arg"]').val();
 
-                
+
                 try {
                     data = JSON.parse(data);
                 } catch (err) {};
@@ -1431,6 +1434,41 @@
                     args: args,
                     delBtn: true
                 });
+                if (fnName == "getAttr") {
+                    var dataId = args[1],
+                        
+                        preExpress = GLOBAL_PROPERTY[dataId]["expression"],
+                        resultHTML = that.convertExpr(preExpress, functions),
+                        preFnName = $(resultHTML).text(),
+                        result = decodeURI($(resultHTML).attr('data-fn_args'));
+                         if (preFnName == "executeQuery" || preFnName == "conBox") {
+                         result = JSON.parse(result)
+                         var dbCon = result[0],
+                             preDbName = dbCon.dbName,
+                             preTable = dbCon.table,
+                             prefields = dbCon.fields,
+                             nowTableDetail = AllDbName[preDbName][preTable]["tableDetail"],
+                             fieldNameArr = [],
+                             $content = $('.eg:visible .query-config-content');
+                         nowTableDetail.forEach(function (item) {
+                             if (prefields.includes(item.id)) {
+                                 fieldNameArr.push(item.cname)
+                             }
+                         })
+                         var fieldHtml = renderfieldSpan(fieldNameArr);
+                         $content.empty().append(fieldHtml)
+                     }
+
+                     function renderfieldSpan(data) {
+                         if (!Array.isArray(data)) return;
+                         var str = "";
+                         data.forEach(function (item, index) {
+                             str += `<div class="label label-success" style="margin:5px;display:inline-block">${item}(${index})</div>`
+                         })
+                         return str;
+                     }
+
+                }
             });
 
             // 删除表达式中的函数

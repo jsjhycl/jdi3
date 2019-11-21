@@ -11,7 +11,7 @@
         "detail": ["测试"]
     }, {
         "version": "1.1.2",
-        "files": ["web/designer/editor.html", "versions.json"],
+        "files": ["web/designer/editor.html", "versions.json","web/js/modals/dbDesigner.modal.js"],
         "detail": ["表格内的文本框去除边框"]
     }]
 }

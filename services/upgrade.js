@@ -19,6 +19,12 @@ function requestPromise(url) {
 exports.requestPromise = requestPromise;
 const gitUrl = 'https://raw.githubusercontent.com/jsjhycl/jdi3/official/', localPath = './resources/app', //'./resources/app'
 versionPath = 'versions.json';
+/* 获取本地版本信息 */
+function getLocalVersion() {
+    let localInfo = JSON.parse(fs_1.default.readFileSync(path_1.default.join(localPath, versionPath)).toString());
+    return localInfo.version;
+}
+exports.getLocalVersion = getLocalVersion;
 /* 获取版本信息是否需要升级 */
 async function getVersion() {
     try {

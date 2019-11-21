@@ -17,6 +17,12 @@ const gitUrl: string = 'https://raw.githubusercontent.com/jsjhycl/jdi3/official/
     localPath: string = './resources/app',//'./resources/app'
     versionPath: string = 'versions.json';
 
+/* 获取本地版本信息 */
+function getLocalVersion() {
+    let localInfo = JSON.parse(fs.readFileSync(path.join(localPath, versionPath)).toString());
+    return localInfo.version;
+}
+
 /* 获取版本信息是否需要升级 */
 async function getVersion() {
     try {
@@ -88,4 +94,4 @@ function createDirectorySync(p: string) {
     }
 }
 
-export { requestPromise, getVersion, upgrade, remote2local }
+export { requestPromise, getLocalVersion, getVersion, upgrade, remote2local }

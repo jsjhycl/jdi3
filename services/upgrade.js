@@ -19,6 +19,12 @@ function requestPromise(url) {
 exports.requestPromise = requestPromise;
 const gitUrl = 'https://raw.githubusercontent.com/jsjhycl/jdi3/official/', localPath = '', //'./resources/app'
 versionPath = 'versions.json';
+/* 获取本地版本信息 */
+function getLocalVersion() {
+    let localInfo = JSON.parse(fs_1.default.readFileSync(path_1.default.join(localPath, versionPath)).toString());
+    return localInfo.version;
+}
+exports.getLocalVersion = getLocalVersion;
 /* 获取版本信息是否需要升级 */
 async function getVersion() {
     try {
@@ -81,10 +87,7 @@ async function remote2local(filePath) {
 }
 exports.remote2local = remote2local;
 /* 创建文件夹 */
-function createDirectorySync(p, dirname) {
-    dirname = dirname || path_1.default.dirname(__dirname);
-    if (!path_1.default.isAbsolute(p))
-        p = path_1.default.resolve(dirname, p);
+function createDirectorySync(p) {
     let parts = path_1.default.dirname(path_1.default.normalize(p)).split(path_1.default.sep);
     //@ts-ignore
     let current = path_1.default.join(parts.shift(), path_1.default.sep);

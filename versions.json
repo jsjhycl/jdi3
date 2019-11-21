@@ -1,5 +1,17 @@
 {
-    "name":"jditest",
-    "version":"1.1.0",
-    "list":[]
-  }
+    "name": "jdi客户端",
+    "version": "1.1.2",
+    "list": [{
+        "version": "1.1.0",
+        "files": [],
+        "detail": []
+    }, {
+        "version": "1.1.1",
+        "files": ["web/designer/error.html"],
+        "detail": ["测试"]
+    }, {
+        "version": "1.1.2",
+        "files": ["web/designer/editor.html", "versions.json"],
+        "detail": ["表格内的文本框去除边框"]
+    }]
+}

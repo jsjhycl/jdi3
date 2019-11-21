@@ -1,6 +1,6 @@
 {
     "name": "jdi客户端",
-    "version": "1.1.2",
+    "version": "1.1.3",
     "list": [{
         "version": "1.1.0",
         "files": [],
@@ -11,7 +11,11 @@
         "detail": ["测试"]
     }, {
         "version": "1.1.2",
-        "files": ["web/designer/editor.html", "versions.json","web/js/modals/dbDesigner.modal.js"],
+        "files": ["web/designer/editor.html", "versions.json", "web/js/modals/dbDesigner.modal.js"],
         "detail": ["表格内的文本框去除边框"]
+    }, {
+        "version": "1.1.3",
+        "files": ["main/menu.ts", "versions.json", "main/menu.js", "services/upgrade.js", "services/upgrade.ts"],
+        "detail": ["menu菜单显示当前版本信息"]
     }]
 }

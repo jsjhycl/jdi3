@@ -13,6 +13,7 @@ function SaveAsModal($modal) {
         this.$lastName.val();
         this.$isFinalName.attr("checked", false);
     }
+
     this.getLastSaveId = async function (table, id) {
         var condition = [{
                 col: "customId",
@@ -21,7 +22,8 @@ function SaveAsModal($modal) {
             fields = ["customId"]
         return await new Service().query(table, condition, fields)
     }
-
+    
+    
 }
 SaveAsModal.prototype = {
     initData: function () {

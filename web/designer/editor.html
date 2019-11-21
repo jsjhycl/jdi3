@@ -137,7 +137,7 @@
 					styles =
 					"margin:0;padding:0;width:100%;height:100%;box-sizing:border-box;vertical-align: middle;";
 				if (bgColor.match(/rgb\(255,\s*0,\s*0\)/) || bgColor.match("red")) { //红
-					transHtml = '<input type="text" style="' + styles + '" />';
+					transHtml = '<input type="text" style="' + styles + 'border:none;" />';
 				} else if (bgColor.match(/rgb\(\s*0\,\s*0\,\s*0\)/) || bgColor.match("black")) { //黑
 					styles += ";clip:rect(1px " + ($this.width() - 2) + "px " + ($this.height() - 2) + "px 1px)";
 					transHtml = '<input type="checkbox"  style="' + styles + '" />';

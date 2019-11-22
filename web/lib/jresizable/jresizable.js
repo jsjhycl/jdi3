@@ -74,7 +74,7 @@
                 } else {
                     that.renderDOM(element);
                 }
-            } else {}
+            } else { }
         },
         renderDOM: function (element) {
             var that = this,
@@ -118,6 +118,8 @@
                 if (!direction) {
                     target.css("cursor", "move");
                 } else {
+                    if (target.find("[data-type='circleBtn']").length > 0)
+                        return;
                     target.css("cursor", direction + "-resize");
                 }
             });
@@ -306,8 +308,10 @@
         },
         childSetData: function () {
             var $child = this.getChild();
-            $child.data("left", $child.position().left || 0);
-            $child.data("top", $child.position().top || 0);
+            if ($child.length > 0) {
+                $child.data("left", $child.position().left || 0);
+                $child.data("top", $child.position().top || 0);
+            }
         },
         removeChildData: function () {
             var $child = this.getChild();
@@ -332,9 +336,9 @@
         handles: "n,e,s,w,ne,se,sw,nw,all",
         color: "gray",
         edge: 2,
-        onStart: function (e) {},
-        onResize: function (e) {},
-        onStop: function (e) {}
+        onStart: function (e) { },
+        onResize: function (e) { },
+        onStop: function (e) { }
     };
 
     $.fn.jresizable.methods = {

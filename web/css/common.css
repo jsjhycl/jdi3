@@ -51,3 +51,12 @@ input[data-type="circleBtn"] {
     background-color: white;
     border-radius: 100%;
 }
+
+input[data-type="dotBtn"] {
+    width: 5px;
+    height: 5px;
+    padding: 0;
+    border: none;
+    background-color: red;
+    border-radius: 100%;
+}

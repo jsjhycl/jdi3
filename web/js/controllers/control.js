@@ -1,8 +1,9 @@
 function Control() {
     this.CONTROL_TYPES = {
         text: '<input data-type="text" type="text" value="">',
-        circleBtn: '<input data-type="circleBtn" type="button" value="circleBtn">',
         button: '<input data-type="button" type="button" value="button">',
+        circleBtn: '<input data-type="circleBtn" type="button" value="circleBtn">',
+        dotBtn: '<input data-type="dotBtn" type="button" value="dotBtn">',
         checkbox: '<input data-type="checkbox" type="checkbox" value="">',
         img: '<img data-type="img">',
         div: '<div data-type="div"></div>',
@@ -11,8 +12,9 @@ function Control() {
     };
     this.CONTROL_HTML = {
         text: '<input data-type="text" type="text">',
-        circleBtn: '<input data-type="circleBtn" type="button">',
         button: '<input data-type="button" type="button">',
+        circleBtn: '<input data-type="circleBtn" type="button">',
+        dotBtn: '<input data-type="dotBtn" type="button">',
         checkbox: '<input data-type="checkbox" type="checkbox">',
         img: '<div data-type="img"></div>',
         div: '<div data-type="div"></div>',

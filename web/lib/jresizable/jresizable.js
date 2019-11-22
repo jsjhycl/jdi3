@@ -118,7 +118,7 @@
                 if (!direction) {
                     target.css("cursor", "move");
                 } else {
-                    if (target.find("[data-type='circleBtn']").length > 0)
+                    if (target.find("[data-type='circleBtn'],[data-type='dotBtn']").length > 0)
                         return;
                     target.css("cursor", direction + "-resize");
                 }

@@ -274,6 +274,7 @@ function controlbar() {
 			}
 		});
 
+		// 圆按钮
 		$("#controlbar .control-item[data-type='circleBtn']").draggable({ //给draggable传递参数可拖动的控件
 			helper: function () {
 				var type = $(this).data("type");
@@ -284,6 +285,27 @@ function controlbar() {
 					"padding": "0",
 					"border": "5px solid red",
 					"background-color": "white",
+					"border-radius": "100%"
+				});
+				return $node;
+			},
+			cursorAt: {
+				left: 0,
+				top: 0
+			}
+		});
+
+		// 点按钮
+		$("#controlbar .control-item[data-type='dotBtn']").draggable({ //给draggable传递参数可拖动的控件
+			helper: function () {
+				var type = $(this).data("type");
+				$node = new Control().getControl(type);
+				$node.css({
+					"width": "5px",
+					"height": "5px",
+					"padding": "0",
+					"border": "none",
+					"background-color": "red",
 					"border-radius": "100%"
 				});
 				return $node;

@@ -22,8 +22,8 @@ function SaveAsModal($modal) {
             fields = ["customId"]
         return await new Service().query(table, condition, fields)
     }
-    
-    
+
+
 }
 SaveAsModal.prototype = {
     initData: function () {
@@ -31,7 +31,7 @@ SaveAsModal.prototype = {
         that._clearData();
         var $workspace = $("#workspace"),
             id = $workspace.attr("data-id");
-            id = id.replace(/\((.*)\)/img, "");
+        id = id.replace(/\((.*)\)/img, "");
         var type = $workspace.attr("data-type");
         var table = type == "表单" ? "newResources" : "newProducts";
         that.getLastSaveId(table, id).then(res => {
@@ -45,15 +45,18 @@ SaveAsModal.prototype = {
         var $workspace = $("#workspace"),
             id = $workspace.attr("data-id"),
             type = $workspace.attr("data-type"),
+            name = $workspace.attr("data-name"),
+            contactId = $workspace.attr("data-contactid"),
+            reltemplate = $workspace.attr("data-reltemplate"),
             id = id.replace(/\((.*)\)/img, "");
         if (isFinsh) {
-            new Workspace().save(true, `${id}(99)`,null)
+            new Workspace().save(true, `${id}(99)`, null)
         } else {
             var table = type == "表单" ? "newResources" : "newProducts";
-            console.log()
-            that.getLastSaveId(table, id).then(res => {
+            that.getLastSaveId(table, id).then(async res => {
                 var count = res.length;
-                new Workspace().save(true, `${id}(${count})`,null)
+                await new Workspace().save(true, `${id}(${count})`, null)
+                new Workspace().load(`${id}(${count})`, name, type, contactId, reltemplate)
             });
         }
     },
@@ -76,7 +79,7 @@ SaveAsModal.prototype = {
                 if (flag) {
                     count = 99;
                 }
-                that.$saveAsName.val(`${id}(${count})`)                
+                that.$saveAsName.val(`${id}(${count})`)
             })
         })
     }

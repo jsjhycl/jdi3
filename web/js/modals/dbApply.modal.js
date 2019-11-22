@@ -60,7 +60,7 @@ function DbApplyModal($modal) {
         dbNames.forEach(dbName => {
             var tables = Object.keys(data[dbName]);
             tables.forEach(table => {
-                if (table.indexOf("X") == 3) {
+                if (table.indexOf("V") == 3) {
                     var obj = {
                         value: table,
                         name: data[dbName][table].tableDesc

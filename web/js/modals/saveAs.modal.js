@@ -39,7 +39,7 @@ SaveAsModal.prototype = {
             that.$saveAsName.val(`${id}(${count})`)
         })
     },
-    saveData: function () {
+    saveData: async function () {
         var that = this;
         var isFinsh = that.$isFinalName.prop("checked");
         var $workspace = $("#workspace"),
@@ -50,7 +50,9 @@ SaveAsModal.prototype = {
             reltemplate = $workspace.attr("data-reltemplate"),
             id = id.replace(/\((.*)\)/img, "");
         if (isFinsh) {
-            new Workspace().save(true, `${id}(99)`, null)
+            await new Workspace().save(true, `${id}(99)`, null)
+            new Workspace().load(`${id}(${99})`, name, type, contactId, reltemplate)
+
         } else {
             var table = type == "表单" ? "newResources" : "newProducts";
             that.getLastSaveId(table, id).then(async res => {

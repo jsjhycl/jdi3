@@ -131,10 +131,10 @@ function navbar() {
 					return flag = true;
 				}
 			})
-			if($("#AAAA").length==0){
+			if ($("#AAAA").length == 0) {
 				return alert("布局不是从AAAA编号开始的");
 			}
-			
+
 			if (flag) {
 				var sure = window.confirm("你还有元素没有配置中文名,是否确认配置数据库？")
 				if (!sure) return;
@@ -154,7 +154,21 @@ function navbar() {
 	(function changeID() {
 		$("#changeID").click(function () {
 			if ($("#workspace").attr('data-type')) {
-				$("#changeId").modal("show")
+				var $workspace = $("#workspace"),
+					type = $workspace.attr("data-type"),
+					id = $workspace.attr('data-id').replace(/\((.*)\)/img, ""),
+					dbCollection = type == "表单" ? "newResources" : "newProducts",
+					condition = [{
+						col: "customId",
+						value: `/${id}/`
+					}],
+					fields = ["customId"];
+				new Service().query(dbCollection, condition, fields).then(res => {
+					if(res.length>1){
+						alert("当前布局已经另存多个版本,修改编号请注意同步版本？")
+					}
+					$("#changeId").modal("show")
+				})
 			} else {
 				alert("请打开资源")
 			}
@@ -177,7 +191,7 @@ function navbar() {
 					value: id
 				}], null, null, null, function (rst) {
 					if (Array.isArray(rst) && rst[0]) {
-						new Workspace().load(id, name, "布局", null, null, null,null,VERSION); //加载工作区
+						new Workspace().load(id, name, "布局", null, null, null, null, VERSION); //加载工作区
 						new Main().open();
 					} else {
 						return alert("调用失败！");

@@ -131,10 +131,10 @@ function navbar() {
 					return flag = true;
 				}
 			})
-			if($("#AAAA").length==0){
+			if ($("#AAAA").length == 0) {
 				return alert("布局不是从AAAA编号开始的");
 			}
-			
+
 			if (flag) {
 				var sure = window.confirm("你还有元素没有配置中文名,是否确认配置数据库？")
 				if (!sure) return;
@@ -177,7 +177,7 @@ function navbar() {
 					value: id
 				}], null, null, null, function (rst) {
 					if (Array.isArray(rst) && rst[0]) {
-						new Workspace().load(id, name, "布局", null, null, null,null,VERSION); //加载工作区
+						new Workspace().load(id, name, "布局", null, null, null, null, VERSION); //加载工作区
 						new Main().open();
 					} else {
 						return alert("调用失败！");
@@ -196,7 +196,7 @@ function navbar() {
 			var subtype = $("#workspace").attr("data-type");
 			subtype = subtype == "布局" ? 1 : 0;
 			var urlConfig = jdi.fileApi.getConfigUrl();
-			var href = (urlConfig.displayUrl || urlConfig.serverUrl) + `/home/model?customId=${id}${VERSION?'&version='+VERSION:""}&type=${subtype}&isPreview=preview`;
+			var href = (urlConfig.displayUrl || urlConfig.serverUrl) + `/home/model?customId=${id}${VERSION ? '&version=' + VERSION : ""}&type=${subtype}&isPreview=preview`;
 			// "/home/model?customId=" + id + "&type=" + subtype + "&isPreview=preview"; //拼接路径
 			require('electron').shell.openExternal(href); //使用electron打开默认浏览器   
 		});
@@ -224,13 +224,13 @@ function navbar() {
 				hasBrace: true,
 				global: true,
 				functions: [{
-						data: localFunction,
-						title: "本地函数"
-					},
-					{
-						data: remoteFunction,
-						title: "远程函数"
-					}
+					data: localFunction,
+					title: "本地函数"
+				},
+				{
+					data: remoteFunction,
+					title: "远程函数"
+				}
 				],
 				onSetProperty: function (data) {
 					new Property().setValue('BODY', 'globalMethods', data)
@@ -247,12 +247,12 @@ function navbar() {
 
 			$.when(fileService.readFile("/profiles/local_functions.json", "UTF-8"),
 				fileService.readFile("/profiles/remote_functions.json", "UTF-8")).done(function (result1, result2) {
-				if (!result1 || !result2) return;
-				globalExprMethods($this, result1, result2);
-			}).fail(function (err) {
-				console.log(err);
-				alert("全局函数配置器生成失败！");
-			});
+					if (!result1 || !result2) return;
+					globalExprMethods($this, result1, result2);
+				}).fail(function (err) {
+					console.log(err);
+					alert("全局函数配置器生成失败！");
+				});
 		});
 	})();
 }
@@ -266,6 +266,48 @@ function controlbar() {
 				var type = $(this).data("type");
 				$node = new Control().getControl(type)
 				type === 'text' && $node.width(151).height(27);
+				return $node;
+			},
+			cursorAt: {
+				left: 0,
+				top: 0
+			}
+		});
+
+		// 圆按钮
+		$("#controlbar .control-item[data-type='circleBtn']").draggable({ //给draggable传递参数可拖动的控件
+			helper: function () {
+				var type = $(this).data("type");
+				$node = new Control().getControl(type);
+				$node.css({
+					"width": "15px",
+					"height": "15px",
+					"padding": "0",
+					"border": "5px solid red",
+					"background-color": "white",
+					"border-radius": "100%"
+				});
+				return $node;
+			},
+			cursorAt: {
+				left: 0,
+				top: 0
+			}
+		});
+
+		// 点按钮
+		$("#controlbar .control-item[data-type='dotBtn']").draggable({ //给draggable传递参数可拖动的控件
+			helper: function () {
+				var type = $(this).data("type");
+				$node = new Control().getControl(type);
+				$node.css({
+					"width": "5px",
+					"height": "5px",
+					"padding": "0",
+					"border": "none",
+					"background-color": "red",
+					"border-radius": "100%"
+				});
 				return $node;
 			},
 			cursorAt: {
@@ -476,13 +518,13 @@ function propertybar() {
 					},
 				],
 				functions: [{
-						data: localFunction,
-						title: "本地函数"
-					},
-					{
-						data: remoteFunction,
-						title: "远程函数"
-					}
+					data: localFunction,
+					title: "本地函数"
+				},
+				{
+					data: remoteFunction,
+					title: "远程函数"
+				}
 				],
 				systemFunction: systemFunction,
 				onSetProperty: function (expr) {
@@ -509,39 +551,39 @@ function propertybar() {
 				fileService.readFile("/profiles/local_functions.json", "UTF-8"),
 				fileService.readFile("/profiles/remote_functions.json", "UTF-8"),
 				fileService.readFile("/profiles/system_functions.json", "UTF-8")).done(function (result1, result2, result3, result4) {
-				if (!result1 || !result2 || !result3 || !result4) return;
-				var staticGlobal = result1,
-					localFunction = result2,
-					remoteFunction = result3,
-					systemFunction = result4,
-					globalVariable = {},
-					localVariable = {};
+					if (!result1 || !result2 || !result3 || !result4) return;
+					var staticGlobal = result1,
+						localFunction = result2,
+						remoteFunction = result3,
+						systemFunction = result4,
+						globalVariable = {},
+						localVariable = {};
 
-				if (staticGlobal) {
-					if (Array.isArray(staticGlobal.global)) {
-						staticGlobal.global.forEach(el => {
-							globalVariable[el.key] = el.desc;
-						});
+					if (staticGlobal) {
+						if (Array.isArray(staticGlobal.global)) {
+							staticGlobal.global.forEach(el => {
+								globalVariable[el.key] = el.desc;
+							});
+						}
+						let workspaceId = $('#workspace').attr('data-id');
+						if (workspaceId && Array.isArray(staticGlobal[workspaceId])) {
+							staticGlobal[workspaceId].forEach(el => {
+								localVariable[el.key] = el.desc;
+							});
+						}
 					}
-					let workspaceId = $('#workspace').attr('data-id');
-					if (workspaceId && Array.isArray(staticGlobal[workspaceId])) {
-						staticGlobal[workspaceId].forEach(el => {
-							localVariable[el.key] = el.desc;
-						});
-					}
-				}
 
-				// if (globalId) {
-				// 	commonService.getFile("/publish/" + globalId + "/property.json", function (dynamicGlobal) {
-				// 		buildArgs($expr, staticGlobal, dynamicGlobal, localFunction, remoteFunction, systemFunction);
-				// 	});
-				// } else {
-				buildArgs($expr, globalVariable, localVariable, localFunction, remoteFunction, systemFunction);
-				// }
-			}).fail(function (err) {
-				console.log(err);
-				alert("表达式生成器参数数据生成失败！");
-			});
+					// if (globalId) {
+					// 	commonService.getFile("/publish/" + globalId + "/property.json", function (dynamicGlobal) {
+					// 		buildArgs($expr, staticGlobal, dynamicGlobal, localFunction, remoteFunction, systemFunction);
+					// 	});
+					// } else {
+					buildArgs($expr, globalVariable, localVariable, localFunction, remoteFunction, systemFunction);
+					// }
+				}).fail(function (err) {
+					console.log(err);
+					alert("表达式生成器参数数据生成失败！");
+				});
 		});
 	})();
 
@@ -858,15 +900,15 @@ function phone() {
 							oriProperty = property.getValue(oriId),
 							newId = 'phone_' + NumberHelper.getNewId(type, $phone_content),
 							$newDom = $($ori.get(0).outerHTML).removeAttr('class').attr('class', 'workspace-node')
-							.attr({
-								id: newId,
-								name: newId
-							}).css({
-								"width": $ori.outerWidth(),
-								"height": $ori.outerHeight(),
-								"left": $ori.offset().left - p_offset.left + $phone_content.scrollLeft(),
-								"top": $ori.offset().top - p_offset.top + $phone_content.scrollTop()
-							});
+								.attr({
+									id: newId,
+									name: newId
+								}).css({
+									"width": $ori.outerWidth(),
+									"height": $ori.outerHeight(),
+									"left": $ori.offset().left - p_offset.left + $phone_content.scrollLeft(),
+									"top": $ori.offset().top - p_offset.top + $phone_content.scrollTop()
+								});
 						$this.css(LAST_POSITION[oriId]);
 						oriProperty && property.setValue(newId, null, oriProperty);
 						$newDom.appendTo($phone_content);

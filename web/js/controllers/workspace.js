@@ -514,7 +514,7 @@ function Workspace() {
             });
         }
         var router = type == "布局" ? `./product/${id}${version?'.'+version:""}` : `./resource/${id}`;
-        that.judgeFile(router).then(res => {
+        return that.judgeFile(router).then(res => {
             //文件夹不存在
             if (!res) {
                 return that.mkdirFile(router)
@@ -721,7 +721,7 @@ Workspace.prototype = {
         }).fail(function (err) { //如果失败
         });
     },
-    save: function (isPrompt, saveAsId, changeId, changeData, changeName, version) {
+    save: async function (isPrompt, saveAsId, changeId, changeData, changeName, version) {
         var that = this;
         if (isPrompt) {
             var isValidate = that._sameNameValidate(); //调用_sameNameValidate
@@ -777,7 +777,12 @@ Workspace.prototype = {
             })
             var data = that._getData(saveId, name, type, contactId)
             if (data) {
-                that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData, version)
+                try {
+                    
+                   await that._setData(isPrompt, saveId, type, data.settingData, data.modelData, data.tableData, data.phoneData, data.phoneSettingData, version)
+                } catch (error) {
+                    console.log(error)
+                }
             }
 
         }

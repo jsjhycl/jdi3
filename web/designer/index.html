@@ -118,9 +118,17 @@
                 <span class="glyphicon glyphicon-subtitles"></span>
                 <span>文本框</span>
             </li>
-            <li class="control-item" data-type="button" title="按钮">
+            <li class="control-item" data-type="button" title="方按钮">
+                <span class="glyphicon glyphicon-unchecked"></span>
+                <span>方按钮</span>
+            </li>
+            <li class="control-item" data-type="circleBtn" title="圆按钮">
                 <span class="glyphicon glyphicon-record"></span>
-                <span>按钮</span>
+                <span>圆按钮</span>
+            </li>
+            <li class="control-item" data-type="dotBtn" title="点按钮">
+                <span class="glyphicon glyphicon-option-horizontal"></span>
+                <span>点按钮</span>
             </li>
             <li class="control-item" data-type="checkbox" title="复选框">
                 <span class="glyphicon glyphicon-check"></span>
@@ -1203,6 +1211,10 @@
                 </header>
                 <section class="modal-body">
                     <form class="form-inline">
+                          <div class="form-group" style="margin-bottom: 5px">
+                              <label class="fromlable">数据库名</label>
+                              <input class="form-control" type="text" data-type="dbName">
+                          </div>
                         <div class="form-group" style="margin-bottom: 5px">
                             <label class="fromlable">表名</label>
                             <input class="form-control " type="text" disabled="true" data-type="tableName">
@@ -1211,14 +1223,29 @@
                             <label class="fromlable">表描述</label>
                             <input class="form-control " type="text" data-type="description">
                         </div>
-                        <div class="form-group" style="margin-bottom: 5px">
+                        <div class="form-group" style="margin-bottom:5px;">
+                            <label class="fromlable">目录表</label>
+                            <select class="form-control " data-type="databaseList" style="width: 196px;">
+                                <option value="">请选择外库目录表</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom:5px;">
+                            <label class="fromlable">映射库</label>
+                            <select class="form-control " data-type="databaseName" style="width: 196px;">
+                                <option value="">请选择数据库</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom:5px;">
+                            <label class="fromlable">映射表</label>
+                            <select class="form-control " data-type="databaseTableName" style="width: 196px;">
+                                <option value="">请选择数据表</option>
+                            </select>
+                        </div>
+                        <!-- <div class="form-group" style="margin-bottom: 5px">
                             <label class="fromlable">IP地址</label>
                             <input class="form-control" type="text" data-type="IPArea">
                         </div>
-                        <div class="form-group" style="margin-bottom: 5px">
-                            <label class="fromlable">数据库名</label>
-                            <input class="form-control" type="text" data-type="dbName">
-                        </div>
+                      
                         <div class="form-group" style="margin-bottom: 5px">
                             <label class="fromlable">映射表名</label>
                             <input class="form-control" type="text" data-type="mapTableName">
@@ -1238,8 +1265,8 @@
                         <div class="form-group" style="margin-bottom: 5px">
                             <label class="fromlable">库类型</label>
                             <input class="form-control " type="text" data-type="dbType">
-                        </div>
-                        <button class="btn queryDb btn-sm" style="float: right;">查询</button>        
+                        </div> -->
+                        <!-- <button class="btn queryDb btn-sm" style="float: right;">查询</button>         -->
                     </form>
                     <div>
                         <table class="table table-bordered table-striped">

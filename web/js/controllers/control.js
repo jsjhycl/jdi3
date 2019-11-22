@@ -2,6 +2,8 @@ function Control() {
     this.CONTROL_TYPES = {
         text: '<input data-type="text" type="text" value="">',
         button: '<input data-type="button" type="button" value="button">',
+        circleBtn: '<input data-type="circleBtn" type="button" value="circleBtn">',
+        dotBtn: '<input data-type="dotBtn" type="button" value="dotBtn">',
         checkbox: '<input data-type="checkbox" type="checkbox" value="">',
         img: '<img data-type="img">',
         div: '<div data-type="div"></div>',
@@ -11,16 +13,18 @@ function Control() {
     this.CONTROL_HTML = {
         text: '<input data-type="text" type="text">',
         button: '<input data-type="button" type="button">',
+        circleBtn: '<input data-type="circleBtn" type="button">',
+        dotBtn: '<input data-type="dotBtn" type="button">',
         checkbox: '<input data-type="checkbox" type="checkbox">',
         img: '<div data-type="img"></div>',
         div: '<div data-type="div"></div>',
         arrow: '<canvas data-type="arrow"></canvas>',
         hidden: '<input data-type="hidden" type="hidden">'
     };
-    this.getArrowConfig =  function(subtype, w, h) {
+    this.getArrowConfig = function (subtype, w, h) {
         var result = { dots: [], rotate: 0 },
             triangle = 45;
-        switch(subtype) {
+        switch (subtype) {
             case 'left-arrow':
                 result.rotate = 180;
             case 'right-arrow':
@@ -80,10 +84,10 @@ function Control() {
         }
         return result;
     };
-    this.rotateCenter = function(ctx, rotate, w, h) {
+    this.rotateCenter = function (ctx, rotate, w, h) {
         if (!ctx || !rotate) return;
-        ctx.translate( w / 2, h / 2);
-        ctx.rotate(rotate * Math.PI/180);
+        ctx.translate(w / 2, h / 2);
+        ctx.rotate(rotate * Math.PI / 180);
         ctx.translate(-w / 2, -h / 2);
     };
 }
@@ -124,8 +128,8 @@ Control.prototype = {
                 arrs.push(id.substring(prefix.length));
             }
         });
-        if(arrs.includes("ZZZZ")){
-            arrs.splice(arrs.indexOf("ZZZZ"),1)
+        if (arrs.includes("ZZZZ")) {
+            arrs.splice(arrs.indexOf("ZZZZ"), 1)
         }
         var max = arrs.max("String");
         if (!max) return prefix + "AAAA";
@@ -164,8 +168,8 @@ Control.prototype = {
             $node = $(that.CONTROL_HTML[basic.type]),
             $ori = $('#' + basic.id),
             type = new Property().getValue(basic.id, 'controlType');
-        
-        $node.attr({"id": basic.id, "name": basic.name, value: basic.value || ""});
+
+        $node.attr({ "id": basic.id, "name": basic.name, value: basic.value || "" });
 
         if (type === '签名控件') $node.attr('control-type', '签名控件');
 
@@ -188,7 +192,7 @@ Control.prototype = {
                 break;
             case "div":
                 $node.append(basic.attach ? basic.attach.html : "");
-                $ori.find(':checkbox').each(function() {
+                $ori.find(':checkbox').each(function () {
                     $(this).is(':checked') ? $node.find('#' + this.id).attr('checked', 'checked') : $node.find('#' + this.id).removeAttr('checked')
                 })
                 break;
@@ -265,9 +269,9 @@ Control.prototype = {
             new Property().setDefault(number);
         });
     },
-    getPhoneControlHtml: function($el, id) {
+    getPhoneControlHtml: function ($el, id) {
         if (!$el || !id) return;
-        
+
         var top = parseFloat($el.css('top')),
             left = parseFloat($el.css('left')),
             height = $el.outerHeight(),
@@ -275,27 +279,27 @@ Control.prototype = {
             cname = property.getValue(id, "cname"),
             relatedId = property.getValue(id, "relatedId"),
             newCname = !cname || cname != id ? property.getValue(id, "cname") : relatedId ? property.getValue(relatedId, "cname") : "";
-            controlHtml = $($el.get(0).outerHTML).attr('id', GLOBAL_PROPERTY[id] && relatedId ? relatedId : id).get(0).outerHTML,
+        controlHtml = $($el.get(0).outerHTML).attr('id', GLOBAL_PROPERTY[id] && relatedId ? relatedId : id).get(0).outerHTML,
             spanHtml = "",
             $span = newCname ? $("<span style='position: absolute; visibility: hidden;'>" + newCname + "</span>") : "";
-            if ($span) {
-                var span_width = $span.appendTo($("body")).width(),
-                    span_height = $span.height();
-                $span.remove();
-                spanHtml += "<span style='position: absolute; top: "+ (height > span_height ? (height - span_height)/2 + top : top ) +"px; left: "+ (left - span_width - 8) +"px'>"+ newCname +"</span>";
-            }
-            return controlHtml + spanHtml;
-    },    
-    drawArrow: function($cvs, subtype, w, h) {
+        if ($span) {
+            var span_width = $span.appendTo($("body")).width(),
+                span_height = $span.height();
+            $span.remove();
+            spanHtml += "<span style='position: absolute; top: " + (height > span_height ? (height - span_height) / 2 + top : top) + "px; left: " + (left - span_width - 8) + "px'>" + newCname + "</span>";
+        }
+        return controlHtml + spanHtml;
+    },
+    drawArrow: function ($cvs, subtype, w, h) {
         if (!$cvs || Number.isNaN(Number(w))) return;
 
         var ctx = $cvs.get(0).getContext('2d'),
             w = w || parseInt($cvs.attr("width")),
             h = h || parseInt($cvs.attr("height"));
-    
+
         $cvs.attr({ width: w, height: h });
         var config = this.getArrowConfig(subtype, w, h);
-        
+
         // 清空画布
         ctx.clearRect(0, 0, w, h);
         ctx.lineWidth = 1;
@@ -303,7 +307,7 @@ Control.prototype = {
         this.rotateCenter(ctx, config.rotate, w, h)
         // 画坐标
         var dots = config.dots;
-        dots.forEach(function(item, idx) {
+        dots.forEach(function (item, idx) {
             if (idx === 0) return ctx.moveTo(...item);
             ctx.lineTo(...item);
             idx === dots.length - 1 && ctx.lineTo(...dots[0]);
@@ -315,7 +319,7 @@ Control.prototype = {
         ctx.fill();
         ctx.save();
     },
-    setDrawControl: function(type, subtype, w, h, callback) {
+    setDrawControl: function (type, subtype, w, h, callback) {
         var that = this,
             $canvas = $(that.CONTROL_TYPES[type]);
         $canvas.addClass("workspace-node").css({

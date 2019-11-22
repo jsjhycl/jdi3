@@ -145,8 +145,6 @@ OpenConfigModal.prototype = {
             name: i,
             value: i
         }));
-        console.log("data :", data)
-        console.log("customData:", customData)
         tableSelect = customData["db"] ?
             Object.keys(data[customData["db"]]).map(el => {
                 if (data[customData["db"]][el].key === this.key) return {
@@ -274,7 +272,6 @@ OpenConfigModal.prototype = {
                 name = $(this).find("option:selected").text(),
                 $tableConditionsWrap = that.$body.find('[data-name="table_conditions_wrap"]'),
                 html = '';
-            console.log(value, $(`[data-condition][data-name="${value}"]`))
             if (value && that.$modal.find(`[data-condition][data-name="${value}"]`).length <= 0) {
                 html += that.renderConditionItem({
                     col: value,

@@ -380,7 +380,7 @@ DbDesignerModal.prototype = {
         data.forEach(item => {
             property.setValue(item.id, "db", [])
         })
-        GLOBAL_PROPERTY.BODY ? "" : GLOBAL_PROPERTY.BODY ={};
+        GLOBAL_PROPERTY.BODY ? "" : GLOBAL_PROPERTY.BODY = {};
         GLOBAL_PROPERTY.BODY.keyInfo = savekeyInfo
         data.forEach(function (item) {
             if (!item.isSave) return true;
@@ -583,7 +583,6 @@ DbDesignerModal.prototype = {
                         $dbName.val(item).trigger("change").trigger("chosen:updated")
                         $table.val(id).trigger("change").trigger("chosen:updated")
                         $field.val($id.val()).trigger("change").trigger("chosen:updated")
-
                     }
                 })
             } else {
@@ -597,6 +596,7 @@ DbDesignerModal.prototype = {
             that.judgeNewTable()
 
         })
+
         //点击全部入库
         that.$db.on("click" + that.NAME_SPACE, "thead th .check-all", function () {
             var rowIndex = $(this).parent('th').index();
@@ -608,6 +608,7 @@ DbDesignerModal.prototype = {
                 $checkbox.prop("checked", !isChecked).trigger("click")
             })
         })
+
         //鼠标悬浮上去
         that.$db.on("mouseover" + that.NAME_SPACE, "tbody tr", function () {
             var $this = $(this),
@@ -615,6 +616,7 @@ DbDesignerModal.prototype = {
                 $target = that.$db.find(`tbody tr[data-id="${dataId}"]`);
             $target.css("background", "#eee")
         })
+        
         //鼠标移除
         that.$db.on("mouseleave" + that.NAME_SPACE, "tbody tr", function () {
             var $this = $(this),

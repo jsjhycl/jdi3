@@ -2,6 +2,10 @@ function Service() {
     this.baseUrl = "/dbApi/dbOperate";
     this.routerTable = "router"
     this.createTableURL = "/dataApi/api/dataportal/createtable"
+    this.queryExteraDbName = "/dataApi/api/dataportal/listexternaldatabases" //获取外库的库名
+    this.queryExteraTableName = "/dataApi/api/dataportal/listexternaltables" //获取外库的表名
+    this.queryExteraColums = "/dataApi//api/dataportal/listexternalcolumns" //获取外库的字段
+
     this.queryDb = "/dataApi/api/dataportal/query" //查询所有的数据库所有表的数据
     this.publishURl = "/home/dirCopy"
     //获取远程数据库配置
@@ -180,6 +184,95 @@ Service.prototype = {
             })
         })
     },
+    //获取外库的库名
+    getExtraDbName: function (data) {
+        var that = this;
+        return new Promise(function (resolve, reject) {
+            $.cajax({
+                url: that.queryExteraDbName,
+                type: "POST",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: "json",
+                success: rst => {
+                    var failedMsg = "操作失败!\n消息";
+                    if(DataType.isObject(rst)){
+                        var data = rst.errmsg;
+                        if(rst.errno === 0){
+                            resolve(rst)
+                        }else{
+                            alert(failedMsg + JSON.stringify(data, null, 2));
+                        }
+                    }else{
+                        alert(failedMsg + "服务器数据获取异常！")
+                        reject("服务器数据获取异常！");
+                    }
+                },
+                error: err => reject(err)
+            })
+        })
+    },
+    //获取外库的表名
+    getExtraTableName: function (data) {
+        var that = this;
+        return new Promise(function (resolve, reject) {
+            $.cajax({
+                url: that.queryExteraTableName,
+                type: "POST",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: "json",
+                success: rst => {
+                    var failedMsg = "操作失败!\n消息";
+                    if (DataType.isObject(rst)) {
+                        var data = rst.errmsg;
+                        if (rst.errno === 0) {
+                            resolve(rst)
+                        } else {
+                            alert(failedMsg + JSON.stringify(data, null, 2));
+                        }
+                    } else {
+                        alert(failedMsg + "服务器数据获取异常！")
+                        reject("服务器数据获取异常！");
+                    }
+                },
+                error: err => {
+                    reject(err)
+                }
+            })
+        })
+    },
+    //获取外库的列名
+    getExtraCloums: function (data) {
+        var that = this;
+        return new Promise(function (resolve, reject) {
+            $.cajax({
+                url: that.queryExteraColums,
+                type: "POST",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: "json",
+                success: rst => {
+                    var failedMsg = "操作失败!\n消息";
+                    if (DataType.isObject(rst)) {
+                        var data = rst.errmsg;
+                        if (rst.errno === 0) {
+                            resolve(rst)
+                        } else {
+                            alert(failedMsg + JSON.stringify(data, null, 2));
+                        }
+                    } else {
+                        alert(failedMsg + "服务器数据获取异常！")
+                        reject("服务器数据获取异常！");
+                    }
+                },
+                error: err => {
+                    reject(err)
+                }
+            })
+        })
+    },
+
     getRemoteTable: function (data) {
         var that = this;
         return new Promise(function (resolve, reject) {

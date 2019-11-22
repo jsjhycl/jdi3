@@ -583,7 +583,6 @@ DbDesignerModal.prototype = {
                         $dbName.val(item).trigger("change").trigger("chosen:updated")
                         $table.val(id).trigger("change").trigger("chosen:updated")
                         $field.val($id.val()).trigger("change").trigger("chosen:updated")
-
                     }
                 })
             } else {

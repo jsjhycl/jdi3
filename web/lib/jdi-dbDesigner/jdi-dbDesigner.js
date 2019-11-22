@@ -202,7 +202,8 @@
                     var $checkbox = $(this).find("td:eq(" + index + ") :checkbox"),
                         key = $checkbox.attr("data-key"),
                         $tr = $(this);
-                    $checkbox.prop("checked", isChecked);
+                    $checkbox.prop("checked", !isChecked);
+                    $checkbox.trigger("click")
                     that.setDefaultData(current, key, $tr, isChecked);
                 });
             });
@@ -220,10 +221,11 @@
             //2017/09/27补充
             if (isChecked) {
                 $tr.find(selectors).prop("disabled", false);
+                $tr.find(selectors).trigger("chosen:updated")
                 var id = $tr.find('[data-key="id"]').val(),
                     cname = $tr.find('[data-key="cname"]').val();
                 $tr.find('[data-key="table"]').val();
-                $tr.find('[data-key="dbName"]').val()
+                $tr.find('[data-key="dbName"]').val();
                 $tr.find('[data-key="field"]').val();
                 $tr.find('[data-key="desc"]').val(cname);
             } else {

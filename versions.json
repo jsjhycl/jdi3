@@ -19,7 +19,7 @@
         "detail": ["menu菜单显示当前版本信息"]
     }, {
         "version": "1.1.4",
-        "files": ["web/designer/index.html", "web/css/common.css", "web/js/index.js", "web/js/controllers/control.js", "web/js/controllers/workspace.js", "web/js/dbApply.modal.js", "web/js/modals/dbDesigner.modal.js", "web/js/modals/openConfig.modal.js", "web/js/modals/saveAs.modal.js", "web/js/services/service.js", "web/lib/jresizable/jresizable.js", "web/lib/jdi-dbDesigner/jdi-dbDesigner.js", "versions.json"],
+        "files": ["web/designer/index.html", "web/css/common.css", "web/js/index.js", "web/js/controllers/control.js", "web/js/controllers/workspace.js", "web/js/modals/dbApply.modal.js", "web/js/modals/dbDesigner.modal.js", "web/js/modals/openConfig.modal.js", "web/js/modals/saveAs.modal.js", "web/js/services/service.js", "web/lib/jresizable/jresizable.js", "web/lib/jdi-dbDesigner/jdi-dbDesigner.js", "versions.json"],
         "detail": ["按钮样式问题", "考勤函数问题", "其他bug解决"]
     }, {
         "version": "1.1.5",

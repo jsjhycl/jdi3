@@ -1,18 +1,18 @@
+# dirs
 node_modules/
-/*.js
-# /main/*.js
-# /render/*.js
 .idea
-/dist/
-data/temp/
-temp.html
-.vscode
-test.ts
-/_*/
-services/ioHelper.js
-services/fileApi.js
-_template
-说明.txt
-/.svn/
-config.json
 .history
+_template
+.svn
+.vscode
+dist
+data/temp/
+/_*/
+
+# files
+说明.txt
+*.html
+test.ts
+test.js
+config.json
+*.log

@@ -364,7 +364,7 @@ function controlbar() {
 						$node.attr({
 							"id": number,
 							"name": number,
-							"src": jdi.fileApi.getConfigUrl().serverUrl + new FileService().imgUrl + '/' + rst.result[0].fileName
+							"src": jdi.fileApi.getConfigUrl().displayUrl + new FileService().imgUrl + '/' + rst.result[0].fileName
 						}).css({
 							"left": "5px",
 							"top": "5px"

@@ -1,6 +1,6 @@
 {
     "name": "jdi客户端",
-    "version": "1.1.7",
+    "version": "1.1.8",
     "list": [{
         "version": "1.1.0",
         "files": [],
@@ -33,5 +33,9 @@
         "version": "1.1.7",
         "files": ["config.json", "versions.json"],
         "detail": ["域名问题"]
+    }, {
+        "version": "1.1.8",
+        "files": ["web/js/modals/publish.modal.js", "web/js/modals/openResurce.modal.js", "versions.json"],
+        "detail": ["发布布局去除删除功能","删除布局版本问题"]
     }]
 }

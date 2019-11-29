@@ -324,7 +324,6 @@ SetDbDesignerModal.prototype = {
                 description: tableDesc,
                 columns: bingocolumns
             }
-            修改接口
             new Service().createTable(bingoData).then(res => {
                 that._clearData()
                 that._uploderDb(localData).then(res => {

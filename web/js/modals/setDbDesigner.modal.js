@@ -95,7 +95,7 @@ SetDbDesignerModal.prototype = {
     },
     initTableHeader: function (dbName) {
         var that = this;
-        if (that.dbList[dbName][that.tableName]) {
+        if (that.dbList[dbName] && that.dbList[dbName][that.tableName]) {
             var tabledetail = that.dbList[dbName][that.tableName];
             that.$dbName.val(dbName)
             that.$tabeleDesc.val(tabledetail.tableDesc)
@@ -116,7 +116,75 @@ SetDbDesignerModal.prototype = {
     },
     initTable: function (dbName) {
         var that = this;
-        that.$setDbDesigner.dbDesigner({
+        // that.$setDbDesigner.dbDesigner({
+        //     disabled: false,
+        //     $elems: $("#workspace").find("input"),
+        //     thead: [{
+        //             name: "id",
+        //             text: "编号",
+        //             key: "id",
+        //             template: function (value) {
+        //                 return '<input class="form-control" data-key="id" type="text" value="' + value + '" readonly>';
+        //             }
+        //         },
+        //         {
+        //             name: "cname",
+        //             text: "中文名",
+        //             key: "cname",
+        //             template: function (value) {
+        //                 return '<input class="form-control" data-key="cname" type="text" value="' + value + '" readonly>';
+        //             }
+        //         },
+        //         {
+        //             name: "type",
+        //             text: "数据类型",
+        //             key: "type",
+        //             template: function (value) {
+        //                 return `<select class="form-control" data-key="type">
+        //                             <option value="string" ${value=="string"?"selected":""}>字符型</option>
+        //                             <option value="int" ${value=="int"?"selected":""}>整型</option>
+        //                             <option value="float" ${value=="float"?"selected":""}>浮点型</option>
+        //                             <option value="time" ${value=="time"?"selected":""}>日期型</option>
+        //                             <option value="datetime" ${value=="datetime"?"selected":""}>时间型</option>
+        //                         </select>`
+        //             }
+        //         },
+        //         {
+        //             name: "maxlength",
+        //             text: "数据长度",
+        //             key: "maxlength",
+        //             template: function (value) {
+        //                 return `<input class="form-control"  data-key="maxlength" type="text" value="${value||50}"></input>`
+        //             }
+        //         },
+        //         {
+        //             name: "isSave",
+        //             text: "是否入库",
+        //             key: "isSave",
+        //             group: true,
+        //             hasCheckbox: true,
+        //             template: function (value) {
+        //                 var isChecked = !!value ? " checked" : "";
+        //                 return '<input data-key="isSave" type="checkbox"' + isChecked + '>';
+        //             }
+        //         },
+        //         { //新增加
+        //             name: "fieldSplit",
+        //             text: "字段分段",
+        //             key: "fieldSplit",
+        //             group: true,
+        //             template: function (value) {
+        //                 return '<input class="form-control" data-key="fieldSplit"  type="text" value="' + value + '">'
+        //             }
+        //         }
+        //     ],
+        //     getProperty: new Property().getProperty,
+        //     dbList: that.dbList,
+        //     db: dbName,
+        //     table: that.tableName,
+        //     type: "setDbDesigner"
+        // })
+        that.$setDbDesigner.databaseDesigner({
             disabled: false,
             $elems: $("#workspace").find("input"),
             thead: [{
@@ -174,15 +242,14 @@ SetDbDesignerModal.prototype = {
                     key: "fieldSplit",
                     group: true,
                     template: function (value) {
-                        return '<input class="form-control" data-key="fieldSplit"  type="text" value="' + value + '">'
+                        return `<input class="form-control" data-key="fieldSplit"  type="text" value=${value>0?value:""}>`
                     }
                 }
             ],
             getProperty: new Property().getProperty,
             dbList: that.dbList,
             db: dbName,
-            table: that.tableName,
-            type: "setDbDesigner"
+            table: that.tableName
         })
     },
     saveData: async function () {
@@ -192,8 +259,9 @@ SetDbDesignerModal.prototype = {
             action: 'sign/auth',
             title: "扫码验证权限建表",
             data: new Date().valueOf()
-        }, function() {
-                var data = that.$setDbDesigner.dbDesigner("getData"),
+        }, function () {
+            // var data = that.$setDbDesigner.dbDesigner("getData"),
+            var data = that.$setDbDesigner.databaseDesigner("getData"),
                 dbName = that.$dbName.val(),
                 tableName = that.$tableName.val(),
                 tableDesc = that.$tabeleDesc.val(),
@@ -256,7 +324,7 @@ SetDbDesignerModal.prototype = {
                 description: tableDesc,
                 columns: bingocolumns
             }
-            //修改接口
+            修改接口
             new Service().createTable(bingoData).then(res => {
                 that._clearData()
                 that._uploderDb(localData).then(res => {
@@ -264,7 +332,7 @@ SetDbDesignerModal.prototype = {
                 })
             })
         })
-            
+
     },
 
     execute: function () {

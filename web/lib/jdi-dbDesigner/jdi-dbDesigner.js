@@ -102,8 +102,8 @@
                         });
                         tbody += "</tr>";
                     })
-                    if (!setTableDetail.reserveOne){//解决本表数据带主键ID的文题
-                        var setTableDetail = $.extend( {}, setTableDetail)
+                    if (!setTableDetail.reserveOne) { //解决本表数据带主键ID的文题
+                        var setTableDetail = $.extend({}, setTableDetail)
                         setTableDetail.tableDetail.shift()
                     }
                     setTableDetail.tableDetail.some(n => {
@@ -376,7 +376,7 @@
             }
             if (ckey == "field") {
                 if (dbName && table) {
-                    var fields = dbList[dbName][table].tableDetail;
+                    var fields = (dbList[dbName][table] && dbList[dbName][table].tableDetail) || [];
                     fields.forEach(function (item) {
                         options.push({
                             name: item.cname,
@@ -389,9 +389,9 @@
                 if (dbName && table) {
                     var fields = dbList[dbName][table].tableDetail,
                         fieldSplits = '';
-                   
+
                     fields.forEach(function (item) {
-                        if (field== item.id) {
+                        if (field == item.id) {
                             fieldSplits = Number(item.fieldSplit)
                         }
                     })

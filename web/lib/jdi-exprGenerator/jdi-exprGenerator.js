@@ -906,6 +906,7 @@
                 event.stopPropagation();
                 var $eg = $(".eg:visible"),
                     $egExpr = $eg.find(".eg-expr"),
+                    $arg = $eg.find("[data-type='arg'].active, .queryConfig .active"),
                     value = $(this).val();
                 //2017/9/16演示前添加的特殊处理
                 var text = $(this).text();
@@ -914,17 +915,22 @@
                     value = value.replace("{ID}", id);
                 }
 
-                var $list = $('.eg .eg-function').find(".eg-system-list");
-                cache = $.data(element, CACHE_KEY);
-                if ($list.is(":visible")) {
-                    FunctionUtil.setSystemStatus(true);
-                    $(this).find(".fn-system .fn-system-item").first().click();
-                    $list.hide().prev().show();
-                    var newFn = FunctionUtil.getSystemFnOrder(cache.systemFunction);
-                    new FileService().writeFile('/profiles/system_functions', JSON.stringify(newFn));
+                if ($arg.length > 0) {
+                    $arg.val(value)
+                } else {
+                    var $list = $('.eg .eg-function').find(".eg-system-list");
+                    cache = $.data(element, CACHE_KEY);
+                    if ($list.is(":visible")) {
+                        FunctionUtil.setSystemStatus(true);
+                        $(this).find(".fn-system .fn-system-item").first().click();
+                        $list.hide().prev().show();
+                        var newFn = FunctionUtil.getSystemFnOrder(cache.systemFunction);
+                        new FileService().writeFile('/profiles/system_functions', JSON.stringify(newFn));
+                    }
+                    FunctionUtil.effect("close");
+                    that.setExpr($egExpr, $egExpr.get(0), $egExpr.val(), value);
                 }
-                FunctionUtil.effect("close");
-                that.setExpr($egExpr, $egExpr.get(0), $egExpr.val(), value);
+
             });
             //表达式元素input事件
             $(document).on("input" + EVENT_NAMESPACE, ".eg .eg-expr, .eg [data-type='arg']", {
@@ -1512,7 +1518,7 @@
             if (!expr) return "";
             let that = this;
             // return expr.replace(/[a-zA-Z]+?\(([^)]*)\)/img, function () {
-            return expr.replace(/[a-zA-Z]+?\((.+)\)/img, function () {
+            return expr.replace(/[a-zA-Z]+?\((.[^)]*)\)/img, function () {
                 let fn = arguments[0];
                 // 远程函数
                 if (fn.startsWith('functions')) {

@@ -59,15 +59,11 @@
                 `<label class="${labelClass} control-label">查询频率/秒：</label>` +
                 '<div class="col-lg-3"><input class="form-control" data-name="query_time" placeHolder="根据查询频率进行数据查询" /></div>' +
                 '</div>' : "",
-                renderTable = !renderTable ? '<div class="form-group">' +
-                `<label class="${labelClass} control-label">数据渲染表：</label>` +
-                '<div class="col-lg-3"><select class="form-control" data-name="render_table"><select></div>' +
-                '</div>' : "",
                 conditionsHtml = !isColumn ? '<div class="form-group">' +
                 `<label class="${labelClass} control-label">查询条件：</label>` +
                 `<div class="${inputClass} querier-conditions"></div>` +
                 '</div>' : '';
-            $(element).empty().append(tableHtml + querierRate + renderTable + that.renderFields(element) + conditionsHtml).addClass("form-horizontal querier");
+            $(element).empty().append(tableHtml + querierRate + that.renderFields(element) + conditionsHtml).addClass("form-horizontal querier");
         },
         renderFields: function (element) {
             var cache = $.data(element, CACHE_KEY),
@@ -103,7 +99,6 @@
                 $querierFields = $(element).find(".querier-fields"),
                 $querierConditions = $(element).find(".querier-conditions"),
                 $queryTime = $(element).find('[data-name="query_time"]'),
-                $renderTable = $(element).find('[data-name="render_table"]'),
                 fieldMode = cache.fieldMode,
                 noExpression = !!cache.noExpression,
                 reduceTypeConfig = !!cache.reduceTypeConfig,
@@ -115,20 +110,18 @@
                 $querierFields = $(element).find(".querier-fields-column");
             };
 
-            var dbName, table, fields, conditions, queryTime, renderTable;
+            var dbName, table, fields, conditions, queryTime;
             if (DataType.isObject(data)) {
                 dbName = data.dbName;
                 table = data.table;
                 fields = data.fields;
                 conditions = data.conditions;
                 queryTime = data.queryTime;
-                renderTable = data.renderTable;
             }
             var AllDbName = that.AllDbName,
                 dbOptions = [],
                 tableOptions = [],
-                fieldsoptions = [],
-                renderTableOptions = [];
+                fieldsoptions = [];
             Object.keys(AllDbName).forEach(function (item) {
                 dbOptions.push({
                     name: item,
@@ -170,18 +163,6 @@
                 queryCondition: queryCondition,
             });
             $queryTime.val(queryTime || "");
-            $("#workspace").find('[data-type="div"]').each(function () {
-                var $this = $(this),
-                    id = $this.attr('id');
-                if ($this.find('table').length > 0) renderTableOptions.push({
-                    name: id,
-                    value: id
-                })
-            });
-            Common.fillSelect($renderTable, {
-                name: "请选择渲染表",
-                value: ""
-            }, renderTableOptions, renderTable, true)
         },
         setFields: function ($fieldsDiv, fieldMode, fields, data) {
             if (!$fieldsDiv || $fieldsDiv.length <= 0) return;
@@ -419,7 +400,6 @@
                 format = $querierStartTime.data('format') || '',
                 now = new Date().toFormatString(format || 'yyyy/mm/dd', false, true),
                 queryTime = $(elements[0]).find('[data-name="query_time"]').val() || "",
-                renderTable = $querier.find('[data-name="render_table"]').val(),
                 fields;
             //获取字段数据
             if (cache.fieldMode === "single") {
@@ -445,7 +425,6 @@
                 // querierTime: $querierStartTime.length > 0 ? { starttime: $querierStartTime.val() || now, endtime: $querierEndTime.val() || now } : {},
             };
             !cache.noTimeQuery && (result.queryTime = queryTime);
-            !!cache.renderTable && (result.renderTable = renderTable);
             cache.fieldMode !== 'column' && (result.conditions = $querier.find(".querier-conditions").conditions("getData"))
             return result;
         }

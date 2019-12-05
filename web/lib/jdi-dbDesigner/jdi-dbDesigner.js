@@ -387,7 +387,7 @@
             }
             if (ckey == "fieldSplit") {
                 if (dbName && table) {
-                    var fields = dbList[dbName][table].tableDetail,
+                    var fields = (dbList[dbName][table] && dbList[dbName][table].tableDetail) || [],
                         fieldSplits = '';
 
                     fields.forEach(function (item) {

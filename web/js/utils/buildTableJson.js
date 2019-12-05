@@ -205,7 +205,7 @@ BuildTableJson.prototype = {
         }
         if (ckey == "field") {
             if (dbName && table) {
-                var fields = dbList[dbName][table].tableDetail;
+                var fields = (dbList[dbName][table] && dbList[dbName][table].tableDetail) || [];
                 fields.forEach(function (item) {
                     options.push({
                         name: item.cname,
@@ -238,7 +238,7 @@ BuildTableJson.prototype = {
     removeData: function (data) {
         var table = $.extend({}, data),
             dbNames = Object.keys(table);
-        dbNames.forEach(dbName=>{
+        dbNames.forEach(dbName => {
             delete table[dbName]["newProducts"]
             delete table[dbName]["newResources"]
         })

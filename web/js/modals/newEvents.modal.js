@@ -114,7 +114,6 @@ function NewEventsModal($modal, $elemts) {
                     </td>
                     <td>
                         ${ that.renderSaveHTML( event.subscribe.saveHTML ) }
-                        ${ that.renderImportExcel(event.subscribe.importExcel)}
                         ${ that.renderKeySave(event.subscribe.keySave)}
                         ${ that.renderNextProcess( event.subscribe.nextProcess ) }
                         ${ that.renderNotify( event.subscribe.notify ) }
@@ -322,15 +321,15 @@ function NewEventsModal($modal, $elemts) {
             </div>`
         return str;
     }
-    this.renderImportExcel = function (importArea) {
-        let that = this,
-            str = "";
-        str = `<div class="condition importExcel" ${importArea ? "" : 'style="display:none"' }>
-                <span>导入XLSX的区域</span>
-                <input type="text" class="form-control" style="display:inline-block;margin-left:10px;width:500px" value='${importArea||""}' data-category="linkHtml" data-save="importExcel">
-            </div>`
-        return str;
-    }
+    // this.renderImportExcel = function (importArea) {
+    //     let that = this,
+    //         str = "";
+    //     str = `<div class="condition importExcel" ${importArea ? "" : 'style="display:none"' }>
+    //             <span>导入XLSX的区域</span>
+    //             <input type="text" class="form-control" style="display:inline-block;margin-left:10px;width:500px" value='${importArea||""}' data-category="linkHtml" data-save="importExcel">
+    //         </div>`
+    //     return str;
+    // }
     this.renderKeySave = function(key){
          let that = this,
              str = "";
@@ -1029,7 +1028,7 @@ NewEventsModal.prototype = {
                 linkHtml = null,
                 executeFn = null,
                 nextProcess = null,
-                importExcel = null,
+                importExcel = false,
                 keySave = null,
                 importDb = null;
             if (that.judgeCheckMehods("commonQuery", $(this).find(".triggerMethods:checked"))) {
@@ -1037,7 +1036,7 @@ NewEventsModal.prototype = {
                 query.push("commonQuery")
             }
             if (that.judgeCheckMehods("importExcel", $(this).find(".triggerMethods:checked"))) {
-                importExcel = $(this).find('[data-save="importExcel"]').val()
+                importExcel = true;
             }
             if (that.judgeCheckMehods("keySave", $(this).find(".triggerMethods:checked"))) {
                 keySave = $(this).find('[data-save="keySave"]').val()

@@ -172,6 +172,7 @@ OpenConfigModal.prototype = {
     },
 
     saveData: function () {
+        
         var that = this,
             data = {},
             dbName = this.$body.find('[data-name="dbName"]').val(),
@@ -206,6 +207,11 @@ OpenConfigModal.prototype = {
             });
         });
         jdi.fileApi.setProfile(this.configFile, JSON.stringify(data))
+
+        
+        this.$modal.css('opacity', 0);
+        $(`#${(key === 0 ? 'open_template_modal' : 'open_resource_modal')}`).modal('show');
+        this.$modal.css('opacity', 1)
     },
 
     clearData: function () {

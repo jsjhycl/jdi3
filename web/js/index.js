@@ -459,6 +459,9 @@ function propertybar() {
 
 					if (this.id === "property_controlType") {
 						var controlType = event.currentTarget.value;
+						if (id) {//添加控件类型
+							$("#" + id).attr('control-type', controlType)
+						}
 						id && controlType === "上传控件" && AccessControl.setUploadEvent();
 						id && controlType === "下拉列表" && AccessControl.showDataSourceTab();
 					}

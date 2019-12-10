@@ -106,7 +106,10 @@ function DbDesignerModal($modal) {
     }
     this.renderValueSelect = function (selected) {
         var that = this,
-            data = [{name:"请选择",value:""}];
+            data = [{
+                name: "请选择",
+                value: ""
+            }];
         $("#workspace").find("input").each(function () {
             var obj = {},
                 id = $(this).attr("id");
@@ -160,7 +163,7 @@ function DbDesignerModal($modal) {
         //得到指定的数组
         data.forEach(item => {
             if (item.isSave) {
-                if(item.dbName&&item.table){
+                if (item.dbName && item.table) {
                     saveInfo.push(JSON.stringify({
                         dbName: item.dbName,
                         tableName: item.table
@@ -188,9 +191,9 @@ function DbDesignerModal($modal) {
 
         }
         if (keyData.length = saveData.length) {
-            keyData.forEach((item,index)=>{
-                if(!saveData.includes(item)){
-                     that.$keyInfo.find("tbody tr").eq(index).remove()
+            keyData.forEach((item, index) => {
+                if (!saveData.includes(item)) {
+                    that.$keyInfo.find("tbody tr").eq(index).remove()
                 }
             })
             saveData.forEach(item => {
@@ -220,7 +223,7 @@ DbDesignerModal.prototype = {
 
         // var dbList = await new FileService().readFile("./profiles/table.json", 'utf-8') || {},
         var dbList = await new BuildTableJson().get(),
-            dbList = new BuildTableJson().removeData(dbList),//移除一些不要的数据
+            dbList = new BuildTableJson().removeData(dbList), //移除一些不要的数据
             dbNames = [],
             property = new Property(),
             savekeyInfo = property.getValue("BODY", "keyInfo"),
@@ -239,6 +242,128 @@ DbDesignerModal.prototype = {
                 "value": item
             })
         })
+        // that.$dbDesigner.ownSaveDesigner({
+        //     disabled: false,
+        //     $elems: $("#workspace").find("input"),
+        //     thead: [{
+        //             name: "id",
+        //             text: "编号",
+        //             key: "id",
+        //             template: function (value) {
+        //                 return '<input class="form-control" data-key="id" style="width:80px" type="text" value="' + value + '" readonly>';
+        //             }
+        //         },
+        //         {
+        //             name: "cname",
+        //             text: "中文名",
+        //             key: "cname",
+        //             template: function (value) {
+        //                 return '<input class="form-control" data-key="cname" style="width:90px" type="text" value="' + value + '" readonly>';
+        //             }
+        //         }, {
+        //             name: "isSave",
+        //             text: "是否入库",
+        //             key: "db.isSave",
+        //             group: true,
+        //             hasCheckbox: true,
+        //             template: function (value) {
+        //                 var isChecked = !!value ? " checked" : "";
+        //                 return '<input data-key="isSave" type="checkbox"' + isChecked + '>';
+        //             }
+        //         }, {
+        //             name: "dbName",
+        //             text: "数据库名",
+        //             key: "db.dbName",
+        //             group: true,
+        //             template: function (value) {
+        //                 var $select = $('<select class="form-control chosen" data-key="dbName"></select>')
+        //                 Common.fillSelect($select, {
+        //                     name: "请选择库",
+        //                     value: ""
+        //                 }, dbNames, value, true)
+        //                 return $select.get(0).outerHTML;
+        //             }
+        //         }, {
+        //             name: "table",
+        //             text: "表名称",
+        //             key: "db.table",
+        //             group: true,
+        //             template: function (value, options) {
+        //                 var $select = $('<select class="form-control chosen" data-key="table"></select>');
+        //                 Common.fillSelect($select, {
+        //                     name: "请选择表",
+        //                     value: ""
+        //                 }, options, value, true);
+        //                 return $select.get(0).outerHTML;
+        //             }
+        //         }, {
+        //             name: "selectField",
+        //             text: "存入字段",
+        //             key: "db.field",
+        //             group: true,
+        //             template: function (value, options) {
+        //                 var $select = $('<select class="form-control chosen" data-key="selectField"></select>');
+        //                 Common.fillSelect($select, {
+        //                     name: "请选择字段",
+        //                     value: ""
+        //                 }, options, value, true);
+        //                 return $select.get(0).outerHTML;
+        //             }
+        //         },
+        //         { //新增加
+        //             name: "selectFieldSplit",
+        //             text: "字段分段",
+        //             key: "db.fieldSplit",
+        //             group: true,
+        //             template: function (value, options) {
+        //                 var $select = $('<select class="form-control chosen" data-key="selectFieldSplit"></select>')
+        //                 Common.fillSelect($select, {
+        //                     name: "请选择第几段",
+        //                     value: ""
+        //                 }, options, value, true)
+        //                 return $select.get(0).outerHTML;
+        //             }
+        //         },
+        //         // {
+        //         //     name: "field",
+        //         //     text: "字段名称",
+        //         //     key: "db.field",
+        //         //     group: true,
+        //         //     template: function (value) {
+        //         //         return '<input class="form-control" data-key="field" type="text" value="' + value + '">';
+        //         //     }
+        //         // }, 
+        //         {
+        //             name: "desc",
+        //             text: "字段描述",
+        //             key: "db.desc",
+        //             group: true,
+        //             template: function (value) {
+        //                 return '<input class="form-control" data-key="desc" type="text" style="width:90px" value="' + value + '">';
+        //             }
+        //         }, {
+        //             name: "fieldSlice",
+        //             text: "字段截取",
+        //             key: "db.fieldSlice",
+        //             group: true,
+        //             template: function (value) {
+        //                 return '<input class="form-control" data-key="fieldSlice" type="text" style="width:90px" value="' + value + '">';
+        //             }
+        //         }, {
+        //             name: "operation",
+        //             text: "操作",
+        //             key: "db.op",
+        //             group: true,
+        //             template: function (value) {
+        //                 return '<span id="dbDesignerAdd" class="add">+</span><span style="margin-left:10px" class="del" id="dbDesignerRemove" class="del">×</span>'
+        //             }
+        //         }
+        //     ],
+        //     keys:["name","cname","db"],
+        //     getProperty: new Property().getProperty,
+        //     dbList: dbList, //把property的getproperty方法赋值给getProperty
+        //     type: "dbDesigner"
+        // })
         that.$dbDesigner.dbDesigner({ //调用jquery的扩展方法
             disabled: false,
             $elems: $("#workspace").find("input"),
@@ -616,7 +741,7 @@ DbDesignerModal.prototype = {
                 $target = that.$db.find(`tbody tr[data-id="${dataId}"]`);
             $target.css("background", "#eee")
         })
-        
+
         //鼠标移除
         that.$db.on("mouseleave" + that.NAME_SPACE, "tbody tr", function () {
             var $this = $(this),

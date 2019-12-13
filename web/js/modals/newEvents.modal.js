@@ -704,11 +704,19 @@ function NewEventsModal($modal, $elemts) {
                         <td>
                             ${ that.renderFontSelect( "fontSize", item.fontSize) }
                         </td>
-                        <td>
-                            <input type="text" class="form-control" save-type="style" data-save="color" value="${ item.color || ""}">
+                        <td style="position:relative">
+                            <input type="text" class="form-control propety-color" save-type="style" data-save="color" value="${ item.color || ""}">
+                            <div class="property-icon-wrap">
+                                <input type="color" data-belong="propety-color" class="property-color-input">
+                            <i class="icon icon-color"></i>
+                        </div>
                         </td>
-                        <td>
-                            <input type="text" class="form-control" save-type="style" data-save="backgroundColor" value="${ item.backgroundColor || ""}">
+                        <td style="position:relative">
+                            <input type="text" class="form-control property-background" save-type="style" data-save="backgroundColor" value="${ item.backgroundColor || ""}">
+                            <div class="property-icon-wrap">
+                                <input type="color" data-belong="property-background" class="property-color-input">
+                            <i class="icon icon-color"></i>
+                        </div>
                         </td>
                         <td>
                             <input type="checkbox" class="form-control" save-type="style" data-save="visibility" ${item.visibility?"checked":""}>
@@ -1317,6 +1325,13 @@ NewEventsModal.prototype = {
                 })
             }
 
+        })
+        that.$modal.on("input change" + that.NAME_SPACE, ".property-color-input", function (event) {
+            var $this = $(this),
+                target = $this.data('belong');
+            that.$modal.find("." + target).val($this.val()).focus().trigger("blur");
+            // $("." + target).val($this.val()).focus().trigger("blur");
+            $this.val("#FFFFFF");
         })
 
 

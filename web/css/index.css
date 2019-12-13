@@ -245,8 +245,15 @@ li {
     top: 5px;
     right: 5px;
 }
+#events_modal .property-icon-wrap{
+    position: absolute;
+    top: 11px;
+    right: 17px;
+}
 
-.property-group .property-icon-wrap .property-color-input {
+.property-group .property-icon-wrap .property-color-input ,
+#events_modal .property-icon-wrap .property-color-input 
+{
     position: relative;
     top: 0;
     right: -11px;
@@ -258,7 +265,9 @@ li {
     border: none;
     opacity: 0;
 }
-.property-group .property-icon-wrap .icon-color {
+.property-group .property-icon-wrap .icon-color,
+#events_modal .property-icon-wrap .icon-color
+ {
     position: relative;
     top: 4px;
     right: 8px;

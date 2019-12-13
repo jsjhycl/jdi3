@@ -58,7 +58,7 @@ function OpenConfigModal($modal, key) {
             html += `
                     <label class="col-lg-3 control-label">${category}：</label>
                     <div class="col-lg-9">
-                        <select class="form-control" data-cate="${category}" data-condition data-name="${id}">${options.map(col => `<option value="${col.value}" ${col.value == value ? "selected" : ""} >${col.name}(${col.value})</option>`).join("")}</select>
+                        <select disabled class="form-control" data-cate="${category}" data-condition data-name="${id}">${options.map(col => `<option value="${col.value}" ${col.value == value ? "selected" : ""} >${col.name}(${col.value})</option>`).join("")}</select>
                     </div>
                     `
         } else {
@@ -92,12 +92,12 @@ OpenConfigModal.prototype = {
         var str = `<div class="form-horizontal">
                     <div class="form-group"><label class="col-lg-2 control-label">查询数据库：</label>
                         <div class="col-lg-9">
-                            <select class="form-control" data-name="dbName"></select>
+                            <select disabled class="form-control" data-name="dbName"></select>
                         </div>
                     </div>
                     <div class="form-group"><label class="col-lg-2 control-label">查询表：</label>
                         <div class="col-lg-9">
-                            <select class="form-control" data-name="tableName"></select>
+                            <select disabled class="form-control" data-name="tableName"></select>
                         </div>
                     </div>
                     <div class="form-group"><label class="col-lg-2 control-label">查询条件：</label>

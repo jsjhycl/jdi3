@@ -1,6 +1,6 @@
 {
     "name": "jdi客户端",
-    "version": "1.1.13",
+    "version": "1.1.14",
     "list": [{
         "version": "1.1.0",
         "files": [],
@@ -57,5 +57,9 @@
         "version": "1.1.13",
         "files": ["web/js/modals/openConfig.modal.js", "versions.json"],
         "detail": ["配置查询优化"]
+    }, {
+        "version": "1.1.14",
+        "files": ["config.json", "versions.json"],
+        "detail": ["临时域名问题"]
     }]
 }

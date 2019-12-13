@@ -1,4 +1,4 @@
 {
-    "serverUrl": "http://www.chinaepg.net",
-    "displayUrl":"http://www.chinaepg.net"
+    "serverUrl": "https://www.chinaepg.net:20443",
+    "displayUrl":"https://www.chinaepg.net:20443"
 }

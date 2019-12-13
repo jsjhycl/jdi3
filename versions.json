@@ -63,7 +63,7 @@
         "detail": ["临时域名问题"]
     }, {
         "version": "1.1.15",
-        "files": ["web/css/index.css", "web/designer/index.html", "web/js/index.js", "web/js/init.js", "web/js/modals/dbDesigner.modal.js", "web/js/modals/newEvents.modal.js", "web/js/modals/openConfig.modal.js", "web/lib/lodash/lodash.js", "web/lib/ownSaveDesigner", "web/lib/ownSaveDesigner/ownSaveDesigner.js", "versions.json"],
+        "files": ["web/css/index.css", "web/designer/index.html", "web/js/index.js", "web/js/init.js", "web/js/modals/dbDesigner.modal.js", "web/js/modals/newEvents.modal.js", "web/js/modals/openConfig.modal.js", "web/lib/lodash/lodash.js", "web/lib/ownSaveDesigner/ownSaveDesigner.js", "versions.json"],
         "detail": ["签名控件修复", "布局配置修改", "引用修改"]
     }]
 }

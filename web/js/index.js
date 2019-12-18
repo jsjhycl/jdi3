@@ -469,6 +469,7 @@ function propertybar() {
 						}
 						id && controlType === "上传控件" && AccessControl.setUploadEvent();
 						id && controlType === "下拉列表" && AccessControl.showDataSourceTab();
+						id && controlType === "自定义下拉列表" && AccessControl.showDataSourceTab();
 					}
 
 					if (this.id === "property_page_rowPersent") {

@@ -45,7 +45,7 @@ function SubmitModal($modal, $submit) {
         return new Service().query(dbCollection, condition)
     }
     this.setData = function (data, type) {
-        // console.log(data, type)
+        console.log(data, type)
         var that = this;
         // if (type == "表单") {
         //     this.$resourceName.val(this.data.name)
@@ -65,7 +65,8 @@ function SubmitModal($modal, $submit) {
                 sixthCategory = data.basicInfo.area,
                 seventhCategory = data.basicInfo.spare1,
                 eighthCategory = data.basicInfo.spare2,
-                ninthCategory = data.basicInfo.userGrade;
+                ninthCategory = data.basicInfo.userGrade,
+                subCategory = data.basicInfo.subCategory;
             var firstData = new ArrayToTree().getFirstData(that.treeData),
                 secondData = new ArrayToTree().getSearchData([firstCategory], that.treeData),
                 thridData = new ArrayToTree().getSearchData([firstCategory, secondeCategory], that.treeData),
@@ -76,6 +77,7 @@ function SubmitModal($modal, $submit) {
                 eighthData = new ArrayToTree().getSearchData([firstCategory, secondeCategory, thridCategory, fourthCategory, fifthCategory, sixthCategory, seventhCategory], that.treeData),
                 ninthData = new ArrayToTree().getSearchData([firstCategory, secondeCategory, thridCategory, fourthCategory, fifthCategory, sixthCategory, seventhCategory, eighthCategory], that.treeData);
             that.$resoureName.val(name)
+            $("#Changemodel_subCategory").find(`[type="radio"][value="${subCategory}"]`).prop('checked', true)
             Common.fillSelect(that.$firstCategory, {
                 name: "请选择表属性",
                 value: ""
@@ -314,22 +316,26 @@ SubmitModal.prototype = {
                 //     var saveAsNumber = data.customId.slice(10, that.data.customId.length)
                 // }
                 // id = autoCreate + userGrade + feature + category + area + spare1 + spare2 + contactId + (saveAsNumber ? saveAsNumber : "");
-                 var name = that.$resoureName.val(),
-                     subCategory = that.$modalBody.find('[name="model_resource_subCategory"]:checked').val(),
-                     firstCategory = that.$firstCategory.val(),
-                     secondeCategory = that.$secondeCategory.val(),
-                     thridCategory = that.$thridCategory.val(),
-                     fourthCategory = that.$fourthCategory.val(),
-                     fifthCategory = that.$fifthCategory.val(),
-                     sixthCategory = that.$sixthCategory.val(),
-                     seventhCategory = that.$seventhCategory.val(),
-                     eighthCategory = that.$eighthCategory.val(),
-                     ninthCategory = that.$ninthCategory.val();
-                //  console.log(name, subCategory, firstCategory, secondeCategory, thridCategory, fourthCategory, fifthCategory, sixthCategory, seventhCategory, eighthCategory, ninthCategory, secondeCategory.split(',')[0], secondeCategory.split(',')[1])
-                 if (!name || !subCategory || !firstCategory || !secondeCategory || !thridCategory || !fourthCategory || !fifthCategory || !sixthCategory || !seventhCategory || !eighthCategory || !ninthCategory) return alert("请填写完整的数据");
-                 var id = firstCategory + secondeCategory.split(',')[0] + secondeCategory.split(',')[1] + thridCategory + fourthCategory + fifthCategory + sixthCategory + seventhCategory + eighthCategory + ninthCategory;
-                //  console.log(id)
-                 if (id.length != 10) return alert("布局编码不等于10位")
+                console.log(data)
+                var name = that.$resoureName.val(),
+                    subCategory = that.$modalBody.find('[name="model_resource_subCategory"]:checked').val(),
+                    firstCategory = that.$firstCategory.val(),
+                    secondeCategory = that.$secondeCategory.val(),
+                    thridCategory = that.$thridCategory.val(),
+                    fourthCategory = that.$fourthCategory.val(),
+                    fifthCategory = that.$fifthCategory.val(),
+                    sixthCategory = that.$sixthCategory.val(),
+                    seventhCategory = that.$seventhCategory.val(),
+                    eighthCategory = that.$eighthCategory.val(),
+                    ninthCategory = that.$ninthCategory.val();
+                 console.log(name, subCategory, firstCategory, secondeCategory, thridCategory, fourthCategory, fifthCategory, sixthCategory, seventhCategory, eighthCategory, ninthCategory, secondeCategory.split(',')[0], secondeCategory.split(',')[1])
+                if (!name || !subCategory || !firstCategory || !secondeCategory || !thridCategory || !fourthCategory || !fifthCategory || !sixthCategory || !seventhCategory || !eighthCategory || !ninthCategory) return alert("请填写完整的数据");
+                var id = firstCategory + secondeCategory.split(',')[0] + secondeCategory.split(',')[1] + thridCategory + fourthCategory + fifthCategory + sixthCategory + seventhCategory + eighthCategory + ninthCategory;
+                if (id.length != 10) return alert("布局编码不等于10位")
+                if (data.customId.length > 10) {
+                    var saveAsNumber = data.customId.slice(10, that.data.customId.length)
+                }
+                id = id + (saveAsNumber ? saveAsNumber : "");
                 condition = [{
                         col: "_id",
                         value: id
@@ -358,7 +364,7 @@ SubmitModal.prototype = {
                         col: "basicInfo",
                         value: {
                             category: fifthCategory,
-                            subCategory: type,
+                            subCategory: subCategory,
                             feature: fourthCategory,
                             userGrade: ninthCategory,
                             autoCreate: thridCategory,
@@ -370,7 +376,7 @@ SubmitModal.prototype = {
                     }
                 ]
                 if (oldId != id) {
-                    new Workspace().save(true, null, id, condition, that.$modalName.val())
+                    new Workspace().save(true, null, id, condition, that.$resoureName.val())
                     that.changeGlobalJson(oldId, id)
                 } else {
                     var dbCollection = type == "表单" ? "newResources" : "newProducts",
@@ -382,6 +388,9 @@ SubmitModal.prototype = {
                         data = [{
                             col: "name",
                             value: name
+                        },{
+                            col: "basicInfo.subCategory",
+                            value: subCategory
                         }];
                     var result = new Service().update(dbCollection, condition, data)
                     result.then(res => {

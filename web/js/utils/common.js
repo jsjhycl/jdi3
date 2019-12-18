@@ -45,18 +45,19 @@ var Common = (function () {
 					value: item
 				};
 			});
-			Common.fillRadio($("#model_resource_subCategory"), "model_resource_subCategory", data); //调用Common的fillRadio的资源分类
+            Common.fillRadio($("#model_resource_subCategory"), "model_resource_subCategory", data); //调用Common的fillRadio的资源分类
+            Common.fillRadio($("#Changemodel_subCategory"), "model_resource_subCategory", data); //调用Common的fillRadio的资源分类
 			//表单资源提交表单
 			Common.fillSelect($('[name="template_category"]'), null, result["表单分类"], null, true); //填充表单分类下拉框
             Common.fillRadio($("#template_subCategory"), "template_subCategory", data); //填充表单分类的单选框
             Common.fillRadio($("#Changetemplate_subCategory"), "Changetemplate_subCategory", data); //填充表单分类的单选框            
 			//布局资源提交表单
-			Common.fillSelect($('[name="model_category"]'), null, result["布局分类"], null, true); //填充布局分类的下拉框
-			Common.fillSelect($('[name="model_userGrade"]'), null, result["布局用户级别"], null, true); //填充用户级别的下拉框
-			Common.fillSelect($('[name="model_feature"]'), null, result["布局特性"], null, true); //填充布局特性的下拉框
-			Common.fillSelect($('[name="model_area"]'), null, result["布局区域"], null, true);
-            Common.fillSelect($('[name="model_autoCreate"]'), null, result["自动分表"], null, true); //新增自动分表属性
-			Common.fillSelect($('#property_page_Area'), null, result["布局区域"], null, true); //新增自动分表属性
+			// Common.fillSelect($('[name="model_category"]'), null, result["布局分类"], null, true); //填充布局分类的下拉框
+			// Common.fillSelect($('[name="model_userGrade"]'), null, result["布局用户级别"], null, true); //填充用户级别的下拉框
+			// Common.fillSelect($('[name="model_feature"]'), null, result["布局特性"], null, true); //填充布局特性的下拉框
+			// Common.fillSelect($('[name="model_area"]'), null, result["布局区域"], null, true);
+            // Common.fillSelect($('[name="model_autoCreate"]'), null, result["自动分表"], null, true); //新增自动分表属性
+			// Common.fillSelect($('#property_page_Area'), null, result["布局区域"], null, true); //新增自动分表属性
         },
         fillRadio: function ($container, name, data) {
             if (!$container || $container.length <= 0) return;

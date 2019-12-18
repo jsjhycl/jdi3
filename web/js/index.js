@@ -52,6 +52,11 @@ function navbar() {
 	//打开表单资源
 	var openTemplate = new OpenTemplate($("#open_template_modal"));
 	openTemplate.execute();
+	
+	//新建树形分类
+	var changeCategoryTree = new ChangeCategoryTree($("#change_tree_modal"));
+	// changeCategoryTree.initData(); //初始化新建布局表单
+	changeCategoryTree.execute();
 
 	// 表单查询配置
 	var templateModal = new OpenConfigModal($("#template_config_modal"), 0);

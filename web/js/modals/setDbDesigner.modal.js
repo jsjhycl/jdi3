@@ -359,7 +359,13 @@ SetDbDesignerModal.prototype = {
             type == "string" ? ($dataLength.removeAttr("readonly"), $dataLength.val(50)) : ($dataLength.attr("readonly", true) && $dataLength.val(""))
 
         })
-        that.$modal.on("change" + that.NAME_SPACE, '[data-type="dbName"]', function () {
+        // that.$modal.on("change" + that.NAME_SPACE, '[data-type="dbName"]', function () {
+        //     var dbName = $(this).val()
+        //     if (!dbName) return;
+        //     that.initTableHeader(dbName)
+        //     that.initTable(dbName)
+        // })
+        that.$modal.on("input" + that.NAME_SPACE, '[data-type="dbName"]', function () {
             var dbName = $(this).val()
             if (!dbName) return;
             that.initTableHeader(dbName)

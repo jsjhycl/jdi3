@@ -148,10 +148,10 @@
 					elementHtml = "";
 				var rule = {
 					type:parseInt(ruleStrSplits[0]),
-					width:ruleStrSplits.length>1?(ruleStrSplits[1] + "px"):"100%",
-					height:ruleStrSplits.length>2?(ruleStrSplits[2] + "px"):"100%"
+					width:ruleStrSplits.length>1?(ruleStrSplits[1] + "px"):"",
+					height:ruleStrSplits.length>2?(ruleStrSplits[2] + "px"):""
 				}
-				var hw = "width:" + rule.width + ";height:" + rule.height + ";";
+				var hw = rule.width?("width:" + rule.width + ";"):"" + (rule.height?("height:" + rule.height + ";"):"");
 				switch (rule.type) {
 					case 0:
 						elementHtml = '<input type="text" style="' + styles + hw + '" />';

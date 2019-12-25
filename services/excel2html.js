@@ -826,8 +826,8 @@ function json2table(htmls, styles, resultName) {
 				html += '" style="height:' + defaultdivhgt + ';"><div class="item_contain">';
 				if (item.content.length > 1) {
 					for (let con of item.content) {
-						let htmlElement = 'span';
-						html += '<' + htmlElement;
+						let htmlLabel = 'span';
+						html += '<' + htmlLabel;
 						if (con.style) {
 							let className = '';
 							html += ' style="'
@@ -839,7 +839,7 @@ function json2table(htmls, styles, resultName) {
 							if (className)
 								html += ' class="' + className + '"';
 						}
-						html += '>' + formatStr(con.val) + '</' + htmlElement + '>';
+						html += '>' + formatStr(con.val) + '</' + htmlLabel + '>';
 					}
 				} else if (item.content.length > 0)
 					html += formatStr(item.content[0].val);
@@ -897,7 +897,7 @@ function getJS() {
 
 //转换特定字符串(去除空格换行大小于号)
 function formatStr(str) {
-	return str ? str.toString().replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\r\n/g, "<br>").replace(/\s/g, "<span class='" + config.radomStr + "_space'>&nbsp;</span>") : '';
+	return str ? str.toString().replace(/<(?!%)/g, "&lt;").replace(/(?<!%)>/g, "&gt;").replace(/\r\n/g, "<br>").replace(/\s/g, "<span class='" + config.radomStr + "_space'>&nbsp;</span>") : '';
 }
 
 //对单元格位置的一些解析

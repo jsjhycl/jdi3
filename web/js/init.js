@@ -112,6 +112,7 @@ Loader.prototype = {
                 that.JS_PATH + "/modals/archivePath.modal.js",
                 that.JS_PATH + "/modals/change.tree.modal.js", //zww
                 that.JS_PATH + "/modals/archivePathBatch.modal.js",
+                that.JS_PATH + "/modals/changeListen.modal.js",
                 that.JS_PATH + "/modals/conditions.modal.js",
                 that.JS_PATH + "/modals/setDbDesigner.modal.js",
                 that.JS_PATH + "/modals/copyValue.modal.js",

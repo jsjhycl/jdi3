@@ -948,9 +948,11 @@ li {
 #change_global_modal .del,
 #events_modal .add,
 #change_router_modal .add,
+#change_listen_modal .add,
 #events_modal .del,
 #dbDesignerModal .add,
 #dbDesignerModal .del,
+#change_listen_modal .del,
 #change_router_modal .del {
     margin-top: 8px;
     display: inline-block;
@@ -974,7 +976,8 @@ li {
 #change_global_modal .add,
 #events_modal .add,
 #dbDesignerModal .add,
-#change_router_modal .add {
+#change_router_modal .add ,
+#change_listen_modal .add{
     color: #41B883;
     border: 1px solid #41B883;
 }

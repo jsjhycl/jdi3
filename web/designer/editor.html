@@ -151,16 +151,17 @@
 					width:ruleStrSplits.length>1?(ruleStrSplits[1] + "px"):"",
 					height:ruleStrSplits.length>2?(ruleStrSplits[2] + "px"):""
 				}
-				var hw = rule.width?("width:" + rule.width + ";"):"" + (rule.height?("height:" + rule.height + ";"):"");
+				var width = rule.width?("width:" + rule.width + ";"):"",
+					height = rule.height?("height:" + rule.height + ";"):"";
 				switch (rule.type) {
 					case 0:
-						elementHtml = '<input type="text" style="' + styles + hw + '" />';
+						elementHtml = '<input type="text" style="' + styles + width + height + '" />';
 						break;
 					case 1:
-						elementHtml = '<input type="button" value="button" style="' + styles + hw + '" />';
+						elementHtml = '<input type="button" value="button" style="' + styles + width + height + '" />';
 						break;
 					case 2:
-						elementHtml = '<input type="checkbox"  style="' + styles + hw + '" />';
+						elementHtml = '<input type="checkbox"  style="' + styles + width + height + '" />';
 						break;					
 					default:
 						elementHtml = element;

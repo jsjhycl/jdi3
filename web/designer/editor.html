@@ -6,26 +6,7 @@
 	<meta charset="utf-8" />
 	<title>子模块设计器</title>
 	<style type="text/css">
-		html,
-		body,
-		h1,
-		h2,
-		h3,
-		h4,
-		h5,
-		h6,
-		p,
-		span,
-		label,
-		ol,
-		ul,
-		li,
-		dl,
-		dt,
-		dd,
-		div,
-		form,
-		pre {
+		html,body,h1,h2,h3,h4,h5,h6,p,span,label,ol,ul,li,dl,dt,dd,div,form,pre {
 			margin: 0;
 			padding: 0;
 		}
@@ -87,7 +68,7 @@
 			$("#inputFile").click(function () {
 				jdi.importExcel().then(o => {
 					var editor = textboxio.getActiveEditor();
-					editor.content.set(o);
+					editor.content.set(replaceFormat(o));
 				}).catch(err => alert(err))
 			})
 		}
@@ -155,6 +136,39 @@
 					$this.html(transHtml);
 				}
 			});
+		}
+
+		function replaceFormat(html){
+			var styles = "margin:0;padding:0;box-sizing:border-box;vertical-align: middle;line-height:normal;";
+			var pat = new RegExp("<%[\\d,]+%>","g");
+			var matchs = html.match(pat);
+			matchs.forEach(function(element,index){
+				var ruleStr = element.replace("<%","").replace("%>",""),
+					ruleStrSplits = ruleStr.split(","),
+					elementHtml = "";
+				var rule = {
+					type:parseInt(ruleStrSplits[0]),
+					width:ruleStrSplits.length>1?(ruleStrSplits[1] + "px"):"100%",
+					height:ruleStrSplits.length>2?(ruleStrSplits[2] + "px"):"100%"
+				}
+				var hw = "width:" + rule.width + ";height:" + rule.height + ";";
+				switch (rule.type) {
+					case 0:
+						elementHtml = '<input type="text" style="' + styles + hw + '" />';
+						break;
+					case 1:
+						elementHtml = '<input type="button" value="button" style="' + styles + hw + '" />';
+						break;
+					case 2:
+						elementHtml = '<input type="checkbox"  style="' + styles + hw + '" />';
+						break;					
+					default:
+						elementHtml = element;
+						break;
+				}
+				html = html.replace(element,elementHtml);
+			})
+			return html;
 		}
 
 		$(function () {

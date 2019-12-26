@@ -4,7 +4,7 @@ function DbApplyModal($modal) {
 
     this.$dbApply = this.$modalBody.find("#dbApply")
 
-    this.$dbName = this.$modalBody.find('[data-type="dbName"]')//库名
+    this.$dbName = this.$modalBody.find('[data-type="dbName"]') //库名
     this.$table = this.$modalBody.find('[data-type="tableName"]') //表名
     this.$tableDesc = this.$modalBody.find('[data-type="description"]') //表描述
     this.$listTable = this.$modalBody.find('[data-type="databaseList"]') //外库目录表
@@ -48,7 +48,7 @@ function DbApplyModal($modal) {
     // this.dataArr = ["id", "type", "maxLength", "cname", "mapId"]
 
     //获取外库数据库目录表
-    this.getListTable = function (data) {
+    this.getListTable = async function (data) {
         if (!DataType.isObject(data)) return;
         var that = this,
             dbNames = Object.keys(data),
@@ -56,11 +56,12 @@ function DbApplyModal($modal) {
                 value: "",
                 name: "请选择外库目录表"
             }];
-
+        listens = await new FileService().readFile("./profiles/listen.json")
+        outsideDatabase = listens.outsideDatabase;
         dbNames.forEach(dbName => {
             var tables = Object.keys(data[dbName]);
             tables.forEach(table => {
-                if (table.indexOf("V") == 3) {//  应用外库的时候需要用到的
+                if (table.indexOf(outsideDatabase.detail[0].value) == outsideDatabase.detail[0].idPosition - 1) { //  应用外库的时候需要用到的
                     var obj = {
                         value: table,
                         name: data[dbName][table].tableDesc
@@ -70,14 +71,15 @@ function DbApplyModal($modal) {
                 }
             })
         })
+        console.log(12, listTabls)
         return listTabls;
     }
 
 }
 DbApplyModal.prototype = {
-    initData: function () {
+    initData: async function () {
         var that = this,
-            listTables = that.getListTable(AllDbName);
+            listTables = await that.getListTable(AllDbName);
         that.renderOptions(that.$listTable, listTables, true)
         that.clearData()
     },
@@ -130,10 +132,10 @@ DbApplyModal.prototype = {
         //     userName = that.$userName.val(),
         //     password = that.$password.val(),
         //     dbtype = that.$dbType.val();
-        if (!database || !table || !description || !metadataModelId || !metadataName || !mapTable ) {
+        if (!database || !table || !description || !metadataModelId || !metadataName || !mapTable) {
             return alert("请填写完整的数据")
         }
-        
+
         var postData = {
             database: database,
             table: table,
@@ -222,7 +224,7 @@ DbApplyModal.prototype = {
                 databaseName = that.$databaseName.val(),
                 databaseTableName = $(this).val();
             if (!databaseTableName) {
-                 that.$dbApply.empty()
+                that.$dbApply.empty()
                 return
             };
             var postData = {

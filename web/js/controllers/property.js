@@ -407,6 +407,7 @@ Property.prototype = {
         if (type === "text") { //如果type是text文本输入框
             GLOBAL_PROPERTY[id]["controlType"] = "文本输入框"; //给全局属性中对应的id设置controltype属性为文本输入框
             GLOBAL_PROPERTY[id]["fontFamily"] = "宋体";
+            GLOBAL_PROPERTY[id]["value"] = $("#"+id).val()
             GLOBAL_PROPERTY[id]["fontSize"] = "10px";
             GLOBAL_PROPERTY[id]["color"] = "black";
             GLOBAL_PROPERTY[id]["backgroundColor"] = "white";
@@ -416,6 +417,7 @@ Property.prototype = {
         } else {
             GLOBAL_PROPERTY[id]["name"] = id;
             GLOBAL_PROPERTY[id]["cname"] = id;
+            GLOBAL_PROPERTY[id]["value"] = $("#" + id).val()
             GLOBAL_PROPERTY[id]["visibility"] = true;
             GLOBAL_PROPERTY[id]["disabled"] = false;
             GLOBAL_PROPERTY[id]["readonly"] = false;

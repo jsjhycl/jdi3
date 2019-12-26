@@ -71,7 +71,7 @@ function DbApplyModal($modal) {
                 }
             })
         })
-        console.log(12, listTabls)
+        // console.log(12, listTabls)
         return listTabls;
     }
 

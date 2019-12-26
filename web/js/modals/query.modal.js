@@ -68,7 +68,9 @@ DbQueryModal.prototype = {
             $workspace = $("#workspace"),
             $control = $workspace.find("#" + id);
         that.$element.val(JSON.stringify(data));
-        that.setEvent(id, data)
+        if(data.triggerType){
+            that.setEvent(id, data)
+        }
         new Property().save(id === "BODY" ? $workspace : $control, that.$element);
     },
     setEvent: function (id, data) {

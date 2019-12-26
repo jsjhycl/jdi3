@@ -67,7 +67,6 @@ ChangeListenModal.prototype = {
                     value = $input.val();
                 obj[type] = value;
             })
-            console.log(obj, data)
             if (data[obj.name]) {
                 data[obj.name].cname = obj.cname;
                 data[obj.name].argumentsNumber = obj.arguments

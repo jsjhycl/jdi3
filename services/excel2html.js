@@ -108,9 +108,10 @@ function getFiles(dirName, resultName) {
 function getDefaultStyle() {
 	let defaultStyle = JSON.parse(fs.readFileSync(config.defaultStyle));
 	defaultStyle.forEach((item, index) => {
-		if (item.className.indexOf(".") == 0) {
-			item.className = "." + config.radomStr + "_" + item.className.substring(1);
-		}
+		// 去除默认style的随机，于2019-12-27修改
+		// if (item.className.indexOf(".") == 0) {
+		// 	item.className = "." + config.radomStr + "_" + item.className.substring(1);
+		// }
 	})
 	return defaultStyle;
 }
@@ -497,7 +498,7 @@ function singleCell(c, htmls, shareObj, styleObj, themestyle, tintColor, colorOb
 					cellobj.val = si.rPh.t || '';
 				if (si.phoneticPr.$.fontId >= 1) {
 					cellobj.style = param2Style(styleObj.fonts[Number(si.phoneticPr.$.fontId)], themestyle, tintColor, colorObj, paramConfig);
-					cellobj.style["className"] = config.radomStr + "_pinyin";
+					cellobj.style["className"] = "pinyin";
 				}
 				contents.unshift(cellobj);
 			}
@@ -506,7 +507,7 @@ function singleCell(c, htmls, shareObj, styleObj, themestyle, tintColor, colorOb
 		contents.push({
 			val: Number(c.v)
 		});
-	if (!textAlign) classes.push(config.radomStr + "_text_align_right");
+	if (!textAlign) classes.push("text_align_right");
 	if (c.$.s) { //要考虑数据的格式化的问题
 		if (styleObj.formats[c.$.s])
 			format = styleObj.formats[c.$.s];
@@ -706,7 +707,7 @@ function judgeCellIn(cell, area) {
 function json2table(htmls, styles, resultName) {
 	let htmlstrs = [];
 	for (let htmlElement of htmls) {
-		let html = '<div class="' + config.radomStr + '_sheet_contain"><table style="border-collapse: collapse;table-layout: fixed;width: 1px;">';
+		let html = '<div class="sheet_contain"><table style="border-collapse: collapse;table-layout: fixed;width: 1px;">';
 		let tdwidth = '70px';
 		let areaObj = locationIndex(htmlElement.area);
 		let widthLength = areaObj.cols + areaObj.col,
@@ -816,7 +817,7 @@ function json2table(htmls, styles, resultName) {
 					html += ' format="' + item.format.replace(/"/g, '`') + '"';
 				if (item.rotation)
 					html += ' rotation="' + item.rotation + '"';
-				html += '><div class="' + config.radomStr + '_td_item_all';
+				html += '><div class="td_item_all';
 				if (eleClass.length >= 0) {
 					tdClass = eleClass.filter((element, index, self) => {
 						return self.indexOf(element) === index
@@ -897,7 +898,7 @@ function getJS() {
 
 //转换特定字符串(去除空格换行大小于号)
 function formatStr(str) {
-	return str ? str.toString().replace(/<(?!%)/g, "&lt;").replace(/(?<!%)>/g, "&gt;").replace(/\r\n/g, "<br>").replace(/\s/g, "<span class='" + config.radomStr + "_space'>&nbsp;</span>") : '';
+	return str ? str.toString().replace(/<(?!%)/g, "&lt;").replace(/(?<!%)>/g, "&gt;").replace(/\r\n/g, "<br>").replace(/\s/g, "<span class='space'>&nbsp;</span>") : '';
 }
 
 //对单元格位置的一些解析

@@ -60,7 +60,7 @@ Propertybar.prototype = {
                 expand = index === 0 ? ' aria-expanded="true"' : "", //index等于0则把aria-expanded="true"赋值到expand控制属性栏的折叠
                 collapse = index === 0 ? "collapse in" : "collapse"; //如果index等于0 collapse in赋值给collapse
 
-            html += `<div class="property-group" data-first-filter="${value=="db"?"":value}">` +
+            html += `<div class="property-group" data-first-filter="${value == "db" ? "" : value}">` +
                 '<header class="property-header" data-toggle="collapse" data-target="#' + id + '"' + expand + '>' +
                 '<span class="property-toggle"></span><h4 class="property-title">' + name + '</h4></header>' +
                 '<div class="property-body ' + collapse + '" id="' + id + '">' +
@@ -212,6 +212,42 @@ Propertybar.prototype = {
         })
         that.$container.on("click" + that.NAME_SPACE, "#event_btn", function (event) {
             $("#eventGuide_modal").modal("show")
+        })
+        //zww
+        that.$container.on('input change' + that.NAME_SPACE, '#property_window_visibility', function (params) {
+            var $this = $(this),
+                resizableNode = $('.resizable-node'),
+                resizableNodeChild = resizableNode.children('div');
+            if ($this.prop('checked')) {
+                resizableNodeChild.css({
+                    "width": "6px",
+                    "height": "6px",
+                    "border-radius": "50%",
+                    "backgroundColor": "#5B9BD5",
+                    "overflow": "hidden"
+                })
+                resizableNode.parent().css({
+                    "width": "10px",
+                    "height": "10px",
+                    "border-radius": "50%",
+                })
+            } else {
+                resizableNodeChild.css({
+                    "width": "100%",
+                    "height": "100%",
+                    "border-radius": "0",
+                    "backgroundColor": "transparent",
+                    "overflow": "visible"
+                })
+                var resizableNodeTable = resizableNode.find('table'),
+                    nodeTableWidth = resizableNodeTable.width(),
+                    nodeTableHeight = resizableNodeTable.height();
+                resizableNode.parent().css({
+                    "width": nodeTableWidth + 10 + 'px',
+                    "height": nodeTableHeight + 10 + 'px',
+                    "border-radius": "0",
+                })
+            }
         })
     }
 };

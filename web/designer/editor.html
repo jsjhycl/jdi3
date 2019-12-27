@@ -68,7 +68,7 @@
 			$("#inputFile").click(function () {
 				jdi.importExcel().then(o => {
 					var editor = textboxio.getActiveEditor();
-					editor.content.set(replaceFormat(o));
+					editor.content.set(o);
 				}).catch(err => alert(err))
 			})
 		}
@@ -83,11 +83,13 @@
 				if (content.indexOf('<style>') >= 0) {
 					style = content.substring(content.indexOf('<style>'), content.indexOf('<\/style>') + 8);
 					$temp = $(".ephox-hare-content-iframe").contents().find(".ephox-candy-mountain");
-					if ($temp.find(".sheet_contain").length > 0)
-						$temp = $temp.find(".sheet_contain");
+					// 目前sheet_contain不包含style
+					// if ($temp.find(".sheet_contain").length > 0)
+					// 	$temp = $temp.find(".sheet_contain");
 				}
 				if (content.indexOf('<script') >= 0)
 					script = content.substring(content.indexOf('<script'), content.indexOf('<\/script>') + 9);
+				$temp = setWidth($temp);
 				_transform($temp);
 				content = (style || '') + $temp.html() + (script || '');
 				if (content) {
@@ -100,6 +102,20 @@
 					}
 				}
 			});
+		}
+
+		function setWidth($temp){
+			$temp.find(".item_contain").each(function(index,element){
+				if(!$(element).text())
+					return true;
+				$(element).html($(element).html().replace(/<span class="space">&nbsp;<\/span>/g," "));
+				var value = $(element).text(),
+					font = $(element).css("font");
+				var result = replaceFormat(value,font);
+				if(result.status == 1)
+					$(element).html(result.content);
+			})
+			return $temp;
 		}
 
 		function _transform($body) {
@@ -115,8 +131,7 @@
 				var $this = $(this),
 					bgColor = $this.css("background-color").toLowerCase().trim(),
 					transHtml = "",
-					styles =
-					"margin:0;padding:0;width:100%;height:100%;box-sizing:border-box;vertical-align: middle;";
+					styles = "margin:0;padding:0;width:100%;height:100%;box-sizing:border-box;vertical-align: middle;";
 				if (bgColor.match(/rgb\(255,\s*0,\s*0\)/) || bgColor.match("red")) { //红
 					transHtml = '<input type="text" style="' + styles + 'border:none;" />';
 				} else if (bgColor.match(/rgb\(\s*0\,\s*0\,\s*0\)/) || bgColor.match("black")) { //黑
@@ -138,38 +153,48 @@
 			});
 		}
 
-		function replaceFormat(html){
+		function replaceFormat(content,font){
 			var styles = "margin:0;padding:0;box-sizing:border-box;vertical-align: middle;line-height:normal;";
-			var pat = new RegExp("<%[\\d,]+%>","g");
-			var matchs = html.match(pat);
+			var pat = new RegExp("<%\\d[,，]?\\s*%>","g");
+			var matchs = content.match(pat);
+			if(!matchs || matchs.length <= 0)
+				return {status:0,content:content};
 			matchs.forEach(function(element,index){
-				var ruleStr = element.replace("<%","").replace("%>",""),
+				var ruleStr = element.replace("<%","").replace("%>","").replace("，",","),
 					ruleStrSplits = ruleStr.split(","),
 					elementHtml = "";
 				var rule = {
 					type:parseInt(ruleStrSplits[0]),
-					width:ruleStrSplits.length>1?(ruleStrSplits[1] + "px"):"",
-					height:ruleStrSplits.length>2?(ruleStrSplits[2] + "px"):""
+					value:ruleStrSplits.length>1?ruleStrSplits[1]:''
 				}
-				var width = rule.width?("width:" + rule.width + ";"):"",
-					height = rule.height?("height:" + rule.height + ";"):"";
+				var width = getWidth(rule.value,font);
 				switch (rule.type) {
 					case 0:
-						elementHtml = '<input type="text" style="' + styles + width + height + '" />';
+						var elementStyle = 'width:' + width + 'px;font:' + font + ';';
+						elementHtml = '<input type="text" style="' + elementStyle + '" />';
 						break;
 					case 1:
-						elementHtml = '<input type="button" value="button" style="' + styles + width + height + '" />';
+						var elementStyle = 'width:' + width + 'px;font:' + font + ';';
+						elementHtml = '<input type="button" value="button" style="' + elementStyle + '" />';
 						break;
 					case 2:
-						elementHtml = '<input type="checkbox"  style="' + styles + width + height + '" />';
+						elementHtml = '<input type="checkbox"  style="' + styles + '" />';
 						break;					
 					default:
 						elementHtml = element;
 						break;
 				}
-				html = html.replace(element,elementHtml);
+				content = content.replace(element,elementHtml);
 			})
-			return html;
+			return {status:1,content:content};
+		}
+
+		function getWidth(text,font){
+			var obj = $("<span>").hide().appendTo(document.body);
+			$(obj).html(text.replace(/\s/g,'&nbsp;')).css('font',font);
+			var width = obj.width();
+			obj.remove();
+			return width;
 		}
 
 		$(function () {

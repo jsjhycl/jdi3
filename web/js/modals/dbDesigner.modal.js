@@ -464,6 +464,14 @@ DbDesignerModal.prototype = {
                         return '<input class="form-control" data-key="desc" type="text" style="width:90px" value="' + value + '">';
                     }
                 }, {
+                    name: "sliceTarget",
+                    text: "截取标记",
+                    key: "db.sliceTarget",
+                    group: true,
+                    template: function (value) {
+                        return '<input class="form-control" data-key="sliceTarget" type="text" style="width:90px" value="' + value + '">';
+                    }
+                }, {
                     name: "fieldSlice",
                     text: "字段截取",
                     key: "db.fieldSlice",
@@ -517,6 +525,7 @@ DbDesignerModal.prototype = {
                 field: item.selectField,
                 fieldSplit: item.selectFieldSplit, //新增加
                 desc: item.desc,
+                sliceTarget: item.sliceTarget,
                 fieldSlice: item.fieldSlice,
             }
             savekeyInfo.forEach(citem => {

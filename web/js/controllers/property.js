@@ -66,75 +66,75 @@ function Property() {
     };
     //生成下拉列表
     this.setOptions = function ($select, ckey, data) {
-            var dbName = data.dbName,
-                table = data.table,
-                field = data.field,
-                dbList = AllDbName,
-                options = [],
-                selectValue = "";
+        var dbName = data.dbName,
+            table = data.table,
+            field = data.field,
+            dbList = AllDbName,
+            options = [],
+            selectValue = "";
 
-            if (ckey == "dbName") {
-                selectValue = data.dbName
-                Object.keys(dbList).forEach(function (item) {
+        if (ckey == "dbName") {
+            selectValue = data.dbName
+            Object.keys(dbList).forEach(function (item) {
+                options.push({
+                    name: item,
+                    value: item
+                })
+            })
+        }
+        if (ckey == "table") {
+            selectValue = data.table
+            if (dbName) {
+                Object.keys(dbList[dbName]).forEach(function (item) {
                     options.push({
-                        name: item,
+                        name: dbList[dbName][item]["tableDesc"],
                         value: item
                     })
                 })
             }
-            if (ckey == "table") {
-                selectValue = data.table
-                if (dbName) {
-                    Object.keys(dbList[dbName]).forEach(function (item) {
-                        options.push({
-                            name: dbList[dbName][item]["tableDesc"],
-                            value: item
-                        })
-                    })
-                }
-            }
-            if (ckey == "field") {
-                selectValue = data.field
-                if (dbName && table && dbList[dbName][table]) {
-                    var fields = dbList[dbName][table].tableDetail;
-                    fields.forEach(function (item) {
-                        options.push({
-                            name: item.cname,
-                            value: item.id
-                        })
-                    })
-                }
-            }
-            if (ckey == "fieldSplit") {
-
-                if (dbName && table && dbList[dbName][table]) {
-                    var fields = dbList[dbName][table].tableDetail,
-                        fieldSplits = '';
-                    fields.forEach(function (item) {
-                        if (data.field == item.id) {
-                            fieldSplits = Number(item.fieldSplit)
-                        }
-                    })
-                    selectValue = fieldSplits;
-                    for (i = 1; i <= fieldSplits; i++) {
-                        options.push({
-                            name: "插入",
-                            value: String(i)
-                        })
-                    }
-                }
-            }
-
-            Common.fillSelect($select, {
-                name: "请选择",
-                value: ""
-            }, options, selectValue, true)
-        },
-
-        this.setRelatedId = function ($control) {
-            if (!$control || !$control.attr('id').startsWith('phone_')) return;
-            $("#property_relatedId").length <= 0 && $("#property_id").parents('tr').after('<tr data-second-filter="relatedId"><td><label for="property_relatedId">关联元素编号</label></td><td><input id="property_relatedId" type="text" data-datatype="String" data-attrorstyle="attribute"></td></tr>');
         }
+        if (ckey == "field") {
+            selectValue = data.field
+            if (dbName && table && dbList[dbName][table]) {
+                var fields = dbList[dbName][table].tableDetail;
+                fields.forEach(function (item) {
+                    options.push({
+                        name: item.cname,
+                        value: item.id
+                    })
+                })
+            }
+        }
+        if (ckey == "fieldSplit") {
+
+            if (dbName && table && dbList[dbName][table]) {
+                var fields = dbList[dbName][table].tableDetail,
+                    fieldSplits = '';
+                fields.forEach(function (item) {
+                    if (data.field == item.id) {
+                        fieldSplits = Number(item.fieldSplit)
+                    }
+                })
+                selectValue = fieldSplits;
+                for (i = 1; i <= fieldSplits; i++) {
+                    options.push({
+                        name: "插入",
+                        value: String(i)
+                    })
+                }
+            }
+        }
+
+        Common.fillSelect($select, {
+            name: "请选择",
+            value: ""
+        }, options, selectValue, true)
+    };
+
+    this.setRelatedId = function ($control) {
+        if (!$control || !$control.attr('id').startsWith('phone_')) return;
+        $("#property_relatedId").length <= 0 && $("#property_id").parents('tr').after('<tr data-second-filter="relatedId"><td><label for="property_relatedId">关联元素编号</label></td><td><input id="property_relatedId" type="text" data-datatype="String" data-attrorstyle="attribute"></td></tr>');
+    }
 }
 
 Property.prototype = {
@@ -407,7 +407,7 @@ Property.prototype = {
         if (type === "text") { //如果type是text文本输入框
             GLOBAL_PROPERTY[id]["controlType"] = "文本输入框"; //给全局属性中对应的id设置controltype属性为文本输入框
             GLOBAL_PROPERTY[id]["fontFamily"] = "宋体";
-            GLOBAL_PROPERTY[id]["value"] = $("#"+id).val()
+            GLOBAL_PROPERTY[id]["value"] = $("#" + id).val()
             GLOBAL_PROPERTY[id]["fontSize"] = "10px";
             GLOBAL_PROPERTY[id]["color"] = "black";
             GLOBAL_PROPERTY[id]["backgroundColor"] = "white";

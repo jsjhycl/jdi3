@@ -68,10 +68,11 @@ DbQueryModal.prototype = {
             $workspace = $("#workspace"),
             $control = $workspace.find("#" + id);
         that.$element.val(JSON.stringify(data));
-        if(data.triggerType){
+        if (that.$triggerSelecet.val()) {
             that.setEvent(id, data)
         }
         new Property().save(id === "BODY" ? $workspace : $control, that.$element);
+        new Property().load($control);
     },
     setEvent: function (id, data) {
         if (!id) return;
@@ -124,8 +125,8 @@ DbQueryModal.prototype = {
             }
         }
         property.setValue(id, "events", events)
-        var $control = $(`#workspace #${id}`)
-        new Property().load($control);
+       
+        
     },
     clearData: function () {
         var that = this,

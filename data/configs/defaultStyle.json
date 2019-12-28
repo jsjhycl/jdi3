@@ -1,59 +1,62 @@
-[
-	{
-		"className": "*",
-		"margin": "0",
-		"padding": "0"
-	},
-	{
-		"className": "ul,li",
-		"list-style": "none"
-	},
-	{
-		"className": ".sheet_contain",
-		"padding": "10px"
-	},
-	{
-		"className": "tr > td:last-child .item",
-		"overflow": "visible"
-	},
-	{
-		"className": "td",
-		"box-sizing": "border-box"
-	},
-	{
-		"className": "table",
-		"min-width": "72px"
-	},
-	{
-		"className": ".td_item_all",
-		"display": "flex",
-		"padding-top": "1px",
-		"padding-right": "1px",
-		"padding-left": "1px",
-		"height": "18px",
-		"align-items": "flex-end",
-		"font-size": "15px",
-		"font-family": "宋体",
-		"text-align": "left",
-		"box-sizing": "border-box",
-		"white-space": "nowrap",
-		"border-color": "#000",
-		"overflow": "hidden",
-		"width": "100%",
-		"word-break": "break-all"
-	},
-	{
-		"className": ".text_align_right",
-		"justify-content": "flex-end"
-	},
-	{
-		"className": ".pinyin",
-		"display": "block"
-	},
-	{
-		"className": ".space",
-		"display": "inline-block",
-		"font-size": "12px",
-		"transform": "scale(0.75); width: 9px"
-	}
-]
+{
+    "only": [{
+            "className": ".sheet_contain",
+            "padding": "10px"
+        },
+        {
+            "className": ".td_item_all",
+            "display": "flex",
+            "padding-top": "1px",
+            "padding-right": "1px",
+            "padding-left": "1px",
+            "height": "18px",
+            "align-items": "flex-end",
+            "font-size": "15px",
+            "font-family": "宋体",
+            "text-align": "left",
+            "box-sizing": "border-box",
+            "white-space": "nowrap",
+            "border-color": "#000",
+            "overflow": "hidden",
+            "width": "100%",
+            "word-break": "break-all"
+        },
+        {
+            "className": ".text_align_right",
+            "justify-content": "flex-end"
+        }
+    ],
+    "usually": [{
+            "className": "*",
+            "margin": "0",
+            "padding": "0"
+        },
+        {
+            "className": "ul,li",
+            "list-style": "none"
+        },
+        {
+            "className": "tr > td:last-child .item",
+            "overflow": "visible"
+        },
+        {
+            "className": "td",
+            "box-sizing": "border-box"
+        },
+        {
+            "className": "table",
+            "min-width": "72px"
+        },
+        {
+            "className": ".pinyin",
+            "display": "block"
+        },
+        {
+            "className": ".space",
+            "display": "inline-block",
+            "font-size": "12px",
+            "transform": "scale(0.75)",
+            "width": "9px"
+        }
+    ]
+}

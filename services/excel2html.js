@@ -106,13 +106,19 @@ function getFiles(dirName, resultName) {
 
 //获取默认样式
 function getDefaultStyle() {
-	let defaultStyle = JSON.parse(fs.readFileSync(config.defaultStyle));
-	defaultStyle.forEach((item, index) => {
-		// 去除默认style的随机，于2019-12-27修改
-		// if (item.className.indexOf(".") == 0) {
-		// 	item.className = "." + config.radomStr + "_" + item.className.substring(1);
-		// }
-	})
+	let content = JSON.parse(fs.readFileSync(config.defaultStyle)),
+		defaultStyle = {};
+	for (let key in content) {
+		if (key == "usually")
+			defaultStyle = content[key];
+		if (key == "only") {
+			content[key].forEach((item, index) => {
+				if (item.className.indexOf(".") == 0) {
+					item.className = "." + config.radomStr + "_" + item.className.substring(1);
+				}
+			})
+		}
+	}
 	return defaultStyle;
 }
 
@@ -507,7 +513,7 @@ function singleCell(c, htmls, shareObj, styleObj, themestyle, tintColor, colorOb
 		contents.push({
 			val: Number(c.v)
 		});
-	if (!textAlign) classes.push("text_align_right");
+	if (!textAlign) classes.push(config.radomStr + "_text_align_right");
 	if (c.$.s) { //要考虑数据的格式化的问题
 		if (styleObj.formats[c.$.s])
 			format = styleObj.formats[c.$.s];
@@ -707,7 +713,7 @@ function judgeCellIn(cell, area) {
 function json2table(htmls, styles, resultName) {
 	let htmlstrs = [];
 	for (let htmlElement of htmls) {
-		let html = '<div class="sheet_contain"><table style="border-collapse: collapse;table-layout: fixed;width: 1px;">';
+		let html = '<div class="' + config.radomStr + '_sheet_contain"><table style="border-collapse: collapse;table-layout: fixed;width: 1px;">';
 		let tdwidth = '70px';
 		let areaObj = locationIndex(htmlElement.area);
 		let widthLength = areaObj.cols + areaObj.col,
@@ -817,7 +823,7 @@ function json2table(htmls, styles, resultName) {
 					html += ' format="' + item.format.replace(/"/g, '`') + '"';
 				if (item.rotation)
 					html += ' rotation="' + item.rotation + '"';
-				html += '><div class="td_item_all';
+				html += '><div class="' + config.radomStr + '_td_item_all';
 				if (eleClass.length >= 0) {
 					tdClass = eleClass.filter((element, index, self) => {
 						return self.indexOf(element) === index

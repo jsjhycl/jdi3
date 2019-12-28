@@ -279,6 +279,7 @@ Property.prototype = {
                             var field = db.field, //字段名称
                                 fieldSplit = db.fieldSplit, //字段分段
                                 dbName = db.dbName,
+                                sliceTarget = db.sliceTarget,
                                 fieldSlice = db.fieldSlice,
                                 desc = db.desc; //字段描述
                             if (result.hasOwnProperty(table)) { //result对象中是存在table这个属性
@@ -293,6 +294,7 @@ Property.prototype = {
                                     desc: desc,
                                     type: "String",
                                     fieldSplit: fieldSplit,
+                                    sliceTarget: sliceTarget,
                                     fieldSlice: fieldSlice
                                 }); //向fields中添加一条对象
                             } else { //reslut中不存在这个table
@@ -307,6 +309,7 @@ Property.prototype = {
                                     desc: desc,
                                     type: "String",
                                     fieldSplit: fieldSplit,
+                                    sliceTarget :sliceTarget,
                                     fieldSlice: fieldSlice
                                 }); //向fields中添加一条对象
                             }

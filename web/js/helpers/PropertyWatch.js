@@ -25,10 +25,7 @@ var PropertyWatch = {
             zIndex: 801,
             top: "18px"
         })
-        $designer.css({
-            display: "none"
-            // visibility: "hidden"
-        })
+
         $PropertyMask.css({
             width: $('body').width() - 10,
             height: $designer.find("#ruler").height(),
@@ -39,6 +36,10 @@ var PropertyWatch = {
         $PropertyMaskContent.append($copyWorkSpace)
         $PropertyMask.append($PropertyMaskContent)
         $('body').append($PropertyMask)
+        $designer.css({
+            display: "none"
+            // visibility: "hidden"
+        })
         that.bindEvents()
     },
     inputToBtn: function (view, $doms, $originContainer, key, name, change) {
@@ -52,18 +53,26 @@ var PropertyWatch = {
             //     $span = $(`<input type="checkbox">`) 
             // }
             // $temp = isSelected ? $dom.parent() : $dom;
+            console.log("$dom", $dom)
+            console.log("$origin", $origin, "isNode", isNode, $origin.outerWidth())
             $temp = $dom;
             $span.css({
                 // position:"static",
-                width: isNode ? ($origin.outerWidth() ? $origin.outerWidth() : "151px") : "100%",
-                height: isNode ? ($origin.outerHeight() ? $origin.outerHeight() : "27px") : "100%",
+                // width: isNode ? ($origin.outerWidth() ? $origin.outerWidth() : "151px") : "100%",
+                // height: isNode ? ($origin.outerHeight() ? $origin.outerHeight() : "27px") : "100%",
+                // width: $origin.outerWidth() ? $origin.outerWidth() : "151px",
+                // height: $origin.outerHeight() ? $origin.outerHeight() : "27px",
+                width: $origin.width(),
+                height: $origin.height(),
                 position: $origin.css('position'),
                 top: $origin.css('top'),
                 left: $origin.css('left'),
                 zIndex: 803,
-                display: "block",
+                display: "inline-block",
                 boxSizing: "border-box",
                 cursor: "pointer",
+                "font":$origin.css('font'),
+                "vertical-align": "middle"
                 // lineHeight: '0'
             })
 

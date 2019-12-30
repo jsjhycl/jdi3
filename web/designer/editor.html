@@ -136,7 +136,7 @@
 					transHtml = '<input type="text" style="' + styles + 'border:none;" />';
 				} else if (bgColor.match(/rgb\(\s*0\,\s*0\,\s*0\)/) || bgColor.match("black")) { //黑
 					styles += ";clip:rect(1px " + ($this.width() - 2) + "px " + ($this.height() - 2) + "px 1px)";
-					transHtml = '<input type="checkbox"  style="' + styles + '" />';
+					transHtml = '<input type="checkbox" value="' + ($this.text() || '') + '" style="' + styles + '" />';
 				} else if (bgColor.match(/rgb\(255\,\s*255\,\s*0\)/) || bgColor.match("yellow")) { //黄
 					transHtml = '<input type="button" value="' + $this.text() + '" style="' + styles + '" />';
 				}
@@ -155,7 +155,9 @@
 
 		function replaceFormat(content,font){
 			var styles = "margin:0;padding:0;box-sizing:border-box;vertical-align: middle;line-height:normal;";
-			var pat = new RegExp("<%\\d[,，]?\\s*%>","g");
+			// <%1%>,<%1,  %>,<%1,  ,***%>,<%1,,***%>四种情况
+			var pat = /<%(\d|\d[,，]\s+|\d[,，]\s+[,，]([^%>]+)?|\d[,，]{2}([^%>]+)?)%>/g;
+			// var pat = new RegExp("<%\\d[,，]?\\s*%>","g");
 			var matchs = content.match(pat);
 			if(!matchs || matchs.length <= 0)
 				return {status:0,content:content};
@@ -165,9 +167,10 @@
 					elementHtml = "";
 				var rule = {
 					type:parseInt(ruleStrSplits[0]),
-					value:ruleStrSplits.length>1?ruleStrSplits[1]:''
+					space:ruleStrSplits.length>1?ruleStrSplits[1]:'',
+					value:ruleStrSplits.length>2?ruleStrSplits[2]:''
 				}
-				var width = getWidth(rule.value,font);
+				var width = getWidth(rule.space,font);
 				switch (rule.type) {
 					case 0:
 						var elementStyle = 'width:' + width + 'px;font:' + font + ';';
@@ -175,10 +178,10 @@
 						break;
 					case 1:
 						var elementStyle = 'width:' + width + 'px;font:' + font + ';';
-						elementHtml = '<input type="button" value="button" style="' + elementStyle + '" />';
+						elementHtml = '<input type="button" value="' + (rule.value || 'button') + '" style="' + elementStyle + '" />';
 						break;
 					case 2:
-						elementHtml = '<input type="checkbox"  style="' + styles + '" />';
+						elementHtml = '<input type="checkbox" value="' + (rule.value || '') + '" style="' + styles + '" />';
 						break;					
 					default:
 						elementHtml = element;

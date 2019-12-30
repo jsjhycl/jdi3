@@ -223,6 +223,7 @@ function ContextMenu() {
         var resizableNode = $('.resizable-node'),
             resizableNodeChild = resizableNode.children('div');
         if (idx === 2) {
+            resizableNode.find('table').hide();
             resizableNodeChild.css({
                 "width": "6px",
                 "height": "6px",
@@ -236,8 +237,9 @@ function ContextMenu() {
                 "height": "10px",
                 "border-radius": "50%"
             })
-            resizableNode.find('table').hide();
+
         } else {
+            resizableNode.find('table').show();
             resizableNodeChild.css({
                 "width": "100%",
                 "height": "100%",
@@ -249,11 +251,11 @@ function ContextMenu() {
                 nodeTableWidth = resizableNodeTable.width(),
                 nodeTableHeight = resizableNodeTable.height();
             resizableNode.parent().css({
-                "width": nodeTableWidth + 10 + 'px',
-                "height": nodeTableHeight + 10 + 'px',
+                "width": nodeTableWidth + 'px',
+                "height": nodeTableHeight + 5 + 'px',
                 "border-radius": "0",
             })
-            resizableNode.find('table').show();
+
         }
     }
     /**

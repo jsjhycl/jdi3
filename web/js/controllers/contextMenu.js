@@ -218,7 +218,10 @@ function ContextMenu() {
             }
         });
     }
-
+    //窗口可见性
+    this.windowIsShow = function () {
+        
+    }
     /**
      * 页面自适应宽高
      */
@@ -415,24 +418,24 @@ ContextMenu.prototype = {
                             type: "menuitem",
                             text: "添加子模块设计器",
                             handler: function () {
-                                
+
                                 // $('#controlbar .control-item[data-type="div"]').click();
-                                    var arrs = [
-                                        "channelmode=no",
-                                        "directories=no",
-                                        "location=no",
-                                        "menubar=no",
-                                        "resizable=yes",
-                                        "scrollbars=no",
-                                        "status=no",
-                                        "titlebar=no",
-                                        "toolbar=no",
-                                        "width=1000px",
-                                        "height=700px",
-                                        "top=100px",
-                                        "left=200px"
-                                    ];
-                                    let editor = window.open("./editor.html", "_blank", arrs.join(", "));
+                                var arrs = [
+                                    "channelmode=no",
+                                    "directories=no",
+                                    "location=no",
+                                    "menubar=no",
+                                    "resizable=yes",
+                                    "scrollbars=no",
+                                    "status=no",
+                                    "titlebar=no",
+                                    "toolbar=no",
+                                    "width=1000px",
+                                    "height=700px",
+                                    "top=100px",
+                                    "left=200px"
+                                ];
+                                let editor = window.open("./editor.html", "_blank", arrs.join(", "));
                             }
                         },
                         {
@@ -523,6 +526,14 @@ ContextMenu.prototype = {
                             text: "页面自适应",
                             handler: function () {
                                 that.pageAuto();
+                            }
+                        }, {
+                            type: "separator"
+                        }, {
+                            type: "menuitem",
+                            text: "窗口可见性",
+                            handler: function () {
+                                that.windowIsShow()
                             }
                         }
                     ]
@@ -620,8 +631,7 @@ ContextMenu.prototype = {
                                 let id = $("#property_id").val(),
                                     query = new Property().getValue(id, 'query.db'),
                                     nestQuery = new Property().getValue(id, 'query.nest');
-                                (query || nestQuery) ? $("#archivePathBatch_modal").modal('show')
-                                    : alert('当前控件未设置查询属性！')
+                                (query || nestQuery) ? $("#archivePathBatch_modal").modal('show'): alert('当前控件未设置查询属性！')
                             }
                         }
                     ]

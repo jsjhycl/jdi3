@@ -213,41 +213,5 @@ Propertybar.prototype = {
         that.$container.on("click" + that.NAME_SPACE, "#event_btn", function (event) {
             $("#eventGuide_modal").modal("show")
         })
-        //zww
-        that.$container.on('input change' + that.NAME_SPACE, '#property_window_visibility', function (params) {
-            var $this = $(this),
-                resizableNode = $('.resizable-node'),
-                resizableNodeChild = resizableNode.children('div');
-            if ($this.prop('checked')) {
-                resizableNodeChild.css({
-                    "width": "6px",
-                    "height": "6px",
-                    "border-radius": "50%",
-                    "backgroundColor": "#5B9BD5",
-                    "overflow": "hidden"
-                })
-                resizableNode.parent().css({
-                    "width": "10px",
-                    "height": "10px",
-                    "border-radius": "50%",
-                })
-            } else {
-                resizableNodeChild.css({
-                    "width": "100%",
-                    "height": "100%",
-                    "border-radius": "0",
-                    "backgroundColor": "transparent",
-                    "overflow": "visible"
-                })
-                var resizableNodeTable = resizableNode.find('table'),
-                    nodeTableWidth = resizableNodeTable.width(),
-                    nodeTableHeight = resizableNodeTable.height();
-                resizableNode.parent().css({
-                    "width": nodeTableWidth + 10 + 'px',
-                    "height": nodeTableHeight + 10 + 'px',
-                    "border-radius": "0",
-                })
-            }
-        })
     }
 };

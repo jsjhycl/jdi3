@@ -752,13 +752,14 @@ function workspace() {
 			new Property().clearDOM();
 		}
 		//窗口可见性复选框
-		var childWidth = $this.children().width(),
-			childHeight = $this.children().height();
-		if (childWidth !== 6 && childHeight !== 6) {
-			$('#property_window_visibility').prop('checked', true);
-		} else {
-			$('#property_window_visibility').prop('checked', false);
-		}
+
+		// var childWidth = $this.children().width(),
+		// 	childHeight = $this.children().height();
+		// if (childWidth !== 6 && childHeight !== 6) {
+		// 	$('#property_window_visibility').prop('checked', true);
+		// } else {
+		// 	$('#property_window_visibility').prop('checked', false);
+		// }
 	});
 
 	//加载属性

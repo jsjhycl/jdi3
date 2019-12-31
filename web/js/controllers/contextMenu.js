@@ -579,7 +579,6 @@ ContextMenu.prototype = {
                             type: "menuitem",
                             text: "不可见",
                             handler: function () {
-                                console.log($(this), '$this222');
                                 that.windowIsShow(2, $(this));
                             }
                         }]

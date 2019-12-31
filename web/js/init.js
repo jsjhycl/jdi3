@@ -41,7 +41,7 @@ Loader.prototype = {
                 that.JS_PATH + "/utils/observer.js",
                 that.JS_PATH + "/utils/buildTableJson.js",
                 that.JS_PATH + "/utils/qr.js",
-                // that.JS_PATH + "/utils/arrayToTree.js",
+                that.JS_PATH + "/utils/arrayToTree.js",
                 that.JS_PATH + "/helpers/numberHelper.js",
                 that.JS_PATH + "/helpers/domHelper.js",
                 that.JS_PATH + "/helpers/conditionsHelper.js",
@@ -52,6 +52,9 @@ Loader.prototype = {
                 that.LIB_PATH + "/jcontextmenu/jcontextmenu.js",
                 that.LIB_PATH + "/jpagination/jpagination.js",
                 that.LIB_PATH + "/lodash/lodash.js",
+                that.LIB_PATH + "/orgChart/html2canvas.js", //zww
+                that.LIB_PATH + "/orgChart/jquery.orgchart.js", //zww
+                that.LIB_PATH + "/buildTree/buildTree.js", //zww
                 that.LIB_PATH + "/jdi-exprGenerator/jdi-exprGenerator.js",
                 that.LIB_PATH + "/jdi-propModifier/jdi-propModifier.js",
                 that.LIB_PATH + "/jdi-propModifier/jdi-propModifier2.js",
@@ -107,7 +110,9 @@ Loader.prototype = {
                 that.JS_PATH + "/modals/queryNest.modal.js",
                 that.JS_PATH + "/modals/dbApply.modal.js",
                 that.JS_PATH + "/modals/archivePath.modal.js",
+                that.JS_PATH + "/modals/change.tree.modal.js", //zww
                 that.JS_PATH + "/modals/archivePathBatch.modal.js",
+                that.JS_PATH + "/modals/changeListen.modal.js",
                 that.JS_PATH + "/modals/conditions.modal.js",
                 that.JS_PATH + "/modals/setDbDesigner.modal.js",
                 that.JS_PATH + "/modals/copyValue.modal.js",

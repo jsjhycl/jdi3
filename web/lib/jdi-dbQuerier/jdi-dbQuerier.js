@@ -166,7 +166,7 @@
         },
         setFields: function ($fieldsDiv, fieldMode, fields, data) {
             if (!$fieldsDiv || $fieldsDiv.length <= 0) return;
-            console.log($fieldsDiv, fields)
+            // console.log($fieldsDiv, fields)
             $fieldsDiv.empty();
             if (!Array.isArray(fields)) return;
 

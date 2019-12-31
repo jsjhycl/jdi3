@@ -603,7 +603,9 @@ Workspace.prototype = {
     load: function (id, name, type, contactId, relTemplate, edit, isCreate, version) {
         if (!id || !type || !name) return;
         var that = this,
-            url = type === "表单" ? `./resource/${id}` : (isCreate ? `./resource/${contactId}` : `./product/${id}${version ? ("." + version) :""}`);
+            // url = type === "表单" ? `./resource/${id}` : (isCreate ? `./resource/${contactId}` : `./product/${id}${version ? ("." + version) :""}`);
+            url = `./product/${id}${version ? ("." + version) :""}`;
+        if (isCreate) return that.init(id, name, type, contactId, relTemplate, that.USER);
         $.when(that.readFile(url + "/setting.json"), that.readFile(url + "/property.json")).done(function (ret1, ret2) {
             that.init(id, name, type, contactId, relTemplate, edit, ret1, version);
             var settingData = ret1,

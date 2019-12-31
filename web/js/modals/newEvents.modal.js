@@ -120,6 +120,7 @@ function NewEventsModal($modal, $elemts) {
                         ${ that.renderTimeQuery(event.subscribe.timeQuery)}
                         ${ that.renderChangePropertyTable( event.subscribe.property ) }
                         ${ that.renderCopySendTable( event.subscribe.copySend ) }
+                        ${ that.renderDeleteTable(event.subscribe.deleteRow)}
                         ${ that.renderLinkHTMLTable(event.subscribe.linkHtml) }
                         ${ that.renderExecuteFn(event.subscribe.executeFn)}
                         ${ that.renderImportDb(event.subscribe.importDb)}
@@ -330,27 +331,27 @@ function NewEventsModal($modal, $elemts) {
     //         </div>`
     //     return str;
     // }
-    this.renderKeySave = function(key){
-         let that = this,
-             str = "";
-         str = `<div class="condition keySave" ${key ? "" : 'style="display:none"' }>
+    this.renderKeySave = function (key) {
+            let that = this,
+                str = "";
+            str = `<div class="condition keySave" ${key ? "" : 'style="display:none"' }>
                 <span>指定主键</span>
                 <input type="text" class="form-control" data-wrap="true" style="display:inline-block;margin-left:10px;width:500px" value='${key||""}' data-category="linkHtml" data-save="keySave">
             </div>`
-         return str;
-    },
-    this.renderTypeOfValue = function (typekey, type, selected) {
-        let defaultType = {
-                name: type,
-                value: ""
-            },
-            str = `<select class="form-control" data-save = "${typekey}" data-change-operator="${typekey}">`,
-            options = [defaultType, ...ConditionsHelper.typeConfig];
-        options.forEach(item => {
-            str += `<option value="${item.value}" ${ selected == item.value ? "selected" : ""}>${item.name}</option>`
-        })
-        return `${str}</select>`
-    }
+            return str;
+        },
+        this.renderTypeOfValue = function (typekey, type, selected) {
+            let defaultType = {
+                    name: type,
+                    value: ""
+                },
+                str = `<select class="form-control" data-save = "${typekey}" data-change-operator="${typekey}">`,
+                options = [defaultType, ...ConditionsHelper.typeConfig];
+            options.forEach(item => {
+                str += `<option value="${item.value}" ${ selected == item.value ? "selected" : ""}>${item.name}</option>`
+            })
+            return `${str}</select>`
+        }
     this.renderCopySendConfigTypeOfValue = function (typekey, type, selected) {
         let defaultType = {
                 name: "请选择操作符",
@@ -381,6 +382,7 @@ function NewEventsModal($modal, $elemts) {
         if (!inputType || !DataType.isArray(dataSource)) return str;
         let checkArr = [];
         if (subscribe.copySend) checkArr.push("copySend");
+        if (subscribe.deleteRow) checkArr.push("deleteRow");
         if (subscribe.property) checkArr.push("changeProperty");
         if (subscribe.notify) checkArr.push("notify");
         if (subscribe.saveHTML) checkArr.push("saveHTML");
@@ -485,6 +487,25 @@ function NewEventsModal($modal, $elemts) {
                    </div>`;
         return str;
     }
+    this.renderDeleteTable = function (deleteData) {
+        let that = this,
+            str = `<div class="condition deleteRow" ${deleteData ? "" : 'style="display:none"' }>
+                <table class="table table-bordered" >
+                    <thead>
+                        <tr>
+                            <th ><span class="add" data-add="renderDeleteTr">+</span></th>
+                            <th class="text-center"> 数据库</th>
+                            <th class="text-center"> 数据表</th>
+                            <th class="text-center"> 删除条件</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${that.renderDeleteTr(deleteData)}
+                    </tbody>
+                </table>
+            </div>`;
+        return str;
+    }
     this.renderCopySendTr = function (copySend = [{}]) {
         let that = this,
             str = '';
@@ -507,6 +528,29 @@ function NewEventsModal($modal, $elemts) {
                             ${ that.renderCopySendFieldsTable( item.dbName, item.table, item.fields) }
                         </td>
                     </tr>`
+        })
+        return str;
+    }
+    this.renderDeleteTr = function (deleteData = [{}]) {
+        let that = this,
+            str = '';
+        if (!DataType.isArray(deleteData)) return str;
+        deleteData.forEach(item => {
+            str += `<tr class="tr deleteTr">
+                <td>
+                    <span class="del">×</span>
+                </td>
+                <td>
+                    ${ that.renderCopySendSelect( 'dbName', item.dbName, null, null,"请选择数据库",item.dbName) }
+                </td>
+                <td>
+                    ${ that.renderCopySendSelect( 'table', item.dbName, item.table, null,"请选择抄送表",item.table) }
+                </td>
+                <td>
+                    ${ that.renderCopySendConditionTable(item.dbName, item.table, item.conditions  ) }
+                </td>
+                        </td>
+            </tr>`
         })
         return str;
     }
@@ -838,6 +882,18 @@ function NewEventsModal($modal, $elemts) {
         })
         return copySends;
     }
+    this.getDelete = function ($deletes) {
+        var that = this,
+            deletes = [];
+        $deletes.each(function () {
+            var Delete = {};
+            Delete.dbName = $(this).find('[data-save="dbName"]').val();
+            Delete.table = $(this).find('[data-save="table"]').val();
+            Delete.conditions = that.getCopySendCondition($(this).find(".copySendCondition"));
+            deletes.push(Delete)
+        })
+        return deletes;
+    }
     this.getCopySendCondition = function ($conditions) {
         var conditions = [];
         $conditions.each(function () {
@@ -1028,6 +1084,7 @@ NewEventsModal.prototype = {
                 $exprMethods = $(this).find('[data-exper="true"]:checked'),
                 exprMethods = [],
                 copySend = null,
+                deleteRow = null,
                 property = null,
                 notify = null,
                 query = null,
@@ -1055,6 +1112,9 @@ NewEventsModal.prototype = {
             }
             if (that.judgeCheckMehods("copySend", $(this).find(".triggerMethods:checked"))) {
                 copySend = that.getCopySend($(this).find('.copySendTr'))
+            }
+            if (that.judgeCheckMehods("deleteRow", $(this).find(".triggerMethods:checked"))) {
+                deleteRow = that.getDelete($(this).find('.deleteTr'))
             }
             if (that.judgeCheckMehods("changeProperty", $(this).find(".triggerMethods:checked"))) {
                 property = that.getChangeProperty($(this).find(".changePropertyTr"))
@@ -1103,6 +1163,7 @@ NewEventsModal.prototype = {
                         conditions: trigger_conditions,
                         custom: trigger_custom_methods,
                         copySend: copySend,
+                        deleteRow: deleteRow,
                         property: property,
                         notify: notify,
                         query: query,
@@ -1168,7 +1229,7 @@ NewEventsModal.prototype = {
         that.$modal.on("click" + that.NAME_SPACE, ".methods input[type='checkbox']", function () {
             let value = $(this).val(),
                 check = $(this).prop("checked");
-            let arr = ["save", "upload", "login", "checkAll", "cancelAll", "changeProperty", "copySend", "notify", "saveHTML", "linkHtml", "nextProcess", "executeFn", "importExcel", "importDb","keySave"];
+            let arr = ["save", "upload", "login", "checkAll", "cancelAll", "changeProperty", "copySend", "notify", "saveHTML", "linkHtml", "nextProcess", "executeFn", "importExcel", "importDb", "keySave", "deleteRow"];
             if (!arr.includes(value)) return;
             $target = $(this).parents("tr").find(`.${value}`)
             check ? $target.show() : $target.hide()

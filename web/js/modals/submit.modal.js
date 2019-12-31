@@ -11,44 +11,118 @@ function SubmitModal($modal, $submit) {
     this.data = {};
     this.USER = "admin"
 
-    this.$resourceName = this.$modal.find("#Changetemplate_name")
-    this.$resourceCategory = this.$modal.find("#Changetemplate_category")
-    this.$resourceSubcategory = this.$modal.find('[name="Changetemplate_subCategory"]:checked')
+    // this.$resourceName = this.$modal.find("#Changetemplate_name")
+    // this.$resourceCategory = this.$modal.find("#Changetemplate_category")
+    // this.$resourceSubcategory = this.$modal.find('[name="Changetemplate_subCategory"]:checked')
 
-    this.$modalName = this.$modal.find("#Changemodel_name")
-    this.$modalFeature = this.$modal.find("#Changemodel_feature")
-    this.$modalCategory = this.$modal.find("#Changemodel_category")
-    this.$modalArea = this.$modal.find("#Changemodel_area")
-    this.$modalSubcategory = this.$modal.find("#Changemodel_subCategory")
-    this.$modalSpare1 = this.$modal.find("#Changemodel_spare1")
-    this.$modalSpare2 = this.$modal.find("#Changemodel_spare2")
-    this.$modalUserGrade = this.$modal.find("#Changemodel_userGrade")
-    this.$modalAutoCreate = this.$modal.find("#Changemodel_autoCreate")
-    this.queryBasicInfo = async function (dbCollection, condition) {
-        return await new Service().query(dbCollection, condition, ["basicInfo"])
-    }
+    // this.$modalName = this.$modal.find("#Changemodel_name")
+    // this.$modalFeature = this.$modal.find("#Changemodel_feature")
+    // this.$modalCategory = this.$modal.find("#Changemodel_category")
+    // this.$modalArea = this.$modal.find("#Changemodel_area")
+    // this.$modalSubcategory = this.$modal.find("#Changemodel_subCategory")
+    // this.$modalSpare1 = this.$modal.find("#Changemodel_spare1")
+    // this.$modalSpare2 = this.$modal.find("#Changemodel_spare2")
+    // this.$modalUserGrade = this.$modal.find("#Changemodel_userGrade")
+    // this.$modalAutoCreate = this.$modal.find("#Changemodel_autoCreate")
+    // this.queryBasicInfo = async function (dbCollection, condition) {
+    //     return await new Service().query(dbCollection, condition, ["basicInfo"])
+    // }
+
+    this.$resoureName = $('#Changemodel_name')
+    this.$firstCategory = $('#Changemodel_firstCategory');
+    this.$secondeCategory = $('#Changemodel_secondeCategory');
+    this.$thridCategory = $('#Changemodel_thridCategory');
+    this.$fourthCategory = $('#Changemodel_fourthCategory');
+    this.$fifthCategory = $('#Changemodel_fifthCategory');
+    this.$sixthCategory = $('#Changemodel_sixthCategory');
+    this.$seventhCategory = $('#Changemodel_seventhCategory');
+    this.$eighthCategory = $('#Changemodel_eighthCategory');
+    this.$ninthCategory = $('#Changemodel_ninthCategory');
+    this.treeData = null;
+
+
     this.getDb = function (dbCollection, condition) {
         return new Service().query(dbCollection, condition)
     }
     this.setData = function (data, type) {
-        if (type == "表单") {
-            this.$resourceName.val(this.data.name)
-            this.$resourceCategory.val(this.data.basicInfo.category)
+        console.log(data, type)
+        var that = this;
+        // if (type == "表单") {
+        //     this.$resourceName.val(this.data.name)
+        //     this.$resourceCategory.val(this.data.basicInfo.category)
 
-            var subCategory = this.data.basicInfo.subCategory,
-                $subCategory = this.$modal.find(`[name="Changetemplate_subCategory"][value="${subCategory}"]`);
-            $subCategory.attr("checked", true)
-        }
+        //     var subCategory = this.data.basicInfo.subCategory,
+        //         $subCategory = this.$modal.find(`[name="Changetemplate_subCategory"][value="${subCategory}"]`);
+        //     $subCategory.attr("checked", true)
+        // }
         if (type == "布局") {
-            this.$modalName.val(this.data.name)
-            this.$modalFeature.val(this.data.basicInfo.feature)
-            this.$modalCategory.val(this.data.basicInfo.category)
-            this.$modalArea.val(this.data.basicInfo.area)
-            this.$modalSubcategory.val(this.data.basicInfo.subCategory)
-            this.$modalSpare1.val(this.data.basicInfo.spare1 || 0)
-            this.$modalSpare2.val(this.data.basicInfo.spare2 || 0)
-            this.$modalUserGrade.val(this.data.basicInfo.userGrade)
-            this.$modalAutoCreate.val(this.data.basicInfo.autoCreate)
+            var name = this.data.name,
+                firstCategory = data.basicInfo.contactId.slice(0, 1),
+                secondeCategory = data.basicInfo.contactId.slice(1, 2) + "," + data.basicInfo.contactId.slice(2, 3),
+                thridCategory = data.basicInfo.autoCreate,
+                fourthCategory = data.basicInfo.feature,
+                fifthCategory = data.basicInfo.category,
+                sixthCategory = data.basicInfo.area,
+                seventhCategory = data.basicInfo.spare1,
+                eighthCategory = data.basicInfo.spare2,
+                ninthCategory = data.basicInfo.userGrade,
+                subCategory = data.basicInfo.subCategory;
+            var firstData = new ArrayToTree().getFirstData(that.treeData),
+                secondData = new ArrayToTree().getSearchData([firstCategory], that.treeData),
+                thridData = new ArrayToTree().getSearchData([firstCategory, secondeCategory], that.treeData),
+                fourthData = new ArrayToTree().getSearchData([firstCategory, secondeCategory, thridCategory], that.treeData),
+                fifthData = new ArrayToTree().getSearchData([firstCategory, secondeCategory, thridCategory, fourthCategory], that.treeData),
+                sixthData = new ArrayToTree().getSearchData([firstCategory, secondeCategory, thridCategory, fourthCategory, fifthCategory], that.treeData),
+                sevenData = new ArrayToTree().getSearchData([firstCategory, secondeCategory, thridCategory, fourthCategory, fifthCategory, sixthCategory], that.treeData),
+                eighthData = new ArrayToTree().getSearchData([firstCategory, secondeCategory, thridCategory, fourthCategory, fifthCategory, sixthCategory, seventhCategory], that.treeData),
+                ninthData = new ArrayToTree().getSearchData([firstCategory, secondeCategory, thridCategory, fourthCategory, fifthCategory, sixthCategory, seventhCategory, eighthCategory], that.treeData);
+            that.$resoureName.val(name)
+            $("#Changemodel_subCategory").find(`[type="radio"][value="${subCategory}"]`).prop('checked', true)
+            Common.fillSelect(that.$firstCategory, {
+                name: "请选择表属性",
+                value: ""
+            }, firstData, firstCategory, true)
+            Common.fillSelect(that.$secondeCategory, {
+                name: "请选择表序号",
+                value: ""
+            }, secondData, secondeCategory, true)
+            Common.fillSelect(that.$thridCategory, {
+                name: "请选择布局属性",
+                value: ""
+            }, thridData, thridCategory, true)
+            Common.fillSelect(that.$fourthCategory, {
+                name: "请选择一级目录",
+                value: ""
+            }, fourthData, fourthCategory, true)
+            Common.fillSelect(that.$fifthCategory, {
+                name: "请选择二级目录",
+                value: ""
+            }, fifthData, fifthCategory, true)
+            Common.fillSelect(that.$sixthCategory, {
+                name: "请选择布局区域",
+                value: ""
+            }, sixthData, sixthCategory, true)
+            Common.fillSelect(that.$seventhCategory, {
+                name: "请选择备用1",
+                value: ""
+            }, sevenData, seventhCategory, true)
+            Common.fillSelect(that.$eighthCategory, {
+                name: "请选择备用",
+                value: ""
+            }, eighthData, eighthCategory, true)
+            Common.fillSelect(that.$ninthCategory, {
+                name: "请选择布局等级",
+                value: ""
+            }, ninthData, ninthCategory, true)
+            // this.$modalName.val(this.data.name)
+            // this.$modalFeature.val(this.data.basicInfo.feature)
+            // this.$modalCategory.val(this.data.basicInfo.category)
+            // this.$modalArea.val(this.data.basicInfo.area)
+            // this.$modalSubcategory.val(this.data.basicInfo.subCategory)
+            // this.$modalSpare1.val(this.data.basicInfo.spare1 || 0)
+            // this.$modalSpare2.val(this.data.basicInfo.spare2 || 0)
+            // this.$modalUserGrade.val(this.data.basicInfo.userGrade)
+            // this.$modalAutoCreate.val(this.data.basicInfo.autoCreate)
         }
     }
     this.globalJsonPath = "./profiles/global.json";
@@ -72,10 +146,13 @@ SubmitModal.prototype = {
             that.$modal.find('.nav-tabs li:eq(0)').css("display", "none");
             that.$modal.find('.nav-tabs li:eq(1) a[data-toggle="tab"]').click();
         }
+        var treeData = await new ArrayToTree().getTreeData();
+        that.treeData = treeData;
         that.getDb(dbCollection, condition).then(res => {
             that.data = res[0]
             that.setData(that.data, type)
         })
+
     },
     saveData: function () {
         // new Workspace().save(true)
@@ -86,11 +163,11 @@ SubmitModal.prototype = {
     changeGlobalJson: async function (oldId, newId) {
         var that = this,
             data = await new FileService().readFile(that.globalJsonPath);
-        if(data[oldId]){
-            var newdata = $.extend(data[oldId],{})
+        if (data[oldId]) {
+            var newdata = $.extend(data[oldId], {})
             delete data[oldId]
             data[newId] = newdata
-            new FileService().writeFile(that.globalJsonPath, JSON.stringify(data)) 
+            new FileService().writeFile(that.globalJsonPath, JSON.stringify(data))
         }
     },
     bindEvents: function () {
@@ -150,10 +227,9 @@ SubmitModal.prototype = {
             that.initData()
         })
         that.$modal.find(".save").on("click", function () {
-            console.log("保存",VERSION)
             var type = $("#workspace").attr("data-type"),
-                oldId = $("#workspace").attr("data-id")
-            id = "",
+                oldId = $("#workspace").attr("data-id"),
+                id = "",
                 condition = [],
                 data = that.data;
             if (type == "表单") {
@@ -226,27 +302,47 @@ SubmitModal.prototype = {
                 }
             }
             if (type == "布局") {
-                if (!that.$modalName.val()) return alert("布局名为必填选项");
-                var autoCreate = that.$modalAutoCreate.val(),
-                    userGrade = that.$modalUserGrade.val(),
-                    feature = that.$modalFeature.val(),
-                    category = that.$modalCategory.val(),
-                    subCategory = that.$modalSubcategory.val(),
-                    area = that.$modalArea.val(),
-                    spare1 = that.$modalSpare1.val(),
-                    spare2 = that.$modalSpare2.val(),
-                    contactId = data.basicInfo.contactId.replace(/\((.*)\)/img, "");
+                if (!that.$resoureName.val()) return alert("布局名为必填选项");
+                // var autoCreate = that.$modalAutoCreate.val(),
+                //     userGrade = that.$modalUserGrade.val(),
+                //     feature = that.$modalFeature.val(),
+                //     category = that.$modalCategory.val(),
+                //     subCategory = that.$modalSubcategory.val(),
+                //     area = that.$modalArea.val(),
+                //     spare1 = that.$modalSpare1.val(),
+                //     spare2 = that.$modalSpare2.val(),
+                //     contactId = data.basicInfo.contactId.replace(/\((.*)\)/img, "");
+                // if (data.customId.length > 10) {
+                //     var saveAsNumber = data.customId.slice(10, that.data.customId.length)
+                // }
+                // id = autoCreate + userGrade + feature + category + area + spare1 + spare2 + contactId + (saveAsNumber ? saveAsNumber : "");
+                console.log(data)
+                var name = that.$resoureName.val(),
+                    subCategory = that.$modalBody.find('[name="model_resource_subCategory"]:checked').val(),
+                    firstCategory = that.$firstCategory.val(),
+                    secondeCategory = that.$secondeCategory.val(),
+                    thridCategory = that.$thridCategory.val(),
+                    fourthCategory = that.$fourthCategory.val(),
+                    fifthCategory = that.$fifthCategory.val(),
+                    sixthCategory = that.$sixthCategory.val(),
+                    seventhCategory = that.$seventhCategory.val(),
+                    eighthCategory = that.$eighthCategory.val(),
+                    ninthCategory = that.$ninthCategory.val();
+                 console.log(name, subCategory, firstCategory, secondeCategory, thridCategory, fourthCategory, fifthCategory, sixthCategory, seventhCategory, eighthCategory, ninthCategory, secondeCategory.split(',')[0], secondeCategory.split(',')[1])
+                if (!name || !subCategory || !firstCategory || !secondeCategory || !thridCategory || !fourthCategory || !fifthCategory || !sixthCategory || !seventhCategory || !eighthCategory || !ninthCategory) return alert("请填写完整的数据");
+                var id = firstCategory + secondeCategory.split(',')[0] + secondeCategory.split(',')[1] + thridCategory + fourthCategory + fifthCategory + sixthCategory + seventhCategory + eighthCategory + ninthCategory;
+                if (id.length != 10) return alert("布局编码不等于10位")
                 if (data.customId.length > 10) {
                     var saveAsNumber = data.customId.slice(10, that.data.customId.length)
                 }
-                id = autoCreate + userGrade + feature + category + area + spare1 + spare2 + contactId + (saveAsNumber ? saveAsNumber : "");
+                id = id + (saveAsNumber ? saveAsNumber : "");
                 condition = [{
                         col: "_id",
                         value: id
                     },
                     {
                         col: "name",
-                        value: that.$modalName.val()
+                        value: name
                     },
                     {
                         col: "customId",
@@ -267,24 +363,24 @@ SubmitModal.prototype = {
                     {
                         col: "basicInfo",
                         value: {
-                            category: category,
+                            category: fifthCategory,
                             subCategory: subCategory,
-                            feature: feature,
-                            userGrade: userGrade,
-                            area: area,
-                            autoCreate: autoCreate,
-                            spare1: spare1,
-                            spare2: spare2,
-                            contactId: data.basicInfo.contactId
+                            feature: fourthCategory,
+                            userGrade: ninthCategory,
+                            autoCreate: thridCategory,
+                            area: sixthCategory, //布局区域=》布局区域
+                            spare1: seventhCategory, //备用1=》备用1
+                            spare2: eighthCategory, //备用2=>综合
+                            contactId: firstCategory + secondeCategory.split(',')[0] + secondeCategory.split(',')[1] //关联ID => ""
                         }
                     }
                 ]
                 if (oldId != id) {
-                    new Workspace().save(true, null, id, condition, that.$modalName.val())
+                    new Workspace().save(true, null, id, condition, that.$resoureName.val())
                     that.changeGlobalJson(oldId, id)
                 } else {
                     var dbCollection = type == "表单" ? "newResources" : "newProducts",
-                        name = that.$modalName.val(),
+                        name = that.$resoureName.val(),
                         condition = [{
                             col: "customId",
                             value: oldId
@@ -292,6 +388,9 @@ SubmitModal.prototype = {
                         data = [{
                             col: "name",
                             value: name
+                        },{
+                            col: "basicInfo.subCategory",
+                            value: subCategory
                         }];
                     var result = new Service().update(dbCollection, condition, data)
                     result.then(res => {
@@ -303,6 +402,142 @@ SubmitModal.prototype = {
                 }
             }
             that.$modal.modal("hide")
+        })
+
+
+        that.$firstCategory.on("change", function () {
+            var firstValue = $(this).val();
+            secondData = new ArrayToTree().getSearchData([firstValue], that.treeData);
+            Common.fillSelect(that.$secondeCategory, {
+                name: "请选择表序号",
+                value: ""
+            }, secondData, null, true)
+
+            that.$thridCategory.find('option').remove()
+            that.$fourthCategory.find('option').remove()
+            that.$fifthCategory.find('option').remove()
+            that.$sixthCategory.find('option').remove()
+            that.$seventhCategory.find('option').remove()
+            that.$eighthCategory.find('option').remove()
+            that.$ninthCategory.find('option').remove()
+        })
+
+
+        that.$secondeCategory.on("change", function () {
+            var firstValue = that.$firstCategory.val(),
+                secondValue = that.$secondeCategory.val(),
+                thridData = new ArrayToTree().getSearchData([firstValue, secondValue], that.treeData);
+            Common.fillSelect(that.$thridCategory, {
+                name: "请选择布局属性",
+                value: ""
+            }, thridData, null, true)
+
+            that.$fourthCategory.find('option').remove()
+            that.$fifthCategory.find('option').remove()
+            that.$sixthCategory.find('option').remove()
+            that.$seventhCategory.find('option').remove()
+            that.$eighthCategory.find('option').remove()
+            that.$ninthCategory.find('option').remove()
+        })
+
+        that.$thridCategory.on("change", function () {
+            var firstValue = that.$firstCategory.val(),
+                secondValue = that.$secondeCategory.val(),
+                thridValue = that.$thridCategory.val(),
+                fourthData = new ArrayToTree().getSearchData([firstValue, secondValue, thridValue], that.treeData)
+
+            Common.fillSelect(that.$fourthCategory, {
+                name: "请选择一级目录",
+                value: ""
+            }, fourthData, null, true)
+            that.$fifthCategory.find('option').remove()
+            that.$sixthCategory.find('option').remove()
+            that.$seventhCategory.find('option').remove()
+            that.$eighthCategory.find('option').remove()
+            that.$ninthCategory.find('option').remove()
+        })
+
+        that.$fourthCategory.on("change", function () {
+            var firstValue = that.$firstCategory.val(),
+                secondValue = that.$secondeCategory.val(),
+                thridValue = that.$thridCategory.val(),
+                fourtValue = that.$fourthCategory.val(),
+                fifthData = new ArrayToTree().getSearchData([firstValue, secondValue, thridValue, fourtValue], that.treeData)
+            Common.fillSelect(that.$fifthCategory, {
+                name: "请选择二级目录",
+                value: ""
+            }, fifthData, null, true)
+
+            that.$sixthCategory.find('option').remove()
+            that.$seventhCategory.find('option').remove()
+            that.$eighthCategory.find('option').remove()
+            that.$ninthCategory.find('option').remove()
+        })
+
+        that.$fifthCategory.on('change', function () {
+            var firstValue = that.$firstCategory.val(),
+                secondValue = that.$secondeCategory.val(),
+                thridValue = that.$thridCategory.val(),
+                fourtValue = that.$fourthCategory.val(),
+                fifthValue = that.$fifthCategory.val(),
+                sixthData = new ArrayToTree().getSearchData([firstValue, secondValue, thridValue, fourtValue, fifthValue], that.treeData)
+            Common.fillSelect(that.$sixthCategory, {
+                name: "请选择布局区域",
+                value: ""
+            }, sixthData, null, true)
+
+            that.$seventhCategory.find('option').remove()
+            that.$eighthCategory.find('option').remove()
+            that.$ninthCategory.find('option').remove()
+        })
+
+        that.$sixthCategory.on('change', function () {
+            var firstValue = that.$firstCategory.val(),
+                secondValue = that.$secondeCategory.val(),
+                thridValue = that.$thridCategory.val(),
+                fourtValue = that.$fourthCategory.val(),
+                fifthValue = that.$fifthCategory.val(),
+                sixthValue = that.$sixthCategory.val(),
+                sevenData = new ArrayToTree().getSearchData([firstValue, secondValue, thridValue, fourtValue, fifthValue, sixthValue], that.treeData);
+            Common.fillSelect(that.$seventhCategory, {
+                name: "请选择备用1",
+                value: ""
+            }, sevenData, null, true)
+
+            that.$eighthCategory.find('option').remove()
+            that.$ninthCategory.find('option').remove()
+
+        })
+        that.$seventhCategory.on('change', function () {
+            var firstValue = that.$firstCategory.val(),
+                secondValue = that.$secondeCategory.val(),
+                thridValue = that.$thridCategory.val(),
+                fourtValue = that.$fourthCategory.val(),
+                fifthValue = that.$fifthCategory.val(),
+                sixthValue = that.$sixthCategory.val(),
+                sevenValue = that.$seventhCategory.val(),
+                eighthData = new ArrayToTree().getSearchData([firstValue, secondValue, thridValue, fourtValue, fifthValue, sixthValue, sevenValue], that.treeData)
+            Common.fillSelect(that.$eighthCategory, {
+                name: "请选择综合",
+                value: ""
+            }, eighthData, null, true)
+            that.$ninthCategory.find('option').remove()
+        })
+
+        that.$eighthCategory.on('change', function () {
+            var firstValue = that.$firstCategory.val(),
+                secondValue = that.$secondeCategory.val(),
+                thridValue = that.$thridCategory.val(),
+                fourtValue = that.$fourthCategory.val(),
+                fifthValue = that.$fifthCategory.val(),
+                sixthValue = that.$sixthCategory.val(),
+                sevenValue = that.$seventhCategory.val(),
+                eighthValue = that.$eighthCategory.val(),
+                ninthData = new ArrayToTree().getSearchData([firstValue, secondValue, thridValue, fourtValue, fifthValue, sixthValue, sevenValue, eighthValue], that.treeData)
+            Common.fillSelect(that.$ninthCategory, {
+                name: "请选择布局等级",
+                value: ""
+            }, ninthData, null, true)
         })
     }
 };

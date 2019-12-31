@@ -106,12 +106,19 @@ function getFiles(dirName, resultName) {
 
 //获取默认样式
 function getDefaultStyle() {
-	let defaultStyle = JSON.parse(fs.readFileSync(config.defaultStyle));
-	defaultStyle.forEach((item, index) => {
-		if (item.className.indexOf(".") == 0) {
-			item.className = "." + config.radomStr + "_" + item.className.substring(1);
+	let content = JSON.parse(fs.readFileSync(config.defaultStyle)),
+		defaultStyle = {};
+	for (let key in content) {
+		if (key == "usually")
+			defaultStyle = content[key];
+		if (key == "only") {
+			content[key].forEach((item, index) => {
+				if (item.className.indexOf(".") == 0) {
+					item.className = "." + config.radomStr + "_" + item.className.substring(1);
+				}
+			})
 		}
-	})
+	}
 	return defaultStyle;
 }
 
@@ -497,7 +504,7 @@ function singleCell(c, htmls, shareObj, styleObj, themestyle, tintColor, colorOb
 					cellobj.val = si.rPh.t || '';
 				if (si.phoneticPr.$.fontId >= 1) {
 					cellobj.style = param2Style(styleObj.fonts[Number(si.phoneticPr.$.fontId)], themestyle, tintColor, colorObj, paramConfig);
-					cellobj.style["className"] = config.radomStr + "_pinyin";
+					cellobj.style["className"] = "pinyin";
 				}
 				contents.unshift(cellobj);
 			}
@@ -826,8 +833,8 @@ function json2table(htmls, styles, resultName) {
 				html += '" style="height:' + defaultdivhgt + ';"><div class="item_contain">';
 				if (item.content.length > 1) {
 					for (let con of item.content) {
-						let htmlElement = 'span';
-						html += '<' + htmlElement;
+						let htmlLabel = 'span';
+						html += '<' + htmlLabel;
 						if (con.style) {
 							let className = '';
 							html += ' style="'
@@ -839,7 +846,7 @@ function json2table(htmls, styles, resultName) {
 							if (className)
 								html += ' class="' + className + '"';
 						}
-						html += '>' + formatStr(con.val) + '</' + htmlElement + '>';
+						html += '>' + formatStr(con.val) + '</' + htmlLabel + '>';
 					}
 				} else if (item.content.length > 0)
 					html += formatStr(item.content[0].val);
@@ -897,7 +904,7 @@ function getJS() {
 
 //转换特定字符串(去除空格换行大小于号)
 function formatStr(str) {
-	return str ? str.toString().replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\r\n/g, "<br>").replace(/\s/g, "<span class='" + config.radomStr + "_space'>&nbsp;</span>") : '';
+	return str ? str.toString().replace(/<(?!%)/g, "&lt;").replace(/(?<!%)>/g, "&gt;").replace(/\r\n/g, "<br>").replace(/\s/g, "<span class='space'>&nbsp;</span>") : '';
 }
 
 //对单元格位置的一些解析

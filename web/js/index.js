@@ -19,11 +19,12 @@ async function init() {
 		}
 	});
 
-	//子模块设计器的位置，全局变量
+	//子模块设计器的位置，全局变量	
 	submodulesOffset = {
 		top: "0",
 		left: "0",
 	};
+
 
 	//右键菜单
 	new ContextMenu().done(1, $workspace);
@@ -52,6 +53,15 @@ function navbar() {
 	//打开表单资源
 	var openTemplate = new OpenTemplate($("#open_template_modal"));
 	openTemplate.execute();
+
+	//特殊布局设置
+	var changeListen = new ChangeListenModal($("#change_listen_modal"));
+	changeListen.execute();
+
+	//新建树形分类
+	var changeCategoryTree = new ChangeCategoryTree($("#change_tree_modal"));
+	// changeCategoryTree.initData(); //初始化新建布局表单
+	changeCategoryTree.execute();
 
 	// 表单查询配置
 	var templateModal = new OpenConfigModal($("#template_config_modal"), 0);
@@ -383,9 +393,10 @@ function controlbar() {
 	(function addChild() {
 		$('#controlbar .control-item[data-type="div"]').click(function () { //子模块设计器按钮点击
 			submodulesOffset = {
-				top: "5",
-				left: "5",
+				top: "0",
+				left: "0",
 			};
+
 			var arrs = [
 				"channelmode=no",
 				"directories=no",
@@ -459,11 +470,12 @@ function propertybar() {
 
 					if (this.id === "property_controlType") {
 						var controlType = event.currentTarget.value;
-						if (id) {//添加控件类型
+						if (id) { //添加控件类型
 							$("#" + id).attr('control-type', controlType)
 						}
 						id && controlType === "上传控件" && AccessControl.setUploadEvent();
 						id && controlType === "下拉列表" && AccessControl.showDataSourceTab();
+						id && controlType === "自定义下拉列表" && AccessControl.showDataSourceTab();
 					}
 
 					if (this.id === "property_page_rowPersent") {
@@ -748,6 +760,15 @@ function workspace() {
 		if (event.ctrlKey) {
 			new Property().clearDOM();
 		}
+		//窗口可见性复选框
+
+		// var childWidth = $this.children().width(),
+		// 	childHeight = $this.children().height();
+		// if (childWidth !== 6 && childHeight !== 6) {
+		// 	$('#property_window_visibility').prop('checked', true);
+		// } else {
+		// 	$('#property_window_visibility').prop('checked', false);
+		// }
 	});
 
 	//加载属性
@@ -951,14 +972,9 @@ function back(html) {
 			"id": number,
 			"name": number
 		}).css({
-			"left": submodulesOffset.left + "px",
+			"left": submodulesOffset.left + "px",				
 			"top": submodulesOffset.top + "px"
 		});
-		// submodulesOffset = {
-		// 	top:"5",
-		// 	left:"5",
-		// };
-
 		$("#workspace").append($node);
 		contextMenu.done(2, $node);
 

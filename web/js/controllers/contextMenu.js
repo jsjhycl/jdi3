@@ -218,7 +218,46 @@ function ContextMenu() {
             }
         });
     }
+    //窗口可见性
+    this.windowIsShow = function (idx, $this) {
+        var resizableNode = $('.resizable-node'),
+            resizableNodeChild = resizableNode.children('div');
+        if (idx === 2) {
+            resizableNode.find('table').hide();
+            resizableNodeChild.css({
+                "width": "6px",
+                "height": "6px",
+                "border-radius": "50%",
+                "backgroundColor": "#5B9BD5",
+                "overflow": "hidden"
+            })
 
+            resizableNode.parent().css({
+                "width": "10px",
+                "height": "10px",
+                "border-radius": "50%"
+            })
+
+        } else {
+            resizableNode.find('table').show();
+            resizableNodeChild.css({
+                "width": "100%",
+                "height": "100%",
+                "border-radius": "0",
+                "backgroundColor": "transparent",
+                "overflow": "visible"
+            })
+            var resizableNodeTable = resizableNode.find('table'),
+                nodeTableWidth = resizableNodeTable.width(),
+                nodeTableHeight = resizableNodeTable.height();
+            resizableNode.parent().css({
+                "width": nodeTableWidth + 'px',
+                "height": nodeTableHeight + 5 + 'px',
+                "border-radius": "0",
+            })
+
+        }
+    }
     /**
      * 页面自适应宽高
      */
@@ -375,83 +414,83 @@ ContextMenu.prototype = {
                 //空白区域右键菜单
                 elem.jcontextmenu({ //通过jcontextmenu设置属性栏
                     menus: [{
-                            type: "menuitem",
-                            text: "批量设置属性",
-                            handler: function () {
-                                that.batchSetAttrs(); //调用批量设置属性
-                            }
-                        },
-                        {
-                            type: "separator"
-                        }, //分割线
-                        {
-                            type: "menuitem",
-                            text: "添加图片",
-                            handler: function () {
-                                $('#controlbar .control-item[data-type="img"]').click();
-                            }
-                        },
-                        {
-                            type: "separator"
-                        },
-                        {
-                            type: "menuitem",
-                            text: "添加复选框",
-                            handler: function () {
-                                that.addControl("checkbox");
-                            }
-                        },
-                        {
-                            type: "menuitem",
-                            text: "添加文本框",
-                            handler: function () {
-                                that.addControl("text");
-                            }
-                        },
-                        {
-                            type: "separator"
-                        },
-                        {
-                            type: "menuitem",
-                            text: "添加子模块设计器",
-                            handler: function () {
-                                
-                                // $('#controlbar .control-item[data-type="div"]').click();
-                                    var arrs = [
-                                        "channelmode=no",
-                                        "directories=no",
-                                        "location=no",
-                                        "menubar=no",
-                                        "resizable=yes",
-                                        "scrollbars=no",
-                                        "status=no",
-                                        "titlebar=no",
-                                        "toolbar=no",
-                                        "width=1000px",
-                                        "height=700px",
-                                        "top=100px",
-                                        "left=200px"
-                                    ];
-                                    let editor = window.open("./editor.html", "_blank", arrs.join(", "));
-                            }
-                        },
-                        {
-                            type: "separator"
-                        },
-                        {
-                            type: "menuitem",
-                            text: "选择页面",
-                            handler: function () {
-                                that.selectPage();
-                            }
-                        },
-                        {
-                            type: "menuitem",
-                            text: "页面自适应",
-                            handler: function () {
-                                that.pageAuto();
-                            }
+                        type: "menuitem",
+                        text: "批量设置属性",
+                        handler: function () {
+                            that.batchSetAttrs(); //调用批量设置属性
                         }
+                    },
+                    {
+                        type: "separator"
+                    }, //分割线
+                    {
+                        type: "menuitem",
+                        text: "添加图片",
+                        handler: function () {
+                            $('#controlbar .control-item[data-type="img"]').click();
+                        }
+                    },
+                    {
+                        type: "separator"
+                    },
+                    {
+                        type: "menuitem",
+                        text: "添加复选框",
+                        handler: function () {
+                            that.addControl("checkbox");
+                        }
+                    },
+                    {
+                        type: "menuitem",
+                        text: "添加文本框",
+                        handler: function () {
+                            that.addControl("text");
+                        }
+                    },
+                    {
+                        type: "separator"
+                    },
+                    {
+                        type: "menuitem",
+                        text: "添加子模块设计器",
+                        handler: function () {
+
+                            // $('#controlbar .control-item[data-type="div"]').click();
+                            var arrs = [
+                                "channelmode=no",
+                                "directories=no",
+                                "location=no",
+                                "menubar=no",
+                                "resizable=yes",
+                                "scrollbars=no",
+                                "status=no",
+                                "titlebar=no",
+                                "toolbar=no",
+                                "width=1000px",
+                                "height=700px",
+                                "top=100px",
+                                "left=200px"
+                            ];
+                            let editor = window.open("./editor.html", "_blank", arrs.join(", "));
+                        }
+                    },
+                    {
+                        type: "separator"
+                    },
+                    {
+                        type: "menuitem",
+                        text: "选择页面",
+                        handler: function () {
+                            that.selectPage();
+                        }
+                    },
+                    {
+                        type: "menuitem",
+                        text: "页面自适应",
+                        handler: function () {
+                            that.pageAuto();
+                        }
+                    }
                     ]
                 });
                 break;
@@ -459,72 +498,92 @@ ContextMenu.prototype = {
                 //子模块设计器右键菜单
                 elem.jcontextmenu({
                     menus: [{
+                        type: "menuitem",
+                        text: "批量设置中文名",
+                        submenus: [{
                             type: "menuitem",
-                            text: "批量设置中文名",
-                            submenus: [{
-                                    type: "menuitem",
-                                    text: "由上",
-                                    handler: function () {
-                                        that.batchSetNames(1, $(this));
-                                    }
-                                },
-                                {
-                                    type: "menuitem",
-                                    text: "由左",
-                                    handler: function () {
-                                        that.batchSetNames(2, $(this));
-                                    }
-                                },
-                                {
-                                    type: "menuitem",
-                                    text: "由下",
-                                    handler: function () {
-                                        that.batchSetNames(3, $(this));
-                                    }
-                                },
-                                {
-                                    type: "menuitem",
-                                    text: "由右",
-                                    handler: function () {
-                                        that.batchSetNames(4, $(this));
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            type: "separator"
-                        },
-                        {
-                            type: "menuitem",
-                            text: "引入属性",
-                            dynamic: function ($submenu) {
-                                that.importProperty($(this), $submenu);
+                            text: "由上",
+                            handler: function () {
+                                that.batchSetNames(1, $(this));
                             }
                         },
                         {
                             type: "menuitem",
-                            text: "批量设置变量",
+                            text: "由左",
                             handler: function () {
-                                that.batchSetVals($(this));
-                            }
-                        },
-                        {
-                            type: "separator"
-                        },
-                        {
-                            type: "menuitem",
-                            text: "选择页面",
-                            handler: function () {
-                                that.selectPage();
+                                that.batchSetNames(2, $(this));
                             }
                         },
                         {
                             type: "menuitem",
-                            text: "页面自适应",
+                            text: "由下",
                             handler: function () {
-                                that.pageAuto();
+                                that.batchSetNames(3, $(this));
+                            }
+                        },
+                        {
+                            type: "menuitem",
+                            text: "由右",
+                            handler: function () {
+                                that.batchSetNames(4, $(this));
                             }
                         }
+                        ]
+                    },
+                    {
+                        type: "separator"
+                    },
+                    {
+                        type: "menuitem",
+                        text: "引入属性",
+                        dynamic: function ($submenu) {
+                            that.importProperty($(this), $submenu);
+                        }
+                    },
+                    {
+                        type: "menuitem",
+                        text: "批量设置变量",
+                        handler: function () {
+                            that.batchSetVals($(this));
+                        }
+                    },
+                    {
+                        type: "separator"
+                    },
+                    {
+                        type: "menuitem",
+                        text: "选择页面",
+                        handler: function () {
+                            that.selectPage();
+                        }
+                    },
+                    {
+                        type: "menuitem",
+                        text: "页面自适应",
+                        handler: function () {
+                            that.pageAuto();
+                        }
+                    }, {
+                        type: "separator"
+                    }, {
+                        type: "menuitem",
+                        text: "窗口可见性",
+                        submenus: [{
+                            type: "menuitem",
+                            text: "可见",
+                            handler: function () {
+                                that.windowIsShow(1);
+                            }
+                        },
+                        {
+                            type: "menuitem",
+                            text: "不可见",
+                            handler: function () {
+                                console.log($(this), '$this222');
+                                that.windowIsShow(2, $(this));
+                            }
+                        }]
+                    }
                     ]
                 });
                 break;
@@ -532,98 +591,97 @@ ContextMenu.prototype = {
                 //控件元素右键菜单
                 elem.jcontextmenu({
                     menus: [{
+                        type: "menuitem",
+                        text: "清除属性",
+                        handler: function () {
+                            var id = this.id,
+                                property = new Property();
+                            property.remove(id);
+                            property.setDefault(id);
+                            //还得修改相应的DOM数据
+                        }
+                    },
+                    {
+                        type: "separator"
+                    },
+                    {
+                        type: "menuitem",
+                        text: "复制属性",
+                        submenus: [{
                             type: "menuitem",
-                            text: "清除属性",
+                            text: "按行",
                             handler: function () {
-                                var id = this.id,
-                                    property = new Property();
-                                property.remove(id);
-                                property.setDefault(id);
-                                //还得修改相应的DOM数据
-                            }
-                        },
-                        {
-                            type: "separator"
-                        },
-                        {
-                            type: "menuitem",
-                            text: "复制属性",
-                            submenus: [{
-                                    type: "menuitem",
-                                    text: "按行",
-                                    handler: function () {
-                                        that.copyAttrs(1, $(this));
-                                    }
-                                },
-                                {
-                                    type: "menuitem",
-                                    text: "按列",
-                                    handler: function () {
-                                        that.copyAttrs(2, $(this));
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            type: "separator"
-                        },
-                        {
-                            type: "menuitem",
-                            text: "行编号设置",
-                            handler: function () {
-                                that.setLineId($(this));
-                            }
-                        },
-                        {
-                            type: "separator"
-                        },
-                        {
-                            type: "menuitem",
-                            text: "选择页面",
-                            handler: function () {
-                                that.selectPage();
+                                that.copyAttrs(1, $(this));
                             }
                         },
                         {
                             type: "menuitem",
-                            text: "页面自适应",
+                            text: "按列",
                             handler: function () {
-                                that.pageAuto();
-                            }
-                        },
-                        {
-                            type: "separator"
-                        },
-                        {
-                            type: "menuitem",
-                            text: "新增当前行",
-                            handler: function () {
-                                var $el = $(this);
-
-                                new PromptModal('新增行数', function (val) {
-                                    var num = Number(val);
-                                    if (Number.isNaN(num) || num <= 0) {
-                                        alert('无效的参数')
-                                    } else {
-                                        that.copyLine($el, num);
-                                    }
-                                }).init()
-                            }
-                        },
-                        {
-                            type: "separator"
-                        },
-                        {
-                            type: "menuitem",
-                            text: "批量设置查询显示路径",
-                            handler: function () {
-                                let id = $("#property_id").val(),
-                                    query = new Property().getValue(id, 'query.db'),
-                                    nestQuery = new Property().getValue(id, 'query.nest');
-                                (query || nestQuery) ? $("#archivePathBatch_modal").modal('show')
-                                    : alert('当前控件未设置查询属性！')
+                                that.copyAttrs(2, $(this));
                             }
                         }
+                        ]
+                    },
+                    {
+                        type: "separator"
+                    },
+                    {
+                        type: "menuitem",
+                        text: "行编号设置",
+                        handler: function () {
+                            that.setLineId($(this));
+                        }
+                    },
+                    {
+                        type: "separator"
+                    },
+                    {
+                        type: "menuitem",
+                        text: "选择页面",
+                        handler: function () {
+                            that.selectPage();
+                        }
+                    },
+                    {
+                        type: "menuitem",
+                        text: "页面自适应",
+                        handler: function () {
+                            that.pageAuto();
+                        }
+                    },
+                    {
+                        type: "separator"
+                    },
+                    {
+                        type: "menuitem",
+                        text: "新增当前行",
+                        handler: function () {
+                            var $el = $(this);
+
+                            new PromptModal('新增行数', function (val) {
+                                var num = Number(val);
+                                if (Number.isNaN(num) || num <= 0) {
+                                    alert('无效的参数')
+                                } else {
+                                    that.copyLine($el, num);
+                                }
+                            }).init()
+                        }
+                    },
+                    {
+                        type: "separator"
+                    },
+                    {
+                        type: "menuitem",
+                        text: "批量设置查询显示路径",
+                        handler: function () {
+                            let id = $("#property_id").val(),
+                                query = new Property().getValue(id, 'query.db'),
+                                nestQuery = new Property().getValue(id, 'query.nest');
+                            (query || nestQuery) ? $("#archivePathBatch_modal").modal('show') : alert('当前控件未设置查询属性！')
+                        }
+                    }
                     ]
                 });
                 break;
@@ -631,12 +689,12 @@ ContextMenu.prototype = {
                 // 手机元素右键菜单
                 elem.jcontextmenu({ //通过jcontextmenu设置属性栏
                     menus: [{
-                            type: "menuitem",
-                            text: "关联工作区元素",
-                            handler: function () {
-                                that.relateWorkspace(elem);
-                            }
+                        type: "menuitem",
+                        text: "关联工作区元素",
+                        handler: function () {
+                            that.relateWorkspace(elem);
                         }
+                    }
 
                     ]
                 });

@@ -60,7 +60,7 @@ Propertybar.prototype = {
                 expand = index === 0 ? ' aria-expanded="true"' : "", //index等于0则把aria-expanded="true"赋值到expand控制属性栏的折叠
                 collapse = index === 0 ? "collapse in" : "collapse"; //如果index等于0 collapse in赋值给collapse
 
-            html += `<div class="property-group" data-first-filter="${value=="db"?"":value}">` +
+            html += `<div class="property-group" data-first-filter="${value == "db" ? "" : value}">` +
                 '<header class="property-header" data-toggle="collapse" data-target="#' + id + '"' + expand + '>' +
                 '<span class="property-toggle"></span><h4 class="property-title">' + name + '</h4></header>' +
                 '<div class="property-body ' + collapse + '" id="' + id + '">' +

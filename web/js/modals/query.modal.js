@@ -7,11 +7,13 @@
 function DbQueryModal($modal, $element) {
     BaseModal.call(this, $modal, $element);
 
+    this.$triggerSelecet = this.$modalBody.find('[data-key="triggerType"]')
     this.$typeSelect = this.$modalBody.find('[data-key="type"]');
     this.$querier = this.$modalBody.find(".querier");
 
     this._resetData = function () {
         this.$typeSelect.val("");
+        this.$triggerSelecet.val("");
     };
 }
 
@@ -30,16 +32,18 @@ DbQueryModal.prototype = {
                 queryTime: data.queryTime,
                 renderTable: data.renderTable
             };
-            var type = data.type || "";
+            var type = data.type || "",
+                triggerType = data.triggerType || "";
             if (type) {
                 that.$typeSelect.val(type);
             }
+            triggerType && that.$triggerSelecet.val(triggerType)
         }
         that.$querier.dbQuerier({
             fieldMode: "multi",
             data: queryData,
             renderTable: true,
-        }).then(function() {
+        }).then(function () {
             if (data && data.type === "foldmenu") {
                 that.$querier.find('.form-group').eq(1).nextAll().hide();
             }
@@ -52,6 +56,7 @@ DbQueryModal.prototype = {
         var that = this,
             result = that.$querier.dbQuerier("getData"),
             data = {
+                triggerType: that.$triggerSelecet.val(),
                 type: that.$typeSelect.val(),
                 dbName: result.dbName,
                 table: result.table,
@@ -63,7 +68,65 @@ DbQueryModal.prototype = {
             $workspace = $("#workspace"),
             $control = $workspace.find("#" + id);
         that.$element.val(JSON.stringify(data));
+        if (that.$triggerSelecet.val()) {
+            that.setEvent(id, data)
+        }
         new Property().save(id === "BODY" ? $workspace : $control, that.$element);
+        new Property().load($control);
+    },
+    setEvent: function (id, data) {
+        if (!id) return;
+        var property = new Property(),
+            events = property.getValue(id, "events") || [],
+            trigger_type = data.triggerType,
+            length = events.length,
+            trigger_key = [id, trigger_type, "SPP" + (length - 1)].join("_"),
+            eventObj = {
+                publish: {
+                    type: trigger_type,
+                    key: trigger_key,
+                    data: null
+                },
+                subscribe: {
+                    conditions: null,
+                    custom: null,
+                    copySend: null,
+                    property: null,
+                    notify: null,
+                    query: [],
+                    timeQuery: null,
+                    exprMethods: [],
+                    saveHTML: null,
+                    linkHtml: null,
+                    nextProcess: null,
+                    executeFn: null,
+                    importExcel: false,
+                    importDb: null,
+                    keySave: null
+                }
+            };
+        if (data.type == "common") {
+            eventObj.subscribe.query = ["commonQuery"]
+        }
+        if (data.type == "table") {
+            eventObj.subscribe.query = ["tableQuery"]
+        }
+        if (events.length == 0) { //如果没有事件
+            eventObj.publish.key = [id, trigger_type, "SPP" + 0].join("_")
+            events.push(eventObj)
+        } else {
+            var isExist = false;
+            isExist = events.some(item => {
+                return JSON.stringify(item) == JSON.stringify(eventObj)
+            });
+            if (!isExist) {
+                eventObj.publish.key = [id, trigger_type, "SPP" + length].join("_")
+                events.push(eventObj)
+            }
+        }
+        property.setValue(id, "events", events)
+       
+        
     },
     clearData: function () {
         var that = this,
@@ -85,7 +148,7 @@ DbQueryModal.prototype = {
         var that = this;
 
         //  切换查询类型
-        that.$modal.on('change', '.modal-body [data-key="type"]', function() {
+        that.$modal.on('change', '.modal-body [data-key="type"]', function () {
             if ($(this).val() === "foldmenu") {
                 that.$querier.find('.form-group').eq(1).nextAll().hide();
             } else {

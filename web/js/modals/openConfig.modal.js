@@ -58,7 +58,7 @@ function OpenConfigModal($modal, key) {
             html += `
                     <label class="col-lg-3 control-label">${category}：</label>
                     <div class="col-lg-9">
-                        <select disabled class="form-control" data-cate="${category}" data-condition data-name="${id}">${options.map(col => `<option value="${col.value}" ${col.value == value ? "selected" : ""} >${col.name}(${col.value})</option>`).join("")}</select>
+                        <select class="form-control" data-cate="${category}" data-condition data-name="${id}">${options.map(col => `<option value="${col.value}" ${col.value == value ? "selected" : ""} >${col.name}(${col.value})</option>`).join("")}</select>
                     </div>
                     `
         } else {
@@ -167,7 +167,16 @@ OpenConfigModal.prototype = {
             name: "全部",
             value: ""
         }, tableSelect.filter(el => !!el), customData["table"]);
-        this.renderCondition($tableConditions, fields, $tableConditionsWrap, customData["condition"]);
+        fields1 = [{
+                id: "name",
+                cname: "资源名称"
+            },
+             {
+                id: "customId",
+                cname: "编号"
+            }
+        ]
+        this.renderCondition($tableConditions, fields1, $tableConditionsWrap, customData["condition"]);
         this.renderFields($tableFields, fields, customData["fields"]);
     },
 

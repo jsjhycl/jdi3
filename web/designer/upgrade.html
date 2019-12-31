@@ -160,10 +160,10 @@
                 try {
                     $("#upgrade").hide();
                     var result = await upgradeApi.upgrade();
+                    $(".upgrade-file").css({ display: "inline-block" });
                     if (result.status == 0) {
                         var files = result.result;
                         for (var i = 0; i < files.length; i++) {
-                            $(".upgrade-file").css({ display: "inline-block" });
                             $(".upgrade-file span").text(files[i]);
                             var uresult = await upgradeApi.remote2local(files[i]);
                             if (uresult.status != 0) {
@@ -173,7 +173,7 @@
                         }
                         $(".upgrade-file").css({ color: "green" }).text("升级成功，请重启客户端");
                     } else
-                        $(".upgrade-file").css({ color: "red" }).text(result.result);
+                        $(".upgrade-file").css({ color: "red" }).text("升级失败，错误信息：" + result.result);
                 } catch (err) {
                     $(".upgrade-file").css({ color: "red" }).text(err.toString());
                 }

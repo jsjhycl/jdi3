@@ -1,6 +1,6 @@
 {
     "name": "jdi客户端",
-    "version": "1.1.18",
+    "version": "1.1.19",
     "list": [{
         "version": "1.1.0",
         "files": [],
@@ -76,6 +76,10 @@
     }, {
         "version": "1.1.18",
         "files": ["data/configs/defaultStyle.json", "services/excel2html.js", "web/css/index.css", "web/designer/editor.html", "web/designer/index.html", "web/js/controllers/contextMenu.js", "web/js/controllers/property.js", "web/js/controllers/propertybar.js", "web/js/controllers/workspace.js", "web/js/helpers/PropertyWatch.js", "web/js/index.js", "web/js/init.js", "web/js/modals/createResource.modal.js", "web/js/modals/dbApply.modal.js", "web/js/modals/dbDesigner.modal.js", "web/js/modals/newEvents.modal.js", "web/js/modals/openConfig.modal.js", "web/js/modals/query.modal.js", "web/js/modals/setDbDesigner.modal.js", "web/js/modals/submit.modal.js", "web/js/utils/common.js", "web/lib/jdi-dbQuerier/jdi-dbQuerier.js", "web/js/modals/change.tree.modal.js", "web/js/modals/changeListen.modal.js", "web/js/utils/arrayTOTree.js", "web/lib/buildTree/buildTree.css", "web/lib/buildTree/buildTree.js", "web/lib/orgChart/html2canvas.js", "web/lib/orgChart/jquery.orgchart.css", "web/lib/orgChart/jquery.orgchart.js","services/upgrade.js", "versions.json"],
+        "detail": ["Excel转HTML格式", "字段截取", "分类编辑", "bug问题修改"]
+    }, {
+        "version": "1.1.19",
+        "files": ["data/configs/defaultStyle.json", "services/excel2html.js", "web/css/index.css", "web/designer/editor.html", "web/designer/index.html", "web/js/controllers/contextMenu.js", "web/js/controllers/property.js", "web/js/controllers/propertybar.js", "web/js/controllers/workspace.js", "web/js/helpers/PropertyWatch.js", "web/js/index.js", "web/js/init.js", "web/js/modals/createResource.modal.js", "web/js/modals/dbApply.modal.js", "web/js/modals/dbDesigner.modal.js", "web/js/modals/newEvents.modal.js", "web/js/modals/openConfig.modal.js", "web/js/modals/query.modal.js", "web/js/modals/setDbDesigner.modal.js", "web/js/modals/submit.modal.js", "web/js/utils/common.js", "web/lib/jdi-dbQuerier/jdi-dbQuerier.js", "web/js/modals/change.tree.modal.js", "web/js/modals/changeListen.modal.js", "web/js/utils/arrayTOTree.js", "web/lib/buildTree/buildTree.css", "web/lib/buildTree/buildTree.js", "web/lib/orgChart/html2canvas.js", "web/lib/orgChart/jquery.orgchart.css", "web/lib/orgChart/jquery.orgchart.js","services/upgrade.js","web/designer/upgrade.html", "versions.json"],
         "detail": ["Excel转HTML格式", "字段截取", "分类编辑", "bug问题修改"]
     }]
 }

@@ -108,12 +108,11 @@
 			$temp.find(".item_contain").each(function(index,element){
 				if(!$(element).text())
 					return true;
-				$(element).html($(element).html().replace(/<span class="space">&nbsp;<\/span>/g," "));
-				var value = $(element).text(),
+				var html = $(element).html().replace(/<span class="space">&nbsp;<\/span>/g," ").replace(/&lt;/g,"<").replace(/&gt;/g,">"),
 					font = $(element).css("font");
-				var result = replaceFormat(value,font);
+				var result = replaceFormat(html,font);
 				if(result.status == 1)
-					$(element).html(result.content);
+					$(element).html(result.html);
 			})
 			return $temp;
 		}
@@ -153,14 +152,14 @@
 			});
 		}
 
-		function replaceFormat(content,font){
+		function replaceFormat(html,font){
 			var styles = "margin:0;padding:0;box-sizing:border-box;vertical-align: middle;line-height:normal;";
 			// <%1%>,<%1,  %>,<%1,  ,***%>,<%1,,***%>四种情况
 			var pat = /<%(\d|\d[,，]\s+|\d[,，]\s+[,，]([^%>]+)?|\d[,，]{2}([^%>]+)?)%>/g;
 			// var pat = new RegExp("<%\\d[,，]?\\s*%>","g");
-			var matchs = content.match(pat);
+			var matchs = html.match(pat);
 			if(!matchs || matchs.length <= 0)
-				return {status:0,content:content};
+				return {status:0,html:html};
 			matchs.forEach(function(element,index){
 				var ruleStr = element.replace("<%","").replace("%>","").replace("，",","),
 					ruleStrSplits = ruleStr.split(","),
@@ -187,9 +186,9 @@
 						elementHtml = element;
 						break;
 				}
-				content = content.replace(element,elementHtml);
+				html = html.replace(element,elementHtml);
 			})
-			return {status:1,content:content};
+			return {status:1,html:html};
 		}
 
 		function getWidth(text,font){

@@ -100,8 +100,12 @@ function NewEventsModal($modal, $elemts) {
         publish: {},
         subscribe: {}
     }) {
+        console.log(event.publish.sort, 'sort');
+        var sortArr = '';
+        if (event.publish.sort)
+            sortArr = JSON.stringify(event.publish.sort);
         let that = this,
-            str = `<tr class="tr eventsTr">
+            str = `<tr data-check='${sortArr}' class="tr eventsTr">
                     <td><span class="del">×</span></td>
                     <td>
                         ${ that.renderTriggerType("radio", that.TRIGGER_TYPE, event.publish.type, that.triggerRadioName++)}
@@ -110,7 +114,7 @@ function NewEventsModal($modal, $elemts) {
                          ${ that.renderTriggerConditionTable(event.subscribe.conditions)}
                     </td>
                     <td class="methods">
-                        ${that.renderTriggerMethods("checkbox", that.METHODS, event.subscribe)}
+                        ${that.renderTriggerMethods("checkbox", that.METHODS, event.subscribe, event.publish)}
                     </td>
                     <td>
                         ${ that.renderSaveHTML(event.subscribe.saveHTML)}
@@ -376,7 +380,7 @@ function NewEventsModal($modal, $elemts) {
         })
         return str;
     }
-    this.renderTriggerMethods = function (inputType = "checkbox", dataSource = [], subscribe = {}) {
+    this.renderTriggerMethods = function (inputType = "checkbox", dataSource = [], subscribe = {}, publish = {}) {
         let that = this,
             str = "";
         if (!inputType || !DataType.isArray(dataSource)) return str;
@@ -392,7 +396,6 @@ function NewEventsModal($modal, $elemts) {
         if (subscribe.importExcel) checkArr.push("importExcel");
         if (subscribe.importDb) checkArr.push("importDb");
         if (subscribe.keySave) checkArr.push("keySave");
-
         subscribe.query && subscribe.query.forEach(item => {
             checkArr.push(item)
         })
@@ -402,11 +405,17 @@ function NewEventsModal($modal, $elemts) {
         subscribe.exprMethods && subscribe.exprMethods.forEach(item => {
             checkArr.push(item.expression)
         })
+        console.log(dataSource, "dataSource");
+
         dataSource.forEach(item => {
             str += `<div>
                         <input type="${inputType}" value='${item.value}' class="triggerMethods" ${item.type ? 'data-exper="true"' : ""} ${checkArr.indexOf(item.value) > -1 ? "checked" : ""} data-name='${item.name}'>
-                        <span> ${ item.name} </span>
-                    </div>`
+                        <span> ${ item.name} </span>`
+            if (publish.sort) {
+                var sortIdx = publish.sort.indexOf(item.value);
+                if (sortIdx > -1) str += `<span class="checked-num" data-value="${item.value}">${sortIdx + 1}</span>`
+            }
+            str += '</div>'
         });
         return str;
     }
@@ -1028,6 +1037,8 @@ function NewEventsModal($modal, $elemts) {
 }
 NewEventsModal.prototype = {
     initData: async function (data) {
+        console.log(data, 'data');
+
         let that = this,
             id = $("#property_id").val(),
             events = data,
@@ -1097,7 +1108,7 @@ NewEventsModal.prototype = {
                 importExcel = false,
                 keySave = null,
                 importDb = null;
-            if (trAttr) var sort = JSON.parse(trAttr);
+
             if (that.judgeCheckMehods("commonQuery", $(this).find(".triggerMethods:checked"))) {
                 query = []
                 query.push("commonQuery")
@@ -1154,13 +1165,23 @@ NewEventsModal.prototype = {
                     expression: $(this).val()
                 })
             });
+            if (trAttr) var sortArr = JSON.parse(trAttr);
+            console.log(sortArr, 'sort');
+            var specialArr = ['keySave', 'saveHTML', 'nextProcess'];
+            for (var i = 0; i < specialArr.length; i++) {
+                var specialIdx = sortArr.indexOf(specialArr[i]);
+                if (specialIdx > -1) {
+                    var specialVal = $(`.${specialArr[i]}`).find(`[data-save="${specialArr[i]}"]`).val();
+                    if (!specialVal) sortArr.splice(specialIdx, 1);
+                }
+            }
             if (trigger_type) {
                 result.push({
                     publish: {
                         type: trigger_type,
                         key: trigger_key,
                         data: trigger_data,
-                        sort: sort
+                        sort: sortArr
                     },
                     subscribe: {
                         conditions: trigger_conditions,
@@ -1274,7 +1295,6 @@ NewEventsModal.prototype = {
             $target = $this.parents("tr").find(`.${value}`);
             check ? $target.show() : $target.hide()
         })
-
 
 
         that.$modal.on("change" + that.NAME_SPACE, "[data-change='dbName']", function () {

@@ -11,7 +11,7 @@ function ChangeListenModal($modal) {
                     <td class="text-center"><input type="text" ${!isAppend ? "disabled='disables'" : ""} class="form-control first" data-name="codePage" value="${data.codePage|| ""}" /></td>
                     <td class="text-center"><input type="text" ${!isAppend ? "disabled='disables'" : ""} class="form-control first" data-name="name" value="${data.name || ""}" /></td>
                     <td class="text-center"><input type="text" class="form-control first" data-name="cname" value="${data.cname || ""}" /></td>
-                    <td class="text-center"><input type="text" ${!isAppend ? "disabled='disables'" : ""} class="form-control first" data-name="arguments" value="${data.arguments || ""}" /></td>
+                    <td class="text-center"><input type="text" ${!isAppend ? "" : ""} class="form-control first" data-name="arguments" value="${data.arguments || ""}" /></td>
                     <td class="text-center">${this.renderSpan(data.detail,isAppend)}</td>
                     <td><span class="del"  ${!isAppend ? "style='display:none'" : ""}>X</span></td>
                 </tr>`

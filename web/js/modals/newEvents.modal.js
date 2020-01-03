@@ -104,24 +104,24 @@ function NewEventsModal($modal, $elemts) {
             str = `<tr class="tr eventsTr">
                     <td><span class="del">×</span></td>
                     <td>
-                        ${ that.renderTriggerType ("radio", that.TRIGGER_TYPE, event.publish.type, that.triggerRadioName++ )}
+                        ${ that.renderTriggerType("radio", that.TRIGGER_TYPE, event.publish.type, that.triggerRadioName++)}
                     </td>
                     <td>
-                         ${ that.renderTriggerConditionTable( event.subscribe.conditions ) }
+                         ${ that.renderTriggerConditionTable(event.subscribe.conditions)}
                     </td>
                     <td class="methods">
-                        ${that.renderTriggerMethods( "checkbox", that.METHODS, event.subscribe )}
+                        ${that.renderTriggerMethods("checkbox", that.METHODS, event.subscribe)}
                     </td>
                     <td>
-                        ${ that.renderSaveHTML( event.subscribe.saveHTML ) }
+                        ${ that.renderSaveHTML(event.subscribe.saveHTML)}
                         ${ that.renderKeySave(event.subscribe.keySave)}
-                        ${ that.renderNextProcess( event.subscribe.nextProcess ) }
-                        ${ that.renderNotify( event.subscribe.notify ) }
+                        ${ that.renderNextProcess(event.subscribe.nextProcess)}
+                        ${ that.renderNotify(event.subscribe.notify)}
                         ${ that.renderTimeQuery(event.subscribe.timeQuery)}
-                        ${ that.renderChangePropertyTable( event.subscribe.property ) }
-                        ${ that.renderCopySendTable( event.subscribe.copySend ) }
+                        ${ that.renderChangePropertyTable(event.subscribe.property)}
+                        ${ that.renderCopySendTable(event.subscribe.copySend)}
                         ${ that.renderDeleteTable(event.subscribe.deleteRow)}
-                        ${ that.renderLinkHTMLTable(event.subscribe.linkHtml) }
+                        ${ that.renderLinkHTMLTable(event.subscribe.linkHtml)}
                         ${ that.renderExecuteFn(event.subscribe.executeFn)}
                         ${ that.renderImportDb(event.subscribe.importDb)}
                     </td>
@@ -141,7 +141,7 @@ function NewEventsModal($modal, $elemts) {
                 queryTable = "表格查询"
             }
         };
-        str = `<div class="condition timeQuery" ${timeQuery ? "" : 'style="display:none"' }>
+        str = `<div class="condition timeQuery" ${timeQuery ? "" : 'style="display:none"'}>
                     <div style="margin: 0 20px 20px 0; display: inline-block;">
                     <span>查询频率/秒</span>
                             <input style="display: inline-block;width:100px;margin-left:10px;" data-save="queryTime" type="text" data-category="queryTime" class="form-control" data-key="" value="${timeQuery && timeQuery || ""}">
@@ -156,7 +156,7 @@ function NewEventsModal($modal, $elemts) {
     this.renderLinkHTMLTable = function (linkHtml) {
         let that = this,
             str = "";
-        str = `<div class="conditoion linkHtml"  ${linkHtml ? "" : 'style="display:none"' }>
+        str = `<div class="conditoion linkHtml"  ${linkHtml ? "" : 'style="display:none"'}>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -176,7 +176,7 @@ function NewEventsModal($modal, $elemts) {
     this.renderImportDb = function (ImportDbData) {
         let that = this,
             str = '';
-        str = `<div class="conditoion importDb"  ${ImportDbData ? "" : 'style="display:none"' }>
+        str = `<div class="conditoion importDb"  ${ImportDbData ? "" : 'style="display:none"'}>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -199,16 +199,16 @@ function NewEventsModal($modal, $elemts) {
             str = '';
         str += `<tr class="importDbTr">
             <td>
-                <input type="text" class="form-control" data-save="importDbName" value="${ImportDbData.dbName||""}" data-wrap="true" data-category="linkHtml">
+                <input type="text" class="form-control" data-save="importDbName" value="${ImportDbData.dbName || ""}" data-wrap="true" data-category="linkHtml">
             </td>
             <td>
-                <input type="text" class="form-control" data-save="importTableName" value="${ImportDbData.tableName||""}" data-wrap="true" data-category="linkHtml">
+                <input type="text" class="form-control" data-save="importTableName" value="${ImportDbData.tableName || ""}" data-wrap="true" data-category="linkHtml">
             </td>
             <td>
-                <input type="text" class="form-control" data-save="excelArea" data-category="linkHtml" value="${ImportDbData.excelArea||""}" >
+                <input type="text" class="form-control" data-save="excelArea" data-category="linkHtml" value="${ImportDbData.excelArea || ""}" >
             </td>
             <td>
-                <input type="text" class="form-control" data-save="dbArea" data-category="linkHtml" value="${ImportDbData.dbArea||""}" >
+                <input type="text" class="form-control" data-save="dbArea" data-category="linkHtml" value="${ImportDbData.dbArea || ""}" >
             </td>
         </tr>`
         return str;
@@ -221,16 +221,16 @@ function NewEventsModal($modal, $elemts) {
         };
         str += `<tr class="linkHtmlTr">
                     <td>
-                        <input type="text" class="form-control" data-save="linkHttp" value="${linkHtml.http||"http://172.18.152.111/home/model"}">
+                        <input type="text" class="form-control" data-save="linkHttp" value="${linkHtml.http || "http://172.18.152.111/home/model"}">
                     </td>
                     <td>
                         <select class="form-control" data-save="linkType">
-                            <option value="linkhtml" ${linkHtml.type=="linkhtml"?"selected":""}>内部跳转</option>
-                            <option value="nextProcess" ${linkHtml.type=="nextProcess"?"selected":""}>下一流程</option>
+                            <option value="linkhtml" ${linkHtml.type == "linkhtml" ? "selected" : ""}>内部跳转</option>
+                            <option value="nextProcess" ${linkHtml.type == "nextProcess" ? "selected" : ""}>下一流程</option>
                         </select>
                     </td>
                     <td class="linkCustomId">
-                        ${ that.renderLinkHTMLSelect(linkHtml.customId,linkHtml.type) }
+                        ${ that.renderLinkHTMLSelect(linkHtml.customId, linkHtml.type)}
                     </td>
                     <td>
                         <table class="table table-bordered">
@@ -257,16 +257,16 @@ function NewEventsModal($modal, $elemts) {
         parmas.forEach((item) => {
             str += `<tr class="linkHtmlParamsTr">
                         <td>
-                            <input type="text" class="form-control" data-save="linkKey" readonly="true" save-value="${item.key}" value="${item.key||""}">
+                            <input type="text" class="form-control" data-save="linkKey" readonly="true" save-value="${item.key}" value="${item.key || ""}">
                         </td>
                         <td>
-                            <input type="text" class="form-control" data-save="linkDesc" readonly="true" save-value="${item.key}" value="${item.desc||""}">
+                            <input type="text" class="form-control" data-save="linkDesc" readonly="true" save-value="${item.key}" value="${item.desc || ""}">
                         </td>
                         <td>
-                            ${ that.copySendConfigTypeOfValue("linkHtml_type",item.type)}
+                            ${ that.copySendConfigTypeOfValue("linkHtml_type", item.type)}
                         </td>
                         <td>
-                            <input type="text" class="form-control" data-save="linkValue" data-wrap="true" data-category="linkHtml" value="${item.value||""}">
+                            <input type="text" class="form-control" data-save="linkValue" data-wrap="true" data-category="linkHtml" value="${item.value || ""}">
                         </td>
                     </tr>`
         })
@@ -278,7 +278,7 @@ function NewEventsModal($modal, $elemts) {
         if (type == "linkhtml") {
             str = `<select class="form-control chosen" data-save="linkCustomId" data-change="linkCustomId"><option value="">请选择跳转页面</option>`
             that.PUBLISH_JSON.forEach(item => {
-                str += `<option value="${item.customId}" ${customId==item.customId? "selected" : ""}> ${item.name}(${item.customId})</option>`
+                str += `<option value="${item.customId}" ${customId == item.customId ? "selected" : ""}> ${item.name}(${item.customId})</option>`
             })
             str += "</select>"
         } else {
@@ -289,25 +289,25 @@ function NewEventsModal($modal, $elemts) {
     this.renderNextProcess = function (nextProcess) {
         let that = this,
             str = "";
-        str = `<div class="condition nextProcess" ${nextProcess?"" :'style="display:none"'}>
+        str = `<div class="condition nextProcess" ${nextProcess ? "" : 'style="display:none"'}>
                     <span>下一流程</span>
-                    <input type="text" class="form-control" data-save="nextProcess" data-category="nextProcess" data-wrap="true" data-insert="true"  style="display:inline-block;margin-left:10px; width:500px" value='${nextProcess||""}'>                    
+                    <input type="text" class="form-control" data-save="nextProcess" data-category="nextProcess" data-wrap="true" data-insert="true"  style="display:inline-block;margin-left:10px; width:500px" value='${nextProcess || ""}'>                    
                 </div>`;
         return str;
     }
     this.renderNotify = function (notify) {
         let that = this,
             str = "";
-        str = `<div class="condition notify" ${notify ? "" : 'style="display:none"' }>
+        str = `<div class="condition notify" ${notify ? "" : 'style="display:none"'}>
                     <span>通知元素</span>
-                    <input type="text" class="form-control" data-save="notifyEl" data-category="notify" data-apply="add"  style="display:inline-block;margin-left:10px;width:500px" value='${notify||""}'>
+                    <input type="text" class="form-control" data-save="notifyEl" data-category="notify" data-apply="add"  style="display:inline-block;margin-left:10px;width:500px" value='${notify || ""}'>
                </div>`
         return str;
     }
     this.renderExecuteFn = function (fn) {
         let that = this,
             str = "";
-        str = `<div class="condition executeFn" ${fn ? "" : 'style="display:none"' } >
+        str = `<div class="condition executeFn" ${fn ? "" : 'style="display:none"'} >
                     <p style="margin:0px">代码执行</p>
                     <textarea style="width:860px;height:200px" data-save="executeFn" >${fn}</textarea>
                 </div>`
@@ -316,9 +316,9 @@ function NewEventsModal($modal, $elemts) {
     this.renderSaveHTML = function (saveHTML) {
         let that = this,
             str = "";
-        str = `<div class="condition saveHTML" ${saveHTML ? "" : 'style="display:none"' }>
+        str = `<div class="condition saveHTML" ${saveHTML ? "" : 'style="display:none"'}>
                 <span>保存文件名</span>
-                <input type="text" class="form-control" style="display:inline-block;margin-left:10px;width:500px" value='${saveHTML||""}' data-save="saveHTML" data-category="saveHTML" data-wrap="true" data-insert="true">
+                <input type="text" class="form-control" style="display:inline-block;margin-left:10px;width:500px" value='${saveHTML || ""}' data-save="saveHTML" data-category="saveHTML" data-wrap="true" data-insert="true">
             </div>`
         return str;
     }
@@ -332,35 +332,35 @@ function NewEventsModal($modal, $elemts) {
     //     return str;
     // }
     this.renderKeySave = function (key) {
-            let that = this,
-                str = "";
-            str = `<div class="condition keySave" ${key ? "" : 'style="display:none"' }>
+        let that = this,
+            str = "";
+        str = `<div class="condition keySave" ${key ? "" : 'style="display:none"'}>
                 <span>指定主键</span>
-                <input type="text" class="form-control" data-wrap="true" style="display:inline-block;margin-left:10px;width:500px" value='${key||""}' data-category="linkHtml" data-save="keySave">
+                <input type="text" class="form-control" data-wrap="true" style="display:inline-block;margin-left:10px;width:500px" value='${key || ""}' data-category="linkHtml" data-save="keySave">
             </div>`
-            return str;
-        },
+        return str;
+    },
         this.renderTypeOfValue = function (typekey, type, selected) {
             let defaultType = {
-                    name: type,
-                    value: ""
-                },
+                name: type,
+                value: ""
+            },
                 str = `<select class="form-control" data-save = "${typekey}" data-change-operator="${typekey}">`,
                 options = [defaultType, ...ConditionsHelper.typeConfig];
             options.forEach(item => {
-                str += `<option value="${item.value}" ${ selected == item.value ? "selected" : ""}>${item.name}</option>`
+                str += `<option value="${item.value}" ${selected == item.value ? "selected" : ""}>${item.name}</option>`
             })
             return `${str}</select>`
         }
     this.renderCopySendConfigTypeOfValue = function (typekey, type, selected) {
         let defaultType = {
-                name: "请选择操作符",
-                value: ""
-            },
+            name: "请选择操作符",
+            value: ""
+        },
             str = `<select class="form-control" data-save = "${typekey}">`,
             options = [defaultType, ...ConditionsHelper.getOperators(type)];
         options.forEach(item => {
-            str += `<option value="${item.value}" ${ selected == item.value ? "selected" : ""}>${item.name}</option>`
+            str += `<option value="${item.value}" ${selected == item.value ? "selected" : ""}>${item.name}</option>`
         })
         return `${str}</select>`
     }
@@ -372,7 +372,7 @@ function NewEventsModal($modal, $elemts) {
         options = type == 3 ? ConditionsHelper.getOperators(type, relyValue) : [defalutOption, ...ConditionsHelper.getOperators(type, relyValue)],
             str = `<select class="form-control" data-save="${saveType}" data-change="${saveType}">`;
         options.forEach(item => {
-            str += `<option value="${item.value}" ${ selected==item.value ? "selected" : "" }>${item.name}</option>`
+            str += `<option value="${item.value}" ${selected == item.value ? "selected" : ""}>${item.name}</option>`
         })
         return str;
     }
@@ -404,8 +404,8 @@ function NewEventsModal($modal, $elemts) {
         })
         dataSource.forEach(item => {
             str += `<div>
-                        <input type="${inputType}" value='${item.value}' class="triggerMethods" ${item.type?'data-exper="true"':""} ${ checkArr.indexOf(item.value)>-1 ? "checked" : "" } data-name='${item.name}'>
-                        <span> ${ item.name } </span>
+                        <input type="${inputType}" value='${item.value}' class="triggerMethods" ${item.type ? 'data-exper="true"' : ""} ${checkArr.indexOf(item.value) > -1 ? "checked" : ""} data-name='${item.name}'>
+                        <span> ${ item.name} </span>
                     </div>`
         });
         return str;
@@ -417,8 +417,8 @@ function NewEventsModal($modal, $elemts) {
         let str = "";
         dataSource.forEach(item => {
             str += `<div>
-                        <input type="${inputType}" data-key="trigger_type" ${ checked == item.value ? "checked" : "" } name="${ radioName }" value="${ item.value }">
-                        <span> ${ item.name } </span>
+                        <input type="${inputType}" data-key="trigger_type" ${checked == item.value ? "checked" : ""} name="${radioName}" value="${item.value}">
+                        <span> ${ item.name} </span>
                     </div>`
         })
         return str;
@@ -437,7 +437,7 @@ function NewEventsModal($modal, $elemts) {
                         </tr>
                     </thead>
                     <tbody>
-                       ${ that.renderTriggerConditionTbody(conditions) }
+                       ${ that.renderTriggerConditionTbody(conditions)}
                     </tbody>
                </table>`;
         return str;
@@ -445,7 +445,7 @@ function NewEventsModal($modal, $elemts) {
     this.renderChangePropertyTable = function (property) {
         let that = this,
             str = '';
-        str = `<div class="condition changeProperty" ${property ? "" : 'style="display:none"' }>
+        str = `<div class="condition changeProperty" ${property ? "" : 'style="display:none"'}>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -469,7 +469,7 @@ function NewEventsModal($modal, $elemts) {
     }
     this.renderCopySendTable = function (copySend) {
         let that = this,
-            str = `<div class="conditoion copySend" ${copySend ? "" : 'style="display:none"' }>
+            str = `<div class="conditoion copySend" ${copySend ? "" : 'style="display:none"'}>
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -481,7 +481,7 @@ function NewEventsModal($modal, $elemts) {
                                 </tr>
                             </thead>
                             <tbody>
-                                ${ that.renderCopySendTr(copySend) }
+                                ${ that.renderCopySendTr(copySend)}
                             </tbody>
                         </table>
                    </div>`;
@@ -489,7 +489,7 @@ function NewEventsModal($modal, $elemts) {
     }
     this.renderDeleteTable = function (deleteData) {
         let that = this,
-            str = `<div class="condition deleteRow" ${deleteData ? "" : 'style="display:none"' }>
+            str = `<div class="condition deleteRow" ${deleteData ? "" : 'style="display:none"'}>
                 <table class="table table-bordered" >
                     <thead>
                         <tr>
@@ -516,16 +516,16 @@ function NewEventsModal($modal, $elemts) {
                             <span class="del">×</span>
                         </td>
                         <td>
-                            ${ that.renderCopySendSelect( 'dbName', item.dbName, null, null,"请选择数据库",item.dbName) }
+                            ${ that.renderCopySendSelect('dbName', item.dbName, null, null, "请选择数据库", item.dbName)}
                         </td>
                         <td>
-                            ${ that.renderCopySendSelect( 'table', item.dbName, item.table, null,"请选择抄送表",item.table) }
+                            ${ that.renderCopySendSelect('table', item.dbName, item.table, null, "请选择抄送表", item.table)}
                         </td>
                         <td>
-                            ${ that.renderCopySendConditionTable(item.dbName, item.table, item.conditions  ) }
+                            ${ that.renderCopySendConditionTable(item.dbName, item.table, item.conditions)}
                         </td>
                         <td>
-                            ${ that.renderCopySendFieldsTable( item.dbName, item.table, item.fields) }
+                            ${ that.renderCopySendFieldsTable(item.dbName, item.table, item.fields)}
                         </td>
                     </tr>`
         })
@@ -541,13 +541,13 @@ function NewEventsModal($modal, $elemts) {
                     <span class="del">×</span>
                 </td>
                 <td>
-                    ${ that.renderCopySendSelect( 'dbName', item.dbName, null, null,"请选择数据库",item.dbName) }
+                    ${ that.renderCopySendSelect('dbName', item.dbName, null, null, "请选择数据库", item.dbName)}
                 </td>
                 <td>
-                    ${ that.renderCopySendSelect( 'table', item.dbName, item.table, null,"请选择抄送表",item.table) }
+                    ${ that.renderCopySendSelect('table', item.dbName, item.table, null, "请选择抄送表", item.table)}
                 </td>
                 <td>
-                    ${ that.renderCopySendConditionTable(item.dbName, item.table, item.conditions  ) }
+                    ${ that.renderCopySendConditionTable(item.dbName, item.table, item.conditions)}
                 </td>
                         </td>
             </tr>`
@@ -568,7 +568,7 @@ function NewEventsModal($modal, $elemts) {
                         </tr>
                     </thead>
                     <tbody>
-                        ${that.renderCopySendCondition(dbName,table,conditions)}
+                        ${that.renderCopySendCondition(dbName, table, conditions)}
                     </tbody>
                </table>`
         return str;
@@ -580,16 +580,16 @@ function NewEventsModal($modal, $elemts) {
         conditions.forEach(item => {
             str += `<tr class="tr copySendCondition">
                         <td>
-                            ${ that.renderCopySendSelect( 'field', dbName, table, item.field, "请选择抄送列" ,item.field) }
+                            ${ that.renderCopySendSelect('field', dbName, table, item.field, "请选择抄送列", item.field)}
                         </td>
                         <td>
-                            ${ that.renderCopySendConfigTypeOfValue("condition_operator",1,item.operator) }
+                            ${ that.renderCopySendConfigTypeOfValue("condition_operator", 1, item.operator)}
                         </td>
                         <td>
-                            ${ that.copySendConfigTypeOfValue("condition_type",item.type)}
+                            ${ that.copySendConfigTypeOfValue("condition_type", item.type)}
                         </td>
                         <td>
-                           <input type="text" data-category="copySend_conditions" data-wrap="true" data-save="condition_value" class="form-control" value='${item.value||""}'>
+                           <input type="text" data-category="copySend_conditions" data-wrap="true" data-save="condition_value" class="form-control" value='${item.value || ""}'>
                         </td>
                         <td>
                             <span class="del">×</span>
@@ -616,7 +616,7 @@ function NewEventsModal($modal, $elemts) {
                         </tr>
                     </thead>
                     <tbody>
-                        ${ that.renderCopySendConfig( dbName, table, fields) }
+                        ${ that.renderCopySendConfig(dbName, table, fields)}
                     </tbody>
                </table>`;
         return str;
@@ -630,16 +630,16 @@ function NewEventsModal($modal, $elemts) {
         fields.forEach(item => {
             str += `<tr class="tr copySendFieldTr">
                         <td class="changeFieldSplit">
-                            ${ that.renderCopySendSelect( 'field', dbName, table, item.field, "请选择抄送列" ,item.field) }
+                            ${ that.renderCopySendSelect('field', dbName, table, item.field, "请选择抄送列", item.field)}
                         </td>
                         <td>
-                            ${ that.renderCopySendSelect( 'fieldSplit', dbName, table, item.field, "请选择抄送段", item.fieldSplit) }
+                            ${ that.renderCopySendSelect('fieldSplit', dbName, table, item.field, "请选择抄送段", item.fieldSplit)}
                         </td>
                         <td>
-                            ${ that.copySendConfigTypeOfValue("value_type",item.value.type)}
+                            ${ that.copySendConfigTypeOfValue("value_type", item.value.type)}
                         </td>
                         <td>
-                            <input type="text" data-save="element" data-wrap="true" class="form-control" data-category="copySend" value='${item.element||""}'></input>
+                            <input type="text" data-save="element" data-wrap="true" class="form-control" data-category="copySend" value='${item.element || ""}'></input>
                         </td>
                         <td>
                             ${that.renderOPeratorSelect(3, "value_operator", item.value.type, item.value.operator)}
@@ -655,7 +655,7 @@ function NewEventsModal($modal, $elemts) {
         let str = `<select class="form-control" data-save = "${savekey}" data-change="${savekey}">`,
             options = ConditionsHelper.copySendConfig;
         options.forEach(item => {
-            str += `<option value="${item.value}" ${ selected == item.value ? "selected" : ""}>${item.name}</option>`
+            str += `<option value="${item.value}" ${selected == item.value ? "selected" : ""}>${item.name}</option>`
         })
         return `${str}</select>`
     }
@@ -666,7 +666,7 @@ function NewEventsModal($modal, $elemts) {
             str = `<select class="form-control chosen" data-save="${type}" data-change="${type}"><option value="">${defalutOption}</option>`;
 
         data.forEach(item => {
-            str += `<option value="${item.value}" ${ selected==item.value? "selected" : ""}>${item.name}(${item.value})</option>`
+            str += `<option value="${item.value}" ${selected == item.value ? "selected" : ""}>${item.name}(${item.value})</option>`
         })
         return str;
     }
@@ -740,13 +740,13 @@ function NewEventsModal($modal, $elemts) {
             str += `<tr class="tr changePropertyTr">
                         <td><span class="del">×</span></td>
                         <td>
-                            <input type="text" class="form-control"  data-category="property" save-type="id" data-save="id" value="${ item.id || "" }">
+                            <input type="text" class="form-control"  data-category="property" save-type="id" data-save="id" value="${ item.id || ""}">
                         </td>
                         <td>
-                            ${ that.renderFontSelect( "fontFamily", item.fontFamily ) }
+                            ${ that.renderFontSelect("fontFamily", item.fontFamily)}
                         </td>
                         <td>
-                            ${ that.renderFontSelect( "fontSize", item.fontSize) }
+                            ${ that.renderFontSelect("fontSize", item.fontSize)}
                         </td>
                         <td style="position:relative">
                             <input type="text" class="form-control propety-color" save-type="style" data-save="color" value="${ item.color || ""}">
@@ -763,7 +763,7 @@ function NewEventsModal($modal, $elemts) {
                         </div>
                         </td>
                         <td>
-                            <input type="checkbox" class="form-control" save-type="style" data-save="visibility" ${item.visibility?"checked":""}>
+                            <input type="checkbox" class="form-control" save-type="style" data-save="visibility" ${item.visibility ? "checked" : ""}>
                         </td>
                         <td>
                             <input type="checkbox" class="form-control" save-type="attribute" data-save="disabled" ${ item.disabled ? "checked" : ""}>
@@ -782,12 +782,12 @@ function NewEventsModal($modal, $elemts) {
         str = `<select class="form-control" save-type="style" data-save = "${type}">`;
         if (type == "fontFamily") {
             that.FONT_FAMILY.forEach(item => {
-                str += `<option value="${item.value}" ${ selected == item.value ? "selected" : "" }>${item.name}</option>`
+                str += `<option value="${item.value}" ${selected == item.value ? "selected" : ""}>${item.name}</option>`
             })
         }
         if (type == "fontSize") {
             that.FONT_SIZE.forEach(item => {
-                str += `<option value="${item.value}" ${ selected == item.value ? "selected" : "" }>${item.name}</option>`
+                str += `<option value="${item.value}" ${selected == item.value ? "selected" : ""}>${item.name}</option>`
             })
         }
         return `${str}</select>`
@@ -799,19 +799,19 @@ function NewEventsModal($modal, $elemts) {
         conditions.forEach(item => {
             str += `<tr class="tr triggerConditionTr">
                         <td>
-                            ${ that.renderTypeOfValue( "leftType", "请选择左值类型", item.leftType) }
+                            ${ that.renderTypeOfValue("leftType", "请选择左值类型", item.leftType)}
                         </td>
                         <td>
-                            <input class="form-control" data-save="leftValue" data-category="trigger" data-wrap="true" type="text" value="${ item.leftValue || "" }">
+                            <input class="form-control" data-save="leftValue" data-category="trigger" data-wrap="true" type="text" value="${ item.leftValue || ""}">
                         </td>
                         <td>
-                            ${ that.renderOPeratorSelect( 2, "operator", item.leftType, item.operator ) }
+                            ${ that.renderOPeratorSelect(2, "operator", item.leftType, item.operator)}
                         </td>
                         <td>
-                            ${ that.renderTypeOfValue( "rightType", "请选择右值类型", item.rightType) }
+                            ${ that.renderTypeOfValue("rightType", "请选择右值类型", item.rightType)}
                         </td>
                         <td>
-                            <input class="form-control" data-save="rightValue" data-category="trigger" data-wrap="true" type="text" value="${ item.rightValue || "" }">
+                            <input class="form-control" data-save="rightValue" data-category="trigger" data-wrap="true" type="text" value="${ item.rightValue || ""}">
                         </td>
                         <td><span class="del">×<span></td>
                     </tr>`
@@ -1082,6 +1082,7 @@ NewEventsModal.prototype = {
                 trigger_conditions = that.getTriggerConditions($(this).find(".triggerConditionTr")),
                 trigger_custom_methods = that.getTriggerCustomMethods($(this).find(".triggerMethods:checked")),
                 $exprMethods = $(this).find('[data-exper="true"]:checked'),
+                trAttr = $(this).attr('data-check'),
                 exprMethods = [],
                 copySend = null,
                 deleteRow = null,
@@ -1096,6 +1097,7 @@ NewEventsModal.prototype = {
                 importExcel = false,
                 keySave = null,
                 importDb = null;
+            if (trAttr) var sort = JSON.parse(trAttr);
             if (that.judgeCheckMehods("commonQuery", $(this).find(".triggerMethods:checked"))) {
                 query = []
                 query.push("commonQuery")
@@ -1158,6 +1160,7 @@ NewEventsModal.prototype = {
                         type: trigger_type,
                         key: trigger_key,
                         data: trigger_data,
+                        sort: sort
                     },
                     subscribe: {
                         conditions: trigger_conditions,
@@ -1178,6 +1181,8 @@ NewEventsModal.prototype = {
                         keySave: keySave
                     }
                 })
+                console.log(result, 'result');
+
             }
         })
         result.length > 0 ? that.$element.val(JSON.stringify(result)) : that.$element.val("");
@@ -1226,14 +1231,52 @@ NewEventsModal.prototype = {
             $op.replaceWith($html)
         })
         //触发方法的点击
+
         that.$modal.on("click" + that.NAME_SPACE, ".methods input[type='checkbox']", function () {
-            let value = $(this).val(),
-                check = $(this).prop("checked");
+            var checkArr = [];
+            let $this = $(this),
+                value = $this.val(),
+                check = $this.prop("checked"),
+                $thisParent = $this.parent(),
+                $thisParents = $this.parents('tr'),
+                parentsAttrArr = $thisParents.attr('data-check');
+            if (parentsAttrArr) {
+                var attrArr = JSON.parse(parentsAttrArr);
+                checkArr = attrArr.concat(checkArr);
+            }
+            if (check) {
+                var maxNum = 0;
+                checkArr.push(value);
+                maxNum = checkArr.findIndex(ele => ele === value);
+                $thisParent.append(`<span class="checked-num" data-value="${value}">${maxNum + 1}</span>`);
+            } else {
+                var findIdx = checkArr.findIndex(ele => ele === value),
+                    parentSib = $thisParent.siblings();
+                checkArr.splice(findIdx, 1);
+                $thisParent.find('.checked-num').remove();
+                if (checkArr.length) {
+                    parentSib.each((idx, node) => {
+                        var triggerVal = $(node).find('.triggerMethods').val();
+                        if (checkArr.includes(triggerVal)) {
+                            var findCheck = checkArr.findIndex(item => item === triggerVal);
+                            console.log($(node).find('.checked-num'), 'node');
+
+                            $(node).find('.checked-num').text(findCheck + 1);
+                        }
+                    })
+                }
+            }
+            $this.parents('tr').attr('data-check', JSON.stringify(checkArr));
             let arr = ["save", "upload", "login", "checkAll", "cancelAll", "changeProperty", "copySend", "notify", "saveHTML", "linkHtml", "nextProcess", "executeFn", "importExcel", "importDb", "keySave", "deleteRow"];
-            if (!arr.includes(value)) return;
-            $target = $(this).parents("tr").find(`.${value}`)
+            if (!arr.includes(value)) {
+                return;
+            }
+            $target = $this.parents("tr").find(`.${value}`);
             check ? $target.show() : $target.hide()
         })
+
+
+
         that.$modal.on("change" + that.NAME_SPACE, "[data-change='dbName']", function () {
             let $table = $(this).parents("tr").eq(0).find('[data-change="table"]'),
                 dbName = $(this).val(),
@@ -1357,10 +1400,10 @@ NewEventsModal.prototype = {
             $linkbody.empty()
             if (type == "nextProcess") {
                 var data = [{
-                        key: "isNext",
-                        desc: "下一流程",
-                        value: ""
-                    }],
+                    key: "isNext",
+                    desc: "下一流程",
+                    value: ""
+                }],
                     html = that.renderLinkHTMLParmas(data)
                 $linkbody.append(html)
             }

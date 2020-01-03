@@ -53,8 +53,8 @@ var PropertyWatch = {
             //     $span = $(`<input type="checkbox">`) 
             // }
             // $temp = isSelected ? $dom.parent() : $dom;
-            console.log("$dom", $dom)
-            console.log("$origin", $origin, "isNode", isNode, $origin.outerWidth())
+            // console.log("$dom", $dom)
+            // console.log("$origin", $origin, "isNode", isNode, $origin.outerWidth())
             $temp = $dom;
             $span.css({
                 // position:"static",

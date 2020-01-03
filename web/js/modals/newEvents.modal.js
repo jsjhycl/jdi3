@@ -1265,6 +1265,9 @@ NewEventsModal.prototype = {
                 var attrArr = JSON.parse(parentsAttrArr);
                 checkArr = attrArr.concat(checkArr);
             }
+            var $thisExper = $this.attr('data-exper'),
+                $thisName = $this.attr('data-name');
+            $thisExper ? value = $thisName : value = value;
             if (check) {
                 var maxNum = 0;
                 checkArr.push(value);
@@ -1280,8 +1283,6 @@ NewEventsModal.prototype = {
                         var triggerVal = $(node).find('.triggerMethods').val();
                         if (checkArr.includes(triggerVal)) {
                             var findCheck = checkArr.findIndex(item => item === triggerVal);
-                            console.log($(node).find('.checked-num'), 'node');
-
                             $(node).find('.checked-num').text(findCheck + 1);
                         }
                     })

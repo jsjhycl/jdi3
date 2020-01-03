@@ -100,7 +100,6 @@ function NewEventsModal($modal, $elemts) {
         publish: {},
         subscribe: {}
     }) {
-        console.log(event.publish.sort, 'sort');
         var sortArr = '';
         if (event.publish.sort)
             sortArr = JSON.stringify(event.publish.sort);
@@ -405,15 +404,16 @@ function NewEventsModal($modal, $elemts) {
         subscribe.exprMethods && subscribe.exprMethods.forEach(item => {
             checkArr.push(item.expression)
         })
-        console.log(dataSource, "dataSource");
-
         dataSource.forEach(item => {
+            console.log(item, 'item');
             str += `<div>
                         <input type="${inputType}" value='${item.value}' class="triggerMethods" ${item.type ? 'data-exper="true"' : ""} ${checkArr.indexOf(item.value) > -1 ? "checked" : ""} data-name='${item.name}'>
                         <span> ${ item.name} </span>`
             if (publish.sort) {
-                var sortIdx = publish.sort.indexOf(item.value);
-                if (sortIdx > -1) str += `<span class="checked-num" data-value="${item.value}">${sortIdx + 1}</span>`
+                var itemValue = '';
+                item.type ? itemValue = item.name : itemValue = item.value;
+                var sortIdx = publish.sort.indexOf(itemValue);
+                if (sortIdx > -1) str += `<span class="checked-num" data-value="${itemValue}">${sortIdx + 1}</span>`
             }
             str += '</div>'
         });
@@ -1037,8 +1037,6 @@ function NewEventsModal($modal, $elemts) {
 }
 NewEventsModal.prototype = {
     initData: async function (data) {
-        console.log(data, 'data');
-
         let that = this,
             id = $("#property_id").val(),
             events = data,
@@ -1166,7 +1164,6 @@ NewEventsModal.prototype = {
                 })
             });
             if (trAttr) var sortArr = JSON.parse(trAttr);
-            console.log(sortArr, 'sort');
             var specialArr = ['keySave', 'saveHTML', 'nextProcess'];
             for (var i = 0; i < specialArr.length; i++) {
                 var specialIdx = sortArr.indexOf(specialArr[i]);
@@ -1202,8 +1199,6 @@ NewEventsModal.prototype = {
                         keySave: keySave
                     }
                 })
-                console.log(result, 'result');
-
             }
         })
         result.length > 0 ? that.$element.val(JSON.stringify(result)) : that.$element.val("");
@@ -1280,7 +1275,15 @@ NewEventsModal.prototype = {
                 $thisParent.find('.checked-num').remove();
                 if (checkArr.length) {
                     parentSib.each((idx, node) => {
-                        var triggerVal = $(node).find('.triggerMethods').val();
+                        var nodeExper = $(node).find('.triggerMethods').attr('data-exper');
+                        var triggerVal = '';
+                        if (nodeExper) {
+                            triggerVal = $(node).find('.triggerMethods').attr('data-name');
+                        } else {
+                            triggerVal = $(node).find('.triggerMethods').val();
+                        }
+                        console.log(triggerVal, 'triggerVal');
+
                         if (checkArr.includes(triggerVal)) {
                             var findCheck = checkArr.findIndex(item => item === triggerVal);
                             $(node).find('.checked-num').text(findCheck + 1);
@@ -1296,8 +1299,6 @@ NewEventsModal.prototype = {
             $target = $this.parents("tr").find(`.${value}`);
             check ? $target.show() : $target.hide()
         })
-
-
         that.$modal.on("change" + that.NAME_SPACE, "[data-change='dbName']", function () {
             let $table = $(this).parents("tr").eq(0).find('[data-change="table"]'),
                 dbName = $(this).val(),
@@ -1395,7 +1396,7 @@ NewEventsModal.prototype = {
                 val = isWrap ? "{" + id + "}" : $(this).data("id"),
                 isExist = originVal.isExist(null, val),
                 isAdd = !!$target.data('apply');
-            console.log(id)
+            // console.log(id)
             if (isInsert) {
                 Common.insertAfterText($target.get(0), val);
             } else if ($(this).hasClass("applied") && isExist) {

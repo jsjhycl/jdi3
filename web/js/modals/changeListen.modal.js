@@ -19,7 +19,6 @@ function ChangeListenModal($modal) {
         return html;
     }
     this.renderSpan = function (data = []) {
-        console.log(data)
         var buildData = ["", "", "", "", "", "", "", "", "", ""]
         data.forEach(item => {
             var position = item["idPosition"] - 1,
@@ -49,88 +48,7 @@ ChangeListenModal.prototype = {
     },
     setData: async function () {
         var listens = await new FileService().readFile("./profiles/listen.json");
-        // var listens = {
-        //     "processListen": {
-        //         "cname": "流程监听",
-        //         "argumentsNumber": "2",
-        //         "codePage": "代码所在位置1",
-        //         "detail": [{
-        //             "type": "id",
-        //             "idPosition": "1",
-        //             "value": "G"
-        //         }, {
-        //             "type": "id",
-        //             "idPosition": "4",
-        //             "value": "D"
-        //         }]
-        //     },
-        //     "messageListen": {
-        //         "cname": "消息监听",
-        //         "argumentsNumber": "2",
-        //         "codePage": "代码所在位置1",
-        //         "detail": [{
-        //             "type": "id",
-        //             "idPosition": "1",
-        //             "value": "G"
-        //         }, {
-        //             "type": "id",
-        //             "idPosition": "4",
-        //             "value": "E"
-        //         }]
-        //     },
-        //     "mainPage": {
-        //         "cname": "主页面",
-        //         "argumentsNumber": "2",
-        //         "detail": [{
-        //             "type": "id",
-        //             "idPosition": "1",
-        //             "value": "I"
-        //         }, {
-        //             "type": "id",
-        //             "idPosition": "4",
-        //             "value": "K"
-        //         }]
-        //     },
-        //     "loginPage": {
-        //         "cname": "员工登录",
-        //         "argumentsNumber": "2",
-        //         "detail": [{
-        //             "type": "id",
-        //             "idPosition": "1",
-        //             "value": "G"
-        //         }, {
-        //             "type": "id",
-        //             "idPosition": "4",
-        //             "value": "J"
-        //         }]
-        //     },
-        //     "BPage": {
-        //         "cname": "B载体区域",
-        //         "argumentsNumber": "1",
-        //         "detail": [{
-        //             "type": "id",
-        //             "idPosition": "4",
-        //             "value": "P"
-        //         }]
-        //     },
-        //     "outsideDatabase": {
-        //         "cname": "外库目录",
-        //         "argumentsNumber": "1",
-        //         "detail": [{
-        //             "type": "id",
-        //             "idPosition": "4",
-        //             "value": "V"
-        //         }]
-        //     },
-        //     "pageArea": {
-        //         "cname": "布局区域",
-        //         "argumentsNumber": "1",
-        //         "detail": [{
-        //             "type": "id",
-        //             "idPosition": "7"
-        //         }]
-        //     }
-        // }
+       
         //     treeData = await new ArrayToTree().getTreeData();
         // queryData = await new ArrayToTree().getDataByposition(4, ["G", "", "", ""], treeData)
 

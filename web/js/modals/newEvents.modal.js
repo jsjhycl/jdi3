@@ -405,7 +405,6 @@ function NewEventsModal($modal, $elemts) {
             checkArr.push(item.expression)
         })
         dataSource.forEach(item => {
-            console.log(item, 'item');
             str += `<div>
                         <input type="${inputType}" value='${item.value}' class="triggerMethods" ${item.type ? 'data-exper="true"' : ""} ${checkArr.indexOf(item.value) > -1 ? "checked" : ""} data-name='${item.name}'>
                         <span> ${ item.name} </span>`
@@ -1282,8 +1281,6 @@ NewEventsModal.prototype = {
                         } else {
                             triggerVal = $(node).find('.triggerMethods').val();
                         }
-                        console.log(triggerVal, 'triggerVal');
-
                         if (checkArr.includes(triggerVal)) {
                             var findCheck = checkArr.findIndex(item => item === triggerVal);
                             $(node).find('.checked-num').text(findCheck + 1);

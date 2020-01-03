@@ -328,8 +328,8 @@ SubmitModal.prototype = {
                     seventhCategory = that.$seventhCategory.val(),
                     eighthCategory = that.$eighthCategory.val(),
                     ninthCategory = that.$ninthCategory.val();
-                 console.log(name, subCategory, firstCategory, secondeCategory, thridCategory, fourthCategory, fifthCategory, sixthCategory, seventhCategory, eighthCategory, ninthCategory, secondeCategory.split(',')[0], secondeCategory.split(',')[1])
-                if (!name || !subCategory || !firstCategory || !secondeCategory || !thridCategory || !fourthCategory || !fifthCategory || !sixthCategory || !seventhCategory || !eighthCategory || !ninthCategory) return alert("请填写完整的数据");
+                 if (!name || !subCategory || !firstCategory || !secondeCategory || !thridCategory || !fourthCategory || !fifthCategory || !sixthCategory || !seventhCategory || !eighthCategory || !ninthCategory) return alert("请填写完整的数据");
+                    //  console.log(name, subCategory, firstCategory, secondeCategory, thridCategory, fourthCategory, fifthCategory, sixthCategory, seventhCategory, eighthCategory, ninthCategory, secondeCategory.split(',')[0], secondeCategory.split(',')[1])
                 var id = firstCategory + secondeCategory.split(',')[0] + secondeCategory.split(',')[1] + thridCategory + fourthCategory + fifthCategory + sixthCategory + seventhCategory + eighthCategory + ninthCategory;
                 if (id.length != 10) return alert("布局编码不等于10位")
                 if (data.customId.length > 10) {

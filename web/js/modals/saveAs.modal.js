@@ -52,7 +52,6 @@ SaveAsModal.prototype = {
                 newid = id.slice(0, 8) + dataid + id.slice(9, 10);
 
 
-            console.log(res, "dataid", newid)
             that.$saveAsName.val(`${newid}`)
         })
     },

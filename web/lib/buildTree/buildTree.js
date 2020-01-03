@@ -191,19 +191,19 @@
                 var inputCheked = $('input[type="checkbox"]:checked');
                 if (activeCol !== 1) {
                     inputCheked.length == 1 && activeCol !== 8 ? $('#text').attr('disabled', false) : $('#text').attr('disabled', true);
+                    $('#defaultNum').val('0');
                 } else {
                     inputCheked.length == 2 && activeCol !== 8 ? $('#text').attr('disabled', false) : $('#text').attr('disabled', true);
+                    $('#defaultNum').val('0,0');
                 }
                 if (activeCol === 3 || activeCol === 4) that.levelRenderList(activeCol);//渲染一级二级下拉列表
                 // that.closeNode($this);//关闭兄弟节点
+
                 that.getTotalCode(activeRow, activeCol);//获取综合编号
                 $('#totalNum').val($this.attr('data-totalNum'));//设置综合编号
             });
             //点击input进行名称输入
-            var selectArr = [{
-                "code1": '',
-                "code2": ''
-            }];//选中的值
+            //选中的值
             $(document).on('click' + nameSpace, '#selectType input', function () {
                 var inputCheked = $('#selectType').find('input[type="checkbox"]:checked');
                 var actPos = $("#rowColNum").text();
@@ -213,14 +213,13 @@
                     return alert('先取消后在选择');
                 }
                 if ($(this).prop('checked') == true) {
-                    selectArr.code1 = $(this).val();
                     $(this).parent().css('color', 'blue');
                     $('#text').attr('disabled', false);
                     if (Number(actY) !== 1) {
                         $('.tree-list .active-item').attr('title', $(this).val());
                     }
                 } else {
-                    $('#text').attr('disabled', true);
+                    $('#text').attr('disabled', true).val('');
                     $('.tree-list .active-item').attr('title', '');
                     $('#selectList').hide();
                     $(this).parent().css('color', '#333');
@@ -240,14 +239,15 @@
                     $(this).prop('checked', false);
                     return alert('先取消后在选择');
                 }
-                selectArr.code2 = $(this).val();
+                var code1 = $('#selectType input[type="checkbox"]:checked').val(),
+                    code2 = $(this).val();
                 var checkArr = [];
-                if (!selectArr.code1) {
+                if (!code1) {
                     $(this).prop('checked', false);
                     return alert('请先选择编号,在选择编号1');
                 }
-                checkArr.push(selectArr.code1);
-                checkArr.push(selectArr.code2);
+                checkArr.push(code1);
+                checkArr.push(code2);
                 $(this).prop('checked') == true ? $(this).parent().css('color', 'blue') : $(this).parent().css('color', '#333');
                 $('.tree-list .active-item').attr('title', checkArr);
             })
@@ -258,6 +258,10 @@
                 $('.tree-list').show();
                 activeRow = Number($('.active-item').attr('data-row'));
                 activeCol = Number($('.active-item').attr('data-col'));
+                // if (activeRow === NaN && activeCol === NaN) {
+                //     activeRow = 0;
+                //     activeCol = 0;
+                // }
                 var flags = true;
                 var iconSpan = $('.active-item').find('span').eq(0);
                 var liLen = $('.tree-list li').length,
@@ -274,8 +278,8 @@
                         break;
                     }
                 }
-                var $this = $('li[data-row="' + activeRow + '"][data-col="' + activeCol + '"]');
-
+                var $this = $('li[data-row="' + activeRow + '"][data-col="' + activeCol + '"]'),
+                    isFlag = false;
                 var $thisNextItem = $this.nextAll();
                 var totalF = 0;
                 for (var i = 0; i < $thisNextItem.length; i++) {
@@ -304,10 +308,11 @@
                             $this.after(that.renderTreeNode(rows, cols, true))
                         } else {
                             $('.tree-list').append(that.renderTreeNode(maxRow ? Number(maxRow) + 1 : 0, 0, true))
-                            thisRow = maxRow ? maxRow : 0
-                            thisCol = 0
+                            // thisRow = maxRow ? maxRow : 0
+                            thisCol = 0;
+                            isFlag = true;
                         }
-                        if (Number(thisRow) == $('.tree-item').length - 2 && thisCol == 0) break;
+                        // if (Number(thisRow) == $('.tree-item').length - 2 && thisCol == 0) 
                         //出现-icon
                         var renderLi = $(`li[data-row="${rows}"][data-col="${cols}"]`);
                         if (cols !== 8) {
@@ -317,8 +322,9 @@
                             $('li.active-item').find('.expand-icon').show();
                             that.defaultNumName(cols, true, rows);//默认名称和编号
                         }
+                        if (isFlag) break;
                     }
-                    $('#content').mouseleave();
+                    if (!isFlag) $('#content').mouseleave();
                 }
             });
             //点击名称窗口
@@ -332,6 +338,8 @@
             $(document).on('click' + nameSpace, '#selectList li', function (e) {
                 e.stopPropagation();
                 e.preventDefault();
+                // if ($('.active-item').attr('data-col') === '1') $('#defaultNum').val('0,0');
+                // $('#defaultNum').val('0');
                 var $this = $(this),
                     thisText = $this.text();
                 $('#text').val(thisText);
@@ -352,7 +360,9 @@
                     actY = getPos.y,
                     actX = getPos.x,
                     inputCheked = $('#selectType').find('input[type="checkbox"]:checked');
-                if (inputCheked.length && !textVal) return alert('请选择需要的名称');
+                if (inputCheked.length) {
+                    if (!textVal) return alert('请选择需要的名称');
+                }
                 //树形赋值
                 if (inputCheked.length && textVal) {
                     $('.active-item').find('.item-content').text(textVal);
@@ -363,6 +373,11 @@
                 $('.active-item').attr('data-isnet', true);
                 if (actY === 3 || actY === 4) {
                     that.levelRenderList(actY);
+                }
+                //判断title是否有值
+                if (!$('.active-item').attr('title')) {
+                    var defaultNum = $('#defaultNum').val();
+                    $('.active-item').attr('title', defaultNum);
                 }
                 //获取模态框内容
                 var compareObj = that.getPrevNextVal(actX, actY);
@@ -779,6 +794,7 @@
                     rowCol = compareObj.rowCols,
                     thisRow = $('#rowColNum').text().split(',')[0],
                     posRowCol = $('#rowColNum').text().replace(',', '_');
+
                 onObject = "A" + ';' + compareObj.textVal + ';' + "A" + ';' + compareObj.totalCode + ';' + compareObj.selectTypeArr + ';' + posRowCol + ';';
                 if (!allDataArr.length) {
                     allDataArr.push({ rowCol: rowCol, table: onObject, pathText: compareObj.pathText })
@@ -841,7 +857,7 @@
                 actCol = Number(col),
                 actRow = Number(row),
                 activePrev = actItem.prevAll();
-            var actTitle = actItem.attr('title') === '' ? Number(col) == "1" ? '0,0' : '0' : actItem.attr('title').split(',').join(''),
+            var actTitle = actItem.attr('title') === '' ? col === "1" ? '0,0' : '0' : actItem.attr('title').split(',').join(''),
                 totalCode = [];
             //获取父级的综合编号与自己的编号连接----得到自己的综合编号
             totalCode.push(actTitle);
@@ -1130,8 +1146,8 @@
         outputTree: function (root) {
             var that = this;
             $('#outputBtn').click(function () {
-                if (!$('.tree-list li').length) return alert('没有节点');
                 var allData = that.changeDataStru();
+                if (!$('.tree-list li').length) allData = [];
                 // console.log(allData, '55555', allDataArr);
                 that.callback(allData);
             })

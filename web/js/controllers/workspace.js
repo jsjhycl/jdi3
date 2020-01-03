@@ -580,7 +580,9 @@ Workspace.prototype = {
         id ? $("#saveAs").show() : $("#saveAs").hide();
         $("#toolbar").css('right', "260px") //设置样式
         $("#toolbar").css('left', "140px") //设置样式
-        GLOBAL_PROPERTY = {}; //全局属性值空
+        GLOBAL_PROPERTY = {
+            "ZZZZ":{cname:"布局名",name:"ZZZZ"}
+        }; //全局属性值空
         LAST_SELECTED_ID = null; // 最后一次被选中的元素id
         LAST_POSITION = {}; // 选中元素的初始位置
         VERSION = version;

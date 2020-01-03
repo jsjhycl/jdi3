@@ -45,6 +45,35 @@ function DbApplyModal($modal) {
         $target.empty().append(html)
     }
 
+    this.getRegex = function (listenConfig, area) {
+        let regexp = "";
+        for (let i = 1; i <= 10; i++) {
+            if (listenConfig[i]) {
+                regexp += listenConfig[i];
+            } else if (listenConfig[i] == "") {
+                regexp += area;
+            } else {
+                regexp += "[A-Za-z0-9]";
+            }
+        }
+        return "^" + regexp + "$";
+    }
+    this.getListenByConfig = async function (key) {
+        var listens = await new FileService().readFile("./profiles/listen.json"),
+            data = listens[key];
+        if (!data) {
+            return alert("没有获取外库信息表的配置")
+        }
+        if (parseInt(data.argumentsNumber) != data.detail.length) {
+            return alert("参数个数不正确")
+        }
+        let result = {}
+        data.detail.forEach(item => {
+            result[item.idPosition] = item.value || '';
+        })
+        return result;
+    }
+
     // this.dataArr = ["id", "type", "maxLength", "cname", "mapId"]
 
     //获取外库数据库目录表
@@ -55,13 +84,14 @@ function DbApplyModal($modal) {
             listTabls = [{
                 value: "",
                 name: "请选择外库目录表"
-            }];
-        listens = await new FileService().readFile("./profiles/listen.json")
-        outsideDatabase = listens.outsideDatabase;
+            }],
+            outsideDatabase = await that.getListenByConfig("outsideDatabase"),
+            reg = that.getRegex(outsideDatabase);
+       
         dbNames.forEach(dbName => {
             var tables = Object.keys(data[dbName]);
             tables.forEach(table => {
-                if (table.indexOf(outsideDatabase.detail[0].value) == outsideDatabase.detail[0].idPosition - 1) { //  应用外库的时候需要用到的
+                if (new RegExp(reg).test(table)) { //  应用外库的时候需要用到的
                     var obj = {
                         value: table,
                         name: data[dbName][table].tableDesc
@@ -71,7 +101,6 @@ function DbApplyModal($modal) {
                 }
             })
         })
-        // console.log(12, listTabls)
         return listTabls;
     }
 

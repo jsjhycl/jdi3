@@ -62,6 +62,14 @@ li {
 .ruler_horizontal .n {
     top: 1px;
 }
+#change_listen_modal .changeListenSpan{
+    width: 29px;
+    margin: 1px;
+    padding: 5px;
+    /* line-height: 0px; */
+    /* border: 1px solid #ccc; */
+    /* background-color: #eee; */
+}
 
 #controlbar,
 #toolbar,

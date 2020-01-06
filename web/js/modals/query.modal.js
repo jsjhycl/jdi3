@@ -68,11 +68,23 @@ DbQueryModal.prototype = {
             $workspace = $("#workspace"),
             $control = $workspace.find("#" + id);
         that.$element.val(JSON.stringify(data));
+        
+        // that.deleteEvents(id)
+        //删除触发中的查询事件
         if (that.$triggerSelecet.val()) {
             that.setEvent(id, data)
         }
         new Property().save(id === "BODY" ? $workspace : $control, that.$element);
         new Property().load($control);
+    },
+    deleteEvents: function (id) {
+        if (!id) return;
+        var property = new Property(),
+        events = property.getValue(id,"events")||[];
+        events.forEach(event => {
+            event.subscribe.query =[]                
+        });
+        
     },
     setEvent: function (id, data) {
         if (!id) return;
@@ -105,6 +117,8 @@ DbQueryModal.prototype = {
                     keySave: null
                 }
             };
+
+
         if (data.type == "common") {
             eventObj.subscribe.query = ["commonQuery"]
         }
@@ -119,14 +133,15 @@ DbQueryModal.prototype = {
             isExist = events.some(item => {
                 return JSON.stringify(item) == JSON.stringify(eventObj)
             });
+            alert("修改配置后请修改对应的触发事件")
             if (!isExist) {
                 eventObj.publish.key = [id, trigger_type, "SPP" + length].join("_")
                 events.push(eventObj)
             }
         }
         property.setValue(id, "events", events)
-       
-        
+
+
     },
     clearData: function () {
         var that = this,

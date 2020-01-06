@@ -409,8 +409,9 @@ function NewEventsModal($modal, $elemts) {
                         <input type="${inputType}" value='${item.value}' class="triggerMethods" ${item.type ? 'data-exper="true"' : ""} ${checkArr.indexOf(item.value) > -1 ? "checked" : ""} data-name='${item.name}'>
                         <span> ${ item.name} </span>`
             if (publish.sort) {
-                var itemValue = '';
-                item.type ? itemValue = item.name : itemValue = item.value;
+                var itemValue = '',
+                    itemName = item.name.replace(/\([^\)]*\)/g, "");
+                item.type ? itemValue = itemName : itemValue = item.value;
                 var sortIdx = publish.sort.indexOf(itemValue);
                 if (sortIdx > -1) str += `<span class="checked-num" data-value="${itemValue}">${sortIdx + 1}</span>`
             }

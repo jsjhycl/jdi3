@@ -1,6 +1,6 @@
 {
     "name": "jdi客户端",
-    "version": "1.1.20",
+    "version": "1.1.21",
     "list": [{
         "version": "1.1.0",
         "files": [],
@@ -85,5 +85,9 @@
         "version": "1.1.20",
         "files": ["web/css/index.css", "web/designer/index.html", "web/designer/editor.html", "web/js/controllers/contextMenu.js", "web/js/controllers/workspace.js", "web/js/helpers/PropertyWatch.js", "web/js/modals/changeListen.modal.js", "web/js/modals/dbApply.modal.js", "web/js/modals/newEvents.modal.js", "web/js/modals/saveAs.modal.js", "web/js/modals/submit.modal.js", "web/lib/buildTree/buildTree.js", "versions.json"],
         "detail": ["子模块HTML格式化问题", "事件串行执行", "另存逻辑", "其他bug问题修改"]
+    }, {
+        "version": "1.1.21",
+        "files": ["web/designer/editor.html", "web/js/controllers/contextMenu.js", "web/js/modals/newEvents.modal.js", "web/js/modals/query.modal.js", "web/js/utils/qr.js", "web/js/editor.js", "versions.json"],
+        "detail": ["二维码bug", "中文名设置", "子模块修改", "修改查询属性添加事件时候的提示"]
     }]
 }

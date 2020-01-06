@@ -40,6 +40,7 @@ function renderQrModal(data, callBack) {
     function _renderQrCode() {
         data['uid'] = Common.uid();
         data['fp'] = 'JDIQR';
+        data['data'] = data['data'].toString();
         try {
             new QRCode($('.qr-modal').find('.qr-code').get(0), {
                 text: JSON.stringify(data),

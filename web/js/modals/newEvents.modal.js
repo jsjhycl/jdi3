@@ -408,13 +408,6 @@ function NewEventsModal($modal, $elemts) {
             str += `<div>
                         <input type="${inputType}" value='${item.value}' class="triggerMethods" ${item.type ? 'data-exper="true"' : ""} ${checkArr.indexOf(item.value) > -1 ? "checked" : ""} data-name='${item.name}'>
                         <span> ${ item.name} </span>`
-            if (publish.sort) {
-                var itemValue = '',
-                    itemName = item.name.replace(/\([^\)]*\)/g, "");
-                item.type ? itemValue = itemName : itemValue = item.value;
-                var sortIdx = publish.sort.indexOf(itemValue);
-                if (sortIdx > -1) str += `<span class="checked-num" data-value="${itemValue}">${sortIdx + 1}</span>`
-            }
             str += '</div>'
         });
         return str;
@@ -1065,7 +1058,8 @@ NewEventsModal.prototype = {
         events.forEach(event => {
             str += that.renderEvents(event)
         })
-        that.$eventTbody.append(str)
+        that.$eventTbody.append(str);
+        that.judgeCheck();//判断是否选中
         that.bindChosen();
         // $(".moveTable").colResizable({
         //     liveDrag: true,
@@ -1077,6 +1071,47 @@ NewEventsModal.prototype = {
         //     // resizeMode:'fit'
         // });
 
+    },
+    judgeCheck: function () {
+        var $eventsAttr = $('.eventsTr').attr('data-check'),
+            $attrCheck = JSON.parse($eventsAttr),
+            methodsContent = $('.eventsTr').find('.methods > div'),
+            checkedArr = [];
+        for (var i = 0; i < methodsContent.length; i++) {
+            var value = this.commonData(methodsContent, i);
+            value && checkedArr.push(value);
+        }
+        if (checkedArr.length === 0) $attrCheck = [];
+        var filterArr = $attrCheck.filter(ele => {
+            return checkedArr.indexOf(ele) == -1;
+        })
+        for (var m = 0; m < filterArr.length; m++) {
+            var findIdx = $attrCheck.indexOf(filterArr[m]);
+            if (findIdx > -1) $attrCheck.splice(findIdx, 1);
+        }
+        $('.eventsTr').attr('data-check', JSON.stringify($attrCheck));
+        for (var i = 0; i < methodsContent.length; i++) {
+            var value = this.commonData(methodsContent, i),
+                checkbox = methodsContent.eq(i).find('input[type="checkbox"]');
+            if (value) {
+                var findItemIdx = $attrCheck.indexOf(value);
+                checkbox.parent('div').append(`<span class="checked-num" data-value="${value}">${findItemIdx + 1}</span>`);
+            }
+        }
+    },
+    commonData: function (methodsContent, i) {
+        var checkbox = methodsContent.eq(i).find('input[type="checkbox"]'),
+            isExper = checkbox.attr('data-exper'),
+            value = '';
+        if (checkbox.prop('checked')) {
+            if (isExper) {
+                var dataName = checkbox.attr('data-name');
+                value = dataName.replace(/\([^\)]*\)/g, "");
+            } else {
+                value = checkbox.val();
+            }
+            return value;
+        }
     },
     saveData: function () {
         let that = this,

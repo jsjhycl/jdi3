@@ -60,8 +60,8 @@ function SubmitModal($modal, $submit) {
                 firstCategory = data.basicInfo.contactId.slice(0, 1),
                 secondeCategory = data.basicInfo.contactId.slice(1, 2) + "," + data.basicInfo.contactId.slice(2, 3),
                 thridCategory = data.basicInfo.autoCreate,
-                fourthCategory = data.basicInfo.feature,
-                fifthCategory = data.basicInfo.category,
+                fourthCategory = data.basicInfo.category,
+                fifthCategory = data.basicInfo.fifthCategory,
                 sixthCategory = data.basicInfo.area,
                 seventhCategory = data.basicInfo.spare1,
                 eighthCategory = data.basicInfo.spare2,
@@ -363,11 +363,21 @@ SubmitModal.prototype = {
                     {
                         col: "basicInfo",
                         value: {
-                            category: fifthCategory,
-                            subCategory: subCategory,
-                            feature: fourthCategory,
-                            userGrade: ninthCategory,
-                            autoCreate: thridCategory,
+                            // category: fifthCategory,//一级目录
+                            // subCategory: subCategory,//布局分类
+                            // feature: fourthCategory,//布局体系
+                            // userGrade: ninthCategory,//用户等级
+                            // autoCreate: thridCategory,//自动分表
+                            // area: sixthCategory, //布局区域=》布局区域
+                            // spare1: seventhCategory, //备用1=》备用1
+                            // spare2: eighthCategory, //备用2=>综合
+                            // contactId: firstCategory + secondeCategory.split(',')[0] + secondeCategory.split(',')[1] //关联ID => ""
+                            category: fourthCategory, //一级目录
+                            subCategory: subCategory,//布局分类
+                            feature: firstCategory,//布局体系
+                            fifthCategory:fifthCategory,
+                            userGrade: ninthCategory,//用户等级
+                            autoCreate: thridCategory,//自动分表
                             area: sixthCategory, //布局区域=》布局区域
                             spare1: seventhCategory, //备用1=》备用1
                             spare2: eighthCategory, //备用2=>综合

@@ -76,22 +76,22 @@ CreateResource.prototype = {
         var treeData = await new ArrayToTree().getTreeData();
         that.treeData = treeData;
         var firstData = new ArrayToTree().getFirstData(treeData),
-            secondData =[],
-            thridData=[],
-            fourthData=[],
-            fifthData=[],
-            sixthData=[],
-            sevenData=[],
-            eighthData=[],
-            ninthData=[];
-            // secondData = new ArrayToTree().getSearchData([firstData[0].value], that.treeData),
-            // thridData = new ArrayToTree().getSearchData([firstData[0].value, secondData[0].value], that.treeData),
-            // fourthData = new ArrayToTree().getSearchData([firstData[0].value, secondData[0].value, thridData[0].value], that.treeData),
-            // fifthData = new ArrayToTree().getSearchData([firstData[0].value, secondData[0].value, thridData[0].value, fourthData[0].value], that.treeData),
-            // sixthData = new ArrayToTree().getSearchData([firstData[0].value, secondData[0].value, thridData[0].value, fourthData[0].value, fifthData[0].value], that.treeData),
-            // sevenData = new ArrayToTree().getSearchData([firstData[0].value, secondData[0].value, thridData[0].value, fourthData[0].value, fifthData[0].value, sixthData[0].value], that.treeData),
-            // eighthData = new ArrayToTree().getSearchData([firstData[0].value, secondData[0].value, thridData[0].value, fourthData[0].value, fifthData[0].value, sixthData[0].value, sevenData[0].value], that.treeData),
-            // ninthData = new ArrayToTree().getSearchData([firstData[0].value, secondData[0].value, thridData[0].value, fourthData[0].value, fifthData[0].value, sixthData[0].value, sevenData[0].value, eighthData], that.treeData);
+            secondData = [],
+            thridData = [],
+            fourthData = [],
+            fifthData = [],
+            sixthData = [],
+            sevenData = [],
+            eighthData = [],
+            ninthData = [];
+        // secondData = new ArrayToTree().getSearchData([firstData[0].value], that.treeData),
+        // thridData = new ArrayToTree().getSearchData([firstData[0].value, secondData[0].value], that.treeData),
+        // fourthData = new ArrayToTree().getSearchData([firstData[0].value, secondData[0].value, thridData[0].value], that.treeData),
+        // fifthData = new ArrayToTree().getSearchData([firstData[0].value, secondData[0].value, thridData[0].value, fourthData[0].value], that.treeData),
+        // sixthData = new ArrayToTree().getSearchData([firstData[0].value, secondData[0].value, thridData[0].value, fourthData[0].value, fifthData[0].value], that.treeData),
+        // sevenData = new ArrayToTree().getSearchData([firstData[0].value, secondData[0].value, thridData[0].value, fourthData[0].value, fifthData[0].value, sixthData[0].value], that.treeData),
+        // eighthData = new ArrayToTree().getSearchData([firstData[0].value, secondData[0].value, thridData[0].value, fourthData[0].value, fifthData[0].value, sixthData[0].value, sevenData[0].value], that.treeData),
+        // ninthData = new ArrayToTree().getSearchData([firstData[0].value, secondData[0].value, thridData[0].value, fourthData[0].value, fifthData[0].value, sixthData[0].value, sevenData[0].value, eighthData], that.treeData);
 
         Common.fillSelect(that.$firstCategory, {
             name: "请选择表属性",
@@ -327,11 +327,21 @@ CreateResource.prototype = {
                     {
                         col: "basicInfo",
                         value: {
-                            category: fifthCategory,
-                            subCategory: type,
-                            feature: fourthCategory,
-                            userGrade: ninthCategory,
-                            autoCreate: thridCategory,
+                            // category: fifthCategory,
+                            // subCategory: type,
+                            // feature: fourthCategory,
+                            // userGrade: ninthCategory,
+                            // autoCreate: thridCategory,
+                            // area: sixthCategory, //布局区域=》布局区域
+                            // spare1: seventhCategory, //备用1=》备用1
+                            // spare2: eighthCategory, //备用2=>综合
+                            // contactId: firstCategory + secondeCategory.split(',')[0] + secondeCategory.split(',')[1] //关联ID => ""
+                            category: fourthCategory, //一级目录
+                            subCategory: subCategory, //布局分类
+                            feature: firstCategory, //布局体系
+                            fifthCategory: fifthCategory,
+                            userGrade: ninthCategory, //用户等级
+                            autoCreate: thridCategory, //自动分表
                             area: sixthCategory, //布局区域=》布局区域
                             spare1: seventhCategory, //备用1=》备用1
                             spare2: eighthCategory, //备用2=>综合

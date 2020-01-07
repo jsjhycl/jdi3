@@ -51,7 +51,7 @@ function BaseModal($modal, $element) {
             $save.on("click", function () { //移除事件
                 if (saveFn) { //如果issaveFn为真
                     var result = saveFn.call(that); //绑定事件
-                    if (result === -1) return false
+                    if (result === -1 || result === "judgeFalse") return false
                 }
                 that.$modal.modal("hide"); //隐藏模态框
             });

@@ -126,7 +126,8 @@ function ContextMenu() {
         }
         var property = new Property(); //实例化属性栏的实例
         arrs.forEach(function(item) { //遍历数组
-            if (!property.getValue(item.id, "cname"))
+            var cname = property.getValue(item.id, "cname");
+            if (!cname || cname == item.id)
                 property.setValue(item.id, "cname", item.cname); //遍历数组设置元素的中文名
         });
         alert("设置成功！"); //提示弹出成功

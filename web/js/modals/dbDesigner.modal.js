@@ -63,22 +63,22 @@ function DbDesignerModal($modal) {
         }
         var html = `<tr>
                         <td>
-                            <select class="form-control" data-save="dbName" disabled value="${dbName||""}">
-                                ${that.renderOptions('dbName',item)}
+                            <select class="form-control" data-save="dbName" disabled value="${dbName || ""}">
+                                ${that.renderOptions('dbName', item)}
                             </select>
                         </td>
                         <td>
-                          <select class="form-control" data-save="tableName" disabled value="${tableName||""}">
-                                ${that.renderOptions('table',item)}
+                          <select class="form-control" data-save="tableName" disabled value="${tableName || ""}">
+                                ${that.renderOptions('table', item)}
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" data-save="key" value="${key||""}">
-                                ${that.renderOptions('field',item)}
+                            <select class="form-control" data-save="key" value="${key || ""}">
+                                ${that.renderOptions('field', item)}
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" data-save="value" value="${value||""}">
+                            <select class="form-control" data-save="value" value="${value || ""}">
                                 ${that.renderValueSelect(value)}
                             </select>
                         </td>
@@ -98,7 +98,7 @@ function DbDesignerModal($modal) {
             value: ""
         });
         result.forEach(function (item) {
-            html += `<option value="${item.value}" ${ selected == item.value ? "selected" : ""}>${item.name} ${item.value ? "("+item.value+")" : ""}</option>`
+            html += `<option value="${item.value}" ${selected == item.value ? "selected" : ""}>${item.name} ${item.value ? "(" + item.value + ")" : ""}</option>`
         })
         return html
 
@@ -127,11 +127,11 @@ function DbDesignerModal($modal) {
         if (!select) {
 
             data.forEach(function (item) {
-                html += `<option value="${item.value}" >${item.name} ${item.value ? "("+item.value+")" : ""}</option>`
+                html += `<option value="${item.value}" >${item.name} ${item.value ? "(" + item.value + ")" : ""}</option>`
             })
         } else {
             data.forEach(function (item) {
-                html += `<option value="${item.value}" ${ select == item.value ? "selected" : ""}>${item.name} ${item.value ? "("+item.value+")" : ""}</option>`
+                html += `<option value="${item.value}" ${select == item.value ? "selected" : ""}>${item.name} ${item.value ? "(" + item.value + ")" : ""}</option>`
             })
         }
         return html;
@@ -368,126 +368,126 @@ DbDesignerModal.prototype = {
             disabled: false,
             $elems: $("#workspace").find("input"),
             thead: [{
-                    name: "id",
-                    text: "编号",
-                    key: "id",
-                    template: function (value) {
-                        return '<input class="form-control" data-key="id" style="width:80px" type="text" value="' + value + '" readonly>';
-                    }
-                },
-                {
-                    name: "cname",
-                    text: "中文名",
-                    key: "cname",
-                    template: function (value) {
-                        return '<input class="form-control" data-key="cname" style="width:90px" type="text" value="' + value + '" readonly>';
-                    }
-                }, {
-                    name: "isSave",
-                    text: "是否入库",
-                    key: "db.isSave",
-                    group: true,
-                    hasCheckbox: true,
-                    template: function (value) {
-                        var isChecked = !!value ? " checked" : "";
-                        return '<input data-key="isSave" type="checkbox"' + isChecked + '>';
-                    }
-                }, {
-                    name: "dbName",
-                    text: "数据库名",
-                    key: "db.dbName",
-                    group: true,
-                    template: function (value) {
-                        var $select = $('<select class="form-control chosen" data-key="dbName"></select>')
-                        Common.fillSelect($select, {
-                            name: "请选择库",
-                            value: ""
-                        }, dbNames, value, true)
-                        return $select.get(0).outerHTML;
-                    }
-                }, {
-                    name: "table",
-                    text: "表名称",
-                    key: "db.table",
-                    group: true,
-                    template: function (value, options) {
-                        var $select = $('<select class="form-control chosen" data-key="table"></select>');
-                        Common.fillSelect($select, {
-                            name: "请选择表",
-                            value: ""
-                        }, options, value, true);
-                        return $select.get(0).outerHTML;
-                    }
-                }, {
-                    name: "selectField",
-                    text: "存入字段",
-                    key: "db.field",
-                    group: true,
-                    template: function (value, options) {
-                        var $select = $('<select class="form-control chosen" data-key="selectField"></select>');
-                        Common.fillSelect($select, {
-                            name: "请选择字段",
-                            value: ""
-                        }, options, value, true);
-                        return $select.get(0).outerHTML;
-                    }
-                },
-                { //新增加
-                    name: "selectFieldSplit",
-                    text: "字段分段",
-                    key: "db.fieldSplit",
-                    group: true,
-                    template: function (value, options) {
-                        var $select = $('<select class="form-control chosen" data-key="selectFieldSplit"></select>')
-                        Common.fillSelect($select, {
-                            name: "请选择第几段",
-                            value: ""
-                        }, options, value, true)
-                        return $select.get(0).outerHTML;
-                    }
-                },
-                // {
-                //     name: "field",
-                //     text: "字段名称",
-                //     key: "db.field",
-                //     group: true,
-                //     template: function (value) {
-                //         return '<input class="form-control" data-key="field" type="text" value="' + value + '">';
-                //     }
-                // }, 
-                {
-                    name: "desc",
-                    text: "字段描述",
-                    key: "db.desc",
-                    group: true,
-                    template: function (value) {
-                        return '<input class="form-control" data-key="desc" type="text" style="width:90px" value="' + value + '">';
-                    }
-                }, {
-                    name: "sliceTarget",
-                    text: "截取标记",
-                    key: "db.sliceTarget",
-                    group: true,
-                    template: function (value) {
-                        return '<input class="form-control" data-key="sliceTarget" type="text" style="width:90px" value="' + value + '">';
-                    }
-                }, {
-                    name: "fieldSlice",
-                    text: "字段截取",
-                    key: "db.fieldSlice",
-                    group: true,
-                    template: function (value) {
-                        return '<input class="form-control" data-key="fieldSlice" type="text" style="width:90px" value="' + value + '">';
-                    }
-                }, {
-                    name: "operation",
-                    text: "操作",
-                    key: "db.op",
-                    group: true,
-                    template: function (value) {
-                        return '<span id="dbDesignerAdd" class="add">+</span><span style="margin-left:10px" class="del" id="dbDesignerRemove" class="del">×</span>'
-                    }
+                name: "id",
+                text: "编号",
+                key: "id",
+                template: function (value) {
+                    return '<input class="form-control" data-key="id" style="width:80px" type="text" value="' + value + '" readonly>';
                 }
+            },
+            {
+                name: "cname",
+                text: "中文名",
+                key: "cname",
+                template: function (value) {
+                    return '<input class="form-control" data-key="cname" style="width:90px" type="text" value="' + value + '" readonly>';
+                }
+            }, {
+                name: "isSave",
+                text: "是否入库",
+                key: "db.isSave",
+                group: true,
+                hasCheckbox: true,
+                template: function (value) {
+                    var isChecked = !!value ? " checked" : "";
+                    return '<input data-key="isSave" type="checkbox"' + isChecked + '>';
+                }
+            }, {
+                name: "dbName",
+                text: "数据库名",
+                key: "db.dbName",
+                group: true,
+                template: function (value) {
+                    var $select = $('<select class="form-control chosen" data-key="dbName"></select>')
+                    Common.fillSelect($select, {
+                        name: "请选择库",
+                        value: ""
+                    }, dbNames, value, true)
+                    return $select.get(0).outerHTML;
+                }
+            }, {
+                name: "table",
+                text: "表名称",
+                key: "db.table",
+                group: true,
+                template: function (value, options) {
+                    var $select = $('<select class="form-control chosen" data-key="table"></select>');
+                    Common.fillSelect($select, {
+                        name: "请选择表",
+                        value: ""
+                    }, options, value, true);
+                    return $select.get(0).outerHTML;
+                }
+            }, {
+                name: "selectField",
+                text: "存入字段",
+                key: "db.field",
+                group: true,
+                template: function (value, options) {
+                    var $select = $('<select class="form-control chosen" data-key="selectField"></select>');
+                    Common.fillSelect($select, {
+                        name: "请选择字段",
+                        value: ""
+                    }, options, value, true);
+                    return $select.get(0).outerHTML;
+                }
+            },
+            { //新增加
+                name: "selectFieldSplit",
+                text: "字段分段",
+                key: "db.fieldSplit",
+                group: true,
+                template: function (value, options) {
+                    var $select = $('<select class="form-control chosen" data-key="selectFieldSplit"></select>')
+                    Common.fillSelect($select, {
+                        name: "请选择第几段",
+                        value: ""
+                    }, options, value, true)
+                    return $select.get(0).outerHTML;
+                }
+            },
+            // {
+            //     name: "field",
+            //     text: "字段名称",
+            //     key: "db.field",
+            //     group: true,
+            //     template: function (value) {
+            //         return '<input class="form-control" data-key="field" type="text" value="' + value + '">';
+            //     }
+            // }, 
+            {
+                name: "desc",
+                text: "字段描述",
+                key: "db.desc",
+                group: true,
+                template: function (value) {
+                    return '<input class="form-control" data-key="desc" type="text" style="width:90px" value="' + value + '">';
+                }
+            }, {
+                name: "sliceTarget",
+                text: "截取标记",
+                key: "db.sliceTarget",
+                group: true,
+                template: function (value) {
+                    return '<input class="form-control" data-key="sliceTarget" type="text" style="width:90px" value="' + value + '">';
+                }
+            }, {
+                name: "fieldSlice",
+                text: "字段截取",
+                key: "db.fieldSlice",
+                group: true,
+                template: function (value) {
+                    return '<input class="form-control" data-key="fieldSlice" type="text" style="width:90px" value="' + value + '">';
+                }
+            }, {
+                name: "operation",
+                text: "操作",
+                key: "db.op",
+                group: true,
+                template: function (value) {
+                    return '<span id="dbDesignerAdd" class="add">+</span><span style="margin-left:10px" class="del" id="dbDesignerRemove" class="del">×</span>'
+                }
+            }
             ],
             getProperty: new Property().getProperty,
             dbList: dbList, //把property的getproperty方法赋值给getProperty
@@ -502,10 +502,26 @@ DbDesignerModal.prototype = {
         that.bindChosen()
 
     },
+    judgeSelect: function (data) {
+        if (!Array.isArray(data)) return false;
+        var result = false;
+        data.forEach(item => {
+            if (item.isSave) {
+                if (!item.dbName || !item.table || !item.selectField) {
+                    result = true
+                }
+            }
+        })
+        return result;
+    },
     saveData: function () {
         var that = this,
             data = that.$dbDesigner.dbDesigner("getData"); //调用getData方法
+        // console.log(data, "data")
+
         if (!Array.isArray(data)) return alert("无效的数据类型！"); //如果data不是数组退出函数提示
+        var isSelect = that.judgeSelect(data)
+        if (isSelect) { alert("当前数据选择不完全;"); return "judgeFalse" };
         var property = new Property();
         //获取信息
         var savekeyInfo = that.getKeyInfo();
@@ -518,7 +534,6 @@ DbDesignerModal.prototype = {
         data.forEach(function (item) {
             if (!item.isSave) return true;
             var db = {
-
                 isSave: item.isSave, //是否入库
                 dbName: item.dbName, //存档数据库
                 table: item.table, //存档表格

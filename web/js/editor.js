@@ -64,7 +64,7 @@ function setWidth($temp) {
         var result = replaceFormat(content, font);
         if (result.status == 1) {
             // var $html = $("<div>" + result.html + "</div>");
-            
+
             $(element).html(result.html);
         }
     })

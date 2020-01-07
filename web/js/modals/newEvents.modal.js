@@ -409,8 +409,9 @@ function NewEventsModal($modal, $elemts) {
                         <input type="${inputType}" value='${item.value}' class="triggerMethods" ${item.type ? 'data-exper="true"' : ""} ${checkArr.indexOf(item.value) > -1 ? "checked" : ""} data-name='${item.name}'>
                         <span> ${ item.name} </span>`
             if (publish.sort) {
-                var itemValue = '';
-                item.type ? itemValue = item.name : itemValue = item.value;
+                var itemValue = '',
+                    itemName = item.name.replace(/\([^\)]*\)/g, "");
+                item.type ? itemValue = itemName : itemValue = item.value;
                 var sortIdx = publish.sort.indexOf(itemValue);
                 if (sortIdx > -1) str += `<span class="checked-num" data-value="${itemValue}">${sortIdx + 1}</span>`
             }
@@ -1246,7 +1247,6 @@ NewEventsModal.prototype = {
             $op.replaceWith($html)
         })
         //触发方法的点击
-
         that.$modal.on("click" + that.NAME_SPACE, ".methods input[type='checkbox']", function () {
             var checkArr = [];
             let $this = $(this),
@@ -1260,7 +1260,8 @@ NewEventsModal.prototype = {
                 checkArr = attrArr.concat(checkArr);
             }
             var $thisExper = $this.attr('data-exper'),
-                $thisName = $this.attr('data-name');
+                $thisDataName = $this.attr('data-name'),
+                $thisName = $thisDataName.replace(/\([^\)]*\)/g, "");
             $thisExper ? value = $thisName : value = value;
             if (check) {
                 var maxNum = 0;
@@ -1277,7 +1278,8 @@ NewEventsModal.prototype = {
                         var nodeExper = $(node).find('.triggerMethods').attr('data-exper');
                         var triggerVal = '';
                         if (nodeExper) {
-                            triggerVal = $(node).find('.triggerMethods').attr('data-name');
+                            var triggerDataName = $(node).find('.triggerMethods').attr('data-name');
+                            triggerVal = triggerDataName.replace(/\([^\)]*\)/g, "");
                         } else {
                             triggerVal = $(node).find('.triggerMethods').val();
                         }

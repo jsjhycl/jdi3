@@ -1,6 +1,6 @@
 {
     "name": "jdi客户端",
-    "version": "1.1.21",
+    "version": "1.1.22",
     "list": [{
         "version": "1.1.0",
         "files": [],
@@ -89,5 +89,9 @@
         "version": "1.1.21",
         "files": ["web/designer/editor.html", "web/js/controllers/contextMenu.js", "web/js/modals/newEvents.modal.js", "web/js/modals/query.modal.js", "web/js/utils/qr.js", "web/js/editor.js", "versions.json"],
         "detail": ["二维码bug", "中文名设置", "子模块修改", "修改查询属性添加事件时候的提示"]
+    }, {
+        "version": "1.1.22",
+        "files": ["services/excel2html.js", "web/js/controllers/contextMenu.js", "web/js/modals/newEvents.modal.js", "web/js/editor.js", "web/js/modals/base.modal.js", "web/js/modals/dbDesigner.modal.js", "versions.json"],
+        "detail": ["部分样式", "中文名设置", "子模块修改", "修改查询属性添加事件时候的提示"]
     }]
 }

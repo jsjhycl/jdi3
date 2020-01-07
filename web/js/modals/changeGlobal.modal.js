@@ -18,9 +18,9 @@ function ChangeGlobal($modal) {
     this.renderCustomTr = function (key, desc, value, isAppend, appendTo) {
         isAppend = !!isAppend;
         var html = `<tr>
-                        <td class="text-center"><input type="text" class="form-control" value="${key||''}" /></td>
-                        <td class="text-center"><input type="text" class="form-control" value="${desc||''}" /></td>
-                        <td class="text-center"><input type="text" class="form-control" value="${value||''}" /></td>
+                        <td class="text-center"><input type="text" class="form-control" value="${key || ''}" /></td>
+                        <td class="text-center"><input type="text" class="form-control" value="${desc || ''}" /></td>
+                        <td class="text-center"><input type="text" class="form-control" value="${value || ''}" /></td>
                         <td class="text-center"><span class="del">X</span></td>                
                     </tr>`
         isAppend && appendTo.append(html)
@@ -63,8 +63,8 @@ ChangeGlobal.prototype = {
         var that = this,
             save = [],
             type = that.$modal.find(".nav .active a").text(),
-            $target = type == "登录" ? that.$globaltbody : that.$localVariable,
-            typeId = type == "局部" ? $("#workspace").attr("data-id") : "global";
+            $target = type == "全局变量" ? that.$globaltbody : that.$localVariable,
+            typeId = type == "局部变量" ? $("#workspace").attr("data-id") : "global";
         $target.find("tr").each((trIndex, trEle) => {
             if (!$(trEle).find("input:first").val() || !$(trEle).find("input:last").val()) return;
             save.push({
@@ -96,8 +96,8 @@ ChangeGlobal.prototype = {
         that.$modal.on("click" + that.NAME_SPACE, "a", function (e) {
             e.preventDefault()
             var type = $(this).text(),
-                typeId = type == "局部" ? $("#workspace").attr("data-id") : "global",
-                target = type == "局部" ? that.$localVariable : that.$globaltbody;
+                typeId = type == "局部变量" ? $("#workspace").attr("data-id") : "global",
+                target = type == "局部变量" ? that.$localVariable : that.$globaltbody;
             typeId && that.setData(target, that.data[typeId])
             $(this).tab('show')
         })

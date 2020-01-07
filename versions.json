@@ -1,6 +1,6 @@
 {
     "name": "jdi客户端",
-    "version": "1.1.22",
+    "version": "1.1.23",
     "list": [{
         "version": "1.1.0",
         "files": [],
@@ -93,5 +93,9 @@
         "version": "1.1.22",
         "files": ["services/excel2html.js", "web/js/controllers/contextMenu.js", "web/js/modals/newEvents.modal.js", "web/js/editor.js", "web/js/modals/base.modal.js", "web/js/modals/dbDesigner.modal.js", "versions.json"],
         "detail": ["部分样式", "中文名设置", "子模块修改", "修改查询属性添加事件时候的提示"]
+    }, {
+        "version": "1.1.23",
+        "files": ["web/designer/index.html", "web/js/modals/changeGlobal.modal.js", "web/js/modals/createResource.modal.js", "web/js/modals/newEvents.modal.js", "web/js/modals/submit.modal.js", "versions.json"],
+        "detail": ["修改布局编号的问题统一问题", "更改变量配置名称", "优化事件串行执行(全局函数)"]
     }]
 }

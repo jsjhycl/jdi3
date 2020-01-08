@@ -177,7 +177,7 @@
                 activeRow = Number($(this).attr('data-row'));
                 activeCol = Number($(this).attr('data-col'));
                 $('#content').show();
-                that.defaultNumName(activeCol, false);//默认名称和编号
+                that.defaultNumName(activeCol, false, activeRow);//默认名称和编号
                 $('#selectType').empty().append(that.renderNum());//渲染编号选择type
                 //表序号多添加编号1
                 if (activeCol === 1) {
@@ -258,16 +258,15 @@
                 $('.tree-list').show();
                 activeRow = Number($('.active-item').attr('data-row'));
                 activeCol = Number($('.active-item').attr('data-col'));
-                // if (activeRow === NaN && activeCol === NaN) {
-                //     activeRow = 0;
-                //     activeCol = 0;
-                // }
                 var flags = true;
                 var iconSpan = $('.active-item').find('span').eq(0);
                 var liLen = $('.tree-list li').length,
                     hasCls = $('.tree-list li').hasClass('active-item');
                 if (hasCls) {
-                    if ($('.active-item').attr('data-col') !== "0") return alert('只能在一级上添加子节点');
+                    // if ($('.active-item').attr('data-col') !== "0") 
+                    console.log(activeCol, "activeCol");
+                    var colArr = [0, 6];
+                    if (!colArr.includes(activeCol)) return alert('只能在一级或六级上添加子节点');
                 }
                 if (iconSpan.hasClass('colse-icon') && iconSpan.css('display') === 'inline') return alert('展开父级再添加');
                 if (liLen !== 0) {
@@ -281,7 +280,8 @@
                 var $this = $('li[data-row="' + activeRow + '"][data-col="' + activeCol + '"]'),
                     isFlag = false;
                 var $thisNextItem = $this.nextAll();
-                var totalF = 0;
+                var totalF = 0,
+                    descTotal = 8 - activeCol;
                 for (var i = 0; i < $thisNextItem.length; i++) {
                     var nextItemCol = Number($thisNextItem.eq(i).attr('data-col'));
                     if (nextItemCol === Number(activeCol)) break;
@@ -289,12 +289,13 @@
                         totalF++;
                     }
                 }
+
                 if (totalF) {
-                    activeRow = activeRow + (8 * totalF);
+                    activeRow = activeRow + (descTotal * totalF);
                     $this = $('li[data-row="' + activeRow + '"]');
                 }
                 if (flags) {
-                    for (var n = 8; n > 0; n--) {
+                    for (var n = descTotal; n > 0; n--) {
                         var rows = Number(activeRow) + 1,
                             cols = Number(activeCol) + n;
 
@@ -308,11 +309,9 @@
                             $this.after(that.renderTreeNode(rows, cols, true))
                         } else {
                             $('.tree-list').append(that.renderTreeNode(maxRow ? Number(maxRow) + 1 : 0, 0, true))
-                            // thisRow = maxRow ? maxRow : 0
                             thisCol = 0;
                             isFlag = true;
                         }
-                        // if (Number(thisRow) == $('.tree-item').length - 2 && thisCol == 0) 
                         //出现-icon
                         var renderLi = $(`li[data-row="${rows}"][data-col="${cols}"]`);
                         if (cols !== 8) {
@@ -320,6 +319,8 @@
                         }
                         if ($('li.active-item').next().length !== 0) {
                             $('li.active-item').find('.expand-icon').show();
+                            console.log(cols, "cols", rows);
+
                             that.defaultNumName(cols, true, rows);//默认名称和编号
                         }
                         if (isFlag) break;
@@ -470,12 +471,12 @@
         //默认编号和名称
         defaultNumName: function (col, isAdd, row) {
             var defaultArr = ["表属性", "表序号", "布局属性", "渲染到的一级目录", "渲染到的二级目录", "布局渲染区域", "备用1", "综合", "使用布局等级"];
-            $('#defaultNum').val('0');
-            $('#defaultText').val(defaultArr[col]);
             if (isAdd) {
                 $(`li[data-row="${row}"]`).find('.item-content').text(defaultArr[col]);
                 Number(col) !== 1 ? $(`li[data-row="${row}"]`).attr('title', '0') : $(`li[data-row="${row}"]`).attr('title', '0,0');
-
+            } else {
+                $('#defaultNum').val('0');
+                $('#defaultText').val(defaultArr[col]);
             }
         },
         //搜索结果转换
@@ -960,7 +961,9 @@
             var that = this;
             $('#removeBtn').click(function () {
                 if (!$('.tree-item.active-item').length) return alert('未选中删除节点');
-                if (Number($('.active-item').attr('data-col')) > 1) return alert('删除请选中一级或二级节点');
+                var activeCol = Number($('.active-item').attr('data-col'));
+                var colArr = [0, 1, 6, 7];
+                if (!colArr.includes(activeCol)) return alert('删除请选中一级,二级,六级,七级节点');
                 var removeRow = $('.tree-item.active-item').attr('data-row'),
                     removeCol = $('.tree-item.active-item').attr('data-col'),
                     removeRowCol = `x:${removeRow},y:${removeCol}`;

@@ -63,9 +63,14 @@ function setWidth($temp) {
             font = $(element).css("font");
         var result = replaceFormat(content, font);
         if (result.status == 1) {
-            // var $html = $("<div>" + result.html + "</div>");
-
-            $(element).html(result.html);
+            var splits = result.html.split(">");
+            for (var i = 0; i < splits.length; i++) {
+                var splitss = splits[i].split("<");
+                splitss[0] = splitss[0].replace(/\s/g, '<span class="space">&nbsp;</span></span>');
+                splits[i] = splitss.join("<");
+            }
+            var html = splits.join(">");
+            $(element).html(html);
         }
     })
     return $temp;

@@ -140,7 +140,7 @@
                     })
                 })
                 if (table) {
-                    AllDbName[dbName][table].tableDetail.forEach(function (item) {
+                    AllDbName[dbName][table] && AllDbName[dbName][table].tableDetail.forEach(function (item) {
                         fieldsoptions.push({
                             name: item.cname,
                             value: item.id

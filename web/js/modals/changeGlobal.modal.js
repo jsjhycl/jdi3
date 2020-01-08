@@ -20,7 +20,6 @@ function ChangeGlobal($modal) {
         var html = `<tr>
                         <td class="text-center"><input type="text" class="form-control" value="${key || ''}" /></td>
                         <td class="text-center"><input type="text" class="form-control" value="${desc || ''}" /></td>
-                        <td class="text-center"><input type="text" class="form-control" value="${value || ''}" /></td>
                         <td class="text-center"><span class="del">X</span></td>                
                     </tr>`
         isAppend && appendTo.append(html)
@@ -58,24 +57,49 @@ ChangeGlobal.prototype = {
         });
         $target.html(html);
     },
-
-    saveData: function () {
-        var that = this,
-            save = [],
-            type = that.$modal.find(".nav .active a").text(),
-            $target = type == "全局变量" ? that.$globaltbody : that.$localVariable,
-            typeId = type == "局部变量" ? $("#workspace").attr("data-id") : "global";
+    getTableData: function ($target) {
+        var result = [];
         $target.find("tr").each((trIndex, trEle) => {
             if (!$(trEle).find("input:first").val() || !$(trEle).find("input:last").val()) return;
-            save.push({
+            result.push({
                 key: $(trEle).find("input:first").val(),
                 desc: $(trEle).find("input:last").val(),
                 value: ""
             })
 
         })
-        that.data[typeId] = save
-        new FileService().writeFile(that.path, JSON.stringify(that.data))
+        return result;
+    },
+
+    saveData: function () {
+        var that = this,
+            type = that.$modal.find(".nav .active a").text();
+        if (type == "全局变量" || type == "局部变量") {
+            var $target = type == "全局变量" ? that.$globaltbody : that.$localVariable,
+                typeId = type == "局部变量" ? $("#workspace").attr("data-id") : "global",
+                result = that.getTableData($target);
+            that.data[typeId] = result;
+            new FileService().writeFile(that.path, JSON.stringify(that.data))
+        }
+        if (type == "自定义变量") {
+            $target = that.$customizeVariable;
+            result = that.getTableData($target);
+            if (!GLOBAL_PROPERTY.BODY) GLOBAL_PROPERTY.BODY = {}
+            GLOBAL_PROPERTY.BODY.customVariable = result;
+        }
+        // console.log(result)
+        // console.log(that.data)
+        // console.log(type, typeId)
+        // $target.find("tr").each((trIndex, trEle) => {
+        //     if (!$(trEle).find("input:first").val() || !$(trEle).find("input:last").val()) return;
+        //     save.push({
+        //         key: $(trEle).find("input:first").val(),
+        //         desc: $(trEle).find("input:last").val(),
+        //         value: ""
+        //     })
+
+        // })
+
     },
 
     bindEvents: function () {
@@ -95,10 +119,15 @@ ChangeGlobal.prototype = {
         });
         that.$modal.on("click" + that.NAME_SPACE, "a", function (e) {
             e.preventDefault()
-            var type = $(this).text(),
-                typeId = type == "局部变量" ? $("#workspace").attr("data-id") : "global",
-                target = type == "局部变量" ? that.$localVariable : that.$globaltbody;
-            typeId && that.setData(target, that.data[typeId])
+            var type = $(this).text();
+            if (type == "局部变量" || type == "局部变量") {
+                var typeId = type == "局部变量" ? $("#workspace").attr("data-id") : "global",
+                    target = type == "局部变量" ? that.$localVariable : that.$globaltbody;
+                typeId && that.setData(target, that.data[typeId])
+            } else {
+                data = GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable;
+                that.setData(that.$customizeVariable, data)
+            }
             $(this).tab('show')
         })
     },

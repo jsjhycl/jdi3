@@ -64,7 +64,6 @@ function setWidth($temp) {
         var result = replaceFormat(content, font);
         if (result.status == 1) {
             var splits = result.html.split(">");
-            console.log(splits);
             for (var i = 0; i < splits.length; i++) {
                 var splitss = splits[i].split("<");
                 splitss[0] = splitss[0].replace(/\s/g, '<span class="space">&nbsp;</span></span>');

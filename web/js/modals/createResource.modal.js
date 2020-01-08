@@ -337,7 +337,7 @@ CreateResource.prototype = {
                             // spare2: eighthCategory, //备用2=>综合
                             // contactId: firstCategory + secondeCategory.split(',')[0] + secondeCategory.split(',')[1] //关联ID => ""
                             category: fourthCategory, //一级目录
-                            subCategory: subCategory, //布局分类
+                            subCategory: type, //布局分类
                             feature: firstCategory, //布局体系
                             fifthCategory: fifthCategory,
                             userGrade: ninthCategory, //用户等级

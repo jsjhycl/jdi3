@@ -375,7 +375,7 @@ SubmitModal.prototype = {
                             category: fourthCategory, //一级目录
                             subCategory: subCategory,//布局分类
                             feature: firstCategory,//布局体系
-                            fifthCategory:fifthCategory,
+                            fifthCategory:fifthCategory,//二级目录
                             userGrade: ninthCategory,//用户等级
                             autoCreate: thridCategory,//自动分表
                             area: sixthCategory, //布局区域=》布局区域

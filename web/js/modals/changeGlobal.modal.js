@@ -65,16 +65,15 @@ ChangeGlobal.prototype = {
     },
     getTableData: function ($target, type) {
         var result = [];
-        $target.find("tr").each((trIndex, trEle) => {
+        $target.find("tr").each(function(){
             var obj = {}
             $(this).find("input").each(function () {
-                var key = $(this).attr("data-name"),
+                var key = $(this).attr("data-save"),
                     value = $(this).val();
                 obj[key] = value
             })
             console.log(obj)
             if (type == "自定义变量") {
-
                 if (obj.key && obj.desc) {
                     result.push(obj)
                 }

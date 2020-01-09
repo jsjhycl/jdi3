@@ -8,8 +8,8 @@ function ChangeGlobal($modal) {
     this.renderTr = function (key, value, isAppend, appendTo) {
         isAppend = !!isAppend;
         var html = `<tr>
-                <td><input type="text" class="form-control" value="${key || ""}" /></td>
-                <td><input type="text" class="form-control" value="${value || ""}" /></td>
+                <td><input type="text" class="form-control" data-save="key" value="${key || ""}" /></td>
+                <td><input type="text" class="form-control" data-save="value" value="${value || ""}" /></td>
                 <td><span class="del">X</span></td>
                 </tr>`
         isAppend && appendTo.append(html);
@@ -18,8 +18,9 @@ function ChangeGlobal($modal) {
     this.renderCustomTr = function (key, desc, value, isAppend, appendTo) {
         isAppend = !!isAppend;
         var html = `<tr>
-                        <td class="text-center"><input type="text" class="form-control" value="${key || ''}" /></td>
-                        <td class="text-center"><input type="text" class="form-control" value="${desc || ''}" /></td>
+                        <td class="text-center"><input type="text" data-save="key" class="form-control" value="${key || ''}" ></td>
+                        <td class="text-center"><input type="text" data-save="desc" class="form-control" value="${desc || ''}"></td>
+                        <td class="text-center"><input type="text" data-save="value" class="form-control" disabled="disabled" value="${value || ''}"></td>
                         <td class="text-center"><span class="del">X</span></td>                
                     </tr>`
         isAppend && appendTo.append(html)
@@ -48,24 +49,46 @@ ChangeGlobal.prototype = {
         that.$customizeVariable.empty()
     },
 
-    setData: function ($target, data) {
+    setData: function ($target, data, type) {
         var that = this;
         if (!DataType.isArray(data)) return;
         var html = "";
         data.forEach(item => {
-            html += that.renderTr(item.key, item.desc)
+            if (type == "自定义变量") {
+                html += that.renderCustomTr(item.key, item.desc, item.valaue)
+            } else {
+
+                html += that.renderTr(item.key, item.desc)
+            }
         });
         $target.html(html);
     },
-    getTableData: function ($target) {
+    getTableData: function ($target, type) {
         var result = [];
-        $target.find("tr").each((trIndex, trEle) => {
-            if (!$(trEle).find("input:first").val() || !$(trEle).find("input:last").val()) return;
-            result.push({
-                key: $(trEle).find("input:first").val(),
-                desc: $(trEle).find("input:last").val(),
-                value: ""
+        $target.find("tr").each(function(){
+            var obj = {}
+            $(this).find("input").each(function () {
+                var key = $(this).attr("data-save"),
+                    value = $(this).val();
+                obj[key] = value
             })
+            console.log(obj)
+            if (type == "自定义变量") {
+                if (obj.key && obj.desc) {
+                    result.push(obj)
+                }
+            } else {
+                if (obj.key && obj.value) {
+                    obj.value = "";
+                    result.push(obj)
+                }
+            }
+            // if (!$(trEle).find("input:first").val() || !$(trEle).find("input:last").val()) return;
+            // result.push({
+            //     key: $(trEle).find("input:first").val(),
+            //     desc: $(trEle).find("input:last").val(),
+            //     value: ""
+            // })
 
         })
         return result;
@@ -77,14 +100,159 @@ ChangeGlobal.prototype = {
         if (type == "全局变量" || type == "局部变量") {
             var $target = type == "全局变量" ? that.$globaltbody : that.$localVariable,
                 typeId = type == "局部变量" ? $("#workspace").attr("data-id") : "global",
-                result = that.getTableData($target);
-            that.data[typeId] = result;
-            new FileService().writeFile(that.path, JSON.stringify(that.data))
+                result = that.getTableData($target, type);
+            console.log(result, that.data)
+            // that.data[typeId] = result;
+            var str = {
+                "global": [{
+                    "key": "xm",
+                    "desc": "姓名",
+                    "value": ""
+                }, {
+                    "key": "ygbm",
+                    "desc": "员工编码",
+                    "value": ""
+                }, {
+                    "key": "bmbm",
+                    "desc": "部门编码",
+                    "value": ""
+                }, {
+                    "key": "gwbm",
+                    "desc": "岗位编码",
+                    "value": ""
+                }, {
+                    "key": "czzg",
+                    "desc": "垂直主管",
+                    "value": ""
+                }, {
+                    "key": "dkxz",
+                    "desc": "对口行政",
+                    "value": ""
+                }, {
+                    "key": "dkkj",
+                    "desc": "对口会计",
+                    "value": ""
+                }],
+                "CAABB00AAA": [{
+                    "key": "userId",
+                    "desc": "用户编号",
+                    "value": ""
+                }, {
+                    "key": "password",
+                    "desc": "密码",
+                    "value": ""
+                }, {
+                    "key": "test",
+                    "desc": "测试",
+                    "value": ""
+                }],
+                "ZZAZZ00ADT": [{
+                    "key": "test",
+                    "desc": "测试",
+                    "value": ""
+                }, {
+                    "key": "test2",
+                    "desc": "测试2",
+                    "value": ""
+                }],
+                "ZZZAB00AAA": [{
+                    "key": "test",
+                    "desc": "测试",
+                    "value": ""
+                }, {
+                    "key": "username",
+                    "desc": "姓名",
+                    "value": ""
+                }],
+                "ZZAZZ00ADQ": [{
+                    "key": "test_1",
+                    "desc": "测试1",
+                    "value": ""
+                }],
+                "ZAZYB00EDF": [{
+                    "key": "params",
+                    "desc": "参数",
+                    "value": ""
+                }],
+                "ZZZYB00ZDM": [{
+                    "key": "AAAA",
+                    "desc": "测试AAAA",
+                    "value": ""
+                }, {
+                    "key": "userId",
+                    "desc": "用户名",
+                    "value": ""
+                }, {
+                    "key": "userAge",
+                    "desc": "年龄",
+                    "value": ""
+                }],
+                "ZAAAB00AGD": [{
+                    "key": "jubu",
+                    "desc": "局部变量",
+                    "value": ""
+                }],
+                "ZAUUB00WDJ": [{
+                    "key": "userId",
+                    "desc": "用户编号",
+                    "value": ""
+                }],
+                "ZZWWZ00FAZ": [{
+                    "key": "dlm",
+                    "desc": "登录名",
+                    "value": ""
+                }],
+                "ZAXXZ00WDL": [{
+                    "key": "dlm",
+                    "desc": "登录名",
+                    "value": ""
+                }],
+                "ZAFUB00TAB": [{
+                    "key": "test",
+                    "desc": "测试",
+                    "value": ""
+                }],
+                "ZZWWZ00WAA": [{
+                    "key": "dlm",
+                    "desc": "登录名",
+                    "value": ""
+                }],
+                "ZZXXZ00XAA": [{
+                    "key": "dlm",
+                    "desc": "登录名",
+                    "value": ""
+                }, {
+                    "key": "dlmm",
+                    "desc": "登录密码",
+                    "value": ""
+                }],
+                "ZZJEC00KAD": [],
+                "ZZFEZ00KAA": [{
+                    "key": "receiver",
+                    "desc": "接收人",
+                    "value": ""
+                }],
+                "ZZWWZ00WAC": [{
+                    "key": "dlm",
+                    "desc": "登录名",
+                    "value": ""
+                }, {
+                    "key": "dlmm",
+                    "desc": "登录密码",
+                    "value": ""
+                }],
+                "JACC00000Z": []
+            }
+            // new FileService().writeFile(that.path, JSON.stringify(that.data))
+            // new FileService().writeFile(that.path, JSON.stringify(str))
         }
         if (type == "自定义变量") {
             $target = that.$customizeVariable;
-            result = that.getTableData($target);
-            if (!GLOBAL_PROPERTY.BODY) GLOBAL_PROPERTY.BODY = {}
+            result = that.getTableData($target, type);
+            if (!GLOBAL_PROPERTY.BODY) {
+                GLOBAL_PROPERTY.BODY = {}
+            }
+            console.log(result)
             GLOBAL_PROPERTY.BODY.customVariable = result;
         }
         // console.log(result)
@@ -126,7 +294,7 @@ ChangeGlobal.prototype = {
                 typeId && that.setData(target, that.data[typeId])
             } else {
                 data = GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable;
-                that.setData(that.$customizeVariable, data)
+                that.setData(that.$customizeVariable, data, "自定义变量")
             }
             $(this).tab('show')
         })

@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
     init();
     inputFile();
     apply();
@@ -14,7 +14,7 @@ function init() {
 }
 
 function inputFile() {
-    $("#inputFile").click(function() {
+    $("#inputFile").click(function () {
         jdi.importExcel().then(o => {
             var editor = textboxio.getActiveEditor();
             editor.content.set(o);
@@ -23,7 +23,7 @@ function inputFile() {
 }
 
 function apply() {
-    $("#apply").click(function() {
+    $("#apply").click(function () {
         var editor = textboxio.getActiveEditor(),
             content = editor.content.get().replace(/\s*<br\s*\/>/g, '<br />'),
             $temp = $('<div><div>' + content + '</div></div>'),
@@ -55,7 +55,7 @@ function apply() {
 }
 
 function setWidth($temp) {
-    $temp.find(".item_contain").each(function(index, element) {
+    $temp.find(".item_contain").each(function (index, element) {
         if (!$(element).text())
             return true;
         // $(element).html($(element).html().replace(/<span class="space">&nbsp;<\/span>/g, " ").replace(/&lt;/g, "<").replace(/&gt;/g, ">"));
@@ -78,14 +78,14 @@ function setWidth($temp) {
 
 function _transform($body) {
     //设置表格样式
-    $body.find("table").each(function() {
+    $body.find("table").each(function () {
         $(this).css({
             "border-collapse": "collapse",
             "table-layout": "fixed"
         });
     });
     //转换元素类型,p,div,li
-    $body.find("td,p,div,li").each(function() {
+    $body.find("td,p,div,li").each(function () {
         var $this = $(this),
             bgColor = $this.css("background-color").toLowerCase().trim(),
             transHtml = "",
@@ -97,6 +97,9 @@ function _transform($body) {
             transHtml = '<input type="checkbox" value="' + ($this.text() || '') + '" style="' + styles + '" />';
         } else if (bgColor.match(/rgb\(255\,\s*255\,\s*0\)/) || bgColor.match("yellow")) { //黄
             transHtml = '<input type="button" value="' + $this.text() + '" style="' + styles + '" />';
+        } else if (bgColor.match(/rgb\(112\,\s*48\,\s*160\)/)) {
+            var textareaStyles = styles += ";resize:none";
+            transHtml = '<textarea data-type="textarea" style="' + textareaStyles + '">' + $this.text() + '</textarea>';
         }
         if (transHtml) {
             $this.css({
@@ -119,7 +122,7 @@ function replaceFormat(content, font) {
     var matchs = content.match(pat);
     if (!matchs || matchs.length <= 0)
         return { status: 0, html: content };
-    matchs.forEach(function(element, index) {
+    matchs.forEach(function (element, index) {
         var ruleStr = element.replace("<%", "").replace("%>", "").replace("，", ","),
             ruleStrSplits = ruleStr.split(","),
             elementHtml = "";

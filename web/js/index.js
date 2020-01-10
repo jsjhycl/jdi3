@@ -779,6 +779,15 @@ function workspace() {
 			ableToolBarBtn();
 		}
 	});
+	//获取元素值并赋值给基本属性中的文本值
+	$workspace.on("input propertychange", '.workspace-node[data-type!="div"],.workspace-node[data-type="div"] :input', function (event) {
+		var $this = $(this),
+			id = $this.attr('id'),
+			$thisVal = $this.val();
+		$this.attr('value', $thisVal);
+		GLOBAL_PROPERTY[id].value = $thisVal;
+		$("#property_value").val($thisVal)
+	});
 
 	//清除样式
 	$workspace.on("click", function (event) {
@@ -972,7 +981,7 @@ function back(html) {
 			"id": number,
 			"name": number
 		}).css({
-			"left": submodulesOffset.left + "px",				
+			"left": submodulesOffset.left + "px",
 			"top": submodulesOffset.top + "px"
 		});
 		$("#workspace").append($node);

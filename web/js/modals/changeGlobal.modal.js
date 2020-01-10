@@ -20,7 +20,7 @@ function ChangeGlobal($modal) {
         var html = `<tr>
                         <td class="text-center"><input type="text" data-save="key" class="form-control" value="${key || ''}" ></td>
                         <td class="text-center"><input type="text" data-save="desc" class="form-control" value="${desc || ''}"></td>
-                        <td class="text-center"><input type="text" data-save="value" class="form-control" disabled="disabled" value="${value || ''}"></td>
+                        <td class="text-center"><input type="text" data-save="value" class="form-control" disabled="disabled" value='${value || ''}'></td>
                         <td class="text-center"><span class="del">X</span></td>                
                     </tr>`
         isAppend && appendTo.append(html)
@@ -55,7 +55,7 @@ ChangeGlobal.prototype = {
         var html = "";
         data.forEach(item => {
             if (type == "自定义变量") {
-                html += that.renderCustomTr(item.key, item.desc, item.valaue)
+                html += that.renderCustomTr(item.key, item.desc, item.value)
             } else {
 
                 html += that.renderTr(item.key, item.desc)
@@ -72,7 +72,6 @@ ChangeGlobal.prototype = {
                     value = $(this).val();
                 obj[key] = value
             })
-            console.log(obj)
             if (type == "自定义变量") {
                 if (obj.key && obj.desc) {
                     result.push(obj)
@@ -101,7 +100,6 @@ ChangeGlobal.prototype = {
             var $target = type == "全局变量" ? that.$globaltbody : that.$localVariable,
                 typeId = type == "局部变量" ? $("#workspace").attr("data-id") : "global",
                 result = that.getTableData($target, type);
-            console.log(result, that.data)
             that.data[typeId] = result;
            
             new FileService().writeFile(that.path, JSON.stringify(that.data))
@@ -113,12 +111,9 @@ ChangeGlobal.prototype = {
             if (!GLOBAL_PROPERTY.BODY) {
                 GLOBAL_PROPERTY.BODY = {}
             }
-            console.log(result)
             GLOBAL_PROPERTY.BODY.customVariable = result;
         }
-        // console.log(result)
-        // console.log(that.data)
-        // console.log(type, typeId)
+        
         // $target.find("tr").each((trIndex, trEle) => {
         //     if (!$(trEle).find("input:first").val() || !$(trEle).find("input:last").val()) return;
         //     save.push({
@@ -143,7 +138,6 @@ ChangeGlobal.prototype = {
             that.renderCustomTr("", "", "", true, that.$customizeVariable)
         })
         that.$modal.on('click' + that.NAME_SPACE, ".del", function () {
-            console.log(123)
             $(this).parents('tr').remove();
         });
         that.$modal.on("click" + that.NAME_SPACE, "a", function (e) {

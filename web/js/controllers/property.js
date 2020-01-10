@@ -421,6 +421,7 @@ Property.prototype = {
             GLOBAL_PROPERTY[id]["cname"] = id;
             GLOBAL_PROPERTY[id]["value"] = $("#" + id).val()
             GLOBAL_PROPERTY[id]["visibility"] = true;
+            GLOBAL_PROPERTY[id]["checkUp"] = false;
             GLOBAL_PROPERTY[id]["disabled"] = false;
             GLOBAL_PROPERTY[id]["readonly"] = false;
             GLOBAL_PROPERTY[id]["controlType"] = "文本输入框";

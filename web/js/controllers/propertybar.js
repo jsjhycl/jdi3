@@ -216,7 +216,7 @@ Propertybar.prototype = {
         //忽略检查
         that.$container.on("click" + that.NAME_SPACE, "#property_checkUp", function (event) {
             var isCheck = $(this).prop('checked');
-            if (isCheck) $('.focus').attr('nocheck-type', isCheck);
+            if (isCheck) $('.focus').attr('data-nocheck', isCheck);
         })
     }
 };

@@ -130,11 +130,23 @@ function NewEventsModal($modal, $elemts) {
                     ${ that.renderLinkHTMLTable(event.subscribe.linkHtml)}
                     ${ that.renderExecuteFn(event.subscribe.executeFn)}
                     ${ that.renderImportDb(event.subscribe.importDb)}
+                        ${ that.renderSaveHTML(event.subscribe.saveHTML)}
+                        ${ that.renderKeySave(event.subscribe.keySave)}
+                        ${ that.renderNextProcess(event.subscribe.nextProcess)}
+                        ${ that.renderNotify(event.subscribe.notify)}
+                        ${ that.renderTimeQuery(event.subscribe.timeQuery)}
+                        ${ that.renderChangePropertyTable(event.subscribe.property)}
+                        ${ that.renderCopySendTable(event.subscribe.copySend)}
+                        ${ that.renderDeleteTable(event.subscribe.deleteRow)}
+                        ${ that.renderLinkHTMLTable(event.subscribe.linkHtml)}
+                        ${ that.renderExecuteFn(event.subscribe.executeFn)}
+                        ${ that.renderImportDb(event.subscribe.importDb)}
+                        ${ that.renderExtendCol(event.subscribe.extendCol)}//zww
                     </td>
                     </tr>`;
-                    // ${ that.renderPropertyData(event.subscribe.propertyData)}
-                    // ${that.renderPropertyQuery(event.subscribe.propertyQuery,event.subscribe.propertyData)}
-                        // ${ that.renderPropertyData(event.subscribe.propertyData)}
+        // ${ that.renderPropertyData(event.subscribe.propertyData)}
+        // ${that.renderPropertyQuery(event.subscribe.propertyQuery,event.subscribe.propertyData)}
+        // ${ that.renderPropertyData(event.subscribe.propertyData)}
 
         return str;
     }
@@ -433,6 +445,57 @@ function NewEventsModal($modal, $elemts) {
             </div>`
         return str;
     }
+
+    //zww
+    this.renderExtendCol = function (extendCol) {
+        var that = this,
+            str = `<div class="conditoion extendCol"  ${extendCol ? "" : 'style="display:none"'}>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-center">自定义变量</th>
+                    <th class="text-center">开始</th>
+                    <th class="text-center">结束</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${that.renderExtendColTr(extendCol)}
+            </tbody>
+        </table>
+    </div>`
+        return str;
+    }
+    //zww
+    this.renderExtendColTr = function (extendCol = {}) {
+        extendCol = extendCol || {}
+        let that = this,
+            str = '';
+        str += `<tr class="importDbTr">
+            <td>
+                ${that.renderExtentColSelect(extendCol.selectText)}
+            </td>
+            <td>
+                <input type="text" class="form-control" data-save="startText" value="${extendCol.startText || ""}" >
+            </td>
+            <td>
+                <input type="text" class="form-control" data-save="endText" value="${extendCol.endText || ""}" >
+            </td>
+        </tr>`
+        return str;
+    }
+    //zww
+    this.renderExtentColSelect = function (selectText) {
+        var str = `<select class="form-control chosen" data-save="selectText"><option value="">请选择自定义变量</option>`,
+            selectArr = GLOBAL_PROPERTY.BODY.customVariable;
+
+
+        selectArr.forEach(item => {
+            var selectVal = `${item.desc}(${item.key})`;
+            str += `<option value="${selectVal}" ${selectVal == selectText ? "selected" : ""}> ${selectVal}</option>`
+        })
+        str += "</select>"
+        return str;
+    }
     // this.renderImportExcel = function (importArea) {
     //     let that = this,
     //         str = "";
@@ -507,6 +570,8 @@ function NewEventsModal($modal, $elemts) {
         if (subscribe.propertyQuery) checkArr.push("propertyQuery");
         if (subscribe.propertyHandle) checkArr.push("propertyHandle");
         if (subscribe.propertyRender) checkArr.push("propertyRender");
+        if (subscribe.extendCol) checkArr.push("extendCol"); //zww
+
         subscribe.query && subscribe.query.forEach(item => {
             checkArr.push(item)
         })
@@ -945,7 +1010,7 @@ function NewEventsModal($modal, $elemts) {
             this.$modal.find(selector).addClass("applied");
         };
     }
-
+    //获取选择的值
     this.getTriggerConditions = function ($triggerConditionTr) {
         let conditions = [];
         $triggerConditionTr.each(function () {
@@ -1162,6 +1227,16 @@ function NewEventsModal($modal, $elemts) {
     }
 
 
+    //zww
+    this.getExtendCol = function ($tr) {
+        let result = {};
+        $tr.each(function () {
+            result.startText = $(this).find('[data-save="startText"]').val()
+            result.endText = $(this).find('[data-save="endText"]').val()
+            result.selectText = $(this).find('[data-save="selectText"]').val()
+        })
+        return result;
+    }
 }
 NewEventsModal.prototype = {
     initData: async function (data) {
@@ -1280,7 +1355,8 @@ NewEventsModal.prototype = {
                 propertyQuery = null,
                 propertyHandle = null,
                 propertyRender = null,
-                importDb = null;
+                importDb = null,
+                extendCol = null; //zww;
             if (that.judgeCheckMehods("propertyData", $(this).find(".triggerMethods:checked"))) {
                 propertyData = that.getPropertyData($(this).find('.propertyDataTr'))
                 GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
@@ -1290,10 +1366,11 @@ NewEventsModal.prototype = {
                 })
             }
             if (that.judgeCheckMehods("propertyQuery", $(this).find(".triggerMethods:checked"))) {
-               propertyQuery = new newEventsProperty().getPropertyQuery($(this).find(".propertyQueryTr"))
+                propertyQuery = new newEventsProperty().getPropertyQuery($(this).find(".propertyQueryTr"))
+
 
             }
-            if (that.judgeCheckMehods("propertyHandle", $(this).find(".triggerMethods:checked"))){
+            if (that.judgeCheckMehods("propertyHandle", $(this).find(".triggerMethods:checked"))) {
                 propertyHandle = new newEventsProperty().getPropertyHandle($(this).find(".propertyHandleTr"))
             }
             if (that.judgeCheckMehods("commonQuery", $(this).find(".triggerMethods:checked"))) {
@@ -1322,6 +1399,9 @@ NewEventsModal.prototype = {
             if (that.judgeCheckMehods("linkHtml", $(this).find(".triggerMethods:checked"))) {
                 linkHtml = that.getLinkHtml($(this).find('.linkHtmlTr'))
             }
+            if (that.judgeCheckMehods("extendCol", $(this).find(".triggerMethods:checked"))) {
+                extendCol = that.getExtendCol($(this).find('.extendCol'))
+            } //zww
             if (that.judgeCheckMehods("importDb", $(this).find(".triggerMethods:checked"))) {
                 importDb = that.getImportDb($(this).find(".importDbTr"))
             }
@@ -1386,10 +1466,13 @@ NewEventsModal.prototype = {
                         importExcel: importExcel,
                         importDb: importDb,
                         keySave: keySave,
+
                         propertyData: propertyData,
                         propertyQuery: propertyQuery,
                         propertyHandle: propertyHandle,
-                        propertyRender: propertyRender
+                        propertyRender: propertyRender,
+                        extendCol: extendCol //zww
+
                     }
                 })
             }
@@ -1484,9 +1567,11 @@ NewEventsModal.prototype = {
                 }
             }
             $this.parents('tr').attr('data-check', JSON.stringify(checkArr));
+
             let arr = ["save", "upload", "login", "checkAll", "cancelAll", "changeProperty", "copySend", "notify", "saveHTML",
-                "linkHtml", "nextProcess", "executeFn", "importExcel", "importDb", "keySave", "deleteRow", "propertyData", "propertyQuery", "propertyHandle", "propertyRender"
+                "linkHtml", "nextProcess", "executeFn", "importExcel", "importDb", "keySave", "deleteRow", "propertyData", "propertyQuery", "propertyHandle", "propertyRender", "extendCol"
             ];
+
             if (!arr.includes(value)) {
                 return;
             }
@@ -1600,7 +1685,6 @@ NewEventsModal.prototype = {
                 val = isWrap ? "{" + id + "}" : $(this).data("id"),
                 isExist = originVal.isExist(null, val),
                 isAdd = !!$target.data('apply');
-            // console.log(id)
             if (isInsert) {
                 Common.insertAfterText($target.get(0), val);
             } else if ($(this).hasClass("applied") && isExist) {

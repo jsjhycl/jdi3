@@ -123,6 +123,7 @@ Loader.prototype = {
                 that.JS_PATH + "/modals/openTemplate.modal.js",
                 that.JS_PATH + "/modals/openResurce.modal.js",
                 that.JS_PATH + "/modals/newEvents.modal.js",
+                that.JS_PATH + "/modals/newEventsProperty.js",
                 that.JS_PATH + "/modals/eventsGuide.js",
                 that.JS_PATH + "/modals/openConfig.modal.js",
                 that.JS_PATH + "/modals/changeRouter.modal.js",

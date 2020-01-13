@@ -116,21 +116,129 @@ function NewEventsModal($modal, $elemts) {
                         ${that.renderTriggerMethods("checkbox", that.METHODS, event.subscribe, event.publish)}
                     </td>
                     <td>
-                        ${ that.renderSaveHTML(event.subscribe.saveHTML)}
-                        ${ that.renderKeySave(event.subscribe.keySave)}
-                        ${ that.renderNextProcess(event.subscribe.nextProcess)}
-                        ${ that.renderNotify(event.subscribe.notify)}
-                        ${ that.renderTimeQuery(event.subscribe.timeQuery)}
-                        ${ that.renderChangePropertyTable(event.subscribe.property)}
-                        ${ that.renderCopySendTable(event.subscribe.copySend)}
-                        ${ that.renderDeleteTable(event.subscribe.deleteRow)}
-                        ${ that.renderLinkHTMLTable(event.subscribe.linkHtml)}
-                        ${ that.renderExecuteFn(event.subscribe.executeFn)}
-                        ${ that.renderImportDb(event.subscribe.importDb)}
+                    ${new newEventsProperty().renderPropertyQueryData(event.subscribe.propertyData)}
+                    ${new newEventsProperty().renderPropertyQuery(event.subscribe.propertyQuery)}
+                    ${new newEventsProperty().renderPropertyHandle(event.subscribe.propertyHandle)}
+                    ${ that.renderSaveHTML(event.subscribe.saveHTML)}
+                    ${ that.renderKeySave(event.subscribe.keySave)}
+                    ${ that.renderNextProcess(event.subscribe.nextProcess)}
+                    ${ that.renderNotify(event.subscribe.notify)}
+                    ${ that.renderTimeQuery(event.subscribe.timeQuery)}
+                    ${ that.renderChangePropertyTable(event.subscribe.property)}
+                    ${ that.renderCopySendTable(event.subscribe.copySend)}
+                    ${ that.renderDeleteTable(event.subscribe.deleteRow)}
+                    ${ that.renderLinkHTMLTable(event.subscribe.linkHtml)}
+                    ${ that.renderExecuteFn(event.subscribe.executeFn)}
+                    ${ that.renderImportDb(event.subscribe.importDb)}
                     </td>
-                 </tr>`;
+                    </tr>`;
+                    // ${ that.renderPropertyData(event.subscribe.propertyData)}
+                    // ${that.renderPropertyQuery(event.subscribe.propertyQuery,event.subscribe.propertyData)}
+                        // ${ that.renderPropertyData(event.subscribe.propertyData)}
+
         return str;
     }
+    // this.renderPropertyQuery = function (propertyQuery, propertyData) {
+    //     var that = this,
+    //         str = `<div class="conditoion propertyQuery" ${propertyQuery ? "" : 'style="display:none"'}>
+    //                     <table class="table table-bordered">
+    //                         <thead>
+    //                             <tr>
+    //                                 <th class="text-center" style="width:500px">请选择字段</th>
+    //                             </tr>
+    //                         </thead>
+    //                         <tbody>
+    //                             <tr>
+    //                                 <td class="propertyQueryFields">${that.renderPropertyQueryFields(propertyQuery, propertyData)}</td>
+    //                             </tr>
+    //                         </tbody>
+    //                     </table>
+    //                 </div>`
+    //     return str;
+    // }
+    // this.renderPropertyQueryFields = function (propertyQuery = {}, propertyData = {}) {
+    //     if (!propertyQuery || !propertyData) return "";
+    //     var that = this;
+    //     var dbName = propertyData.query ? propertyData.query.dbName : "",
+    //         tableName = propertyData.query ? propertyData.query.table : "",
+    //         selectfields = propertyQuery.fields,
+    //         str = that.renderCustomfields(dbName, tableName, selectfields);
+    //     return str;
+    // }
+    // this.renderPropertyData = function (propertyData) {
+    //     var that = this,
+    //         str = `<div class="conditoion propertyData" ${propertyData ? "" : 'style="display:none"'}>
+    //                     <table class="table table-bordered">
+    //                         <thead>
+    //                             <tr>
+    //                                 <th class="text-center">选择自定义变量</th>
+    //                                 <th class="text-center">选择数据库</th>
+    //                                 <th class="text-center">选择数据表</th>
+    //                                 <th class="text-center">查询条件</th>
+    //                                 <th class="text-center" style="width:600px">选择字段</th>
+    //                             </tr>
+    //                         </thead>
+    //                         <tbody>
+    //                            ${that.renderPropertyDataTr(propertyData)}
+    //                         </tbody>
+    //                     </table>
+    //                </div>`;
+    //     return str;
+    // }
+    // this.renderPropertyDataTr = function (propertyData = {}) {
+    //     var that = this,
+    //         str = "",
+    //         propertyData = propertyData ? propertyData : {},
+    //         dbName = propertyData.query ? propertyData.query.dbName : "",
+    //         tableName = propertyData.query ? propertyData.query.table : "",
+    //         conditions = propertyData.query ? propertyData.query.conditions : [],
+    //         fields = propertyData.query ? propertyData.query.fields : [];
+    //     if (!DataType.isObject(propertyData)) {
+    //         return alert("属性查询配置错误!")
+    //     }
+    //     str += `<tr class="tr propertyDataTr">
+    //                 <td>${that.renderCustomVariable(propertyData.variable)}</td>
+    //                 <td>${ that.renderCopySendSelect('dbName', dbName, null, null, "请选择数据库", dbName)}</td>
+    //                 <td>${ that.renderCopySendSelect('table', dbName, tableName, null, "请选择抄送表", tableName)}</td>
+    //                 <td> ${ that.renderCopySendConditionTable(dbName, tableName, conditions)}</td>
+    //                 <td class="checkboxField">${that.renderCustomfields(dbName,tableName,fields)}</td>
+    //             </tr>`
+    //     return str;
+    // }
+
+    // this.renderCustomVariable = function (selected) {
+    //     var that = this,
+    //         data = GLOBAL_PROPERTY.BODY ? GLOBAL_PROPERTY.BODY.customVariable : [];
+    //     if (!Array.isArray(data)) return alert("获取客户自定义变量失败");
+    //     var str = `<select class="form-control chosen" data-save="variable" data-change="variable"><option value="">请选择自定义变量</option>`
+    //     data.forEach(item => {
+    //         str += `<option value="${item.key}" ${selected==item.key?"selected":""}>${item.desc}(${item.key})</option>`
+    //     })
+    //     str += "</selected>"
+    //     return str;
+    // }
+    // this.renderCustomfields = function (dbName, tableName, selectFields) {
+    //     var that = this;
+    //     if (!Array.isArray(selectFields)) {
+    //         return alert("获取查询字段失败!")
+    //     }
+    //     var dbName = dbName,
+    //         tableName = tableName,
+    //         selectFields = selectFields,
+    //         fields = that.getCopySendSelectData("field", dbName, tableName, "");
+    //     if (!Array.isArray(fields)) {
+    //         return alert("获取查询字段失败!")
+    //     }
+    //     var str = "";
+    //     fields.forEach(function (item) {
+    //         str += `<label title="${item.value}" class="checkbox-inline">
+    //                     <input type="checkbox" name="${item.name}" ${selectFields.includes(item.value)?"checked":""} value="${item.value}">${item.name}(${item.value})
+    //                 </label>`
+    //     });
+    //     return str;
+    // }
+
+
     this.renderTimeQuery = function (timeQuery) {
         let that = this,
             queryTable = "",
@@ -342,24 +450,24 @@ function NewEventsModal($modal, $elemts) {
                 <input type="text" class="form-control" data-wrap="true" style="display:inline-block;margin-left:10px;width:500px" value='${key || ""}' data-category="linkHtml" data-save="keySave">
             </div>`
         return str;
-    },
-        this.renderTypeOfValue = function (typekey, type, selected) {
-            let defaultType = {
+    }
+    this.renderTypeOfValue = function (typekey, type, selected) {
+        let defaultType = {
                 name: type,
                 value: ""
             },
-                str = `<select class="form-control" data-save = "${typekey}" data-change-operator="${typekey}">`,
-                options = [defaultType, ...ConditionsHelper.typeConfig];
-            options.forEach(item => {
-                str += `<option value="${item.value}" ${selected == item.value ? "selected" : ""}>${item.name}</option>`
-            })
-            return `${str}</select>`
-        }
+            str = `<select class="form-control" data-save = "${typekey}" data-change-operator="${typekey}">`,
+            options = [defaultType, ...ConditionsHelper.typeConfig];
+        options.forEach(item => {
+            str += `<option value="${item.value}" ${selected == item.value ? "selected" : ""}>${item.name}</option>`
+        })
+        return `${str}</select>`
+    }
     this.renderCopySendConfigTypeOfValue = function (typekey, type, selected) {
         let defaultType = {
-            name: "请选择操作符",
-            value: ""
-        },
+                name: "请选择操作符",
+                value: ""
+            },
             str = `<select class="form-control" data-save = "${typekey}">`,
             options = [defaultType, ...ConditionsHelper.getOperators(type)];
         options.forEach(item => {
@@ -395,6 +503,10 @@ function NewEventsModal($modal, $elemts) {
         if (subscribe.importExcel) checkArr.push("importExcel");
         if (subscribe.importDb) checkArr.push("importDb");
         if (subscribe.keySave) checkArr.push("keySave");
+        if (subscribe.propertyData) checkArr.push("propertyData");
+        if (subscribe.propertyQuery) checkArr.push("propertyQuery");
+        if (subscribe.propertyHandle) checkArr.push("propertyHandle");
+        if (subscribe.propertyRender) checkArr.push("propertyRender");
         subscribe.query && subscribe.query.forEach(item => {
             checkArr.push(item)
         })
@@ -551,7 +663,6 @@ function NewEventsModal($modal, $elemts) {
                 <td>
                     ${ that.renderCopySendConditionTable(item.dbName, item.table, item.conditions)}
                 </td>
-                        </td>
             </tr>`
         })
         return str;
@@ -662,7 +773,6 @@ function NewEventsModal($modal, $elemts) {
         return `${str}</select>`
     }
     this.renderCopySendSelect = function (type, dbName, table, field, defalutOption, selected) {
-
         let that = this,
             data = that.getCopySendSelectData(type, dbName, table, field),
             str = `<select class="form-control chosen" data-save="${type}" data-change="${type}"><option value="">${defalutOption}</option>`;
@@ -1027,6 +1137,31 @@ function NewEventsModal($modal, $elemts) {
             width: "100%",
         })
     }
+    //获取属性数据
+    this.getPropertyData = function ($tr) {
+        var that = this,
+            result = {};
+        $tr.each(function () {
+            result.variable = $(this).find('[data-save="variable"]').val(),
+                result.query = {},
+                result.query.dbName = $(this).find('[data-save="dbName"]').val(),
+                result.query.table = $(this).find('[data-save="table"]').val(),
+                result.query.conditions = that.getCopySendCondition($(this).find(".copySendCondition")),
+                result.query.fields = that.getCustomPropertyFields($(this).find(".checkboxField"));
+
+        })
+        return result;
+    }
+    //获取查询的属性
+    this.getCustomPropertyFields = function ($target) {
+        var result = [];
+        $target.find("input:checked").each(function () {
+            result.push($(this).val())
+        })
+        return result;
+    }
+
+
 }
 NewEventsModal.prototype = {
     initData: async function (data) {
@@ -1059,7 +1194,7 @@ NewEventsModal.prototype = {
             str += that.renderEvents(event)
         })
         that.$eventTbody.append(str);
-        that.judgeCheck();//判断是否选中
+        that.judgeCheck(); //判断是否选中
         that.bindChosen();
         // $(".moveTable").colResizable({
         //     liveDrag: true,
@@ -1070,6 +1205,7 @@ NewEventsModal.prototype = {
         //     // draggingClass:"dragging", 
         //     // resizeMode:'fit'
         // });
+        new newEventsProperty().bindEvents()
 
     },
     judgeCheck: function () {
@@ -1140,8 +1276,26 @@ NewEventsModal.prototype = {
                 nextProcess = null,
                 importExcel = false,
                 keySave = null,
+                propertyData = null,
+                propertyQuery = null,
+                propertyHandle = null,
+                propertyRender = null,
                 importDb = null;
+            if (that.judgeCheckMehods("propertyData", $(this).find(".triggerMethods:checked"))) {
+                propertyData = that.getPropertyData($(this).find('.propertyDataTr'))
+                GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
+                    if (item.key == propertyData.variable) {
+                        GLOBAL_PROPERTY.BODY.customVariable[index].propertyData = JSON.stringify(propertyData)
+                    }
+                })
+            }
+            if (that.judgeCheckMehods("propertyQuery", $(this).find(".triggerMethods:checked"))) {
+               propertyQuery = new newEventsProperty().getPropertyQuery($(this).find(".propertyQueryTr"))
 
+            }
+            if (that.judgeCheckMehods("propertyHandle", $(this).find(".triggerMethods:checked"))){
+                propertyHandle = new newEventsProperty().getPropertyHandle($(this).find(".propertyHandleTr"))
+            }
             if (that.judgeCheckMehods("commonQuery", $(this).find(".triggerMethods:checked"))) {
                 query = []
                 query.push("commonQuery")
@@ -1231,7 +1385,11 @@ NewEventsModal.prototype = {
                         executeFn: executeFn,
                         importExcel: importExcel,
                         importDb: importDb,
-                        keySave: keySave
+                        keySave: keySave,
+                        propertyData: propertyData,
+                        propertyQuery: propertyQuery,
+                        propertyHandle: propertyHandle,
+                        propertyRender: propertyRender
                     }
                 })
             }
@@ -1326,10 +1484,13 @@ NewEventsModal.prototype = {
                 }
             }
             $this.parents('tr').attr('data-check', JSON.stringify(checkArr));
-            let arr = ["save", "upload", "login", "checkAll", "cancelAll", "changeProperty", "copySend", "notify", "saveHTML", "linkHtml", "nextProcess", "executeFn", "importExcel", "importDb", "keySave", "deleteRow"];
+            let arr = ["save", "upload", "login", "checkAll", "cancelAll", "changeProperty", "copySend", "notify", "saveHTML",
+                "linkHtml", "nextProcess", "executeFn", "importExcel", "importDb", "keySave", "deleteRow", "propertyData", "propertyQuery", "propertyHandle", "propertyRender"
+            ];
             if (!arr.includes(value)) {
                 return;
             }
+
             $target = $this.parents("tr").find(`.${value}`);
             check ? $target.show() : $target.hide()
         })
@@ -1344,8 +1505,17 @@ NewEventsModal.prototype = {
         that.$modal.on("change" + that.NAME_SPACE, "[data-change='table']", function () {
             let $field = $(this).parents("tr").eq(0).find('[data-change="field"]'),
                 tableName = $(this).val(),
-                dbName = $($(this).parents("tr")[0]).find('[data-change="dbName"]').val(),
-                $html = that.renderCopySendSelect("field", dbName, tableName, null, "请选择抄送字段", null);
+                dbName = $($(this).parents("tr")[0]).find('[data-change="dbName"]').val();
+
+            var $html = that.renderCopySendSelect("field", dbName, tableName, null, "请选择抄送字段", null);
+            // if ($(this).parents("div").attr("class") == "conditoion propertyData") {
+            //     var $str = that.renderCustomfields(dbName, tableName, []),
+            //         $checkboxField = $(this).parents("tr").eq(0).find('.checkboxField'),
+            //         $propertyQueryFields = $(".propertyQueryFields");
+            //     $propertyQueryFields.empty().append($str)
+            //     $checkboxField.empty().append($str)
+            // }
+
             $field.parent("td").empty().append($html)
             that.bindChosen()
 
@@ -1456,10 +1626,10 @@ NewEventsModal.prototype = {
             $linkbody.empty()
             if (type == "nextProcess") {
                 var data = [{
-                    key: "isNext",
-                    desc: "下一流程",
-                    value: ""
-                }],
+                        key: "isNext",
+                        desc: "下一流程",
+                        value: ""
+                    }],
                     html = that.renderLinkHTMLParmas(data)
                 $linkbody.append(html)
             }

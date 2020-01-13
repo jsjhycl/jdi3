@@ -15,12 +15,15 @@ function ChangeGlobal($modal) {
         isAppend && appendTo.append(html);
         return html;
     }
-    this.renderCustomTr = function (key, desc, value, isAppend, appendTo) {
+    this.renderCustomTr = function (key, desc, propertyData, propertyQuery, propertyHandle, propertyRender, isAppend, appendTo) {
         isAppend = !!isAppend;
         var html = `<tr>
                         <td class="text-center"><input type="text" data-save="key" class="form-control" value="${key || ''}" ></td>
                         <td class="text-center"><input type="text" data-save="desc" class="form-control" value="${desc || ''}"></td>
-                        <td class="text-center"><input type="text" data-save="value" class="form-control" disabled="disabled" value='${value || ''}'></td>
+                        <td class="text-center"><input type="text" data-save="propertyData" class="form-control" disabled="disabled" value='${propertyData || ''}'></td>
+                        <td class="text-center"><input type="text" data-save="propertyQuery" class="form-control" disabled="disabled" value='${propertyQuery || ''}'></td>
+                        <td class="text-center"><input type="text" data-save="propertyHandle" class="form-control" disabled="disabled" value='${propertyHandle || ''}'></td>
+                        <td class="text-center"><input type="text" data-save="propertyRender" class="form-control" disabled="disabled" value='${propertyRender || ''}'></td>
                         <td class="text-center"><span class="del">X</span></td>                
                     </tr>`
         isAppend && appendTo.append(html)
@@ -55,7 +58,7 @@ ChangeGlobal.prototype = {
         var html = "";
         data.forEach(item => {
             if (type == "自定义变量") {
-                html += that.renderCustomTr(item.key, item.desc, item.value)
+                html += that.renderCustomTr(item.key, item.desc, item.propertyData, item.propertyQuery, item.propertyHandle, item.propertyRender)
             } else {
 
                 html += that.renderTr(item.key, item.desc)
@@ -65,7 +68,7 @@ ChangeGlobal.prototype = {
     },
     getTableData: function ($target, type) {
         var result = [];
-        $target.find("tr").each(function(){
+        $target.find("tr").each(function () {
             var obj = {}
             $(this).find("input").each(function () {
                 var key = $(this).attr("data-save"),
@@ -101,7 +104,7 @@ ChangeGlobal.prototype = {
                 typeId = type == "局部变量" ? $("#workspace").attr("data-id") : "global",
                 result = that.getTableData($target, type);
             that.data[typeId] = result;
-           
+
             new FileService().writeFile(that.path, JSON.stringify(that.data))
             // new FileService().writeFile(that.path, JSON.stringify(str))
         }
@@ -113,7 +116,7 @@ ChangeGlobal.prototype = {
             }
             GLOBAL_PROPERTY.BODY.customVariable = result;
         }
-        
+
         // $target.find("tr").each((trIndex, trEle) => {
         //     if (!$(trEle).find("input:first").val() || !$(trEle).find("input:last").val()) return;
         //     save.push({
@@ -135,7 +138,7 @@ ChangeGlobal.prototype = {
             that.renderTr('', '', true, that.$localVariable);
         });
         that.$modal.on('click' + that.NAME_SPACE, ".customizeadd", function () {
-            that.renderCustomTr("", "", "", true, that.$customizeVariable)
+            that.renderCustomTr("", "", "", "", "", "", true, that.$customizeVariable)
         })
         that.$modal.on('click' + that.NAME_SPACE, ".del", function () {
             $(this).parents('tr').remove();

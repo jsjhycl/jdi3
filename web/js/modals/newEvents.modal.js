@@ -368,7 +368,7 @@ function NewEventsModal($modal, $elemts) {
     this.renderExtentColSelect = function (selectText) {
         var str = `<select class="form-control chosen" data-save="selectText"><option value="">请选择自定义变量</option>`,
             selectArr = GLOBAL_PROPERTY.BODY.customVariable;
-        console.log(selectArr, "selectArr");
+
 
         selectArr.forEach(item => {
             var selectVal = `${item.desc}(${item.key})`;
@@ -449,7 +449,6 @@ function NewEventsModal($modal, $elemts) {
         if (subscribe.keySave) checkArr.push("keySave");
         if (subscribe.extendCol) checkArr.push("extendCol");//zww
 
-        console.log(checkArr)
         subscribe.query && subscribe.query.forEach(item => {
             checkArr.push(item)
         })
@@ -1500,7 +1499,6 @@ NewEventsModal.prototype = {
                 val = isWrap ? "{" + id + "}" : $(this).data("id"),
                 isExist = originVal.isExist(null, val),
                 isAdd = !!$target.data('apply');
-            // console.log(id)
             if (isInsert) {
                 Common.insertAfterText($target.get(0), val);
             } else if ($(this).hasClass("applied") && isExist) {

@@ -1,6 +1,6 @@
 {
     "name": "jdi客户端",
-    "version": "1.1.25",
+    "version": "1.1.26",
     "list": [{
         "version": "1.1.0",
         "files": [],
@@ -99,11 +99,15 @@
         "detail": ["修改布局编号的问题统一问题", "更改变量配置名称", "优化事件串行执行(全局函数)"]
     }, {
         "version": "1.1.24",
-        "files": ["web/designer/index.html", "web/js/editor.js", "web/js/modals/archivePath.modal.js", "web/js/modals/changeGlobal.modal.js","web/js/modals/submit.modal.js","web/lib/buildTree/buildTree.js","web/lib/jdi-dbQuerier/jdi-dbQuerier.js", "versions.json"],
+        "files": ["web/designer/index.html", "web/js/editor.js", "web/js/modals/archivePath.modal.js", "web/js/modals/changeGlobal.modal.js", "web/js/modals/submit.modal.js", "web/lib/buildTree/buildTree.js", "web/lib/jdi-dbQuerier/jdi-dbQuerier.js", "versions.json"],
         "detail": ["树结构bug", "子模块样式", "修改表格被删除后导致的显示问题", "变量显示问题"]
     }, {
         "version": "1.1.25",
         "files": ["web/js/modals/createResource.modal.js", "versions.json"],
         "detail": ["新建布局问题的修改"]
+    }, {
+        "version": "1.1.26",
+        "files": ["web/designer/index.html", "web/js/controllers/accessControl.js", "web/js/controllers/contextMenu.js", "web/js/controllers/property.js", "web/js/controllers/propertybar.js", "web/js/editor.js", "web/js/helpers/conditionsHelper.js", "web/js/index.js", "web/js/init.js", "web/js/modals/changeGlobal.modal.js", "web/js/modals/deleteDb.modal.js", "web/js/modals/newEvents.modal.js", "web/js/utils/buildTableJson.js", "web/js/modals/newEventsProperty.js", "versions.json"],
+        "detail": ["签名控件更改", "表注解修改为表中文名", "注销闲置或未实现代码及修改复制属性文本值", "其他bug修改"]
     }]
 }

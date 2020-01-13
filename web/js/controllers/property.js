@@ -47,9 +47,6 @@ function Property() {
                         if ((key + ckey) == "dbdbName" || (key + ckey) == "dbtable" || (key + ckey) == "dbfield" || (key + ckey) == "dbfieldSplit") {
                             this.setOptions($property, ckey, value)
                         }
-
-
-
                         if ($property.length > 0) { //如果能获取到元素
                             if ($property.is(":text") || $property.is("textarea") || $property.is("select")) { //属性配置元素为文本框或则下拉框
                                 $property.val((DataType.isObject(cvalue) || Array.isArray(cvalue)) ? JSON.stringify(cvalue) : cvalue); //判断这个值是不是是不是对象或则数组如果是转换成字符串存到输入框中否则直接存进去
@@ -62,7 +59,7 @@ function Property() {
                     }
                 }
             }
-        }!isArrow && $elem.addClass("focus"); //给这个元素添加类名focus
+        } !isArrow && $elem.addClass("focus"); //给这个元素添加类名focus
     };
     //生成下拉列表
     this.setOptions = function ($select, ckey, data) {
@@ -184,6 +181,8 @@ Property.prototype = {
         //修改元素属性（特殊处理）
         if (!isBody) {
             if (pid === "property_value") { //pid等于property_value
+                GLOBAL_PROPERTY[id].value = pvalue;
+                $control.val(pvalue);
                 $control.attr("value", pvalue); //则在$control修改value值
             }
             if (pid === "property_name") { //pid等于property_name
@@ -309,7 +308,7 @@ Property.prototype = {
                                     desc: desc,
                                     type: "String",
                                     fieldSplit: fieldSplit,
-                                    sliceTarget :sliceTarget,
+                                    sliceTarget: sliceTarget,
                                     fieldSlice: fieldSlice
                                 }); //向fields中添加一条对象
                             }
@@ -422,6 +421,7 @@ Property.prototype = {
             GLOBAL_PROPERTY[id]["cname"] = id;
             GLOBAL_PROPERTY[id]["value"] = $("#" + id).val()
             GLOBAL_PROPERTY[id]["visibility"] = true;
+            GLOBAL_PROPERTY[id]["checkUp"] = false;
             GLOBAL_PROPERTY[id]["disabled"] = false;
             GLOBAL_PROPERTY[id]["readonly"] = false;
             GLOBAL_PROPERTY[id]["controlType"] = "文本输入框";

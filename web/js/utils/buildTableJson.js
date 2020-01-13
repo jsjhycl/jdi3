@@ -137,8 +137,8 @@ BuildTableJson.prototype = {
                     "id": "表名",
                     "cname": "表名"
                 }, {
-                    "id": "表注解",
-                    "cname": "表注解"
+                    "id": "表中文名",
+                    "cname": "表中文名"
                 }]
             }
         }

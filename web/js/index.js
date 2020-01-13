@@ -614,8 +614,9 @@ function propertybar() {
 	var sourceTabModal = new DataSourceTabModal($("#dataSource_db_tab_modal"), $("#property_dataSource_static"), $("#property_dataSource_db"))
 	sourceTabModal.execute();
 
-	var deleteDbModal = new DeleteDbModal($("#deleteDb_modal"), $("#property_deleteDb"));
-	deleteDbModal.execute();
+	//数据库删除配置
+	// var deleteDbModal = new DeleteDbModal($("#deleteDb_modal"), $("#property_deleteDb"));
+	// deleteDbModal.execute();
 
 
 	//新的触发配置
@@ -778,6 +779,15 @@ function workspace() {
 			new Property().load($(event.target));
 			ableToolBarBtn();
 		}
+	});
+	//获取元素值并赋值给基本属性中的文本值
+	$workspace.on("input propertychange", '.workspace-node[data-type!="div"],.workspace-node[data-type="div"] :input', function (event) {
+		var $this = $(this),
+			id = $this.attr('id'),
+			$thisVal = $this.val();
+		$this.attr('value', $thisVal);
+		GLOBAL_PROPERTY[id].value = $thisVal;
+		$("#property_value").val($thisVal)
 	});
 
 	//清除样式
@@ -972,7 +982,7 @@ function back(html) {
 			"id": number,
 			"name": number
 		}).css({
-			"left": submodulesOffset.left + "px",				
+			"left": submodulesOffset.left + "px",
 			"top": submodulesOffset.top + "px"
 		});
 		$("#workspace").append($node);

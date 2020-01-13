@@ -213,5 +213,10 @@ Propertybar.prototype = {
         that.$container.on("click" + that.NAME_SPACE, "#event_btn", function (event) {
             $("#eventGuide_modal").modal("show")
         })
+        //忽略检查
+        that.$container.on("click" + that.NAME_SPACE, "#property_checkUp", function (event) {
+            var isCheck = $(this).prop('checked');
+            if (isCheck) $('.focus').attr('nocheck-type', isCheck);
+        })
     }
 };

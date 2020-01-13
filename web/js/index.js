@@ -614,8 +614,9 @@ function propertybar() {
 	var sourceTabModal = new DataSourceTabModal($("#dataSource_db_tab_modal"), $("#property_dataSource_static"), $("#property_dataSource_db"))
 	sourceTabModal.execute();
 
-	var deleteDbModal = new DeleteDbModal($("#deleteDb_modal"), $("#property_deleteDb"));
-	deleteDbModal.execute();
+	//数据库删除配置
+	// var deleteDbModal = new DeleteDbModal($("#deleteDb_modal"), $("#property_deleteDb"));
+	// deleteDbModal.execute();
 
 
 	//新的触发配置

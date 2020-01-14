@@ -486,7 +486,8 @@ function NewEventsModal($modal, $elemts) {
     //zww
     this.renderExtentColSelect = function (selectText) {
         var str = `<select class="form-control chosen" data-save="selectText"><option value="">请选择自定义变量</option>`,
-            selectArr = GLOBAL_PROPERTY.BODY ? GLOBAL_PROPERTY.BODY.customVariable : [];
+            BODY = GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable,
+            selectArr = BODY ? GLOBAL_PROPERTY.BODY.customVariable : [];
         selectArr.forEach(item => {
             var selectVal = `${item.desc}(${item.key})`;
             str += `<option value="${selectVal}" ${selectVal == selectText ? "selected" : ""}> ${selectVal}</option>`
@@ -1283,9 +1284,11 @@ NewEventsModal.prototype = {
     },
     judgeCheck: function () {
         var $eventsAttr = $('.eventsTr').attr('data-check'),
-            $attrCheck = JSON.parse($eventsAttr),
+            $attrCheck = '',
             methodsContent = $('.eventsTr').find('.methods > div'),
             checkedArr = [];
+        if (!$eventsAttr) return false;
+        $attrCheck = JSON.parse($eventsAttr);
         for (var i = 0; i < methodsContent.length; i++) {
             var value = this.commonData(methodsContent, i);
             value && checkedArr.push(value);

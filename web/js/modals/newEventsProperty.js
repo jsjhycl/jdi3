@@ -318,19 +318,61 @@ function newEventsProperty() {
         return that._renderFieldsCheckBox(fields, selectFields)
 
     }
-    //
+    //渲染数据处理的表
     this._renderPropertyHandleTr = function (propertyHandle) {
         var that = this,
             str = "";
+        // if (propertyHandle.length == 0) {
+        //     GLOBAL_PROPERTY && GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable.forEach(item => {
+        //         if (item.key == variable) {
+        //             propertyHandle = item.propertyHandle ? JSON.parse(item.propertyHandle).fields : []
+        //         }
+        //     })
+        // }
         propertyHandle.forEach(item => {
             str += `<tr class="propertyHandleConfig">
-                <td><input type="text" class="form-control" disabled="disabled" value="${item.field}"></td>
-                <td><input type="text" class="form-control" value="${item.operation}"></td>
-                <td><input type="text" class="form-control" value="${item.type}"></td>
+                <td><input type="text" class="form-control" data-save="field" disabled="disabled" value="${item.field}"></td>
+                <td>${that._renderPropertyHandleOperation(item.operation)}</td>
+                <td>
+                    ${that._renderPropertyHandleType(item.type)}
+                </td>
             </tr>`
         })
         return str
+    }
+    this._renderPropertyHandleOperation = function (selectedValue) {
+        var that = this,
+            defaultOption = {
+                name: "请选择操作类型",
+                value: ""
+            },
+            options = that.operationOptions,
+            selectedValue = selectedValue,
+            isPrompt = true,
+            selectClass = "form-control chosen",
+            attr = {
+                "data-save": "operation",
+                "data-change": "operation"
+            };
 
+        return that._renderSelect(defaultOption, options, selectedValue, isPrompt, selectClass, attr)
+    }
+    this._renderPropertyHandleType = function (selectedValue) {
+        var that = this,
+            defaultOption = {
+                name: "请选择值类型",
+                value: ""
+            },
+            options = that.NumberType,
+            selectedValue = selectedValue,
+            isPrompt = true,
+            selectClass = "form-control chosen",
+            attr = {
+                "data-save": "type",
+                "data-change": "type"
+            };
+
+        return that._renderSelect(defaultOption, options, selectedValue, isPrompt, selectClass, attr)
     }
 
 }
@@ -408,6 +450,7 @@ newEventsProperty.prototype = {
         return str;
 
     },
+    propertyRender: function (propertyRender) {},
     //获取属性数据
     getPropertyData: function ($tr) {
         var that = this,
@@ -440,11 +483,32 @@ newEventsProperty.prototype = {
     //获取属性处理
     getPropertyHandle: function () {
         var that = this,
-            result = {};
-
-
+            result = {
+                variable: "",
+                handles: []
+            },
+            $variableTr = that.$events.find(".propertyHandleVariable"),
+            $propertyHandleConfig = that.$events.find(".propertyHandleConfig");
+        $variableTr.each(function () {
+            var variable = $(this).find("[data-save='variable']").val()
+            result.variable = variable;
+        })
+        $propertyHandleConfig.each(function () {
+            var config = {};
+            config.field = $(this).find("[data-save='field']").val();
+            config.operation = $(this).find("[data-save='operation']").val();
+            config.type = $(this).find("[data-save='type']").val();
+            result.handles.push(config)
+        })
+        GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
+            if (item.key == result.variable) {
+                GLOBAL_PROPERTY.BODY.customVariable[index].propertyHandle = JSON.stringify(result)
+            }
+        })
         return result;
     },
+    //
+    getPropertyRender: function () {},
     bindEvents: function () {
         var that = this;
         //属性数据数据库切换时
@@ -485,6 +549,51 @@ newEventsProperty.prototype = {
                     GLOBAL_PROPERTY.BODY.customVariable[index].propertyQuery = JSON.stringify(propertyQuery)
                 }
             })
+
+        })
+        //属性处理自定义变量切换的时候
+        that.$events.on("change" + that.NAME_SPACE, ".propertyHandleVariable [data-change='variable']", function () {
+            var propertyHandleVariable = $(this).val(),
+                data = [],
+                check = false,
+                html = "";
+            GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
+                if (item.key == propertyHandleVariable) {
+                    if (GLOBAL_PROPERTY.BODY.customVariable[index].propertyQuery) {
+                        data = JSON.parse(GLOBAL_PROPERTY.BODY.customVariable[index].propertyQuery).fields
+                        check = false
+                    }
+                    if (GLOBAL_PROPERTY.BODY.customVariable[index].propertyHandle) {
+                        check = true;
+                        data = JSON.parse(GLOBAL_PROPERTY.BODY.customVariable[index].getPropertyHandle).handles
+                    }
+                }
+            })
+            if (!check) {
+                var result = []
+                data.forEach(item => {
+                    var config = {
+                        field: item,
+                        operation: "",
+                        type: ""
+                    }
+                    result.push(config)
+                })
+                html += `<tr class="propertyHandleVariable">
+                                <td rowspan="${result.length+1}">
+                                    ${that._renderCustomVariable(propertyHandleVariable)}
+                                </td>
+                            </tr>`;
+                html += that._renderPropertyHandleTr(result)
+            } else {
+                html += `<tr class="propertyHandleVariable">
+                                <td rowspan="${data.length+1}">
+                                    ${that._renderCustomVariable(propertyHandleVariable)}
+                                </td>
+                            </tr>`;
+                html += that._renderPropertyHandleTr(data)
+            }
+            that.$events.find(".propertyHandle tbody").empty().append(html)
 
         })
     }

@@ -116,20 +116,9 @@ function NewEventsModal($modal, $elemts) {
                         ${that.renderTriggerMethods("checkbox", that.METHODS, event.subscribe, event.publish)}
                     </td>
                     <td>
-                    ${new newEventsProperty().renderPropertyQueryData(event.subscribe.propertyData)}
-                    ${new newEventsProperty().renderPropertyQuery(event.subscribe.propertyQuery)}
-                    ${new newEventsProperty().renderPropertyHandle(event.subscribe.propertyHandle)}
-                    ${ that.renderSaveHTML(event.subscribe.saveHTML)}
-                    ${ that.renderKeySave(event.subscribe.keySave)}
-                    ${ that.renderNextProcess(event.subscribe.nextProcess)}
-                    ${ that.renderNotify(event.subscribe.notify)}
-                    ${ that.renderTimeQuery(event.subscribe.timeQuery)}
-                    ${ that.renderChangePropertyTable(event.subscribe.property)}
-                    ${ that.renderCopySendTable(event.subscribe.copySend)}
-                    ${ that.renderDeleteTable(event.subscribe.deleteRow)}
-                    ${ that.renderLinkHTMLTable(event.subscribe.linkHtml)}
-                    ${ that.renderExecuteFn(event.subscribe.executeFn)}
-                    ${ that.renderImportDb(event.subscribe.importDb)}
+                        ${new newEventsProperty().renderPropertyQueryData(event.subscribe.propertyData)}
+                        ${new newEventsProperty().renderPropertyQuery(event.subscribe.propertyQuery)}
+                        ${new newEventsProperty().renderPropertyHandle(event.subscribe.propertyHandle)}
                         ${ that.renderSaveHTML(event.subscribe.saveHTML)}
                         ${ that.renderKeySave(event.subscribe.keySave)}
                         ${ that.renderNextProcess(event.subscribe.nextProcess)}
@@ -515,9 +504,9 @@ function NewEventsModal($modal, $elemts) {
     }
     this.renderTypeOfValue = function (typekey, type, selected) {
         let defaultType = {
-            name: type,
-            value: ""
-        },
+                name: type,
+                value: ""
+            },
             str = `<select class="form-control" data-save = "${typekey}" data-change-operator="${typekey}">`,
             options = [defaultType, ...ConditionsHelper.typeConfig];
         options.forEach(item => {
@@ -527,9 +516,9 @@ function NewEventsModal($modal, $elemts) {
     }
     this.renderCopySendConfigTypeOfValue = function (typekey, type, selected) {
         let defaultType = {
-            name: "请选择操作符",
-            value: ""
-        },
+                name: "请选择操作符",
+                value: ""
+            },
             str = `<select class="form-control" data-save = "${typekey}">`,
             options = [defaultType, ...ConditionsHelper.getOperators(type)];
         options.forEach(item => {
@@ -1373,7 +1362,7 @@ NewEventsModal.prototype = {
 
             }
             if (that.judgeCheckMehods("propertyHandle", $(this).find(".triggerMethods:checked"))) {
-                propertyHandle = new newEventsProperty().getPropertyHandle($(this).find(".propertyHandleTr"))
+                propertyHandle = new newEventsProperty().getPropertyHandle()
             }
             if (that.judgeCheckMehods("commonQuery", $(this).find(".triggerMethods:checked"))) {
                 query = []
@@ -1526,6 +1515,7 @@ NewEventsModal.prototype = {
         })
         //触发方法的点击
         that.$modal.on("click" + that.NAME_SPACE, ".methods input[type='checkbox']", function () {
+            console.log(12)
             var checkArr = [];
             let $this = $(this),
                 value = $this.val(),
@@ -1712,10 +1702,10 @@ NewEventsModal.prototype = {
             $linkbody.empty()
             if (type == "nextProcess") {
                 var data = [{
-                    key: "isNext",
-                    desc: "下一流程",
-                    value: ""
-                }],
+                        key: "isNext",
+                        desc: "下一流程",
+                        value: ""
+                    }],
                     html = that.renderLinkHTMLParmas(data)
                 $linkbody.append(html)
             }

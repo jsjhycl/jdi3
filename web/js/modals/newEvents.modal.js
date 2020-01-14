@@ -116,20 +116,9 @@ function NewEventsModal($modal, $elemts) {
                         ${that.renderTriggerMethods("checkbox", that.METHODS, event.subscribe, event.publish)}
                     </td>
                     <td>
-                    ${new newEventsProperty().renderPropertyQueryData(event.subscribe.propertyData)}
-                    ${new newEventsProperty().renderPropertyQuery(event.subscribe.propertyQuery)}
-                    ${new newEventsProperty().renderPropertyHandle(event.subscribe.propertyHandle)}
-                    ${ that.renderSaveHTML(event.subscribe.saveHTML)}
-                    ${ that.renderKeySave(event.subscribe.keySave)}
-                    ${ that.renderNextProcess(event.subscribe.nextProcess)}
-                    ${ that.renderNotify(event.subscribe.notify)}
-                    ${ that.renderTimeQuery(event.subscribe.timeQuery)}
-                    ${ that.renderChangePropertyTable(event.subscribe.property)}
-                    ${ that.renderCopySendTable(event.subscribe.copySend)}
-                    ${ that.renderDeleteTable(event.subscribe.deleteRow)}
-                    ${ that.renderLinkHTMLTable(event.subscribe.linkHtml)}
-                    ${ that.renderExecuteFn(event.subscribe.executeFn)}
-                    ${ that.renderImportDb(event.subscribe.importDb)}
+                        ${new newEventsProperty().renderPropertyQueryData(event.subscribe.propertyData)}
+                        ${new newEventsProperty().renderPropertyQuery(event.subscribe.propertyQuery)}
+                        ${new newEventsProperty().renderPropertyHandle(event.subscribe.propertyHandle)}
                         ${ that.renderSaveHTML(event.subscribe.saveHTML)}
                         ${ that.renderKeySave(event.subscribe.keySave)}
                         ${ that.renderNextProcess(event.subscribe.nextProcess)}
@@ -486,7 +475,8 @@ function NewEventsModal($modal, $elemts) {
     //zww
     this.renderExtentColSelect = function (selectText) {
         var str = `<select class="form-control chosen" data-save="selectText"><option value="">请选择自定义变量</option>`,
-            selectArr = GLOBAL_PROPERTY.BODY ? GLOBAL_PROPERTY.BODY.customVariable : [];
+            BODY = GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable,
+            selectArr = BODY ? GLOBAL_PROPERTY.BODY.customVariable : [];
         selectArr.forEach(item => {
             var selectVal = `${item.desc}(${item.key})`;
             str += `<option value="${selectVal}" ${selectVal == selectText ? "selected" : ""}> ${selectVal}</option>`
@@ -1262,7 +1252,7 @@ NewEventsModal.prototype = {
             data: events,
             type: "defalut"
         })
-        if (!DataType.isArray(events)) return;
+        if (!DataType.isArray(events)) return false;
         events.forEach(event => {
             str += that.renderEvents(event)
         })
@@ -1283,9 +1273,10 @@ NewEventsModal.prototype = {
     },
     judgeCheck: function () {
         var $eventsAttr = $('.eventsTr').attr('data-check'),
-            $attrCheck = JSON.parse($eventsAttr),
             methodsContent = $('.eventsTr').find('.methods > div'),
             checkedArr = [];
+        if (!$eventsAttr) return false;
+        var $attrCheck = JSON.parse($eventsAttr);
         for (var i = 0; i < methodsContent.length; i++) {
             var value = this.commonData(methodsContent, i);
             value && checkedArr.push(value);
@@ -1370,7 +1361,7 @@ NewEventsModal.prototype = {
 
             }
             if (that.judgeCheckMehods("propertyHandle", $(this).find(".triggerMethods:checked"))) {
-                propertyHandle = new newEventsProperty().getPropertyHandle($(this).find(".propertyHandleTr"))
+                propertyHandle = new newEventsProperty().getPropertyHandle()
             }
             if (that.judgeCheckMehods("commonQuery", $(this).find(".triggerMethods:checked"))) {
                 query = []

@@ -128,9 +128,10 @@ function newEventsProperty() {
     }
 
     //渲染属性查询的Tr
-    this._renderPropertyDataTr = function (propertyData = {}) {
+    this._renderPropertyDataTr = function (propertyData) {
         var that = this,
             str = "",
+            propertyData = propertyData ? propertyData : {},
             dbName = propertyData.query ? propertyData.query.dbName : "",
             tableName = propertyData.query ? propertyData.query.table : "",
             conditions = propertyData.query ? propertyData.query.conditions : [],
@@ -438,25 +439,11 @@ newEventsProperty.prototype = {
     },
     //获取属性处理
     getPropertyHandle: function () {
-        return {
-            variable: "AAAA",
-            handles: [{
-                    field: "AAAA",
-                    operation: "值不变",
-                    type: ""
-                },
-                {
-                    field: "AAAB",
-                    operation: "起始值",
-                    type: "自然数"
-                },
-                {
-                    field: "AAAC",
-                    operation: "终止值",
-                    type: "数字 / 字母"
-                }
-            ]
-        }
+        var that = this,
+            result = {};
+
+
+        return result;
     },
     bindEvents: function () {
         var that = this;

@@ -1,6 +1,6 @@
 {
     "name": "jdi客户端",
-    "version": "1.1.26",
+    "version": "1.1.27",
     "list": [{
         "version": "1.1.0",
         "files": [],
@@ -109,5 +109,9 @@
         "version": "1.1.26",
         "files": ["web/designer/index.html", "web/js/controllers/accessControl.js", "web/js/controllers/contextMenu.js", "web/js/controllers/property.js", "web/js/controllers/propertybar.js", "web/js/editor.js", "web/js/helpers/conditionsHelper.js", "web/js/index.js", "web/js/init.js", "web/js/modals/changeGlobal.modal.js", "web/js/modals/deleteDb.modal.js", "web/js/modals/newEvents.modal.js", "web/js/utils/buildTableJson.js", "web/js/modals/newEventsProperty.js", "versions.json"],
         "detail": ["签名控件更改", "表注解修改为表中文名", "注销闲置或未实现代码及修改复制属性文本值", "其他bug修改"]
+    }, {
+        "version": "1.1.27",
+        "files": ["web/js/modals/newEvents.modal.js","web/js/modals/newEventsProperty.js", "versions.json"],
+        "detail": ["优化扩展表格列","属性操作的一些优化","修改属性查询"]
     }]
 }

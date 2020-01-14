@@ -1,6 +1,6 @@
 {
     "name": "jdi客户端",
-    "version": "1.1.27",
+    "version": "1.1.28",
     "list": [{
         "version": "1.1.0",
         "files": [],
@@ -113,5 +113,9 @@
         "version": "1.1.27",
         "files": ["web/js/modals/newEvents.modal.js","web/js/modals/newEventsProperty.js", "versions.json"],
         "detail": ["优化扩展表格列","属性操作的一些优化","修改属性查询"]
+    }, {
+        "version": "1.1.28",
+        "files": ["web/js/modals/newEvents.modal.js", "versions.json"],
+        "detail": ["优化事件串行执行顺序","修改扩展表格列bug","bug处理"]
     }]
 }

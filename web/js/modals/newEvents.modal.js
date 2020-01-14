@@ -141,7 +141,7 @@ function NewEventsModal($modal, $elemts) {
                         ${ that.renderLinkHTMLTable(event.subscribe.linkHtml)}
                         ${ that.renderExecuteFn(event.subscribe.executeFn)}
                         ${ that.renderImportDb(event.subscribe.importDb)}
-                        ${ that.renderExtendCol(event.subscribe.extendCol)}//zww
+                        ${ that.renderExtendCol(event.subscribe.extendCol)}
                     </td>
                     </tr>`;
         // ${ that.renderPropertyData(event.subscribe.propertyData)}
@@ -486,9 +486,7 @@ function NewEventsModal($modal, $elemts) {
     //zww
     this.renderExtentColSelect = function (selectText) {
         var str = `<select class="form-control chosen" data-save="selectText"><option value="">请选择自定义变量</option>`,
-            selectArr = GLOBAL_PROPERTY.BODY.customVariable;
-
-
+            selectArr = GLOBAL_PROPERTY.BODY ? GLOBAL_PROPERTY.BODY.customVariable : [];
         selectArr.forEach(item => {
             var selectVal = `${item.desc}(${item.key})`;
             str += `<option value="${selectVal}" ${selectVal == selectText ? "selected" : ""}> ${selectVal}</option>`
@@ -516,9 +514,9 @@ function NewEventsModal($modal, $elemts) {
     }
     this.renderTypeOfValue = function (typekey, type, selected) {
         let defaultType = {
-                name: type,
-                value: ""
-            },
+            name: type,
+            value: ""
+        },
             str = `<select class="form-control" data-save = "${typekey}" data-change-operator="${typekey}">`,
             options = [defaultType, ...ConditionsHelper.typeConfig];
         options.forEach(item => {
@@ -528,9 +526,9 @@ function NewEventsModal($modal, $elemts) {
     }
     this.renderCopySendConfigTypeOfValue = function (typekey, type, selected) {
         let defaultType = {
-                name: "请选择操作符",
-                value: ""
-            },
+            name: "请选择操作符",
+            value: ""
+        },
             str = `<select class="form-control" data-save = "${typekey}">`,
             options = [defaultType, ...ConditionsHelper.getOperators(type)];
         options.forEach(item => {
@@ -1359,7 +1357,8 @@ NewEventsModal.prototype = {
                 extendCol = null; //zww;
             if (that.judgeCheckMehods("propertyData", $(this).find(".triggerMethods:checked"))) {
                 propertyData = that.getPropertyData($(this).find('.propertyDataTr'))
-                GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
+
+                GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
                     if (item.key == propertyData.variable) {
                         GLOBAL_PROPERTY.BODY.customVariable[index].propertyData = JSON.stringify(propertyData)
                     }
@@ -1710,10 +1709,10 @@ NewEventsModal.prototype = {
             $linkbody.empty()
             if (type == "nextProcess") {
                 var data = [{
-                        key: "isNext",
-                        desc: "下一流程",
-                        value: ""
-                    }],
+                    key: "isNext",
+                    desc: "下一流程",
+                    value: ""
+                }],
                     html = that.renderLinkHTMLParmas(data)
                 $linkbody.append(html)
             }

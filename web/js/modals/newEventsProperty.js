@@ -4,15 +4,31 @@
 function newEventsProperty() {
     this.NAME_SPACE = ".EVENTSPROPERTY"
     this.$events = $("#events_modal")
-    this.operationOptions = [
-        {name:"值不变",value:"origin"},
-        {name:"起始值",value:"start"},
-        {name:"终止值",value:"end"},
+    this.operationOptions = [{
+            name: "值不变",
+            value: "origin"
+        },
+        {
+            name: "起始值",
+            value: "start"
+        },
+        {
+            name: "终止值",
+            value: "end"
+        },
     ]
-    this.NumberType = [
-        {name:"自然数",value:"dayTime"},
-        {name:"数字",value:"number"},
-        {name:"字母",value:"letter"}
+    this.NumberType = [{
+            name: "自然数",
+            value: "dayTime"
+        },
+        {
+            name: "数字",
+            value: "number"
+        },
+        {
+            name: "字母",
+            value: "letter"
+        }
     ]
 
 
@@ -112,9 +128,10 @@ function newEventsProperty() {
     }
 
     //渲染属性查询的Tr
-    this._renderPropertyDataTr = function (propertyData = {}) {
+    this._renderPropertyDataTr = function (propertyData) {
         var that = this,
             str = "",
+            propertyData = propertyData ? propertyData : {},
             dbName = propertyData.query ? propertyData.query.dbName : "",
             tableName = propertyData.query ? propertyData.query.table : "",
             conditions = propertyData.query ? propertyData.query.conditions : [],
@@ -143,7 +160,7 @@ function newEventsProperty() {
                 "data-save": "variable",
                 "data-change": "variable"
             }
-        GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item) {
+        GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item) {
             var option = {
                 name: item.desc,
                 value: item.key
@@ -275,13 +292,14 @@ function newEventsProperty() {
     this._renderPropertyQueryFields = function (variable, selectFields) {
         var that = this,
             propertyData = "";
-        GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
+        GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
             if (item.key == variable) {
                 propertyData = item.propertyData ? JSON.parse(item.propertyData) : "";
             }
         })
         if (!DataType.isObject(propertyData)) {
-            return alert(`请先配置自定义变量${variable}的属性数据`)
+            return "";
+            // return alert(`请先配置自定义变量${variable}的属性数据`)
         }
         var dbName = propertyData.query.dbName,
             tableName = propertyData.query.table,
@@ -305,7 +323,7 @@ function newEventsProperty() {
         var that = this,
             str = "";
         propertyHandle.forEach(item => {
-            str += `<tr>
+            str += `<tr class="propertyHandleConfig">
                 <td><input type="text" class="form-control" disabled="disabled" value="${item.field}"></td>
                 <td><input type="text" class="form-control" value="${item.operation}"></td>
                 <td><input type="text" class="form-control" value="${item.type}"></td>
@@ -378,7 +396,7 @@ newEventsProperty.prototype = {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr class="propertyHandleVariable">
                                 <td rowspan="${handles.length+1}">
                                     ${that._renderCustomVariable(variable)}
                                 </td>
@@ -412,7 +430,7 @@ newEventsProperty.prototype = {
             propertyQuery.variable = $(this).find('[data-save="variable"]').val();
             propertyQuery.fields = that._getFields($(this).find(".propertyQueryFields"))
         })
-        GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
+        GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
             if (item.key == propertyQuery.variable) {
                 GLOBAL_PROPERTY.BODY.customVariable[index].propertyQuery = JSON.stringify(propertyQuery)
             }
@@ -420,26 +438,12 @@ newEventsProperty.prototype = {
         return propertyQuery;
     },
     //获取属性处理
-    getPropertyHandle: function ($tr) {
-        return {
-            variable: "AAAA",
-            handles: [{
-                    field: "AAAA",
-                    operation: "值不变",
-                    type: ""
-                },
-                {
-                    field: "AAAB",
-                    operation: "起始值",
-                    type: "自然数"
-                },
-                {
-                    field: "AAAC",
-                    operation: "终止值",
-                    type: "数字 / 字母"
-                }
-            ]
-        }
+    getPropertyHandle: function () {
+        var that = this,
+            result = {};
+
+
+        return result;
     },
     bindEvents: function () {
         var that = this;
@@ -460,7 +464,7 @@ newEventsProperty.prototype = {
         that.$events.on("click" + that.NAME_SPACE, ".propertyData .checkboxField input", function () {
             var $target = $(this);
             var propertyData = that.getPropertyData(that.$events.find(".propertyDataTr"))
-            GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
+            GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
                 if (item.key == propertyData.variable) {
                     GLOBAL_PROPERTY.BODY.customVariable[index].propertyData = JSON.stringify(propertyData)
                 }
@@ -476,7 +480,7 @@ newEventsProperty.prototype = {
         //属性查询字段点击时候
         that.$events.on("click" + that.NAME_SPACE, ".propertyQueryFields input", function () {
             var propertyQuery = that.getPropertyQuery(that.$events.find(".propertyQueryTr"))
-            GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
+            GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
                 if (item.key == propertyQuery.variable) {
                     GLOBAL_PROPERTY.BODY.customVariable[index].propertyQuery = JSON.stringify(propertyQuery)
                 }

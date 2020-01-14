@@ -119,6 +119,7 @@ function NewEventsModal($modal, $elemts) {
                         ${new newEventsProperty().renderPropertyQueryData(event.subscribe.propertyData)}
                         ${new newEventsProperty().renderPropertyQuery(event.subscribe.propertyQuery)}
                         ${new newEventsProperty().renderPropertyHandle(event.subscribe.propertyHandle)}
+                        ${new newEventsProperty().propertyRender(event.subscribe.propertyRender)}
                         ${ that.renderSaveHTML(event.subscribe.saveHTML)}
                         ${ that.renderKeySave(event.subscribe.keySave)}
                         ${ that.renderNextProcess(event.subscribe.nextProcess)}
@@ -1362,6 +1363,9 @@ NewEventsModal.prototype = {
             }
             if (that.judgeCheckMehods("propertyHandle", $(this).find(".triggerMethods:checked"))) {
                 propertyHandle = new newEventsProperty().getPropertyHandle()
+            }
+            if (that.judgeCheckMehods("propertyRender", $(this).find(".triggerMethods:checked"))) {
+                propertyRender = new newEventsProperty().getPropertyRender()
             }
             if (that.judgeCheckMehods("commonQuery", $(this).find(".triggerMethods:checked"))) {
                 query = []

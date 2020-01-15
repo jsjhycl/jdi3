@@ -784,10 +784,10 @@ newEventsProperty.prototype = {
                         data = JSON.parse(GLOBAL_PROPERTY.BODY.customVariable[index].propertyQuery).fields
                         check = false
                     }
-                    if (GLOBAL_PROPERTY.BODY.customVariable[index].propertyHandle) {
-                        check = true;
-                        data = JSON.parse(GLOBAL_PROPERTY.BODY.customVariable[index].propertyHandle).handles
-                    }
+                    // if (GLOBAL_PROPERTY.BODY.customVariable[index].propertyHandle) {
+                    //     check = true;
+                    //     data = JSON.parse(GLOBAL_PROPERTY.BODY.customVariable[index].propertyHandle).handles
+                    // }
                 }
             })
             if (!check) {

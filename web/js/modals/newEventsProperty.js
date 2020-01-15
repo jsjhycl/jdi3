@@ -111,7 +111,7 @@ function newEventsProperty() {
                            ${that._renderConditionFields(dbName,table,item.field)}
                         </td>
                         <td>
-                            ${that._renderQueryOpearation(item.operation)}       
+                            ${that._renderQueryOpearation(item.operator)}       
                         </td>
                         <td>
                            ${that._renderQueryType(item.type)}
@@ -273,7 +273,7 @@ function newEventsProperty() {
         $conditions.each(function () {
             var condition = {};
             condition.field = $(this).find('[data-save="field"]').val();
-            condition.operation = $(this).find('[data-save="condition_operator"]').val();
+            condition.operator = $(this).find('[data-save="condition_operator"]').val();
             condition.type = $(this).find('[data-save="condition_type"]').val();
             condition.value = $(this).find('[data-save="condition_value"]').val();
             conditions.push(condition)

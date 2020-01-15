@@ -483,7 +483,8 @@ function newEventsProperty() {
     this.propertyRenderYaxis = function (variable, Yaxis) {
         var that = this,
             str = "";
-        Yaxis.forEach(item => {
+
+        Yaxis && Yaxis.forEach(item => {
             str += `<tr class="YaxisTr">
                         <td>${that._renderPropertyRenderFields(variable,item.name)}</td>
                         <td><input type="text" class="form-control" value="${item.split}" data-save="split"></td>

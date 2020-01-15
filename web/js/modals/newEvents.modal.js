@@ -1501,6 +1501,7 @@ NewEventsModal.prototype = {
             }
             $tbody.append(str)
             that.bindChosen()
+             new newEventsProperty().bindEvents()
         })
         //移除一行
         that.$modal.on("click" + that.NAME_SPACE, ".del", function () {

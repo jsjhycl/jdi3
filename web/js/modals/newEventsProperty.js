@@ -592,7 +592,7 @@ newEventsProperty.prototype = {
             propertyRender = {}
         }
         var that = this,
-            str = `<div class="condition propertyRender" ${propertyRender?"":'style="display:none"'}>
+            str = `<div class="condition propertyRender" ${propertyRender.variable?"":'style="display:none"'}>
                 <table class="table table-bordered">
                     <thead>
                         <tr>

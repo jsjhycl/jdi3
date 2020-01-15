@@ -505,9 +505,9 @@ function NewEventsModal($modal, $elemts) {
     }
     this.renderTypeOfValue = function (typekey, type, selected) {
         let defaultType = {
-            name: type,
-            value: ""
-        },
+                name: type,
+                value: ""
+            },
             str = `<select class="form-control" data-save = "${typekey}" data-change-operator="${typekey}">`,
             options = [defaultType, ...ConditionsHelper.typeConfig];
         options.forEach(item => {
@@ -517,9 +517,9 @@ function NewEventsModal($modal, $elemts) {
     }
     this.renderCopySendConfigTypeOfValue = function (typekey, type, selected) {
         let defaultType = {
-            name: "请选择操作符",
-            value: ""
-        },
+                name: "请选择操作符",
+                value: ""
+            },
             str = `<select class="form-control" data-save = "${typekey}">`,
             options = [defaultType, ...ConditionsHelper.getOperators(type)];
         options.forEach(item => {
@@ -1493,11 +1493,15 @@ NewEventsModal.prototype = {
                 let dbName = $(this).parents("tr").eq(1).find('[data-save="dbName"]').val(),
                     table = $(this).parents("tr").eq(1).find('[data-save="table"]').val();
                 str = that[addType](dbName, table)
+            } else if (addType == "propertyRenderYaxis") {
+                var variable = $(this).parents('tr').eq(1).find('[data-save="variable"]').val();
+                str = new newEventsProperty().propertyRenderYaxis(variable,[{name:"",split:""}])
             } else {
                 str = that[addType]();
             }
             $tbody.append(str)
             that.bindChosen()
+             new newEventsProperty().bindEvents()
         })
         //移除一行
         that.$modal.on("click" + that.NAME_SPACE, ".del", function () {
@@ -1704,10 +1708,10 @@ NewEventsModal.prototype = {
             $linkbody.empty()
             if (type == "nextProcess") {
                 var data = [{
-                    key: "isNext",
-                    desc: "下一流程",
-                    value: ""
-                }],
+                        key: "isNext",
+                        desc: "下一流程",
+                        value: ""
+                    }],
                     html = that.renderLinkHTMLParmas(data)
                 $linkbody.append(html)
             }

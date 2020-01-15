@@ -74,6 +74,9 @@ function newEventsProperty() {
     this._renderFieldsCheckBox = function (fields, selectFields) {
         var that = this,
             str = "";
+        if (!selectFields) {
+            selectFields = []
+        }
         fields.forEach(function (item) {
             str += `<label title="${item.value}" class="checkbox-inline">
                         <input type="checkbox" name="${item.name}" ${selectFields.includes(item.value)?"checked":""} value="${item.value}">${item.name}(${item.value})
@@ -813,8 +816,12 @@ newEventsProperty.prototype = {
             that.bindChosen()
         })
         that.$events.on("change" + that.NAME_SPACE, ".propertyRenderTr [data-change='variable']", function () {
-            var value = $(this).val()
-            console.log(value)
+            var value = $(this).val(),
+                data = {
+                    variable: value
+                };
+            str = that._renderPropertyRenderTr(data)
+            console.log(str)
         })
     }
 

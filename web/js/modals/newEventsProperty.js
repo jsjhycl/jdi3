@@ -587,6 +587,9 @@ newEventsProperty.prototype = {
 
     },
     propertyRender: function (propertyRender) {
+        if (!propertyRender) {
+            propertyRender = {}
+        }
         var that = this,
             str = `<div class="condition propertyRender" ${propertyRender?"":'style="display:none"'}>
                 <table class="table table-bordered">

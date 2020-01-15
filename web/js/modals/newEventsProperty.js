@@ -273,7 +273,7 @@ function newEventsProperty() {
         $conditions.each(function () {
             var condition = {};
             condition.field = $(this).find('[data-save="field"]').val();
-            condition.operator = $(this).find('[data-save="condition_operator"]').val();
+            condition.operation = $(this).find('[data-save="condition_operator"]').val();
             condition.type = $(this).find('[data-save="condition_type"]').val();
             condition.value = $(this).find('[data-save="condition_value"]').val();
             conditions.push(condition)
@@ -375,6 +375,27 @@ function newEventsProperty() {
             };
 
         return that._renderSelect(defaultOption, options, selectedValue, isPrompt, selectClass, attr)
+    }
+    this._renderPropertyRenderTr = function (propertyRender) {
+        var that = this;
+        str = `<tr class="propertyRenderTr">
+                            <td>${that._renderCustomVariable(propertyRender.variable||"")}</td>
+                            <td>${that._renderPropertyRenderFields(propertyRender.variable ,propertyRender.Xaxis, true)}</td>
+                            <td>${that._renderPropertyRenderYaxis(propertyRender.variable, propertyRender.Yaxis)}</td>
+                            <td class="propertyRenderContent">${that._renderPropertyRenderContent(propertyRender.variable, propertyRender.content)}</td>
+                            <td>${that._renderPropertyRenderType(propertyRender.renderType)}</td>
+                            <td><input type="text" class="form-control" data-save="renderPositoon" value="${propertyRender.renderPositoon}"></td>
+                            <td style="position:relative">
+                                <input type="text" class="form-control render-color" save-type="style" data-save="color" value="${ propertyRender.renderColor || ""}">
+                                <div class="property-icon-wrap">
+                                    <input type="color" data-belong="render-color" class="property-color-input">
+                                <i class="icon icon-color"></i>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" data-save="colWidth" value="${propertyRender.ColWisth}">
+                            </td>
+                        </tr>`
+        return str;
     }
     //渲染属性渲染中的字段选择问题
     this._renderPropertyRenderFields = function (variable, selectedValue, isXAxis) {
@@ -510,6 +531,14 @@ function newEventsProperty() {
         return result;
 
     }
+    this.bindChosen = function () {
+        $(".chosen").chosen({
+            no_results_text: "没有找到想要的数据",
+            search_contains: true,
+            allow_single_deselect: true,
+            width: "100%",
+        })
+    }
 
 
 }
@@ -607,23 +636,7 @@ newEventsProperty.prototype = {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="propertyRenderTr">
-                            <td>${that._renderCustomVariable(propertyRender.variable||"")}</td>
-                            <td>${that._renderPropertyRenderFields(propertyRender.variable ,propertyRender.Xaxis, true)}</td>
-                            <td>${that._renderPropertyRenderYaxis(propertyRender.variable, propertyRender.Yaxis)}</td>
-                            <td class="propertyRenderContent">${that._renderPropertyRenderContent(propertyRender.variable, propertyRender.content)}</td>
-                            <td>${that._renderPropertyRenderType(propertyRender.renderType)}</td>
-                            <td><input type="text" class="form-control" data-save="renderPositoon" value="${propertyRender.renderPositoon}"></td>
-                            <td style="position:relative">
-                                <input type="text" class="form-control render-color" save-type="style" data-save="color" value="${ propertyRender.renderColor || ""}">
-                                <div class="property-icon-wrap">
-                                    <input type="color" data-belong="render-color" class="property-color-input">
-                                <i class="icon icon-color"></i>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" data-save="colWidth" value="${propertyRender.ColWisth}">
-                            </td>
-                        </tr>
+                        ${that._renderPropertyRenderTr(propertyRender)}
                     </tbody>
                 </table>
             </div>`;
@@ -797,7 +810,11 @@ newEventsProperty.prototype = {
                 html += that._renderPropertyHandleTr(data)
             }
             that.$events.find(".propertyHandle tbody").empty().append(html)
-
+            that.bindChosen()
+        })
+        that.$events.on("change" + that.NAME_SPACE, ".propertyRenderTr [data-change='variable']", function () {
+            var value = $(this).val()
+            console.log(value)
         })
     }
 

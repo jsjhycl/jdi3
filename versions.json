@@ -1,6 +1,6 @@
 {
     "name": "jdi客户端",
-    "version": "1.1.29",
+    "version": "1.1.30",
     "list": [{
         "version": "1.1.0",
         "files": [],
@@ -121,5 +121,9 @@
         "version": "1.1.29",
         "files": ["web/js/modals/newEvents.modal.js", "web/css/index.css", "web/js/controllers/contextMenu.js", "web/js/modals/newEventsProperty.js", "web/lib/buildTree/buildTree.js", "versions.json"],
         "detail": ["修改树形分类 ", "bug处理"]
+    }, {
+        "version": "1.1.30",
+        "files": ["web/js/modals/newEvents.modal.js", "web/js/modals/newEventsProperty.js", "versions.json"],
+        "detail": ["优化事件绑定问题", "保存配置的问题", "触发条件的问题"]
     }]
 }

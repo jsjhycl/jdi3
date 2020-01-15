@@ -263,8 +263,6 @@
                 var liLen = $('.tree-list li').length,
                     hasCls = $('.tree-list li').hasClass('active-item');
                 if (hasCls) {
-                    // if ($('.active-item').attr('data-col') !== "0") 
-                    console.log(activeCol, "activeCol");
                     var colArr = [0, 6];
                     if (!colArr.includes(activeCol)) return alert('只能在一级或六级上添加子节点');
                 }
@@ -282,18 +280,20 @@
                 var $thisNextItem = $this.nextAll();
                 var totalF = 0,
                     descTotal = 8 - activeCol;
-                for (var i = 0; i < $thisNextItem.length; i++) {
+                for (var i = 0, m = 0; i < $thisNextItem.length; i++) {
                     var nextItemCol = Number($thisNextItem.eq(i).attr('data-col'));
-                    if (nextItemCol === Number(activeCol)) break;
-                    if (nextItemCol === 1) {
-                        totalF++;
+                    if (nextItemCol === Number(activeCol)) {
+                        if (activeCol == 0) {
+                            activeRow = m == 0 ? activeRow + i : activeRow + i + 1;
+                            m++;
+                        }
+                        break;
                     }
+                    if (activeCol == 6 && nextItemCol === 7) totalF++;
                 }
 
-                if (totalF) {
-                    activeRow = activeRow + (descTotal * totalF);
-                    $this = $('li[data-row="' + activeRow + '"]');
-                }
+                if (totalF) activeRow = activeRow + (descTotal * totalF);
+                $this = $('li[data-row="' + activeRow + '"]');
                 if (flags) {
                     for (var n = descTotal; n > 0; n--) {
                         var rows = Number(activeRow) + 1,
@@ -319,8 +319,6 @@
                         }
                         if ($('li.active-item').next().length !== 0) {
                             $('li.active-item').find('.expand-icon').show();
-                            console.log(cols, "cols", rows);
-
                             that.defaultNumName(cols, true, rows);//默认名称和编号
                         }
                         if (isFlag) break;
@@ -351,7 +349,6 @@
             })
             //模态框保存
             // $(document).on('click' + nameSpace, '#saveBtn', function () {
-            //     console.log(allDataArr, 'allDataArr')
             $(document).on('mouseleave' + nameSpace, '#content', function (e) {
                 e.stopPropagation();
                 e.preventDefault();
@@ -409,13 +406,10 @@
                     $thisExpandIcon.removeClass('colse-icon')
                     var $thisSib = $this.parent().siblings(`li[data-col="${$thisCol}"]`);
                     $thisSib.each((idx, item) => {
-                        // console.log($(item), "node");
                         var $itemExpand = $(item).find('.expand-icon');
                         if (!$itemExpand.hasClass('colse-icon')) {
                             var isAdd = false;
                             $(item).nextAll().each((idx, node) => {
-                                // console.log($(node), "node");
-
                                 var $nodeCol = Number($(node).attr('data-col'));
                                 if ($nodeCol > Number($thisCol)) {
                                     isAdd = true;
@@ -481,7 +475,6 @@
         },
         //搜索结果转换
         searchResultSwitch: function (result) {
-            // console.log(result, "result")
             var newResultArr = [];
             result.forEach((ele, key) => {
                 var keys = Object.keys(ele);
@@ -847,8 +840,6 @@
                     }
                 }
             }
-            // console.log(allDataArr, "allDataArr");
-
         },
         //获取综合编号
         getTotalCode: function (row, col) {
@@ -1116,12 +1107,9 @@
                             itemName = itemSplit[1],
                             // itemLable = itemSplit[itemSplit.length - 3];
                             itemLable = item.substring(that.splitPos(item, 4) + 1, that.splitPos(item, 5));
-                        // console.log(itemLable, "itemLable");
                         parentNum = itemSplit[itemSplit.length - 4];
                         prevNum = itemSplit[0];
                         nextNum = itemSplit[2];
-                        // console.log(itemName, parentNum);
-
                     } else {
                         itemLable = item;
                     }
@@ -1151,7 +1139,6 @@
             $('#outputBtn').click(function () {
                 var allData = that.changeDataStru();
                 if (!$('.tree-list li').length) allData = [];
-                // console.log(allData, '55555', allDataArr);
                 that.callback(allData);
             })
         },

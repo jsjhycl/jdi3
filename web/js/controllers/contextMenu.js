@@ -191,32 +191,32 @@ function ContextMenu() {
     /**
      * 行编号设置 
      */
-    this.setLineId = function ($elem) {
-        var $table = $elem.parents("table"); //获取该元素的父集并复制
-        if ($table.length <= 0) return alert("格式错误！"); //如果不是表格中的元素则退出程序并提示
+    // this.setLineId = function ($elem) {
+    //     var $table = $elem.parents("table"); //获取该元素的父集并复制
+    //     if ($table.length <= 0) return alert("格式错误！"); //如果不是表格中的元素则退出程序并提示
 
-        var $trs = $table.find("tr"), //获取table中所有的行
-            rowIndex = -1; //行编号
-        $trs.each(function () {
-            var $inputs = $(this).find(":input"); //获取该行中的所有输入框
-            if ($inputs.length > 0) { //如果能够获取到输入框
-                rowIndex++; //行编号自增
-            }
-            var columnIndex = 0; //列表编号
-            $inputs.each(function () { //获取所有的行编号并遍历
-                $(this).addClass("focus"); //给当前的输入框添加类名
-                var strId = NumberHelper.idToName(rowIndex, 2) + NumberHelper.idToName(columnIndex, 2), //生成编号AA(表示列)AA(表示行)
-                    result = confirm("即将设置的编号为：" + strId + "，确定要设置吗？"); //确认弹窗问是否确认修改
-                if (result) { //如果确认修改
-                    $(this).attr("id", strId); //给该输入框编号从新设置
-                    columnIndex++; // 列编号自增
-                } else {
-                    return false;
-                }
-                $(this).removeClass("focus"); //移除当前元素的focus类名
-            });
-        });
-    };
+    //     var $trs = $table.find("tr"), //获取table中所有的行
+    //         rowIndex = -1; //行编号
+    //     $trs.each(function () {
+    //         var $inputs = $(this).find(":input"); //获取该行中的所有输入框
+    //         if ($inputs.length > 0) { //如果能够获取到输入框
+    //             rowIndex++; //行编号自增
+    //         }
+    //         var columnIndex = 0; //列表编号
+    //         $inputs.each(function () { //获取所有的行编号并遍历
+    //             $(this).addClass("focus"); //给当前的输入框添加类名
+    //             var strId = NumberHelper.idToName(rowIndex, 2) + NumberHelper.idToName(columnIndex, 2), //生成编号AA(表示列)AA(表示行)
+    //                 result = confirm("即将设置的编号为：" + strId + "，确定要设置吗？"); //确认弹窗问是否确认修改
+    //             if (result) { //如果确认修改
+    //                 $(this).attr("id", strId); //给该输入框编号从新设置
+    //                 columnIndex++; // 列编号自增
+    //             } else {
+    //                 return false;
+    //             }
+    //             $(this).removeClass("focus"); //移除当前元素的focus类名
+    //         });
+    //     });
+    // };
 
     /**
      * 选择页面
@@ -652,16 +652,16 @@ ContextMenu.prototype = {
                         }
                         ]
                     },
-                    {
-                        type: "separator"
-                    },
-                    {
-                        type: "menuitem",
-                        text: "行编号设置",
-                        handler: function () {
-                            that.setLineId($(this));
-                        }
-                    },
+                    // {
+                    //     type: "separator"
+                    // },
+                    // {
+                    //     type: "menuitem",
+                    //     text: "行编号设置",
+                    //     handler: function () {
+                    //         that.setLineId($(this));
+                    //     }
+                    // },
                     {
                         type: "separator"
                     },

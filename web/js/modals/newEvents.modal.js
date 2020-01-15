@@ -914,18 +914,22 @@ function NewEventsModal($modal, $elemts) {
                         <td>
                             ${ that.renderFontSelect("fontSize", item.fontSize)}
                         </td>
-                        <td style="position:relative">
-                            <input type="text" class="form-control propety-color" save-type="style" data-save="color" value="${ item.color || ""}">
-                            <div class="property-icon-wrap">
-                                <input type="color" data-belong="propety-color" class="property-color-input">
-                            <i class="icon icon-color"></i>
+                        <td>
+                            <div style="position:relative">
+                                <input type="text" class="form-control propety-color" save-type="style" data-save="color" value="${ item.color || ""}">
+                                <div class="property-icon-wrap" style="top:2px">
+                                    <input type="color" data-belong="propety-color" class="property-color-input">
+                                <i class="icon icon-color"></i>
+                            </div>
                         </div>
                         </td>
-                        <td style="position:relative">
-                            <input type="text" class="form-control property-background" save-type="style" data-save="backgroundColor" value="${ item.backgroundColor || ""}">
-                            <div class="property-icon-wrap">
-                                <input type="color" data-belong="property-background" class="property-color-input">
-                            <i class="icon icon-color"></i>
+                        <td>
+                            <div style="position:relative">
+                                <input type="text" class="form-control property-background" save-type="style" data-save="backgroundColor" value="${ item.backgroundColor || ""}">
+                                <div class="property-icon-wrap" style="top:2px">
+                                    <input type="color" data-belong="property-background" class="property-color-input">
+                                <i class="icon icon-color"></i>
+                            </div>
                         </div>
                         </td>
                         <td>

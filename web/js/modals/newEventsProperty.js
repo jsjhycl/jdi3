@@ -340,6 +340,7 @@ function newEventsProperty() {
         })
         return str
     }
+    //渲染属性处理的操作类型
     this._renderPropertyHandleOperation = function (selectedValue) {
         var that = this,
             defaultOption = {
@@ -357,6 +358,7 @@ function newEventsProperty() {
 
         return that._renderSelect(defaultOption, options, selectedValue, isPrompt, selectClass, attr)
     }
+    //渲染属性处理的值类型
     this._renderPropertyHandleType = function (selectedValue) {
         var that = this,
             defaultOption = {
@@ -374,6 +376,140 @@ function newEventsProperty() {
 
         return that._renderSelect(defaultOption, options, selectedValue, isPrompt, selectClass, attr)
     }
+    //渲染属性渲染中的字段选择问题
+    this._renderPropertyRenderFields = function (variable, selectedValue, isXAxis) {
+        var that = this,
+            att = isXAxis ? "XAxis" : "Yaxis",
+            defaultOption = {
+                name: "请选择",
+                value: ""
+            },
+            options = that._getpropertyRenderXYoption(variable),
+            selectedValue = selectedValue,
+            isPrompt = true,
+            selectClass = "from-control chosen",
+            attr = {
+                "data-save": att,
+                "data-change": att
+            };
+        return that._renderSelect(defaultOption, options, selectedValue, isPrompt, selectClass, attr)
+    }
+    this._getpropertyRenderXYoption = function (variable) {
+        var options = [],
+            selects = [],
+            fields = [];
+        GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item) {
+            if (variable == item.key) {
+                var propertyData = JSON.parse(item.propertyData) || {},
+                    propertyQuery = JSON.parse(item.propertyQuery) || {},
+                    dbName = propertyData.query ? propertyData.query.dbName : "",
+                    table = propertyData.query ? propertyData.query.table : "";
+                selects = propertyQuery.fields,
+                    fields = new BuildTableJson().getOptions(AllDbName, "field", {
+                        dbName: dbName,
+                        table: table
+                    });
+            }
+        })
+        fields.forEach(item => {
+            if (selects.includes(item.value)) {
+                options.push(item)
+            }
+        })
+        return options;
+    }
+    //属性渲染的渲染类型
+    this._renderPropertyRenderType = function (selectedValue) {
+        var that = this,
+            defaultOption = {
+                name: "请选择渲染类型",
+                value: ""
+            },
+            options = [{
+                name: '累加',
+                value: '0'
+            }, {
+                name: '替换',
+                value: '1'
+            }],
+            selectedValue = selectedValue,
+            isPrompt = false,
+            selectClass = "form-control chosen",
+            attr = {
+                "data-save": "renderType",
+                "data-change": "renderType"
+            };
+        return that._renderSelect(defaultOption, options, selectedValue, isPrompt, selectClass, attr)
+    }
+    //属性渲染的位置
+    this._renderPropertyRenderPostiion = function (selectedValue) {
+        var that = this,
+            defaultOption = {
+                name: "请选择渲染类型",
+                value: ""
+            },
+            options = [{
+                name: '',
+                value: '0'
+            }, {
+                name: '替换',
+                value: '1'
+            }],
+            selectedValue = selectedValue,
+            isPrompt = false,
+            selectClass = "form-control chosen",
+            attr = {
+                "data-save": "renderType",
+                "data-change": "renderType"
+            };
+        return that._renderSelect(defaultOption, options, selectedValue, isPrompt, selectClass, attr)
+    }
+    this._renderPropertyRenderYaxis = function (variable, Yaxis) {
+        var that = this,
+            str = `<table class="table table-bordered" style="margin-bottom: 0px;">
+                    <thead>
+                        <tr>
+                            <th class="text-center">字段</th>
+                            <th class="text-center">分割</th>
+                            <th class="text-center"><span class="add" data-add="propertyRenderYaxis">+</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${that.propertyRenderYaxis(variable,Yaxis)}
+                    </tbody>
+                    </table>`
+        return str;
+    }
+    this.propertyRenderYaxis = function (variable, Yaxis) {
+        var that = this,
+            str = "";
+        Yaxis.forEach(item => {
+            str += `<tr class="YaxisTr">
+                        <td>${that._renderPropertyRenderFields(variable,item.name)}</td>
+                        <td><input type="text" class="form-control" value="${item.split}" data-save="split"></td>
+                        <td><span class="del">×</span></td>
+                </tr>`
+        })
+        return str;
+    }
+    this._renderPropertyRenderContent = function (variable, content) {
+        var that = this,
+            options = that._getpropertyRenderXYoption(variable);
+        return that._renderFieldsCheckBox(options, content);
+    }
+    this._getYaxis = function ($target) {
+        var that = this,
+            result = [];
+        $target.each(function () {
+            var config = {};
+            config.name = $(this).find("[data-save='Yaxis']").val()
+            config.split = $(this).find("[data-save='split']").val()
+            result.push(config)
+        })
+        return result;
+
+    }
+
 
 }
 newEventsProperty.prototype = {
@@ -431,7 +567,7 @@ newEventsProperty.prototype = {
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th class="text-center">请选择自定义变脸</th>
+                                <th class="text-center">自定义变量</th>
                                 <th class="text-center">字段</th>
                                 <th class="text-center">操作类型</th>
                                 <th class="text-center">数值类型</th>
@@ -450,7 +586,45 @@ newEventsProperty.prototype = {
         return str;
 
     },
-    propertyRender: function (propertyRender) {},
+    propertyRender: function (propertyRender) {
+        var that = this,
+            str = `<div class="condition propertyRender" ${propertyRender?"":'style="display:none"'}>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center">自定义变量</th>
+                            <th class="text-center">X轴</th>
+                            <th class="text-center">Y轴</th>
+                            <th class="text-center">渲染内容</th>
+                            <th class="text-center">渲染类型</th>
+                            <th class="text-center">渲染位置</th>
+                            <th class="text-center">渲染颜色</th>
+                            <th class="text-center">列宽</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="propertyRenderTr">
+                            <td>${that._renderCustomVariable(propertyRender.variable||"")}</td>
+                            <td>${that._renderPropertyRenderFields(propertyRender.variable ,propertyRender.Xaxis, true)}</td>
+                            <td>${that._renderPropertyRenderYaxis(propertyRender.variable, propertyRender.Yaxis)}</td>
+                            <td class="propertyRenderContent">${that._renderPropertyRenderContent(propertyRender.variable, propertyRender.content)}</td>
+                            <td>${that._renderPropertyRenderType(propertyRender.renderType)}</td>
+                            <td><input type="text" class="form-control" data-save="renderPositoon" value="${propertyRender.renderPositoon}"></td>
+                            <td style="position:relative">
+                                <input type="text" class="form-control render-color" save-type="style" data-save="color" value="${ propertyRender.renderColor || ""}">
+                                <div class="property-icon-wrap">
+                                    <input type="color" data-belong="render-color" class="property-color-input">
+                                <i class="icon icon-color"></i>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" data-save="colWidth" value="${propertyRender.ColWisth}">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>`;
+        return str;
+    },
     //获取属性数据
     getPropertyData: function ($tr) {
         var that = this,
@@ -508,7 +682,32 @@ newEventsProperty.prototype = {
         return result;
     },
     //
-    getPropertyRender: function () {},
+    getPropertyRender: function () {
+        var that = this,
+            result = {
+                variable: "",
+                Xaxis: "",
+                Yaxis: [],
+                content: [],
+                renderType: "",
+                renderPositoon: "",
+                renderColor: "",
+                ColWisth: ""
+            },
+            $tr = that.$events.find(".propertyRenderTr");
+
+        $tr.each(function () {
+            result.variable = $(this).find('[data-save="variable"]').val();
+            result.Xaxis = $(this).find('[data-save="XAxis"]').val();
+            result.content = that._getFields($(this).find(".propertyRenderContent"));
+            result.Yaxis = that._getYaxis($(this).find(".YaxisTr"));
+            result.renderType = $(this).find('[data-save="renderType"]').val();
+            result.renderPositoon = $(this).find('[data-save="renderPositoon"]').val();
+            result.renderColor = $(this).find('[data-save="color"]').val();
+            result.ColWisth = $(this).find('[data-save="colWidth"]').val()
+        })
+        return result;
+    },
     bindEvents: function () {
         var that = this;
         //属性数据数据库切换时
@@ -551,7 +750,7 @@ newEventsProperty.prototype = {
             })
 
         })
-        //属性处理自定义变量切换的时候
+        //属性处理自定义变量切换的时候?还有问题
         that.$events.on("change" + that.NAME_SPACE, ".propertyHandleVariable [data-change='variable']", function () {
             var propertyHandleVariable = $(this).val(),
                 data = [],
@@ -565,7 +764,7 @@ newEventsProperty.prototype = {
                     }
                     if (GLOBAL_PROPERTY.BODY.customVariable[index].propertyHandle) {
                         check = true;
-                        data = JSON.parse(GLOBAL_PROPERTY.BODY.customVariable[index].getPropertyHandle).handles
+                        data = JSON.parse(GLOBAL_PROPERTY.BODY.customVariable[index].propertyHandle).handles
                     }
                 }
             })

@@ -1,6 +1,6 @@
 {
     "name": "jdi客户端",
-    "version": "1.1.30",
+    "version": "1.1.31",
     "list": [{
         "version": "1.1.0",
         "files": [],
@@ -125,5 +125,9 @@
         "version": "1.1.30",
         "files": ["web/js/modals/newEvents.modal.js", "web/js/modals/newEventsProperty.js", "versions.json"],
         "detail": ["优化事件绑定问题", "保存配置的问题", "触发条件的问题"]
+    }, {
+        "version": "1.1.31",
+        "files": ["web/js/modals/newEvents.modal.js", "web/js/modals/newEventsProperty.js", "data/profiles/dBTable1Config_custom.json", "versions.json"],
+        "detail": ["属性处理的问题", "扩展表格列增加参数", "bug处理"]
     }]
 }

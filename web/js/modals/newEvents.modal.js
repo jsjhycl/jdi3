@@ -446,6 +446,8 @@ function NewEventsModal($modal, $elemts) {
                     <th class="text-center">自定义变量</th>
                     <th class="text-center">开始</th>
                     <th class="text-center">结束</th>
+                    <th class="text-center">开始截取</th>
+                    <th class="text-center">结束截取</th>
                 </tr>
             </thead>
             <tbody>
@@ -469,6 +471,12 @@ function NewEventsModal($modal, $elemts) {
             </td>
             <td>
                 <input type="text" class="form-control" data-save="endText" value="${extendCol.endText || ""}" >
+            </td>
+            <td>
+                <input type="text" class="form-control" data-save="startSubstr" value="${extendCol.startSubstr || ""}" >
+            </td>
+            <td>
+                <input type="text" class="form-control" data-save="endSubstr" value="${extendCol.endSubstr || ""}" >
             </td>
         </tr>`
         return str;
@@ -505,9 +513,9 @@ function NewEventsModal($modal, $elemts) {
     }
     this.renderTypeOfValue = function (typekey, type, selected) {
         let defaultType = {
-                name: type,
-                value: ""
-            },
+            name: type,
+            value: ""
+        },
             str = `<select class="form-control" data-save = "${typekey}" data-change-operator="${typekey}">`,
             options = [defaultType, ...ConditionsHelper.typeConfig];
         options.forEach(item => {
@@ -517,9 +525,9 @@ function NewEventsModal($modal, $elemts) {
     }
     this.renderCopySendConfigTypeOfValue = function (typekey, type, selected) {
         let defaultType = {
-                name: "请选择操作符",
-                value: ""
-            },
+            name: "请选择操作符",
+            value: ""
+        },
             str = `<select class="form-control" data-save = "${typekey}">`,
             options = [defaultType, ...ConditionsHelper.getOperators(type)];
         options.forEach(item => {
@@ -914,18 +922,22 @@ function NewEventsModal($modal, $elemts) {
                         <td>
                             ${ that.renderFontSelect("fontSize", item.fontSize)}
                         </td>
-                        <td style="position:relative">
-                            <input type="text" class="form-control propety-color" save-type="style" data-save="color" value="${ item.color || ""}">
-                            <div class="property-icon-wrap">
-                                <input type="color" data-belong="propety-color" class="property-color-input">
-                            <i class="icon icon-color"></i>
+                        <td>
+                            <div style="position:relative">
+                                <input type="text" class="form-control propety-color" save-type="style" data-save="color" value="${ item.color || ""}">
+                                <div class="property-icon-wrap" style="top:2px">
+                                    <input type="color" data-belong="propety-color" class="property-color-input">
+                                <i class="icon icon-color"></i>
+                            </div>
                         </div>
                         </td>
-                        <td style="position:relative">
-                            <input type="text" class="form-control property-background" save-type="style" data-save="backgroundColor" value="${ item.backgroundColor || ""}">
-                            <div class="property-icon-wrap">
-                                <input type="color" data-belong="property-background" class="property-color-input">
-                            <i class="icon icon-color"></i>
+                        <td>
+                            <div style="position:relative">
+                                <input type="text" class="form-control property-background" save-type="style" data-save="backgroundColor" value="${ item.backgroundColor || ""}">
+                                <div class="property-icon-wrap" style="top:2px">
+                                    <input type="color" data-belong="property-background" class="property-color-input">
+                                <i class="icon icon-color"></i>
+                            </div>
                         </div>
                         </td>
                         <td>
@@ -1220,9 +1232,11 @@ function NewEventsModal($modal, $elemts) {
     this.getExtendCol = function ($tr) {
         let result = {};
         $tr.each(function () {
-            result.startText = $(this).find('[data-save="startText"]').val()
-            result.endText = $(this).find('[data-save="endText"]').val()
-            result.selectText = $(this).find('[data-save="selectText"]').val()
+            result.startText = $(this).find('[data-save="startText"]').val();
+            result.endText = $(this).find('[data-save="endText"]').val();
+            result.selectText = $(this).find('[data-save="selectText"]').val();
+            result.startSubstr = $(this).find('[data-save="startSubstr"]').val();
+            result.endSubstr = $(this).find('[data-save="endSubstr"]').val();
         })
         return result;
     }
@@ -1495,13 +1509,13 @@ NewEventsModal.prototype = {
                 str = that[addType](dbName, table)
             } else if (addType == "propertyRenderYaxis") {
                 var variable = $(this).parents('tr').eq(1).find('[data-save="variable"]').val();
-                str = new newEventsProperty().propertyRenderYaxis(variable,[{name:"",split:""}])
+                str = new newEventsProperty().propertyRenderYaxis(variable, [{ name: "", split: "" }])
             } else {
                 str = that[addType]();
             }
             $tbody.append(str)
             that.bindChosen()
-             new newEventsProperty().bindEvents()
+            new newEventsProperty().bindEvents()
         })
         //移除一行
         that.$modal.on("click" + that.NAME_SPACE, ".del", function () {
@@ -1708,10 +1722,10 @@ NewEventsModal.prototype = {
             $linkbody.empty()
             if (type == "nextProcess") {
                 var data = [{
-                        key: "isNext",
-                        desc: "下一流程",
-                        value: ""
-                    }],
+                    key: "isNext",
+                    desc: "下一流程",
+                    value: ""
+                }],
                     html = that.renderLinkHTMLParmas(data)
                 $linkbody.append(html)
             }

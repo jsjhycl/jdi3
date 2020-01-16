@@ -74,6 +74,9 @@ function newEventsProperty() {
     this._renderFieldsCheckBox = function (fields, selectFields) {
         var that = this,
             str = "";
+        if (!selectFields) {
+            selectFields = []
+        }
         fields.forEach(function (item) {
             str += `<label title="${item.value}" class="checkbox-inline">
                         <input type="checkbox" name="${item.name}" ${selectFields.includes(item.value)?"checked":""} value="${item.value}">${item.name}(${item.value})
@@ -384,15 +387,17 @@ function newEventsProperty() {
                             <td>${that._renderPropertyRenderYaxis(propertyRender.variable, propertyRender.Yaxis)}</td>
                             <td class="propertyRenderContent">${that._renderPropertyRenderContent(propertyRender.variable, propertyRender.content)}</td>
                             <td>${that._renderPropertyRenderType(propertyRender.renderType)}</td>
-                            <td><input type="text" class="form-control" data-save="renderPositoon" value="${propertyRender.renderPositoon}"></td>
-                            <td style="position:relative">
-                                <input type="text" class="form-control render-color" save-type="style" data-save="color" value="${ propertyRender.renderColor || ""}">
-                                <div class="property-icon-wrap">
-                                    <input type="color" data-belong="render-color" class="property-color-input">
-                                <i class="icon icon-color"></i>
+                            <td><input type="text" class="form-control" data-save="renderPositoon" value="${propertyRender.renderPositoon||''}"></td>
+                            <td>
+                                <div style = "position:relative">
+                                    <input type="text" class="form-control render-color" save-type="style" data-save="color" value="${ propertyRender.renderColor || ""}">
+                                    <div class="property-icon-wrap" style="top:2px">
+                                        <input type="color" data-belong="render-color" class="property-color-input">
+                                    <i class="icon icon-color"></i>
+                                </div>
                             </td>
                             <td>
-                                <input type="text" class="form-control" data-save="colWidth" value="${propertyRender.ColWisth}">
+                                <input type="text" class="form-control" data-save="colWidth" value="${propertyRender.ColWisth||''}">
                             </td>
                         </tr>`
         return str;
@@ -779,10 +784,10 @@ newEventsProperty.prototype = {
                         data = JSON.parse(GLOBAL_PROPERTY.BODY.customVariable[index].propertyQuery).fields
                         check = false
                     }
-                    if (GLOBAL_PROPERTY.BODY.customVariable[index].propertyHandle) {
-                        check = true;
-                        data = JSON.parse(GLOBAL_PROPERTY.BODY.customVariable[index].propertyHandle).handles
-                    }
+                    // if (GLOBAL_PROPERTY.BODY.customVariable[index].propertyHandle) {
+                    //     check = true;
+                    //     data = JSON.parse(GLOBAL_PROPERTY.BODY.customVariable[index].propertyHandle).handles
+                    // }
                 }
             })
             if (!check) {
@@ -813,8 +818,14 @@ newEventsProperty.prototype = {
             that.bindChosen()
         })
         that.$events.on("change" + that.NAME_SPACE, ".propertyRenderTr [data-change='variable']", function () {
-            var value = $(this).val()
-            console.log(value)
+            var value = $(this).val(),
+                data = {
+                    variable: value
+                },
+                str = that._renderPropertyRenderTr(data),
+                $tbody = $(this).parents('tbody').eq(0);
+            $tbody.empty().append(str)
+            that.bindChosen()
         })
     }
 

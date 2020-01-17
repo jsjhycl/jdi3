@@ -81,7 +81,6 @@ ChangeGlobal.prototype = {
                 }
             } else {
                 if (obj.key && obj.value) {
-                    obj.value = "";
                     result.push(obj)
                 }
             }
@@ -104,6 +103,7 @@ ChangeGlobal.prototype = {
                 typeId = type == "局部变量" ? $("#workspace").attr("data-id") : "global",
                 result = that.getTableData($target, type);
             that.data[typeId] = result;
+            console.log(that.data)
 
             new FileService().writeFile(that.path, JSON.stringify(that.data))
             // new FileService().writeFile(that.path, JSON.stringify(str))

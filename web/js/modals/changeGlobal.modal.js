@@ -60,8 +60,7 @@ ChangeGlobal.prototype = {
             if (type == "自定义变量") {
                 html += that.renderCustomTr(item.key, item.desc, item.propertyData, item.propertyQuery, item.propertyHandle, item.propertyRender)
             } else {
-
-                html += that.renderTr(item.key, item.desc)
+                html += that.renderTr(item.key, item.value)
             }
         });
         $target.html(html);

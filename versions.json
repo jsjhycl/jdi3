@@ -1,6 +1,6 @@
 {
     "name": "jdi客户端",
-    "version": "1.1.31",
+    "version": "1.1.32",
     "list": [{
         "version": "1.1.0",
         "files": [],
@@ -129,5 +129,9 @@
         "version": "1.1.31",
         "files": ["web/js/modals/newEvents.modal.js", "web/js/modals/newEventsProperty.js", "data/profiles/dBTable1Config_custom.json", "versions.json"],
         "detail": ["属性处理的问题", "扩展表格列增加参数", "bug处理"]
+    }, {
+        "version": "1.1.32",
+        "files": ["web/js/modals/changeGlobal.modal.js", "versions.json"],
+        "detail": ["修改保存变量时中文名没有保存上"]
     }]
 }

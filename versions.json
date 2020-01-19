@@ -1,6 +1,6 @@
 {
     "name": "jdi客户端",
-    "version": "1.1.32",
+    "version": "1.1.33",
     "list": [{
         "version": "1.1.0",
         "files": [],
@@ -133,5 +133,9 @@
         "version": "1.1.32",
         "files": ["web/js/modals/changeGlobal.modal.js", "versions.json"],
         "detail": ["修改保存变量时中文名没有保存上"]
+    }, {
+        "version": "1.1.33",
+        "files": ["web/designer/index.html", "web/js/modals/newEvents.modal.js", "web/js/modals/newEventsProperty.js", "web/js/modals/changeGlobal.modal.js", "versions.json"],
+        "detail": ["注释变量配置和扩展表格列中自定义变量", "配置渲染"]
     }]
 }

@@ -9,7 +9,7 @@ function ChangeGlobal($modal) {
         isAppend = !!isAppend;
         var html = `<tr>
                 <td><input type="text" class="form-control" data-save="key" value="${key || ""}" /></td>
-                <td><input type="text" class="form-control" data-save="value" value="${value || ""}" /></td>
+                <td><input type="text" class="form-control" data-save="desc" value="${value || ""}" /></td>
                 <td><span class="del">X</span></td>
                 </tr>`
         isAppend && appendTo.append(html);
@@ -60,7 +60,7 @@ ChangeGlobal.prototype = {
             if (type == "自定义变量") {
                 html += that.renderCustomTr(item.key, item.desc, item.propertyData, item.propertyQuery, item.propertyHandle, item.propertyRender)
             } else {
-                html += that.renderTr(item.key, item.value)
+                html += that.renderTr(item.key, item.desc)
             }
         });
         $target.html(html);
@@ -79,7 +79,7 @@ ChangeGlobal.prototype = {
                     result.push(obj)
                 }
             } else {
-                if (obj.key && obj.value) {
+                if (obj.key && obj.desc) {
                     result.push(obj)
                 }
             }

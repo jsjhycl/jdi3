@@ -652,7 +652,7 @@ newEventsProperty.prototype = {
         var that = this,
             variable = propertyHandle ? propertyHandle.variable : "",
             handles = propertyHandle ? propertyHandle.handles : [],
-            Xaxis = propertyHandle ? propertyHandle.XAxis : "",
+            Xaxis = propertyHandle ? propertyHandle.Xaxis : "",
             Yaxis = propertyHandle ? propertyHandle.Yaxis : [],
             str = `<div class="condition propertyHandle" ${propertyHandle?"":'style="display:none"'}>
                     <table class="table table-bordered">

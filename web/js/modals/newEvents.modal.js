@@ -443,7 +443,6 @@ function NewEventsModal($modal, $elemts) {
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th class="text-center">自定义变量</th>
                     <th class="text-center">开始</th>
                     <th class="text-center">结束</th>
                     <th class="text-center">开始截取</th>
@@ -464,9 +463,6 @@ function NewEventsModal($modal, $elemts) {
             str = '';
         str += `<tr class="importDbTr">
             <td>
-                ${that.renderExtentColSelect(extendCol.selectText)}
-            </td>
-            <td>
                 <input type="text" class="form-control" data-save="startText" value="${extendCol.startText || ""}" >
             </td>
             <td>
@@ -482,17 +478,17 @@ function NewEventsModal($modal, $elemts) {
         return str;
     }
     //zww
-    this.renderExtentColSelect = function (selectText) {
-        var str = `<select class="form-control chosen" data-save="selectText"><option value="">请选择自定义变量</option>`,
-            BODY = GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable,
-            selectArr = BODY ? GLOBAL_PROPERTY.BODY.customVariable : [];
-        selectArr.forEach(item => {
-            var selectVal = `${item.desc}(${item.key})`;
-            str += `<option value="${selectVal}" ${selectVal == selectText ? "selected" : ""}> ${selectVal}</option>`
-        })
-        str += "</select>"
-        return str;
-    }
+    // this.renderExtentColSelect = function (selectText) {
+    //     var str = `<select class="form-control chosen" data-save="selectText"><option value="">请选择自定义变量</option>`,
+    //         BODY = GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable,
+    //         selectArr = BODY ? GLOBAL_PROPERTY.BODY.customVariable : [];
+    //     selectArr.forEach(item => {
+    //         var selectVal = `${item.desc}(${item.key})`;
+    //         str += `<option value="${selectVal}" ${selectVal == selectText ? "selected" : ""}> ${selectVal}</option>`
+    //     })
+    //     str += "</select>"
+    //     return str;
+    // }//end
     // this.renderImportExcel = function (importArea) {
     //     let that = this,
     //         str = "";
@@ -1214,7 +1210,6 @@ function NewEventsModal($modal, $elemts) {
                 result.query.table = $(this).find('[data-save="table"]').val(),
                 result.query.conditions = that.getCopySendCondition($(this).find(".copySendCondition")),
                 result.query.fields = that.getCustomPropertyFields($(this).find(".checkboxField"));
-
         })
         return result;
     }
@@ -1234,7 +1229,7 @@ function NewEventsModal($modal, $elemts) {
         $tr.each(function () {
             result.startText = $(this).find('[data-save="startText"]').val();
             result.endText = $(this).find('[data-save="endText"]').val();
-            result.selectText = $(this).find('[data-save="selectText"]').val();
+            // result.selectText = $(this).find('[data-save="selectText"]').val();
             result.startSubstr = $(this).find('[data-save="startSubstr"]').val();
             result.endSubstr = $(this).find('[data-save="endSubstr"]').val();
         })

@@ -1,6 +1,6 @@
 {
     "name": "jdi客户端",
-    "version": "1.1.34",
+    "version": "1.1.35",
     "list": [{
         "version": "1.1.0",
         "files": [],
@@ -139,6 +139,10 @@
         "detail": ["注释变量配置和扩展表格列中自定义变量", "配置渲染"]
     }, {
         "version": "1.1.34",
+        "files": ["web/js/modals/changeGlobal.modal.js", "versions.json"],
+        "detail": ["修改变量配置"]
+    }, {
+        "version": "1.1.35",
         "files": ["web/js/modals/changeGlobal.modal.js", "versions.json"],
         "detail": ["修改变量配置"]
     }]

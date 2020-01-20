@@ -79,7 +79,7 @@ ChangeGlobal.prototype = {
                     result.push(obj)
                 }
             } else {
-                if (obj.key && obj.desc) {
+                if (obj.key && obj.desc){
                     result.push(obj)
                 }
             }

@@ -121,9 +121,11 @@ DbQueryModal.prototype = {
 
         if (data.type == "common") {
             eventObj.subscribe.query = ["commonQuery"]
+            eventObj.publish.sort = ["commonQuery"]
         }
         if (data.type == "table") {
             eventObj.subscribe.query = ["tableQuery"]
+            eventObj.publish.sort = ["tableQuery"]
         }
         if (events.length == 0) { //如果没有事件
             eventObj.publish.key = [id, trigger_type, "SPP" + 0].join("_")

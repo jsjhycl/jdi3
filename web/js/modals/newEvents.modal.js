@@ -509,9 +509,9 @@ function NewEventsModal($modal, $elemts) {
     }
     this.renderTypeOfValue = function (typekey, type, selected) {
         let defaultType = {
-                name: type,
-                value: ""
-            },
+            name: type,
+            value: ""
+        },
             str = `<select class="form-control" data-save = "${typekey}" data-change-operator="${typekey}">`,
             options = [defaultType, ...ConditionsHelper.typeConfig];
         options.forEach(item => {
@@ -521,9 +521,9 @@ function NewEventsModal($modal, $elemts) {
     }
     this.renderCopySendConfigTypeOfValue = function (typekey, type, selected) {
         let defaultType = {
-                name: "请选择操作符",
-                value: ""
-            },
+            name: "请选择操作符",
+            value: ""
+        },
             str = `<select class="form-control" data-save = "${typekey}">`,
             options = [defaultType, ...ConditionsHelper.getOperators(type)];
         options.forEach(item => {
@@ -1427,49 +1427,51 @@ NewEventsModal.prototype = {
                     expression: $(this).val()
                 })
             });
-            if (trAttr) var sortArr = JSON.parse(trAttr);
-            var specialArr = ['keySave', 'saveHTML', 'nextProcess'];
-            for (var i = 0; i < specialArr.length; i++) {
-                var specialIdx = sortArr.indexOf(specialArr[i]);
-                if (specialIdx > -1) {
-                    var specialVal = $(`.${specialArr[i]}`).find(`[data-save="${specialArr[i]}"]`).val();
-                    if (!specialVal) sortArr.splice(specialIdx, 1);
-                }
-            }
-            if (trigger_type) {
-                result.push({
-                    publish: {
-                        type: trigger_type,
-                        key: trigger_key,
-                        data: trigger_data,
-                        sort: sortArr
-                    },
-                    subscribe: {
-                        conditions: trigger_conditions,
-                        custom: trigger_custom_methods,
-                        copySend: copySend,
-                        deleteRow: deleteRow,
-                        property: property,
-                        notify: notify,
-                        query: query,
-                        timeQuery: timeQuery,
-                        exprMethods: exprMethods,
-                        saveHTML: saveHTML,
-                        linkHtml: linkHtml,
-                        nextProcess: nextProcess,
-                        executeFn: executeFn,
-                        importExcel: importExcel,
-                        importDb: importDb,
-                        keySave: keySave,
-
-                        propertyData: propertyData,
-                        propertyQuery: propertyQuery,
-                        propertyHandle: propertyHandle,
-                        propertyRender: propertyRender,
-                        extendCol: extendCol //zww
-
+            if (trAttr) {
+                var sortArr = JSON.parse(trAttr);
+                var specialArr = ['keySave', 'saveHTML', 'nextProcess'];
+                for (var i = 0; i < specialArr.length; i++) {
+                    var specialIdx = sortArr.indexOf(specialArr[i]);
+                    if (specialIdx > -1) {
+                        var specialVal = $(`.${specialArr[i]}`).find(`[data-save="${specialArr[i]}"]`).val();
+                        if (!specialVal) sortArr.splice(specialIdx, 1);
                     }
-                })
+                }
+                if (trigger_type) {
+                    result.push({
+                        publish: {
+                            type: trigger_type,
+                            key: trigger_key,
+                            data: trigger_data,
+                            sort: sortArr
+                        },
+                        subscribe: {
+                            conditions: trigger_conditions,
+                            custom: trigger_custom_methods,
+                            copySend: copySend,
+                            deleteRow: deleteRow,
+                            property: property,
+                            notify: notify,
+                            query: query,
+                            timeQuery: timeQuery,
+                            exprMethods: exprMethods,
+                            saveHTML: saveHTML,
+                            linkHtml: linkHtml,
+                            nextProcess: nextProcess,
+                            executeFn: executeFn,
+                            importExcel: importExcel,
+                            importDb: importDb,
+                            keySave: keySave,
+
+                            propertyData: propertyData,
+                            propertyQuery: propertyQuery,
+                            propertyHandle: propertyHandle,
+                            propertyRender: propertyRender,
+                            extendCol: extendCol //zww
+
+                        }
+                    })
+                }
             }
         })
         result.length > 0 ? that.$element.val(JSON.stringify(result)) : that.$element.val("");
@@ -1502,9 +1504,9 @@ NewEventsModal.prototype = {
                 }])
             } else if (addType == "propertyHandleYaxis") {
                 var variable = $(this).parents('tr').eq(1).find('[data-save="variable"]').val();
-                str = new newEventsProperty().propertyHandleYaxis(variable,[{name:"",slice:"",content:""}])
+                str = new newEventsProperty().propertyHandleYaxis(variable, [{ name: "", slice: "", content: "" }])
 
-            }else {
+            } else {
                 str = that[addType]();
             }
             $tbody.append(str)
@@ -1716,10 +1718,10 @@ NewEventsModal.prototype = {
             $linkbody.empty()
             if (type == "nextProcess") {
                 var data = [{
-                        key: "isNext",
-                        desc: "下一流程",
-                        value: ""
-                    }],
+                    key: "isNext",
+                    desc: "下一流程",
+                    value: ""
+                }],
                     html = that.renderLinkHTMLParmas(data)
                 $linkbody.append(html)
             }

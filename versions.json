@@ -1,6 +1,6 @@
 {
     "name": "jdi客户端",
-    "version": "1.1.35",
+    "version": "1.1.36",
     "list": [{
         "version": "1.1.0",
         "files": [],
@@ -145,5 +145,9 @@
         "version": "1.1.35",
         "files": ["web/js/modals/changeGlobal.modal.js", "versions.json"],
         "detail": ["修改变量配置"]
+    }, {
+        "version": "1.1.36",
+        "files": ["web/js/modals/newEvents.modal.js","web/js/modals/query.modal.js", "versions.json"],
+        "detail": ["修改保存后触发配置消失bug","修改事件串行执行顺序bug"]
     }]
 }

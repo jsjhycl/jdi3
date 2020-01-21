@@ -101,8 +101,11 @@ function NewEventsModal($modal, $elemts) {
         subscribe: {}
     }) {
         var sortArr = '';
-        if (event.publish.sort)
+        console.log(event, "event")
+        if (event.publish.sort) {
+            console.log(event, "event22222")
             sortArr = JSON.stringify(event.publish.sort);
+        }
         let that = this,
             str = `<tr data-check='${sortArr}' class="tr eventsTr">
                     <td><span class="del">×</span></td>
@@ -509,9 +512,9 @@ function NewEventsModal($modal, $elemts) {
     }
     this.renderTypeOfValue = function (typekey, type, selected) {
         let defaultType = {
-                name: type,
-                value: ""
-            },
+            name: type,
+            value: ""
+        },
             str = `<select class="form-control" data-save = "${typekey}" data-change-operator="${typekey}">`,
             options = [defaultType, ...ConditionsHelper.typeConfig];
         options.forEach(item => {
@@ -521,9 +524,9 @@ function NewEventsModal($modal, $elemts) {
     }
     this.renderCopySendConfigTypeOfValue = function (typekey, type, selected) {
         let defaultType = {
-                name: "请选择操作符",
-                value: ""
-            },
+            name: "请选择操作符",
+            value: ""
+        },
             str = `<select class="form-control" data-save = "${typekey}">`,
             options = [defaultType, ...ConditionsHelper.getOperators(type)];
         options.forEach(item => {
@@ -1282,30 +1285,34 @@ NewEventsModal.prototype = {
 
     },
     judgeCheck: function () {
-        var $eventsAttr = $('.eventsTr').attr('data-check'),
-            methodsContent = $('.eventsTr').find('.methods > div'),
-            checkedArr = [];
-        if (!$eventsAttr) return false;
-        var $attrCheck = JSON.parse($eventsAttr);
-        for (var i = 0; i < methodsContent.length; i++) {
-            var value = this.commonData(methodsContent, i);
-            value && checkedArr.push(value);
-        }
-        if (checkedArr.length === 0) $attrCheck = [];
-        var filterArr = $attrCheck.filter(ele => {
-            return checkedArr.indexOf(ele) == -1;
-        })
-        for (var m = 0; m < filterArr.length; m++) {
-            var findIdx = $attrCheck.indexOf(filterArr[m]);
-            if (findIdx > -1) $attrCheck.splice(findIdx, 1);
-        }
-        $('.eventsTr').attr('data-check', JSON.stringify($attrCheck));
-        for (var i = 0; i < methodsContent.length; i++) {
-            var value = this.commonData(methodsContent, i),
-                checkbox = methodsContent.eq(i).find('input[type="checkbox"]');
-            if (value) {
-                var findItemIdx = $attrCheck.indexOf(value);
-                checkbox.parent('div').append(`<span class="checked-num" data-value="${value}">${findItemIdx + 1}</span>`);
+        var $trArr = this.$eventTbody.find('.eventsTr');
+        for (var item = 0; item < $trArr.length; item++) {
+            var eqTrArr = $trArr.eq(item);
+            var $eventsAttr = eqTrArr.attr('data-check'),
+                methodsContent = eqTrArr.find('.methods > div'),
+                checkedArr = [];
+            if (!$eventsAttr) return false;
+            var $attrCheck = JSON.parse($eventsAttr);
+            for (var i = 0; i < methodsContent.length; i++) {
+                var value = this.commonData(methodsContent, i);
+                value && checkedArr.push(value);
+            }
+            if (checkedArr.length === 0) $attrCheck = [];
+            var filterArr = $attrCheck.filter(ele => {
+                return checkedArr.indexOf(ele) == -1;
+            })
+            for (var m = 0; m < filterArr.length; m++) {
+                var findIdx = $attrCheck.indexOf(filterArr[m]);
+                if (findIdx > -1) $attrCheck.splice(findIdx, 1);
+            }
+            eqTrArr.attr('data-check', JSON.stringify($attrCheck));
+            for (var j = 0; j < methodsContent.length; j++) {
+                var value = this.commonData(methodsContent, j),
+                    checkbox = methodsContent.eq(j).find('input[type="checkbox"]');
+                if (value) {
+                    var findItemIdx = $attrCheck.indexOf(value);
+                    checkbox.parent('div').append(`<span class="checked-num" data-value="${value}">${findItemIdx + 1}</span>`);
+                }
             }
         }
     },
@@ -1427,7 +1434,8 @@ NewEventsModal.prototype = {
                     expression: $(this).val()
                 })
             });
-            if (trAttr) var sortArr = JSON.parse(trAttr);
+            var sortArr = [];
+            if (trAttr) sortArr = JSON.parse(trAttr);
             var specialArr = ['keySave', 'saveHTML', 'nextProcess'];
             for (var i = 0; i < specialArr.length; i++) {
                 var specialIdx = sortArr.indexOf(specialArr[i]);
@@ -1502,9 +1510,9 @@ NewEventsModal.prototype = {
                 }])
             } else if (addType == "propertyHandleYaxis") {
                 var variable = $(this).parents('tr').eq(1).find('[data-save="variable"]').val();
-                str = new newEventsProperty().propertyHandleYaxis(variable,[{name:"",slice:"",content:""}])
+                str = new newEventsProperty().propertyHandleYaxis(variable, [{ name: "", slice: "", content: "" }])
 
-            }else {
+            } else {
                 str = that[addType]();
             }
             $tbody.append(str)
@@ -1716,10 +1724,10 @@ NewEventsModal.prototype = {
             $linkbody.empty()
             if (type == "nextProcess") {
                 var data = [{
-                        key: "isNext",
-                        desc: "下一流程",
-                        value: ""
-                    }],
+                    key: "isNext",
+                    desc: "下一流程",
+                    value: ""
+                }],
                     html = that.renderLinkHTMLParmas(data)
                 $linkbody.append(html)
             }

@@ -101,8 +101,11 @@ function NewEventsModal($modal, $elemts) {
         subscribe: {}
     }) {
         var sortArr = '';
-        if (event.publish.sort)
+        console.log(event, "event")
+        if (event.publish.sort) {
+            console.log(event, "event22222")
             sortArr = JSON.stringify(event.publish.sort);
+        }
         let that = this,
             str = `<tr data-check='${sortArr}' class="tr eventsTr">
                     <td><span class="del">×</span></td>
@@ -1282,30 +1285,34 @@ NewEventsModal.prototype = {
 
     },
     judgeCheck: function () {
-        var $eventsAttr = $('.eventsTr').attr('data-check'),
-            methodsContent = $('.eventsTr').find('.methods > div'),
-            checkedArr = [];
-        if (!$eventsAttr) return false;
-        var $attrCheck = JSON.parse($eventsAttr);
-        for (var i = 0; i < methodsContent.length; i++) {
-            var value = this.commonData(methodsContent, i);
-            value && checkedArr.push(value);
-        }
-        if (checkedArr.length === 0) $attrCheck = [];
-        var filterArr = $attrCheck.filter(ele => {
-            return checkedArr.indexOf(ele) == -1;
-        })
-        for (var m = 0; m < filterArr.length; m++) {
-            var findIdx = $attrCheck.indexOf(filterArr[m]);
-            if (findIdx > -1) $attrCheck.splice(findIdx, 1);
-        }
-        $('.eventsTr').attr('data-check', JSON.stringify($attrCheck));
-        for (var i = 0; i < methodsContent.length; i++) {
-            var value = this.commonData(methodsContent, i),
-                checkbox = methodsContent.eq(i).find('input[type="checkbox"]');
-            if (value) {
-                var findItemIdx = $attrCheck.indexOf(value);
-                checkbox.parent('div').append(`<span class="checked-num" data-value="${value}">${findItemIdx + 1}</span>`);
+        var $trArr = this.$eventTbody.find('.eventsTr');
+        for (var item = 0; item < $trArr.length; item++) {
+            var eqTrArr = $trArr.eq(item);
+            var $eventsAttr = eqTrArr.attr('data-check'),
+                methodsContent = eqTrArr.find('.methods > div'),
+                checkedArr = [];
+            if (!$eventsAttr) return false;
+            var $attrCheck = JSON.parse($eventsAttr);
+            for (var i = 0; i < methodsContent.length; i++) {
+                var value = this.commonData(methodsContent, i);
+                value && checkedArr.push(value);
+            }
+            if (checkedArr.length === 0) $attrCheck = [];
+            var filterArr = $attrCheck.filter(ele => {
+                return checkedArr.indexOf(ele) == -1;
+            })
+            for (var m = 0; m < filterArr.length; m++) {
+                var findIdx = $attrCheck.indexOf(filterArr[m]);
+                if (findIdx > -1) $attrCheck.splice(findIdx, 1);
+            }
+            eqTrArr.attr('data-check', JSON.stringify($attrCheck));
+            for (var j = 0; j < methodsContent.length; j++) {
+                var value = this.commonData(methodsContent, j),
+                    checkbox = methodsContent.eq(j).find('input[type="checkbox"]');
+                if (value) {
+                    var findItemIdx = $attrCheck.indexOf(value);
+                    checkbox.parent('div').append(`<span class="checked-num" data-value="${value}">${findItemIdx + 1}</span>`);
+                }
             }
         }
     },
@@ -1427,51 +1434,50 @@ NewEventsModal.prototype = {
                     expression: $(this).val()
                 })
             });
-            if (trAttr) {
-                var sortArr = JSON.parse(trAttr);
-                var specialArr = ['keySave', 'saveHTML', 'nextProcess'];
-                for (var i = 0; i < specialArr.length; i++) {
-                    var specialIdx = sortArr.indexOf(specialArr[i]);
-                    if (specialIdx > -1) {
-                        var specialVal = $(`.${specialArr[i]}`).find(`[data-save="${specialArr[i]}"]`).val();
-                        if (!specialVal) sortArr.splice(specialIdx, 1);
+            var sortArr = [];
+            if (trAttr) sortArr = JSON.parse(trAttr);
+            var specialArr = ['keySave', 'saveHTML', 'nextProcess'];
+            for (var i = 0; i < specialArr.length; i++) {
+                var specialIdx = sortArr.indexOf(specialArr[i]);
+                if (specialIdx > -1) {
+                    var specialVal = $(`.${specialArr[i]}`).find(`[data-save="${specialArr[i]}"]`).val();
+                    if (!specialVal) sortArr.splice(specialIdx, 1);
+                }
+            }
+            if (trigger_type) {
+                result.push({
+                    publish: {
+                        type: trigger_type,
+                        key: trigger_key,
+                        data: trigger_data,
+                        sort: sortArr
+                    },
+                    subscribe: {
+                        conditions: trigger_conditions,
+                        custom: trigger_custom_methods,
+                        copySend: copySend,
+                        deleteRow: deleteRow,
+                        property: property,
+                        notify: notify,
+                        query: query,
+                        timeQuery: timeQuery,
+                        exprMethods: exprMethods,
+                        saveHTML: saveHTML,
+                        linkHtml: linkHtml,
+                        nextProcess: nextProcess,
+                        executeFn: executeFn,
+                        importExcel: importExcel,
+                        importDb: importDb,
+                        keySave: keySave,
+
+                        propertyData: propertyData,
+                        propertyQuery: propertyQuery,
+                        propertyHandle: propertyHandle,
+                        propertyRender: propertyRender,
+                        extendCol: extendCol //zww
+
                     }
-                }
-                if (trigger_type) {
-                    result.push({
-                        publish: {
-                            type: trigger_type,
-                            key: trigger_key,
-                            data: trigger_data,
-                            sort: sortArr
-                        },
-                        subscribe: {
-                            conditions: trigger_conditions,
-                            custom: trigger_custom_methods,
-                            copySend: copySend,
-                            deleteRow: deleteRow,
-                            property: property,
-                            notify: notify,
-                            query: query,
-                            timeQuery: timeQuery,
-                            exprMethods: exprMethods,
-                            saveHTML: saveHTML,
-                            linkHtml: linkHtml,
-                            nextProcess: nextProcess,
-                            executeFn: executeFn,
-                            importExcel: importExcel,
-                            importDb: importDb,
-                            keySave: keySave,
-
-                            propertyData: propertyData,
-                            propertyQuery: propertyQuery,
-                            propertyHandle: propertyHandle,
-                            propertyRender: propertyRender,
-                            extendCol: extendCol //zww
-
-                        }
-                    })
-                }
+                })
             }
         })
         result.length > 0 ? that.$element.val(JSON.stringify(result)) : that.$element.val("");

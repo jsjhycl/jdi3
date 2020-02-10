@@ -101,8 +101,12 @@ function NewEventsModal($modal, $elemts) {
         subscribe: {}
     }) {
         var sortArr = '';
-        if (event.publish.sort)
+        console.log(event)
+        if (event.publish.sort){
+
             sortArr = JSON.stringify(event.publish.sort);
+            
+        }
         let that = this,
             str = `<tr data-check='${sortArr}' class="tr eventsTr">
                     <td><span class="del">×</span></td>
@@ -1427,7 +1431,7 @@ NewEventsModal.prototype = {
                     expression: $(this).val()
                 })
             });
-            if (trAttr) {
+            // if (trAttr) {
                 var sortArr = JSON.parse(trAttr);
                 var specialArr = ['keySave', 'saveHTML', 'nextProcess'];
                 for (var i = 0; i < specialArr.length; i++) {
@@ -1472,7 +1476,7 @@ NewEventsModal.prototype = {
                         }
                     })
                 }
-            }
+            // }
         })
         result.length > 0 ? that.$element.val(JSON.stringify(result)) : that.$element.val("");
 

@@ -1203,27 +1203,27 @@ function NewEventsModal($modal, $elemts) {
         })
     }
     //获取属性数据
-    this.getPropertyData = function ($tr) {
-        var that = this,
-            result = {};
-        $tr.each(function () {
-            result.variable = $(this).find('[data-save="variable"]').val(),
-                result.query = {},
-                result.query.dbName = $(this).find('[data-save="dbName"]').val(),
-                result.query.table = $(this).find('[data-save="table"]').val(),
-                result.query.conditions = that.getCopySendCondition($(this).find(".copySendCondition")),
-                result.query.fields = that.getCustomPropertyFields($(this).find(".checkboxField"));
-        })
-        return result;
-    }
+    // this.getPropertyData = function ($tr) {
+    //     var that = this,
+    //         result = {};
+    //     $tr.each(function () {
+    //         result.variable = $(this).find('[data-save="variable"]').val(),
+    //             result.query = {},
+    //             result.query.dbName = $(this).find('[data-save="dbName"]').val(),
+    //             result.query.table = $(this).find('[data-save="table"]').val(),
+    //             result.query.conditions = that.getCopySendCondition($(this).find(".copySendCondition")),
+    //             result.query.fields = that.getCustomPropertyFields($(this).find(".checkboxField"));
+    //     })
+    //     return result;
+    // }
     //获取查询的属性
-    this.getCustomPropertyFields = function ($target) {
-        var result = [];
-        $target.find("input:checked").each(function () {
-            result.push($(this).val())
-        })
-        return result;
-    }
+    // this.getCustomPropertyFields = function ($target) {
+    //     var result = [];
+    //     $target.find("input:checked").each(function () {
+    //         result.push($(this).val())
+    //     })
+    //     return result;
+    // }
 
 
     //zww
@@ -1364,7 +1364,8 @@ NewEventsModal.prototype = {
                 importDb = null,
                 extendCol = null; //zww;
             if (that.judgeCheckMehods("propertyData", $(this).find(".triggerMethods:checked"))) {
-                propertyData = that.getPropertyData($(this).find('.propertyDataTr'), id, index)
+                // propertyData = that.getPropertyData($(this).find('.propertyDataTr'), id, index)
+                propertyData = new newEventsProperty().getPropertyData($(this).find('.propertyDataTr'), id, index)
             }
             if (that.judgeCheckMehods("propertyQuery", $(this).find(".triggerMethods:checked"))) {
                 propertyQuery = new newEventsProperty().getPropertyQuery($(this).find(".propertyQueryTr"))

@@ -772,7 +772,6 @@ newEventsProperty.prototype = {
                 }
             }
         }
-
         return propertyData;
     },
     //获取属性查询

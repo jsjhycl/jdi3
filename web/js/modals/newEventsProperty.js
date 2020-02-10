@@ -442,11 +442,11 @@ function newEventsProperty() {
                     propertyQuery = JSON.parse(item.propertyQuery) || {},
                     dbName = propertyData.query ? propertyData.query.dbName : "",
                     table = propertyData.query ? propertyData.query.table : "";
-                selects = propertyQuery.fields,
-                    fields = new BuildTableJson().getOptions(AllDbName, "field", {
-                        dbName: dbName,
-                        table: table
-                    });
+                selects = propertyQuery.fields ? propertyQuery.fields : propertyData.query.fields;
+                fields = new BuildTableJson().getOptions(AllDbName, "field", {
+                    dbName: dbName,
+                    table: table
+                });
             }
         })
         fields.forEach(item => {
@@ -584,7 +584,7 @@ function newEventsProperty() {
     this._getPropertyHandleYaxis = function ($target) {
         var that = this,
             result = [];
-        $target.each(function(){
+        $target.each(function () {
             var config = {};
             config.field = $(this).find("[data-save='field']").val()
             config.split = $(this).find("[data-save='split']").val()
@@ -734,9 +734,9 @@ newEventsProperty.prototype = {
                 key: key,
                 desc: id + "属性" + index + 1,
                 propertyData: JSON.stringify(propertyData),
-                propertyQuery: "",
-                propertyHandle: "",
-                propertyRender: ""
+                propertyQuery: null,
+                propertyHandle: null,
+                propertyRender: null
             })
         } else {
             if (!GLOBAL_PROPERTY.BODY.customVariable) {
@@ -745,9 +745,9 @@ newEventsProperty.prototype = {
                     key: key,
                     desc: id + "属性" + index + 1,
                     propertyData: JSON.stringify(propertyData),
-                    propertyQuery: "",
-                    propertyHandle: "",
-                    propertyRender: ""
+                    propertyQuery: null,
+                    propertyHandle: null,
+                    propertyRender: null
                 })
             } else {
                 if (GLOBAL_PROPERTY.BODY.customVariable.every((item) => {
@@ -757,9 +757,9 @@ newEventsProperty.prototype = {
                         key: key,
                         desc: id + "属性" + index + 1,
                         propertyData: JSON.stringify(propertyData),
-                        propertyQuery: "",
-                        propertyHandle: "",
-                        propertyRender: ""
+                        propertyQuery: null,
+                        propertyHandle: null,
+                        propertyRender: null
                     })
                 } else {
                     var Variableindex = -1
@@ -794,7 +794,7 @@ newEventsProperty.prototype = {
         var that = this,
             result = {
                 variable: "",
-                Xaxis:"",
+                Xaxis: "",
                 Yaxis: that._getPropertyHandleYaxis($tr.find(".YaxisTr")),
                 handles: []
             },

@@ -525,6 +525,7 @@ function newEventsProperty() {
                         <tr>
                             <th class="text-center">字段</th>
                             <th class="text-center">分割</th>
+                            <th class="text-center">是键位</th>
                             <th class="text-center">值</th>
                             <th class="text-center"><span class="add" data-add="propertyHandleYaxis">+</span></th>
                         </tr>
@@ -540,8 +541,9 @@ function newEventsProperty() {
             str = "";
         Yaxis && Yaxis.forEach(item => {
             str += `<tr class="YaxisTr">
-                        <td>${that._renderPropertyHandleFields(variable,item.name,{"data-save":'field',"data-change":'field'})}</td>
+                        <td>${that._renderPropertyHandleFields(variable,item.field,{"data-save":'field',"data-change":'field'})}</td>
                         <td><input type="text" class="form-control" value="${item.split||''}" data-save="split"></td>
+                        <td><input type="checkbox" class="form-control" ${item.isKey?"checked":""} data-save="isKey"></td>
                         <td>${that._renderPropertyHandleFields(variable,item.content,{"data-save":'content',"data-change":'content'})}</td>
                         <td><span class="del">×</span></td>
                 </tr>`
@@ -584,8 +586,9 @@ function newEventsProperty() {
             result = [];
         $target.each(function(){
             var config = {};
-            config.name = $(this).find("[data-save='field']").val()
-            config.field = $(this).find("[data-save='split']").val()
+            config.field = $(this).find("[data-save='field']").val()
+            config.split = $(this).find("[data-save='split']").val()
+            config.isKey = $(this).find("[data-save='isKey']").is(":checked")
             config.content = $(this).find("[data-save='content']").val()
             result.push(config)
         })

@@ -898,6 +898,10 @@ newEventsProperty.prototype = {
                 html = "";
             GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
                 if (item.key == propertyHandleVariable) {
+                    if(GLOBAL_PROPERTY.BODY.customVariable[index].propertyData){
+                        data = JSON.parse(GLOBAL_PROPERTY.BODY.customVariable[index].propertyData).query.fields
+                        check = false
+                    }
                     if (GLOBAL_PROPERTY.BODY.customVariable[index].propertyQuery) {
                         data = JSON.parse(GLOBAL_PROPERTY.BODY.customVariable[index].propertyQuery).fields
                         check = false

@@ -99,15 +99,13 @@ function NewEventsModal($modal, $elemts) {
     this.renderEvents = function (event = {
         publish: {},
         subscribe: {}
-    }) {
+    }, index = 0) {
         var sortArr = '';
-        console.log(event, "event")
         if (event.publish.sort) {
-            console.log(event, "event22222")
             sortArr = JSON.stringify(event.publish.sort);
         }
         let that = this,
-            str = `<tr data-check='${sortArr}' class="tr eventsTr">
+            str = `<tr data-check='${sortArr}' class="tr eventsTr" index="${index}">
                     <td><span class="del">×</span></td>
                     <td>
                         ${ that.renderTriggerType("radio", that.TRIGGER_TYPE, event.publish.type, that.triggerRadioName++)}
@@ -137,10 +135,6 @@ function NewEventsModal($modal, $elemts) {
                         ${ that.renderExtendCol(event.subscribe.extendCol)}
                     </td>
                     </tr>`;
-        // ${ that.renderPropertyData(event.subscribe.propertyData)}
-        // ${that.renderPropertyQuery(event.subscribe.propertyQuery,event.subscribe.propertyData)}
-        // ${ that.renderPropertyData(event.subscribe.propertyData)}
-
         return str;
     }
     // this.renderPropertyQuery = function (propertyQuery, propertyData) {
@@ -512,9 +506,9 @@ function NewEventsModal($modal, $elemts) {
     }
     this.renderTypeOfValue = function (typekey, type, selected) {
         let defaultType = {
-            name: type,
-            value: ""
-        },
+                name: type,
+                value: ""
+            },
             str = `<select class="form-control" data-save = "${typekey}" data-change-operator="${typekey}">`,
             options = [defaultType, ...ConditionsHelper.typeConfig];
         options.forEach(item => {
@@ -524,9 +518,9 @@ function NewEventsModal($modal, $elemts) {
     }
     this.renderCopySendConfigTypeOfValue = function (typekey, type, selected) {
         let defaultType = {
-            name: "请选择操作符",
-            value: ""
-        },
+                name: "请选择操作符",
+                value: ""
+            },
             str = `<select class="form-control" data-save = "${typekey}">`,
             options = [defaultType, ...ConditionsHelper.getOperators(type)];
         options.forEach(item => {
@@ -1266,8 +1260,8 @@ NewEventsModal.prototype = {
             type: "defalut"
         })
         if (!DataType.isArray(events)) return false;
-        events.forEach(event => {
-            str += that.renderEvents(event)
+        events.forEach((event, index) => {
+            str += that.renderEvents(event, index)
         })
         that.$eventTbody.append(str);
         that.judgeCheck(); //判断是否选中
@@ -1511,8 +1505,21 @@ NewEventsModal.prototype = {
                 }])
             } else if (addType == "propertyHandleYaxis") {
                 var variable = $(this).parents('tr').eq(1).find('[data-save="variable"]').val();
-                str = new newEventsProperty().propertyHandleYaxis(variable, [{ name: "", slice: "", content: "" }])
+                str = new newEventsProperty().propertyHandleYaxis(variable, [{
+                    field: "",
+                    split: "",
+                    isKey: false,
+                    content: ""
+                }])
 
+            } else if (addType == "renderEvents") {
+                var trIndex = $(this).parents('table').find(".eventsTr:last").attr("index");
+                trIndex = trIndex ? Number(trIndex) + 1 : 0;
+
+                str = that.renderEvents({
+                    publish: {},
+                    subscribe: {}
+                }, trIndex)
             } else {
                 str = that[addType]();
             }
@@ -1590,7 +1597,7 @@ NewEventsModal.prototype = {
             if (!arr.includes(value)) {
                 return;
             }
-
+            
             $target = $this.parents("tr").find(`.${value}`);
             check ? $target.show() : $target.hide()
         })
@@ -1725,10 +1732,10 @@ NewEventsModal.prototype = {
             $linkbody.empty()
             if (type == "nextProcess") {
                 var data = [{
-                    key: "isNext",
-                    desc: "下一流程",
-                    value: ""
-                }],
+                        key: "isNext",
+                        desc: "下一流程",
+                        value: ""
+                    }],
                     html = that.renderLinkHTMLParmas(data)
                 $linkbody.append(html)
             }

@@ -865,7 +865,8 @@ newEventsProperty.prototype = {
         that.$events.on("click" + that.NAME_SPACE, ".propertyData .checkboxField input", function () {
             var $target = $(this),
                 id = $("#property_id").val(),
-                index = 0;
+                index = $(this).parents('tr').eq(1).attr("index");
+                // console.log()
             that.getPropertyData(that.$events.find(".propertyDataTr"), id, index)
             // GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
             //     if (item.key == propertyData.variable) {

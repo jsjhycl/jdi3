@@ -34,6 +34,21 @@ function SaveAsModal($modal) {
         })
         return result;
     }
+    //对数组进行排序获取最大的那个
+    this.sortStringArr = function (sortArr) {
+        var newArr = sortArr.sort(function (a, b) {
+            return a.localeCompare(b)
+        })
+        return newArr[newArr.length - 1];
+    }
+    //获取下一个编号
+    this.getNextId = function (id) {
+        var arr = [0, "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"],
+            numberId = id.slice(8, 9),
+            index = arr.indexOf(numberId) + 1;
+            newindex = index % 26
+        return arr[newindex]
+    }
 
 
 }
@@ -47,10 +62,12 @@ SaveAsModal.prototype = {
         var type = $workspace.attr("data-type");
         var table = type == "表单" ? "newResources" : "newProducts";
         that.getLastSaveId(table, id).then(res => {
-            var count = res.length,
-                dataid = NumberHelper.idToName(count - 1, 1),
-                newid = id.slice(0, 8) + dataid + id.slice(9, 10);
-
+            var lastid = that.sortStringArr(res),
+                nextid = that.getNextId(lastid),
+                newid = id.slice(0, 8) + nextid + id.slice(9, 10);
+            // var count = res.length,
+            //     dataid = NumberHelper.idToName(count - 1, 1),
+            //     newid = id.slice(0, 8) + dataid + id.slice(9, 10);
 
             that.$saveAsName.val(`${newid}`)
         })
@@ -71,14 +88,17 @@ SaveAsModal.prototype = {
             new Workspace().load(`${newid}`, name, type, contactId, reltemplate)
 
         } else {
-            var table = type == "表单" ? "newResources" : "newProducts";
-            that.getLastSaveId(table, id).then(async res => {
-                var count = res.length,
-                    dataid = NumberHelper.idToName(count - 1, 1),
-                    newid = id.slice(0, 8) + dataid + id.slice(9, 10);
-                await new Workspace().save(true, `${newid}`, null)
-                new Workspace().load(`${newid}`, name, type, contactId, reltemplate)
-            });
+            // var table = type == "表单" ? "newResources" : "newProducts";
+            // that.getLastSaveId(table, id).then(async res => {
+            //     var count = res.length,
+            //         dataid = NumberHelper.idToName(count - 1, 1),
+            //         newid = id.slice(0, 8) + dataid + id.slice(9, 10);
+            //     await new Workspace().save(true, `${newid}`, null)
+            //     new Workspace().load(`${newid}`, name, type, contactId, reltemplate)
+            // });
+            var newid = that.$saveAsName.val()
+            await new Workspace().save(true, `${newid}`, null)
+            new Workspace().load(`${newid}`, name, type, contactId, reltemplate)
         }
     },
 
@@ -96,13 +116,13 @@ SaveAsModal.prototype = {
                 id = id.replace(/\((.*)\)/img, "");
             var table = subtype == "表单" ? "newResources" : "newProducts";
             that.getLastSaveId(table, id).then(res => {
-                var count = res.length,
-                    dataid = NumberHelper.idToName(count - 1, 1);
+                var lastid = that.sortStringArr(res),
+                    nextid = that.getNextId(lastid);
 
                 if (flag) {
-                    dataid = "Z";
+                    nextid = "Z";
                 }
-                newid = id.slice(0, 8) + dataid + id.slice(9, 10);
+                newid = id.slice(0, 8) + nextid + id.slice(9, 10);
                 that.$saveAsName.val(`${newid}`)
             })
         })

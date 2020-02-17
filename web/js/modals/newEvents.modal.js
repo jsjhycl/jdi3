@@ -1520,7 +1520,13 @@ NewEventsModal.prototype = {
                     publish: {},
                     subscribe: {}
                 }, trIndex)
-            } else {
+            } else if (addType == "_renderPropertyDataTr") {//添加属性查询
+                str = new newEventsProperty()._renderPropertyDataTr([{}])
+            } else if(addType=="_renderPropertyQueryTr"){
+                str= new newEventsProperty()._renderPropertyQueryTr([{}])
+            }else if(addType="_renderPropertyHandleBodYTr"){
+                str = new newEventsProperty()._renderPropertyHandleBodYTr([{variable:"",handles:[],Xaxis:"",Yaxis:[]}])
+            }else {
                 str = that[addType]();
             }
             $tbody.append(str)
@@ -1597,7 +1603,7 @@ NewEventsModal.prototype = {
             if (!arr.includes(value)) {
                 return;
             }
-            
+
             $target = $this.parents("tr").find(`.${value}`);
             check ? $target.show() : $target.hide()
         })

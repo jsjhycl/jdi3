@@ -518,7 +518,7 @@ function newEventsProperty() {
                     propertyData = citem
                 }
             })
-            JSON.parse(item.propertyQuery).forEach(citem => {
+            item.propertyQuery && JSON.parse(item.propertyQuery).forEach(citem => {
                 if (citem.variable == variable) {
                     propertyQuery = citem
                 }

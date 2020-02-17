@@ -697,6 +697,23 @@ function newEventsProperty() {
             width: "100%",
         })
     }
+    this.updataVariable = function (targets) {
+        var that = this;
+        targets.each(function () {
+            var value = $(this).val(),
+                str = that._renderCustomVariable(value);
+                $(this).parents("td").eq(0).empty().append(str)
+            // console.log($(this).parents("td").eq(0).empty().append(str))
+            // console.log(value, str)
+        })
+        that.bindChosen()
+        // targets.each(() => {
+        //     var value = $(this).val(),
+        //         str = that._renderCustomVariable(value)
+        //     console.log(str)
+
+        // })
+    }
 
 
 }
@@ -852,6 +869,7 @@ newEventsProperty.prototype = {
                 }
             }
         }
+        that.updataVariable($("[data-change='variable']"))
         return propertyData;
     },
     //获取属性查询

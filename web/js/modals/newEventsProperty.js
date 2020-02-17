@@ -995,7 +995,7 @@ newEventsProperty.prototype = {
                         data = citem.query.fields
                     }
                 })
-                JSON.parse(item.propertyQuery).forEach(citem => {
+                item.propertyQuery && JSON.parse(item.propertyQuery).forEach(citem => {
                     if (citem.variable == propertyHandleVariable) {
                         data = citem.fields
                     }

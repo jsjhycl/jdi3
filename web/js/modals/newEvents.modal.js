@@ -618,7 +618,7 @@ function NewEventsModal($modal, $elemts) {
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th><spa class="add" data-add="renderProperty">＋</span></th>
+                                <th class="text-center"><spa class="add" data-add="renderProperty">＋</span></th>
                                 <th class="text-center">元素</th>
                                 <th class="text-center">字体</th>
                                 <th class="text-center">尺寸</th>
@@ -1362,10 +1362,10 @@ NewEventsModal.prototype = {
                 propertyData = new newEventsProperty().getPropertyData($(this).find('.propertyDataTr'), id, index)
             }
             if (that.judgeCheckMehods("propertyQuery", $(this).find(".triggerMethods:checked"))) {
-                propertyQuery = new newEventsProperty().getPropertyQuery($(this).find(".propertyQueryTr"))
+                propertyQuery = new newEventsProperty().getPropertyQuery($(this).find(".propertyQueryTr"), id, index)
             }
             if (that.judgeCheckMehods("propertyHandle", $(this).find(".triggerMethods:checked"))) {
-                propertyHandle = new newEventsProperty().getPropertyHandle($(this).find(".propertyHandleTbody"))
+                propertyHandle = new newEventsProperty().getPropertyHandle($(this).find(".propertyHandleTbody"), id, index)
             }
             if (that.judgeCheckMehods("propertyRender", $(this).find(".triggerMethods:checked"))) {
                 propertyRender = new newEventsProperty().getPropertyRender($(this).find(".propertyRenderTr"))
@@ -1493,6 +1493,7 @@ NewEventsModal.prototype = {
             let addType = $(this).attr("data-add"),
                 $tbody = $(this).parents("table").eq(0).find("tbody").eq(0),
                 str = "";
+            console.log(1)
             if (addType == "renderCopySendCondition" || addType == "renderCopySendConfig") {
                 let dbName = $(this).parents("tr").eq(1).find('[data-save="dbName"]').val(),
                     table = $(this).parents("tr").eq(1).find('[data-save="table"]').val();
@@ -1520,13 +1521,18 @@ NewEventsModal.prototype = {
                     publish: {},
                     subscribe: {}
                 }, trIndex)
-            } else if (addType == "_renderPropertyDataTr") {//添加属性查询
+            } else if (addType == "_renderPropertyDataTr") { //添加属性查询
                 str = new newEventsProperty()._renderPropertyDataTr([{}])
-            } else if(addType=="_renderPropertyQueryTr"){
-                str= new newEventsProperty()._renderPropertyQueryTr([{}])
-            }else if(addType="_renderPropertyHandleBodYTr"){
-                str = new newEventsProperty()._renderPropertyHandleBodYTr([{variable:"",handles:[],Xaxis:"",Yaxis:[]}])
-            }else {
+            } else if (addType == "_renderPropertyQueryTr") {
+                str = new newEventsProperty()._renderPropertyQueryTr([{}])
+            } else if (addType == "_renderPropertyHandleBodYTr") {
+                str = new newEventsProperty()._renderPropertyHandleBodYTr([{
+                    variable: "",
+                    handles: [],
+                    Xaxis: "",
+                    Yaxis: []
+                }])
+            } else {
                 str = that[addType]();
             }
             $tbody.append(str)

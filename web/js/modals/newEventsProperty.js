@@ -139,11 +139,13 @@ function newEventsProperty() {
         }
         propertyDatas.forEach(propertyData => {
             var propertyData = propertyData ? propertyData : {},
+                cname = propertyData ? propertyData.cname : "",
                 dbName = propertyData.query ? propertyData.query.dbName : "",
                 tableName = propertyData.query ? propertyData.query.table : "",
                 conditions = propertyData.query ? propertyData.query.conditions : [],
                 fields = propertyData.query ? propertyData.query.fields : [];
             str += `<tr class="tr propertyDataTr">
+                <td><input type="text" data-save="cname" class="form-control" value="${cname?cname:''}"></td>
                 <td>${that._renderDbNameSelect(dbName)}</td>
                 <td>${that._renderTableNameSelect(dbName,tableName)}</td>
                 <td>${that._renderQueryCondition(dbName,tableName,conditions)}</td>
@@ -162,9 +164,11 @@ function newEventsProperty() {
         }
 
         propertyQuerys.forEach(propertyQuery => {
-            var variable = propertyQuery ? propertyQuery.variable : "",
+            var variable = propertyQuery ? propertyQuery.oldVariable : "",
+                cname = propertyQuery ? propertyQuery.cname : "",
                 selectFields = propertyQuery ? propertyQuery.fields : [];
             str += `<tr class="propertyQueryTr">
+                    <td><input type="text" class="form-control" data-save="cname" value="${cname?cname:""}"  /></td>
                     <td>${that._renderCustomVariable(variable)}</td>
                     <td class="propertyQueryFields">${that._renderPropertyQueryFields(variable,selectFields)}</td>
                     <td class="text-center"><span class="del">×</span></td>
@@ -188,16 +192,21 @@ function newEventsProperty() {
                 "data-change": "variable"
             }
         GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item) {
-            var propertyData = JSON.parse(item.propertyData)
-            if (Array.isArray(propertyData)) {
-                propertyData.forEach(citem => {
-                    var option = {
-                        name: citem.variable,
-                        value: citem.variable
-                    }
-                    options.push(option)
-                })
+            var option = {
+                name: item.cname ? item.cname : item.key,
+                value: item.key
             }
+            options.push(option)
+            // var propertyData = JSON.parse(item.propertyData)
+            // if (Array.isArray(propertyData)) {
+            //     propertyData.forEach(citem => {
+            //         var option = {
+            //             name: citem.cname ? citem.cname : citem.variable,
+            //             value: citem.variable
+            //         }
+            //         options.push(option)
+            //     })
+            // }
         })
         return that._renderSelect(defaultOption, options, selectedValue, isPrompt, selectClass, attr)
     }
@@ -325,13 +334,18 @@ function newEventsProperty() {
         var that = this,
             propertyData = "";
         GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
-            if (item.propertyData && Array.isArray(JSON.parse(item.propertyData))) {
-                JSON.parse(item.propertyData).forEach(citem => {
-                    if (citem.variable == variable) {
-                        propertyData = citem
-                    }
-                })
+            if (item.key == variable) {
+                propertyData = item
             }
+
+            // if (item.propertyData && Array.isArray(JSON.parse(item.propertyData))) {
+            //     JSON.parse(item.propertyData).forEach(citem => {
+            //         if (citem.variable == variable) {
+            //             propertyData = citem
+            //         }
+            //     })
+            // }
+
             // if (item.key == variable) {
             //     propertyData = item.propertyData ? JSON.parse(item.propertyData) : "";
             // }
@@ -340,9 +354,9 @@ function newEventsProperty() {
             return "";
             // return alert(`请先配置自定义变量${variable}的属性数据`)
         }
-        var dbName = propertyData.query.dbName,
-            tableName = propertyData.query.table,
-            propertyDataFields = propertyData.query.fields,
+        var dbName = propertyData.dbName,
+            tableName = propertyData.table,
+            propertyDataFields = propertyData.fields,
             tableFields = new BuildTableJson().getOptions(AllDbName, "field", {
                 dbName: dbName,
                 table: tableName
@@ -369,13 +383,6 @@ function newEventsProperty() {
                             </tr>
                         </thead>
                     <tbody>`;
-        // if (propertyHandle.length == 0) {
-        //     GLOBAL_PROPERTY && GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable.forEach(item => {
-        //         if (item.key == variable) {
-        //             propertyHandle = item.propertyHandle ? JSON.parse(item.propertyHandle).fields : []
-        //         }
-        //     })
-        // }
         propertyHandle.forEach(item => {
             str += `<tr class="propertyHandleConfig">
                         <td><input type="text" class="form-control" data-save="field" disabled="disabled" value="${item.field}"></td>
@@ -419,7 +426,8 @@ function newEventsProperty() {
             selectClass = "form-control chosen",
             attr = {
                 "data-save": "type",
-                "data-change": "type"
+                "data-change": "type",
+                "data-propertyHandleChange": "propertyHandle"
             };
 
         return that._renderSelect(defaultOption, options, selectedValue, isPrompt, selectClass, attr)
@@ -450,13 +458,17 @@ function newEventsProperty() {
         var that = this,
             str = "";
         propertyhandels.forEach(propertyHandle => {
-            var variable = propertyHandle ? propertyHandle.variable : "",
+            var variable = propertyHandle ? propertyHandle.oldVariable : "",
+                cname = propertyHandle ? propertyHandle.cname : "",
                 handles = propertyHandle ? propertyHandle.handles : [],
                 Xaxis = propertyHandle ? propertyHandle.Xaxis : "",
                 Yaxis = propertyHandle ? propertyHandle.Yaxis : [];
             str += `<tr class="propertyHandleVariable">
                         <td class="text-center" >
                             <span class="del">×</span>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" value="${cname?cname:""}" data-save="cname"/>
                         </td>
                         <td >
                             ${that._renderCustomVariable(variable)}
@@ -510,19 +522,11 @@ function newEventsProperty() {
         var options = [],
             selects = [],
             fields = [],
-            propertyData = {},
-            propertyQuery = {};
+            data = {};
         GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
-            JSON.parse(item.propertyData).forEach(citem => {
-                if (citem.variable == variable) {
-                    propertyData = citem
-                }
-            })
-            item.propertyQuery && JSON.parse(item.propertyQuery).forEach(citem => {
-                if (citem.variable == variable) {
-                    propertyQuery = citem
-                }
-            })
+            if (variable == item.key) {
+                data = item;
+            }
 
 
             // if (variable == item.key) {
@@ -537,9 +541,9 @@ function newEventsProperty() {
             //     });
             // }
         })
-        var dbName = propertyData.query ? propertyData.query.dbName : "",
-            table = propertyData.query ? propertyData.query.table : "";
-        selects = propertyQuery.fields ? propertyQuery.fields : propertyData.query.fields;
+        var dbName = data.dbName,
+            table = data.table;
+        selects = data.fields;
         fields = new BuildTableJson().getOptions(AllDbName, "field", {
             dbName: dbName,
             table: table
@@ -702,7 +706,7 @@ function newEventsProperty() {
         targets.each(function () {
             var value = $(this).val(),
                 str = that._renderCustomVariable(value);
-                $(this).parents("td").eq(0).empty().append(str)
+            $(this).parents("td").eq(0).empty().append(str)
             // console.log($(this).parents("td").eq(0).empty().append(str))
             // console.log(value, str)
         })
@@ -725,6 +729,7 @@ newEventsProperty.prototype = {
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
+                                    <th class="text-center">变量中文名</th>
                                     <th class="text-center">选择数据库</th>
                                     <th class="text-center">选择数据表</th>
                                     <th class="text-center">查询条件</th>
@@ -749,13 +754,14 @@ newEventsProperty.prototype = {
                             <thead>
                                 <tr>
                                     <th class="text-center">请选择自定义变量</th>
+                                    <th class="text-center">变量中文名</th>
                                     <th class="text-center" style="width:500px">请选择字段</th>
                                     <th class="text-center"><span class="add" data-add="_renderPropertyQueryTr">+</span></th>
                                 </tr>
                             </thead>
                             <tbody>
                                ${that._renderPropertyQueryTr(propertyQuerys)} 
-                            </tbody>
+                            </tbody> 
                         </table>
                     </div>`
         return str;
@@ -769,6 +775,7 @@ newEventsProperty.prototype = {
                         <thead>
                             <tr>
                                 <th class="text-center"><span class="add" data-add="_renderPropertyHandleBodYTr">+</span></th>
+                                <th class="text-center">变量中文名</th>
                                 <th class="text-center">自定义变量</th>
                                 <th class="text-center">X轴</th>
                                 <th class="text-center">Y轴</th>
@@ -812,107 +819,115 @@ newEventsProperty.prototype = {
     //获取属性数据
     getPropertyData: function ($tr, id, index) {
         var that = this,
-            key = id + index,
+            key = NumberHelper.idToName(index, 1),
             propertyData = [];
         $tr.each(function (Cindex) {
             var propertyDatatr = {}
-            propertyDatatr.variable = key + Cindex
+            propertyDatatr.variable = id + "_A" + key + NumberHelper.idToName(Cindex, 1)
+            propertyDatatr.cname = $(this).find('[data-save="cname"]').val()
             propertyDatatr.query = {}
             propertyDatatr.query.dbName = $(this).find('[data-save="dbName"]').val()
             propertyDatatr.query.table = $(this).find('[data-save="table"]').val()
             propertyDatatr.query.conditions = that._getQueryCondition($(this).find(".copySendCondition"))
             propertyDatatr.query.fields = that._getFields($(this).find(".checkboxField"));
-            propertyData.push(propertyDatatr)
-        })
-        if (!GLOBAL_PROPERTY.BODY) {
-            GLOBAL_PROPERTY.BODY = {};
-            GLOBAL_PROPERTY.BODY.customVariable = [];
-            GLOBAL_PROPERTY.BODY.customVariable.push({
-                key: key,
-                desc: id + "属性" + index + 1,
-                propertyData: JSON.stringify(propertyData),
-                propertyQuery: null,
-                propertyHandle: null,
-                propertyRender: null
-            })
-        } else {
-            if (!GLOBAL_PROPERTY.BODY.customVariable) {
+            var data = {}
+            data.key = propertyDatatr.variable
+            data.cname = propertyDatatr.cname
+            data.dbName = propertyDatatr.query.dbName
+            data.table = propertyDatatr.query.table
+            data.fields = propertyDatatr.query.fields
+            if (!GLOBAL_PROPERTY.BODY) { //BODY存在吗
+                GLOBAL_PROPERTY.BODY = {};
                 GLOBAL_PROPERTY.BODY.customVariable = [];
-                GLOBAL_PROPERTY.BODY.customVariable.push({
-                    key: key,
-                    desc: id + "属性" + index + 1,
-                    propertyData: JSON.stringify(propertyData),
-                    propertyQuery: null,
-                    propertyHandle: null,
-                    propertyRender: null
-                })
+                GLOBAL_PROPERTY.BODY.customVariable.push(data)
             } else {
-                if (GLOBAL_PROPERTY.BODY.customVariable.every((item) => {
-                        return item.key != key
-                    })) {
-                    GLOBAL_PROPERTY.BODY.customVariable.push({
-                        key: key,
-                        desc: id + "属性" + index + 1,
-                        propertyData: JSON.stringify(propertyData),
-                        propertyQuery: null,
-                        propertyHandle: null,
-                        propertyRender: null
-                    })
+                if (!GLOBAL_PROPERTY.BODY.customVariable) { //customVariable
+                    GLOBAL_PROPERTY.BODY.customVariable = [];
+                    GLOBAL_PROPERTY.BODY.customVariable.push(data)
                 } else {
-                    var Variableindex = -1
-                    GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, cindex) {
-                        if (item.key == key) {
-                            Variableindex = cindex
+                    var number = -1;
+                    GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, cindex) { //原有的存在吗
+                        if (item.key == propertyDatatr.variable) {
+                            number = cindex
                         }
                     })
-                    GLOBAL_PROPERTY.BODY.customVariable[Variableindex].propertyData = JSON.stringify(propertyData)
+                    if (number == -1) {
+                        GLOBAL_PROPERTY.BODY.customVariable.push(data)
+                    } else {
+                        GLOBAL_PROPERTY.BODY.customVariable[number] = data;
+                    }
                 }
             }
-        }
+            propertyData.push(propertyDatatr)
+        })
+
+
         that.updataVariable($("[data-change='variable']"))
         return propertyData;
     },
     //获取属性查询
-    getPropertyQuery: function ($tr) {
+    getPropertyQuery: function ($tr, id, index) {
         var that = this,
+            key = NumberHelper.idToName(index, 1),
             propertyQuerys = [];
-        $tr.each(function () {
+        $tr.each(function (cindex) {
             var propertyQuery = {},
-                variable = $(this).find('[data-save="variable"]').val();
+                cname = $(this).find('[data-save="cname"]').val(),
+                oldVariable = $(this).find('[data-save="variable"]').val(),
+                variable = id + "_B" + key + NumberHelper.idToName(cindex, 1);
             propertyQuery.variable = variable;
+            propertyQuery.oldVariable = oldVariable
+            propertyQuery.cname = cname;
             propertyQuery.fields = that._getFields($(this).find(".propertyQueryFields"));
             propertyQuerys.push(propertyQuery)
-            GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
-                if (Array.isArray(JSON.parse(item.propertyData))) {
-                    JSON.parse(item.propertyData).forEach(citem => {
-                        if (citem.variable == variable) {
-                            GLOBAL_PROPERTY.BODY.customVariable[index].propertyQuery = JSON.stringify(propertyQuerys)
-                        }
-                    })
+            var data = {};
+            data.key = propertyQuery.variable;
+            data.cname = propertyQuery.cname;
+            data.fields = propertyQuery.fields;
+            GLOBAL_PROPERTY.BODY.customVariable.forEach(item => {
+                if (item.key == propertyQuery.oldVariable) {
+                    data.dbName = item.dbName;
+                    data.table = item.table
                 }
-                // if (item.key == propertyQuery.variable) {
-                // }
             })
+            var number = -1;
+            GLOBAL_PROPERTY.BODY.customVariable.forEach((item, dindex) => {
+                if (item.key == data.key) {
+                    number = dindex;
+                }
+            })
+            if (number == -1) {
+                GLOBAL_PROPERTY.BODY.customVariable.push(data)
+            } else {
+                GLOBAL_PROPERTY.BODY.customVariable[number] = data;
+            }
         })
+        that.updataVariable($("[data-change='variable']"))
         return propertyQuerys;
     },
     //获取属性处理
-    getPropertyHandle: function ($trs) {
+    getPropertyHandle: function ($trs, id, key) {
         var that = this,
-            results = [];
+            key = NumberHelper.idToName(key, 1)
+        results = [];
         $trs.find(".propertyHandleVariable").each((index, $tr) => {
             var result = {
                     variable: "",
+                    oldVariable: "",
+                    cname: "",
                     Xaxis: "",
                     Yaxis: that._getPropertyHandleYaxis($($tr).find(".YaxisTr")),
                     handles: []
                 },
-                $variableTr = $($tr).find(".propertyHandleVariable"),
                 $propertyHandleConfig = $($tr).find(".propertyHandleConfig");
-            var variable = $($tr).find("[data-save='variable']").val(),
+            var variable = id + "_C" + key + NumberHelper.idToName(index, 1),
+                oldVariable = $($tr).find("[data-save='variable']").val(),
+                cname = $($tr).find("[data-save='cname']").val(),
                 XAxis = $($tr).find("[data-save='XAxis']").val();
             result.Xaxis = XAxis;
+            result.cname = cname;
             result.variable = variable;
+            result.oldVariable = oldVariable;
             $propertyHandleConfig.each((cindex, tr) => {
                 var config = {};
                 config.field = $(tr).find("[data-save='field']").val();
@@ -921,12 +936,32 @@ newEventsProperty.prototype = {
                 result.handles.push(config)
             })
             results.push(result)
+
+            var data = {}
+            data.key = variable;
+            data.cname = cname;
+            GLOBAL_PROPERTY.BODY.customVariable.forEach(item => {
+                if (item.key == oldVariable) {
+                    data.dbName = item.dbName;
+                    data.table = item.table;
+                    data.fields = item.fields
+                }
+            })
+            var number = -1;
+            GLOBAL_PROPERTY.BODY.customVariable.forEach((item, dindex) => {
+                if (item.key == data.key) {
+                    number = dindex;
+                }
+            })
+            if (number == -1) {
+                GLOBAL_PROPERTY.BODY.customVariable.push(data)
+            } else {
+                GLOBAL_PROPERTY.BODY.customVariable[number] = data;
+            }
+
+            console.log(data)
         })
-        // GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
-        //     if (item.key == result.variable) {
-        //         GLOBAL_PROPERTY.BODY.customVariable[index].propertyHandle = JSON.stringify(results)
-        //     }
-        // })
+        that.updataVariable($("[data-change='variable']"))
         return results;
     },
     //
@@ -976,11 +1011,6 @@ newEventsProperty.prototype = {
                 id = $("#property_id").val(),
                 index = $(this).parents('tr').eq(1).attr("index");
             that.getPropertyData(that.$events.find(".propertyDataTr"), id, index)
-            // GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
-            //     if (item.key == propertyData.variable) {
-            //         GLOBAL_PROPERTY.BODY.customVariable[index].propertyData = JSON.stringify(propertyData)
-            //     }
-            // })
         })
         //数据查询切换自定义变量时
         that.$events.on("change" + that.NAME_SPACE, ".propertyQuery [data-change='variable']", function () {
@@ -993,31 +1023,30 @@ newEventsProperty.prototype = {
         })
         //属性查询字段点击时候
         that.$events.on("click" + that.NAME_SPACE, ".propertyQueryFields input", function () {
-            that.getPropertyQuery(that.$events.find(".propertyQueryTr"))
-            // var propertyQuery = that.getPropertyQuery(that.$events.find(".propertyQueryTr"))
-            // GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
-            //     if (item.key == propertyQuery.variable) {
-            //         GLOBAL_PROPERTY.BODY.customVariable[index].propertyQuery = JSON.stringify(propertyQuery)
-            //     }
-            // })
-
+            var id = $("#property_id").val(),
+                index = $(this).parents('tr').eq(1).attr("index");
+            that.getPropertyQuery(that.$events.find(".propertyQueryTr"), id, index)
         })
         //属性处理自定义变量切换的时候?还有问题
         that.$events.on("change" + that.NAME_SPACE, ".propertyHandleVariable [data-change='variable']", function () {
             var propertyHandleVariable = $(this).val(),
+                cname = $(this).parents("tr").eq(0).find("[data-save='cname']").val(),
                 data = [],
                 html = "";
             GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
-                JSON.parse(item.propertyData).forEach(citem => {
-                    if (citem.variable == propertyHandleVariable) {
-                        data = citem.query.fields
-                    }
-                })
-                item.propertyQuery && JSON.parse(item.propertyQuery).forEach(citem => {
-                    if (citem.variable == propertyHandleVariable) {
-                        data = citem.fields
-                    }
-                })
+                if (item.key == propertyHandleVariable) {
+                    data = item.fields
+                }
+                // JSON.parse(item.propertyData).forEach(citem => {
+                //     if (citem.variable == propertyHandleVariable) {
+                //         data = citem.query.fields
+                //     }
+                // })
+                // item.propertyQuery && JSON.parse(item.propertyQuery).forEach(citem => {
+                //     if (citem.variable == propertyHandleVariable) {
+                //         data = citem.fields
+                //     }
+                // })
                 // if (item.key == propertyHandleVariable) {
                 //     if (GLOBAL_PROPERTY.BODY.customVariable[index].propertyData) {
                 //         data = JSON.parse(GLOBAL_PROPERTY.BODY.customVariable[index].propertyData).query.fields
@@ -1042,7 +1071,8 @@ newEventsProperty.prototype = {
                 handles.push(config)
             })
             var result = [{
-                variable: propertyHandleVariable,
+                cname:cname,
+                oldVariable: propertyHandleVariable,
                 handles: handles,
                 Xaxis: "",
                 Yaxis: ''
@@ -1078,6 +1108,13 @@ newEventsProperty.prototype = {
             // $(this).parents("tr").eq(0).next().remove()
             $(this).parents("tr").eq(0).replaceWith($(html))
             that.bindChosen()
+        })
+
+        that.$events.on("change" + that.NAME_SPACE, ".propertyHandleVariable [data-propertyHandleChange='propertyHandle']", function () {
+            var id = id = $("#property_id").val(),
+                index = $(this).parents('tr').eq(1).attr("index");
+                console.log($(".propertyHandle .propertyHandleTbody"))
+            that.getPropertyHandle($(".propertyHandle .propertyHandleTbody"), id, index)
         })
         that.$events.on("change" + that.NAME_SPACE, ".propertyRenderTr [data-change='variable']", function () {
             var value = $(this).val(),

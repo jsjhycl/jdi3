@@ -1493,7 +1493,6 @@ NewEventsModal.prototype = {
             let addType = $(this).attr("data-add"),
                 $tbody = $(this).parents("table").eq(0).find("tbody").eq(0),
                 str = "";
-            console.log(1)
             if (addType == "renderCopySendCondition" || addType == "renderCopySendConfig") {
                 let dbName = $(this).parents("tr").eq(1).find('[data-save="dbName"]').val(),
                     table = $(this).parents("tr").eq(1).find('[data-save="table"]').val();

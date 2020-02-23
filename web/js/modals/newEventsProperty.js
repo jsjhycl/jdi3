@@ -63,7 +63,7 @@ function newEventsProperty() {
             if (value == selectedValue) {
                 selected = "selected"
             }
-            html += `<option value="${value}" ${selected}>${item.name}${prompt}</option>`
+            html += `<option value="${value}" data-text="${item.name}" ${selected}>${item.name}${prompt}</option>`
         });
         html += `</select>`
         var $select = $(html);
@@ -436,6 +436,7 @@ function newEventsProperty() {
         var that = this;
         str = `<tr class="propertyRenderTr">
                             <td>${that._renderCustomVariable(propertyRender.variable||"")}</td>
+                            <td>${that._renderPropertyRenderFields(propertyRender.variable ,propertyRender.Xline, true,"extrLine")}</td>
                             <td>${that._renderPropertyRenderFields(propertyRender.variable ,propertyRender.Xaxis, true)}</td>
                             <td>${that._renderPropertyRenderYaxis(propertyRender.variable, propertyRender.Yaxis)}</td>
                             <td>${that._renderPropertyRenderType(propertyRender.renderType)}</td>
@@ -488,7 +489,7 @@ function newEventsProperty() {
         return str;
     }
     //渲染属性渲染中的字段选择问题
-    this._renderPropertyRenderFields = function (variable, selectedValue, isXAxis) {
+    this._renderPropertyRenderFields = function (variable, selectedValue, isXAxis, extrLine) {
         var that = this,
             att = isXAxis ? "XAxis" : "Yaxis",
             defaultOption = {
@@ -503,6 +504,12 @@ function newEventsProperty() {
                 "data-save": att,
                 "data-change": att
             };
+        if (extrLine == "extrLine") {
+            attr = {
+                "data-save": 'Xline',
+                "data-change": 'Xline'
+            }
+        }
         return that._renderSelect(defaultOption, options, selectedValue, isPrompt, selectClass, attr)
     }
     this._renderPropertyHandleFields = function (variable, selectedValue, attr) {
@@ -607,6 +614,7 @@ function newEventsProperty() {
                     <thead>
                         <tr>
                             <th class="text-center">字段</th>
+                            <th class="text-center">表头</th>
                             <th class="text-center">分割</th>
                             <th class="text-center"><span class="add" data-add="propertyRenderYaxis">+</span></th>
                         </tr>
@@ -657,6 +665,7 @@ function newEventsProperty() {
         Yaxis && Yaxis.forEach(item => {
             str += `<tr class="YaxisTr">
                         <td>${that._renderPropertyRenderFields(variable,item.name)}</td>
+                        <td><input class="form-control" type="text" data-save="headName" value="${item.headName?item.headName:''}"/></td>
                         <td><input type="text" class="form-control" value="${item.split}" data-save="split"></td>
                         <td><span class="del">×</span></td>
                 </tr>`
@@ -674,6 +683,7 @@ function newEventsProperty() {
         $target.each(function () {
             var config = {};
             config.name = $(this).find("[data-save='Yaxis']").val()
+            config.headName = $(this).find("[data-save='headName']").val()
             config.split = $(this).find("[data-save='split']").val()
             result.push(config)
         })
@@ -707,14 +717,11 @@ function newEventsProperty() {
             var value = $(this).val(),
                 str = that._renderCustomVariable(value);
             $(this).parents("td").eq(0).empty().append(str)
-            // console.log($(this).parents("td").eq(0).empty().append(str))
-            // console.log(value, str)
         })
         that.bindChosen()
         // targets.each(() => {
         //     var value = $(this).val(),
         //         str = that._renderCustomVariable(value)
-        //     console.log(str)
 
         // })
     }
@@ -800,9 +807,9 @@ newEventsProperty.prototype = {
                     <thead>
                         <tr>
                             <th class="text-center">自定义变量</th>
+                            <th class="text-center">X轴所在列</th>
                             <th class="text-center">X轴</th>
                             <th class="text-center">Y轴</th>
-                            
                             <th class="text-center">渲染类型</th>
                             <th class="text-center">渲染位置</th>
                             <th class="text-center">渲染颜色</th>
@@ -959,7 +966,6 @@ newEventsProperty.prototype = {
                 GLOBAL_PROPERTY.BODY.customVariable[number] = data;
             }
 
-            console.log(data)
         })
         that.updataVariable($("[data-change='variable']"))
         return results;
@@ -981,6 +987,7 @@ newEventsProperty.prototype = {
         $tr.each(function () {
             result.variable = $(this).find('[data-save="variable"]').val();
             result.Xaxis = $(this).find('[data-save="XAxis"]').val();
+            result.Xline = $(this).find('[data-save="Xline"]').val();
             // result.content = that._getFields($(this).find(".propertyRenderContent"));
             result.Yaxis = that._getYaxis($(this).find(".YaxisTr"));
             result.renderType = $(this).find('[data-save="renderType"]').val();
@@ -988,6 +995,7 @@ newEventsProperty.prototype = {
             result.renderColor = $(this).find('[data-save="color"]').val();
             result.ColWisth = $(this).find('[data-save="colWidth"]').val()
         })
+        console.log(result)
         return result;
     },
     bindEvents: function () {
@@ -1071,7 +1079,7 @@ newEventsProperty.prototype = {
                 handles.push(config)
             })
             var result = [{
-                cname:cname,
+                cname: cname,
                 oldVariable: propertyHandleVariable,
                 handles: handles,
                 Xaxis: "",
@@ -1113,7 +1121,6 @@ newEventsProperty.prototype = {
         that.$events.on("change" + that.NAME_SPACE, ".propertyHandleVariable [data-propertyHandleChange='propertyHandle']", function () {
             var id = id = $("#property_id").val(),
                 index = $(this).parents('tr').eq(1).attr("index");
-                console.log($(".propertyHandle .propertyHandleTbody"))
             that.getPropertyHandle($(".propertyHandle .propertyHandleTbody"), id, index)
         })
         that.$events.on("change" + that.NAME_SPACE, ".propertyRenderTr [data-change='variable']", function () {
@@ -1125,6 +1132,19 @@ newEventsProperty.prototype = {
                 $tbody = $(this).parents('tbody').eq(0);
             $tbody.empty().append(str)
             that.bindChosen()
+        })
+
+        that.$events.on("change" + that.NAME_SPACE, ".propertyRenderTr .YaxisTr [data-change='Yaxis']", function () {
+            var value = $(this).val(),
+                text = $(this).find('option:selected').attr('data-text'),
+                $target = $(this).parents('tr').eq(0).find('[data-save="headName"]')
+                if(value){
+
+                    $target.val(text)
+                }else{
+                    $target.val("")
+                }
+
         })
     }
 

@@ -459,7 +459,9 @@ function newEventsProperty() {
         return str;
     }
     this.renderExtendColTr = function (extendCol = { tableHead: [], extendHead: [] }) {
-
+        if(extendCol==null){
+            extendCol={ tableHead: [], extendHead: [] }
+        }
         var that = this;
         str = `<tr class="extendColTr">
                     <td><input type="text" class="form-control" data-save="cname" value="${extendCol.cname || ''}" /></td>

@@ -74,13 +74,17 @@ function newEventsProperty() {
     }
     this._renderFieldsCheckBox = function (fields, selectFields) {
         var that = this,
+            data = [],
             str = "";
         if (!selectFields) {
             selectFields = []
         }
+        selectFields.forEach(item => {
+            data.push(item.value)
+        })
         fields.forEach(function (item) {
             str += `<label title="${item.value}" class="checkbox-inline">
-                        <input type="checkbox" name="${item.name}" ${selectFields.includes(item.value) ? "checked" : ""} value="${item.value}">${item.name}(${item.value})
+                        <input type="checkbox" name="${item.name}" ${data.includes(item.value) ? "checked" : ""} value="${item.value}">${item.name}(${item.value})
                     </label>`
         });
         return str;
@@ -178,7 +182,7 @@ function newEventsProperty() {
         return str;
     }
     //渲染自定义变量下拉列表
-    this._renderCustomVariable = function (selectedValue,isLine) {
+    this._renderCustomVariable = function (selectedValue, isLine) {
         var that = this,
             defaultOption = {
                 name: "请选择自定义变量",
@@ -192,12 +196,12 @@ function newEventsProperty() {
                 "data-save": "variable",
                 "data-change": "variable"
             }
-            if(isLine=="isline"){
-                attr = {
-                    "data-save": "XVariable",
-                    "data-change": "XVariable"
-                };
-            }
+        if (isLine == "isline") {
+            attr = {
+                "data-save": "XVariable",
+                "data-change": "XVariable"
+            };
+        }
         GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item) {
             var option = {
                 name: item.cname ? item.cname : item.key,
@@ -449,7 +453,7 @@ function newEventsProperty() {
         var that = this;
         str = `<tr class="propertyRenderTr">
                             <td>${that._renderCustomVariable(propertyRender.variable || "")}</td>
-                            <td>${that._renderCustomVariable(propertyRender.XVariable || '',"isline")}</td>
+                            <td>${that._renderCustomVariable(propertyRender.XVariable || '', "isline")}</td>
                             <td class="xlineTD">${that._renderPropertyRenderFields(propertyRender.XVariable, propertyRender.Xline, true, "extrLine")}</td>
                             <td>${that._renderPropertyRenderFields(propertyRender.variable, propertyRender.Xaxis, true)}</td>
                             <td>${that._renderPropertyRenderYaxis(propertyRender.variable, propertyRender.Yaxis)}</td>

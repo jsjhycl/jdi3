@@ -178,7 +178,7 @@ function newEventsProperty() {
         return str;
     }
     //渲染自定义变量下拉列表
-    this._renderCustomVariable = function (selectedValue) {
+    this._renderCustomVariable = function (selectedValue,isLine) {
         var that = this,
             defaultOption = {
                 name: "请选择自定义变量",
@@ -191,6 +191,12 @@ function newEventsProperty() {
             attr = {
                 "data-save": "variable",
                 "data-change": "variable"
+            }
+            if(isLine=="isline"){
+                attr = {
+                    "data-save": "XVariable",
+                    "data-change": "XVariable"
+                };
             }
         GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item) {
             var option = {
@@ -443,8 +449,8 @@ function newEventsProperty() {
         var that = this;
         str = `<tr class="propertyRenderTr">
                             <td>${that._renderCustomVariable(propertyRender.variable || "")}</td>
-                            <td>${that._renderXVariable(propertyRender.XVariable || '')}</td>
-                            <td class="xlineTD">${that._renderPropertyRenderXLine(propertyRender.XVariable, propertyRender.Xline, true, "extrLine")}</td>
+                            <td>${that._renderCustomVariable(propertyRender.XVariable || '',"isline")}</td>
+                            <td class="xlineTD">${that._renderPropertyRenderFields(propertyRender.XVariable, propertyRender.Xline, true, "extrLine")}</td>
                             <td>${that._renderPropertyRenderFields(propertyRender.variable, propertyRender.Xaxis, true)}</td>
                             <td>${that._renderPropertyRenderYaxis(propertyRender.variable, propertyRender.Yaxis)}</td>
                             <td>${that._renderPropertyRenderType(propertyRender.renderType)}</td>
@@ -509,15 +515,14 @@ function newEventsProperty() {
         return str;
     }
     this.renderExtendHeadTr = function (extendhedes) {
-        console.log(extendhedes)
         var that = this,
             str = ""
         arr = [1, 2, 3, 4, 5, 6];
         arr.forEach(function (item, index) {
             str += `<tr>
                     <td><input type="text" class="form-control" data-save="sortLine" disabled value="${index + 1}"></td>
-                    <td><input type="text" class="form-control" data-save="cname" value="${extendhedes[index] ? (extendhedes[index].name || '') : ''}"></td>
-                    <td><input type="text" class="form-control" data-save="name" value="${extendhedes[index] ? (extendhedes[index].value || '') : ""}"></td>
+                    <td><input type="text" class="form-control" data-save="name" value="${extendhedes[index] ? (extendhedes[index].name || '') : ''}"></td>
+                    <td><input type="text" class="form-control" data-save="value" value="${extendhedes[index] ? (extendhedes[index].value || '') : ""}"></td>
                 </tr>`
         })
         return str;
@@ -544,8 +549,8 @@ function newEventsProperty() {
         heads && heads.forEach((item, index) => {
             str += `<tr>
                     <td><input type="text" class="form-control" data-save="sortLine" value="${item.sortLine ? item.sortLine : index + 1}"/></td>
-                    <td><input type="text" class="form-control" data-save="cname" value="${item.name}"/></td>
-                    <td><input type="text" class="form-control" data-save="name" disabled value="${item.value}"/></td>
+                    <td><input type="text" class="form-control" data-save="name" value="${item.name}"/></td>
+                    <td><input type="text" class="form-control" data-save="value" disabled value="${item.value}"/></td>
                 </tr>`
         })
         return str;
@@ -1340,7 +1345,8 @@ newEventsProperty.prototype = {
         })
         that.$events.on("change" + that.NAME_SPACE, ".propertyRenderTr [data-change='XVariable']", function () {
             var value = $(this).val(),
-                str = that._renderPropertyRenderXLine(value, ""),
+                // str = that._renderPropertyRenderXLine(value, ""),
+                str = that._renderPropertyRenderFields(value, "", true, "extrLine"),
                 $target = $(this).parents("tr").eq(0).find(".xlineTD");
             $target.empty().append(str)
             that.bindChosen()

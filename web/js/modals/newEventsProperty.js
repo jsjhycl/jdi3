@@ -339,36 +339,41 @@ function newEventsProperty() {
     this._getFields = function ($target) {
         var result = [];
         $target.find("input:checked").each(function () {
-            result.push($(this).val())
+            var obj = {
+                name: $(this).attr('name'),
+                value: $(this).val()
+            }
+            result.push(obj)
         })
         return result;
     }
     //渲染属性查询的字段
     this._renderPropertyQueryFields = function (variable, selectFields) {
         var that = this,
+            fields = [],
             propertyData = "";
         GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
             if (item.key == variable) {
-                propertyData = item
+                fields = item.fields
             }
         })
-        if (!DataType.isObject(propertyData)) {
-            return "";
-            // return alert(`请先配置自定义变量${variable}的属性数据`)
-        }
-        var dbName = propertyData.dbName,
-            tableName = propertyData.table,
-            propertyDataFields = propertyData.fields,
-            tableFields = new BuildTableJson().getOptions(AllDbName, "field", {
-                dbName: dbName,
-                table: tableName
-            }),
-            fields = [];
-        tableFields.forEach(function (item) {
-            if (propertyDataFields.includes(item.value)) {
-                fields.push(item)
-            }
-        })
+        // if (!DataType.isObject(propertyData)) {
+        //     return "";
+        //     // return alert(`请先配置自定义变量${variable}的属性数据`)
+        // }
+        // var dbName = propertyData.dbName,
+        //     tableName = propertyData.table,
+        //     propertyDataFields = propertyData.fields,
+        //     tableFields = new BuildTableJson().getOptions(AllDbName, "field", {
+        //         dbName: dbName,
+        //         table: tableName
+        //     }),
+        //     fields = [];
+        // tableFields.forEach(function (item) {
+        //     if (propertyDataFields.includes(item.value)) {
+        //         fields.push(item)
+        //     }
+        // })
 
         return that._renderFieldsCheckBox(fields, selectFields)
 
@@ -459,8 +464,8 @@ function newEventsProperty() {
         return str;
     }
     this.renderExtendColTr = function (extendCol = { tableHead: [], extendHead: [] }) {
-        if(extendCol==null){
-            extendCol={ tableHead: [], extendHead: [] }
+        if (extendCol == null) {
+            extendCol = { tableHead: [], extendHead: [] }
         }
         var that = this;
         str = `<tr class="extendColTr">
@@ -504,14 +509,15 @@ function newEventsProperty() {
         return str;
     }
     this.renderExtendHeadTr = function (extendhedes) {
+        console.log(extendhedes)
         var that = this,
             str = ""
         arr = [1, 2, 3, 4, 5, 6];
         arr.forEach(function (item, index) {
             str += `<tr>
                     <td><input type="text" class="form-control" data-save="sortLine" disabled value="${index + 1}"></td>
-                    <td><input type="text" class="form-control" data-save="cname" value="${extendhedes[index] ? (extendhedes[index].cname || '') : ''}"></td>
-                    <td><input type="text" class="form-control" data-save="name" value="${extendhedes[index] ? (extendhedes[index].name || '') : ""}"></td>
+                    <td><input type="text" class="form-control" data-save="cname" value="${extendhedes[index] ? (extendhedes[index].name || '') : ''}"></td>
+                    <td><input type="text" class="form-control" data-save="name" value="${extendhedes[index] ? (extendhedes[index].value || '') : ""}"></td>
                 </tr>`
         })
         return str;
@@ -538,8 +544,8 @@ function newEventsProperty() {
         heads && heads.forEach((item, index) => {
             str += `<tr>
                     <td><input type="text" class="form-control" data-save="sortLine" value="${item.sortLine ? item.sortLine : index + 1}"/></td>
-                    <td><input type="text" class="form-control" data-save="cname" value="${item.cname}"/></td>
-                    <td><input type="text" class="form-control" data-save="name" disabled value="${item.name}"/></td>
+                    <td><input type="text" class="form-control" data-save="cname" value="${item.name}"/></td>
+                    <td><input type="text" class="form-control" data-save="name" disabled value="${item.value}"/></td>
                 </tr>`
         })
         return str;
@@ -653,21 +659,21 @@ function newEventsProperty() {
             data = {};
         GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
             if (variable == item.key) {
-                data = item;
+                options = item.fields;
             }
         })
-        var dbName = data.dbName,
-            table = data.table;
-        selects = data.fields;
-        fields = new BuildTableJson().getOptions(AllDbName, "field", {
-            dbName: dbName,
-            table: table
-        });
-        fields.forEach(item => {
-            if (selects.includes(item.value)) {
-                options.push(item)
-            }
-        })
+        // var dbName = data.dbName,
+        //     table = data.table;
+        // selects = data.fields;
+        // fields = new BuildTableJson().getOptions(AllDbName, "field", {
+        //     dbName: dbName,
+        //     table: table
+        // });
+        // fields.forEach(item => {
+        //     if (selects.includes(item.value)) {
+        //         options.push(item)
+        //     }
+        // })
         return options;
     }
     //属性渲染的渲染类型
@@ -835,8 +841,8 @@ function newEventsProperty() {
         $tr.each(function () {
             var config = {
                 sortLine: $(this).find("[data-save='sortLine']").val(),
-                cname: $(this).find("[data-save='cname']").val(),
-                name: $(this).find("[data-save='name']").val()
+                name: $(this).find("[data-save='name']").val(),
+                value: $(this).find("[data-save='value']").val()
             };
             result.push(config)
         })
@@ -848,8 +854,8 @@ function newEventsProperty() {
         $tr.each(function () {
             var config = {
                 sortLine: $(this).find("[data-save='sortLine']").val(),
-                cname: $(this).find("[data-save='cname']").val(),
-                name: $(this).find("[data-save='name']").val()
+                name: $(this).find("[data-save='name']").val(),
+                value: $(this).find("[data-save='value']").val()
             };
             result.push(config)
         })
@@ -1160,22 +1166,39 @@ newEventsProperty.prototype = {
             cname: result.cname,
             fields: fields
         };
-        if (!GLOBAL_PROPERTY.BODY.extendHead) {
-            GLOBAL_PROPERTY.BODY.extendHead = [];
-            GLOBAL_PROPERTY.BODY.extendHead.push(data);
-        } else {
-            var number = -1;
-            GLOBAL_PROPERTY.BODY.extendHead.forEach((item, dindex) => {
-                if (item.key == data.key) {
-                    number = dindex;
-                }
-            })
-            if (number == -1) {
-                GLOBAL_PROPERTY.BODY.extendHead.push(data)
-            } else {
-                GLOBAL_PROPERTY.BODY.extendHead[number] = data;
+        GLOBAL_PROPERTY.BODY.customVariable.forEach(item => {
+            if (item.key == result.oldVariable) {
+                data.dbName = item.dbName;
+                data.table = item.table
             }
+        })
+        var number = -1;
+        GLOBAL_PROPERTY.BODY.customVariable.forEach((item, dindex) => {
+            if (item.key == data.key) {
+                number = dindex;
+            }
+        })
+        if (number == -1) {
+            GLOBAL_PROPERTY.BODY.customVariable.push(data)
+        } else {
+            GLOBAL_PROPERTY.BODY.customVariable[number] = data;
         }
+        // if (!GLOBAL_PROPERTY.BODY.extendHead) {
+        //     GLOBAL_PROPERTY.BODY.extendHead = [];
+        //     GLOBAL_PROPERTY.BODY.extendHead.push(data);
+        // } else {
+        //     var number = -1;
+        //     GLOBAL_PROPERTY.BODY.extendHead.forEach((item, dindex) => {
+        //         if (item.key == data.key) {
+        //             number = dindex;
+        //         }
+        //     })
+        //     if (number == -1) {
+        //         GLOBAL_PROPERTY.BODY.extendHead.push(data)
+        //     } else {
+        //         GLOBAL_PROPERTY.BODY.extendHead[number] = data;
+        //     }
+        // }
         return result;
     },
     //
@@ -1281,7 +1304,7 @@ newEventsProperty.prototype = {
             var handles = []
             data.forEach(item => {
                 var config = {
-                    field: item,
+                    field: item.value,
                     operation: "",
                     type: ""
                 }
@@ -1341,32 +1364,32 @@ newEventsProperty.prototype = {
 
             GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
                 if (item.key == value) {
-                    data = item
+                    data = item.fields
                 }
             })
-            if (!DataType.isObject(data)) {
-                return "";
-                // return alert(`请先配置自定义变量${variable}的属性数据`)
-            }
-            var dbName = data.dbName,
-                tableName = data.table,
-                Fields = data.fields,
-                tableFields = new BuildTableJson().getOptions(AllDbName, "field", {
-                    dbName: dbName,
-                    table: tableName
-                }),
-                results = [];
-            tableFields.forEach(function (item) {
-                if (Fields.includes(item.value)) {
-                    var option = {
-                        sortLine: '',
-                        cname: item.name,
-                        name: item.value
-                    }
-                    results.push(option)
-                }
-            })
-            var html = that.renderHeadTr(results),
+            // if (!DataType.isObject(data)) {
+            //     return "";
+            //     // return alert(`请先配置自定义变量${variable}的属性数据`)
+            // }
+            // var dbName = data.dbName,
+            //     tableName = data.table,
+            //     Fields = data.fields,
+            //     tableFields = new BuildTableJson().getOptions(AllDbName, "field", {
+            //         dbName: dbName,
+            //         table: tableName
+            //     }),
+            //     results = [];
+            // tableFields.forEach(function (item) {
+            //     if (Fields.includes(item.value)) {
+            //         var option = {
+            //             sortLine: '',
+            //             cname: item.name,
+            //             name: item.value
+            //         }
+            //         results.push(option)
+            //     }
+            // })
+            var html = that.renderHeadTr(data),
                 $target = $(this).parents("tr").eq(0).find(".tableHead tbody");
             $target.empty().append(html)
 

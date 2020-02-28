@@ -1279,7 +1279,7 @@ NewEventsModal.prototype = {
             }
             if (that.judgeCheckMehods("extendCol", $(this).find(".triggerMethods:checked"))) {
                 // extendCol = that.getExtendCol($(this).find('.extendColTr'), id, index)
-                extendCol = new  newEventsProperty().getExtendCol($(this).find('.extendColTr'), id, index)
+                extendCol = new newEventsProperty().getExtendCol($(this).find('.extendColTr'), id, index)
             } //zww
             if (that.judgeCheckMehods("importDb", $(this).find(".triggerMethods:checked"))) {
                 importDb = that.getImportDb($(this).find(".importDbTr"))
@@ -1413,6 +1413,8 @@ NewEventsModal.prototype = {
                     Xaxis: "",
                     Yaxis: []
                 }])
+            } else if (addType == "_renderPropertyRenderTr") {
+                str = new newEventsProperty()._renderPropertyRenderTr([{}])
             } else {
                 str = that[addType]();
             }
@@ -1657,10 +1659,16 @@ NewEventsModal.prototype = {
         })
         that.$modal.on("input change" + that.NAME_SPACE, ".property-color-input", function (event) {
             var $this = $(this),
-                target = $this.data('belong');
-            that.$modal.find("." + target).val($this.val()).focus().trigger("blur");
+                value = $this.val(),
+                $target = $this.parents("div").eq(1).children("input");
+            $target.val(value)
+            // target = $this.data('belong');
+            // console.log($this)
+            // console.log($this.parents("div").eq(1).children("input"))
+            // console.log($this.val())
+            // that.$modal.find("." + target).val($this.val()).focus().trigger("blur");
             // $("." + target).val($this.val()).focus().trigger("blur");
-            $this.val("#FFFFFF");
+            // $this.val("#FFFFFF");
         })
 
 

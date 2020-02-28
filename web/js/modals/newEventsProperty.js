@@ -449,28 +449,35 @@ function newEventsProperty() {
 
         return that._renderSelect(defaultOption, options, selectedValue, isPrompt, selectClass, attr)
     }
-    this._renderPropertyRenderTr = function (propertyRender) {
-        var that = this;
-        str = `<tr class="propertyRenderTr">
-                            <td>${that._renderCustomVariable(propertyRender.variable || "")}</td>
-                            <td>${that._renderCustomVariable(propertyRender.XVariable || '', "isline")}</td>
-                            <td class="xlineTD">${that._renderPropertyRenderFields(propertyRender.XVariable, propertyRender.Xline, true, "extrLine")}</td>
-                            <td>${that._renderPropertyRenderFields(propertyRender.variable, propertyRender.Xaxis, true)}</td>
-                            <td>${that._renderPropertyRenderYaxis(propertyRender.variable, propertyRender.Yaxis)}</td>
-                            <td>${that._renderPropertyRenderType(propertyRender.renderType)}</td>
-                            <td><input type="text" class="form-control" data-save="renderPositoon" value="${propertyRender.renderPositoon || ''}"></td>
-                            <td>
-                                <div style = "position:relative">
-                                    <input type="text" class="form-control render-color" save-type="style" data-save="color" value="${ propertyRender.renderColor || ""}">
-                                    <div class="property-icon-wrap" style="top:2px">
-                                        <input type="color" data-belong="render-color" class="property-color-input">
-                                    <i class="icon icon-color"></i>
-                                </div>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" data-save="colWidth" value="${propertyRender.ColWisth || ''}">
-                            </td>
-                        </tr>`
+    this._renderPropertyRenderTr = function (propertyRenders) {
+        var that = this,
+            str = "";
+        if (!Array.isArray(propertyRenders)) {
+            return str
+        }
+        propertyRenders.forEach(propertyRender=>{
+            str += `<tr class="propertyRenderTr">
+                                <td class="text-center"><span class="del">×</span></td>
+                                <td>${that._renderCustomVariable(propertyRender.variable || "")}</td>
+                                <td>${that._renderCustomVariable(propertyRender.XVariable || '', "isline")}</td>
+                                <td class="xlineTD">${that._renderPropertyRenderFields(propertyRender.XVariable, propertyRender.Xline, true, "extrLine")}</td>
+                                <td>${that._renderPropertyRenderFields(propertyRender.variable, propertyRender.Xaxis, true)}</td>
+                                <td>${that._renderPropertyRenderYaxis(propertyRender.variable, propertyRender.Yaxis)}</td>
+                                <td>${that._renderPropertyRenderType(propertyRender.renderType)}</td>
+                                <td><input type="text" class="form-control" data-save="renderPositoon" value="${propertyRender.renderPositoon || ''}"></td>
+                                <td>
+                                    <div style = "position:relative">
+                                        <input type="text" class="form-control render-color" save-type="style" data-save="color" value="${ propertyRender.renderColor || ""}">
+                                        <div class="property-icon-wrap" style="top:2px">
+                                            <input type="color" data-belong="render-color" class="property-color-input">
+                                        <i class="icon icon-color"></i>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" data-save="colWidth" value="${propertyRender.ColWisth || ''}">
+                                </td>
+                            </tr>`
+        })
         return str;
     }
     this.renderExtendColTr = function (extendCol = { tableHead: [], extendHead: [] }) {
@@ -966,15 +973,16 @@ newEventsProperty.prototype = {
         return str;
     },
 
-    propertyRender: function (propertyRender) {
-        if (!propertyRender) {
-            propertyRender = {}
-        }
+    propertyRender: function (propertyRenders) {
+        // if (!propertyRender) {
+        //     propertyRender = {}
+        // }
         var that = this,
-            str = `<div class="condition propertyRender" ${propertyRender.variable ? "" : 'style="display:none"'}>
+            str = `<div class="condition propertyRender" ${propertyRenders ? "" : 'style="display:none"'}>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
+                            <th class="text-center"><span class="add" data-add="_renderPropertyRenderTr">+</span></th>
                             <th class="text-center">自定义变量</th>
                             <th class="text-center">X轴变量</th>
                             <th class="text-center">X轴所在列</th>
@@ -987,7 +995,7 @@ newEventsProperty.prototype = {
                         </tr>
                     </thead>
                     <tbody>
-                        ${that._renderPropertyRenderTr(propertyRender)}
+                        ${that._renderPropertyRenderTr(propertyRenders)}
                     </tbody>
                 </table>
             </div>`;
@@ -1214,18 +1222,10 @@ newEventsProperty.prototype = {
     getPropertyRender: function ($tr) {
 
         var that = this,
-            result = {
-                variable: "",
-                Xaxis: "",
-                Yaxis: [],
-                // content: [],
-                renderType: "",
-                renderPositoon: "",
-                renderColor: "",
-                ColWisth: ""
-            };
+            data = [];
 
         $tr.each(function () {
+            var result = {};
             result.variable = $(this).find('[data-save="variable"]').val();
             result.Xaxis = $(this).find('[data-save="XAxis"]').val();
             result.XVariable = $(this).find('[data-save="XVariable"]').val();
@@ -1235,9 +1235,10 @@ newEventsProperty.prototype = {
             result.renderType = $(this).find('[data-save="renderType"]').val();
             result.renderPositoon = $(this).find('[data-save="renderPositoon"]').val();
             result.renderColor = $(this).find('[data-save="color"]').val();
-            result.ColWisth = $(this).find('[data-save="colWidth"]').val()
+            result.ColWisth = $(this).find('[data-save="colWidth"]').val();
+            data.push(result)
         })
-        return result;
+        return data;
     },
     bindEvents: function () {
         var that = this;
@@ -1339,12 +1340,12 @@ newEventsProperty.prototype = {
         })
         that.$events.on("change" + that.NAME_SPACE, ".propertyRenderTr [data-change='variable']", function () {
             var value = $(this).val(),
-                data = {
+                data = [{
                     variable: value
-                },
+                }],
                 str = that._renderPropertyRenderTr(data),
-                $tbody = $(this).parents('tbody').eq(0);
-            $tbody.empty().append(str)
+                $tbody = $(this).parents('tr').eq(0);
+            $tbody.replaceWith(str)
             that.bindChosen()
         })
         that.$events.on("change" + that.NAME_SPACE, ".propertyRenderTr [data-change='XVariable']", function () {

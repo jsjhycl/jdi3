@@ -455,7 +455,7 @@ function newEventsProperty() {
         if (!Array.isArray(propertyRenders)) {
             return str
         }
-        propertyRenders.forEach(propertyRender=>{
+        propertyRenders.forEach(propertyRender => {
             str += `<tr class="propertyRenderTr">
                                 <td class="text-center"><span class="del">×</span></td>
                                 <td>${that._renderCustomVariable(propertyRender.variable || "")}</td>
@@ -489,6 +489,9 @@ function newEventsProperty() {
                     <td><input type="text" class="form-control" data-save="cname" value="${extendCol.cname || ''}" /></td>
                     <td>${that._renderCustomVariable(extendCol.oldVariable || "")}</td>
                     <td>
+                        ${this._renderHead(extendCol.tableHead)}
+                    </td>
+                    <td>
                         <input type="text" class="form-control" data-save="startText" value="${extendCol.startText || ""}" >
                     </td>
                     <td>
@@ -501,7 +504,10 @@ function newEventsProperty() {
                         <input type="text" class="form-control" data-save="endSubstr" value="${extendCol.endSubstr || ""}" >
                     </td>
                     <td>
-                        ${this._renderHead(extendCol.tableHead)}
+                        <input type="text" class="form-control" data-save="fieldSplit" value="${extendCol.fieldSplit || ''}"/>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" data-save="splitMark" value="${extendCol.splitMark || ''}"/>
                     </td>
                     <td>
                         ${this._renderExtendHead(extendCol.extendHead)}
@@ -957,12 +963,14 @@ newEventsProperty.prototype = {
                         <tr>
                             <th class="text-center">变量中文名</th>
                             <th class="text-center">请选择自定义变量</th>
+                            <th class="text-center">表头首列配置</th>
                             <th class="text-center">开始</th>
                             <th class="text-center">结束</th>
                             <th class="text-center">开始截取</th>
                             <th class="text-center">结束截取</th>
-                            <th class="text-center">表头配置</th>
-                            <th class="text-center">表头扩展</th>
+                            <th class="text-center">字段分段</th>
+                            <th class="text-center">分段符</th>
+                            <th class="text-center">表头尾列扩展</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1160,6 +1168,8 @@ newEventsProperty.prototype = {
                 endText = $(tr).find('[data-save="endText"]').val(),
                 startSubstr = $(tr).find('[data-save="startSubstr"]').val(),
                 endSubstr = $(tr).find('[data-save="endSubstr"]').val(),
+                fieldSplit = $(tr).find('[data-save="fieldSplit"]').val(),
+                splitMark = $(tr).find('[data-save="splitMark"]').val(),
                 tableHead = that.getTableHead($(tr).find(".tableHead tbody tr")),
                 extendHead = that.getExtendHead($(tr).find(".extendHeads tbody tr"));
             result.variable = variable;
@@ -1169,6 +1179,8 @@ newEventsProperty.prototype = {
             result.endText = endText;
             result.startSubstr = startSubstr;
             result.endSubstr = endSubstr;
+            result.fieldSplit = fieldSplit;
+            result.splitMark = splitMark;
             result.tableHead = tableHead;
             result.extendHead = extendHead;
         })

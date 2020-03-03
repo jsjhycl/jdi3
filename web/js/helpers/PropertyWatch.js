@@ -32,7 +32,11 @@ var PropertyWatch = {
             padding: "0 10px 20px 20px",
             background: "rgb(0,0,0,.6)"
         })
-        that.inputToBtn(view, $copyWorkSpace.find('input').not("[type=hidden]"), $workspace, key, name, change)
+        var $doms = $copyWorkSpace.find('input').not("[type=hidden]"),//zww
+            $textareaDom = $copyWorkSpace.find('input').not("[type=hidden]");//zww
+        $textareaDom.each((i, ele) => { $doms.push(ele) });//zww
+
+        that.inputToBtn(view, $doms, $workspace, key, name, change)
         $PropertyMaskContent.append($copyWorkSpace)
         $PropertyMask.append($PropertyMaskContent)
         $('body').append($PropertyMask)
@@ -71,7 +75,7 @@ var PropertyWatch = {
                 display: "inline-block",
                 boxSizing: "border-box",
                 cursor: "pointer",
-                "font":$origin.css('font'),
+                "font": $origin.css('font'),
                 "vertical-align": "middle"
                 // lineHeight: '0'
             })
@@ -113,7 +117,7 @@ var PropertyWatch = {
                         });
                     }
                     if (key == "visibility" || key == "disabled" || key == "readonly") {
-                        value = $(`<input type="checkbox" ${ value ? "checked" : ""} data-click="true" data-domId = "${id}"  data-property="${key}" data-name="${name}">`)
+                        value = $(`<input type="checkbox" ${value ? "checked" : ""} data-click="true" data-domId = "${id}"  data-property="${key}" data-name="${name}">`)
                     }
                     break;
             }

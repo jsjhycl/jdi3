@@ -17,9 +17,9 @@ function SaveAsModal($modal) {
     this.getLastSaveId = async function (table, id) {
         var queryId = id.slice(0, 8) //获取已经存在的编号 前八位可能有问题
         var condition = [{
-                col: "customId",
-                value: `/${queryId}/`
-            }],
+            col: "customId",
+            value: `/${queryId}/`
+        }],
             fields = ["customId"]
         var queryData = await new Service().query(table, condition, fields),
             data = [],
@@ -28,9 +28,10 @@ function SaveAsModal($modal) {
             data.push(item.customId.replace(/\((.*)\)/img, ""))
         });
         data.forEach(item => {
-            if (item.slice(9, 10) == id.slice(9, 10)) {
-                result.push(item)
-            }
+            // if (item.slice(9, 10) == id.slice(9, 10)) {
+            //     result.push(item)
+            // }
+            if (item == id) result.push(item);
         })
         return result;
     }
@@ -43,10 +44,10 @@ function SaveAsModal($modal) {
     }
     //获取下一个编号
     this.getNextId = function (id) {
-        var arr = [0, "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"],
+        var arr = ["0", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"],
             numberId = id.slice(8, 9),
             index = arr.indexOf(numberId) + 1;
-            newindex = index % 26
+        newindex = index % 26
         return arr[newindex]
     }
 

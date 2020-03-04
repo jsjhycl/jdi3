@@ -17,7 +17,10 @@ function newEventsProperty() {
         name: "终止值",
         value: "end"
     },
-    ]
+    {
+        name: "数据格式转换",
+        value: "dataSwitch"
+    }]
     this.NumberType = [{
         name: "自然数",
         value: "dayTime"
@@ -29,6 +32,13 @@ function newEventsProperty() {
     {
         name: "字母",
         value: "letter"
+    }]
+    this.dataSwitchConfigure = [{
+        name: "时间格式转换",
+        value: "timeSwitch"
+    }, {
+        name: "其它格式",
+        value: "otherSwitch"
     }
     ]
 
@@ -397,6 +407,7 @@ function newEventsProperty() {
                                 <th class="text-center">字段</th>
                                 <th class="text-center">操作类型</th>
                                 <th class="text-center">数值类型</th>
+                                <th class="text-center">数据格式转换配置</th>
                             </tr>
                         </thead>
                     <tbody>`;
@@ -406,6 +417,9 @@ function newEventsProperty() {
                         <td>${that._renderPropertyHandleOperation(item.operation)}</td>
                         <td>
                             ${that._renderPropertyHandleType(item.type)}
+                        </td>
+                        <td>
+                            ${that._renderPropertyHandleSwitch(item.switch)}
                         </td>
                     </tr>`
         })
@@ -445,6 +459,24 @@ function newEventsProperty() {
                 "data-save": "type",
                 "data-change": "type",
                 "data-propertyHandleChange": "propertyHandle"
+            };
+
+        return that._renderSelect(defaultOption, options, selectedValue, isPrompt, selectClass, attr)
+    }
+    //渲染属性处理的数据格式转换配置
+    this._renderPropertyHandleSwitch = function (selectedValue) {
+        var that = this,
+            defaultOption = {
+                name: "请选择操作类型",
+                value: ""
+            },
+            options = that.dataSwitchConfigure,
+            selectedValue = selectedValue,
+            isPrompt = true,
+            selectClass = "form-control chosen",
+            attr = {
+                "data-save": "switch",
+                "data-change": "switch"
             };
 
         return that._renderSelect(defaultOption, options, selectedValue, isPrompt, selectClass, attr)
@@ -1126,6 +1158,7 @@ newEventsProperty.prototype = {
                 config.field = $(tr).find("[data-save='field']").val();
                 config.operation = $(tr).find("[data-save='operation']").val();
                 config.type = $(tr).find("[data-save='type']").val();
+                config.switch = $(tr).find("[data-save='switch']").val();
                 result.handles.push(config)
             })
             results.push(result)
@@ -1328,7 +1361,8 @@ newEventsProperty.prototype = {
                 var config = {
                     field: item.value,
                     operation: "",
-                    type: ""
+                    type: "",
+                    switch: ""
                 }
                 handles.push(config)
             })

@@ -46,7 +46,7 @@
                 <div class="contain">
                 <div class="dis-flex-btw">
                     <p class = "tips">*右击添加窗口</p>
-                    <button class="btn btn-primary" id='outputBtn' data-dismiss="modal">保存</button>
+                    <button class="btn btn-primary" id='outputBtn'>保存</button>
                 </div>
                 <ul class="tree-list"></ul>
                 </div>
@@ -159,12 +159,12 @@
         bindEvents: function () {
             var that = this;
             //在contain中单击去掉li.active-item
-            $('.contain').click(function (e) {
-                if (!$('li.tree-item').is(e.target) && $('li.tree-item').has(e.target).length === 0) {
-                    $('li.tree-item').removeClass('active-item')
-                    $('#content').hide(); //右侧窗口隐藏
-                }
-            })
+            // $('.contain').click(function (e) {
+            //     if (!$('li.tree-item').is(e.target) && $('li.tree-item').has(e.target).length === 0) {
+            // $('li.tree-item').removeClass('active-item')
+            // $('#content').hide(); //右侧窗口隐藏
+            //     }
+            // })
             //单击节点
             var $this = '',
                 activeRow = 0,
@@ -641,7 +641,10 @@
             allDataArr.forEach((ele, i) => {
                 i == 0 && $('#path').val(ele.pathText);
                 if (ele.rowCol == rowCol) {
-                    $("#defaultText").val() === getTextData.textName ? $('#text').val('') : $('#text').val(getTextData.textName);
+                    if (!$('.active-item').attr('title').includes('0')) {
+                        $('#text').val(getTextData.textName);
+                    }
+                    // $("#defaultText").val() === getTextData.textName ? $('#text').val('') : $('#text').val(getTextData.textName);
                     $('#totalNum').val(getTextData.totalNum);
                     $(`li[data-row="${parentRows}"][data-col="${parentCols}"]`).attr('data-totalNum', getTextData.totalNum);
                 }

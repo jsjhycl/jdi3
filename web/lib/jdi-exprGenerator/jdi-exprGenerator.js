@@ -19,8 +19,8 @@
             return `
             <select data-select="result" class="form-control">
                 ${data.map(i => {
-                    return `<option value="${i.value}">${i.name}</option>`
-                })}
+                return `<option value="${i.value}">${i.name}</option>`
+            })}
             </select>
             `
         }
@@ -34,7 +34,7 @@
                     html += `<span class="input-group-addon addon-query" data-config="${addonType}" ${queryCondition ? 'data-query_condition="' + queryCondition + '"' : ''} data-mode="multi"></span>`
                     break;
 
-                    // html += '<span class="input-group-addon addon-query" data-config="queryNoConditions"></span>'
+                // html += '<span class="input-group-addon addon-query" data-config="queryNoConditions"></span>'
                 case 'queryColumn':
                     // html += '<span class="input-group-addon addon-data"  data-placement="left" data-toggle="popover" data-tirgger="click" data-type="'+ addonType +'"></span>'
                     html += '<span class="input-group-addon addon-query" data-config="query" data-mode="column"></span>'
@@ -230,7 +230,7 @@
                     str = '(?<=' + fnName + '\\("' + target + '",)(.+?)(?=\\))'
                 } else if (fnType === '远程函数') {
                     startIdx = 4
-                    str = "(?<=functions\\(" + '"' + target + '")' + "," + '"' + fnName + '"' + "," + async +"," + voluation + ",(.+?)(?=\\))";
+                    str = "(?<=functions\\(" + '"' + target + '")' + "," + '"' + fnName + '"' + "," + async + "," + voluation + ",(.+?)(?=\\))";
                 }
                 var expr = $(".eg .eg-expr").val(),
                     argReg = new RegExp(str, 'g'),
@@ -326,7 +326,7 @@
                     table,
                     fields = []
                 } = ori_data,
-                oriFields = {},
+                    oriFields = {},
                     renderFields = [];
                 if (dbData[dbName] && dbData[dbName][table] && dbData[dbName][table].tableDetail) {
                     dbData[dbName][table].tableDetail.forEach(i => {
@@ -357,8 +357,8 @@
                 if (globalData && Array.isArray(globalData.global)) global = globalData.global;
 
                 let fieldsHtml = '<select><option value="">请选择</option>' + renderFields.map(i => {
-                        return `<option value="${i.value}">${i.name}</option>`
-                    }).join('') + '</select>',
+                    return `<option value="${i.value}">${i.name}</option>`
+                }).join('') + '</select>',
                     trs = global ? global.map(i => {
                         return `
                                 <tr>
@@ -391,7 +391,7 @@
                 let val = $input.val();
                 try {
                     val = JSON.parse(val);
-                } catch (err) {}
+                } catch (err) { }
 
                 if (DataType.isObject(val)) {
                     Object.keys(val).forEach(i => {
@@ -675,10 +675,10 @@
                         data = item.data,
                         style = item.style ? " " + item.style : "",
                         cpanel = '<div class="cpanel' + style + '" data-title="' + title + '">' +
-                        '<header class="cpanel-header">' +
-                        '<h4 class="cpanel-title">' + title + '</h4>' +
-                        '</header>' +
-                        '<div class="cpanel-body" data-type="' + type + '">';
+                            '<header class="cpanel-header">' +
+                            '<h4 class="cpanel-title">' + title + '</h4>' +
+                            '</header>' +
+                            '<div class="cpanel-body" data-type="' + type + '">';
                     for (var key in data) {
                         var value = data[key];
                         cpanel += '<button data-type="toolbar_btn" class="btn btn-default" value="' + value + '">' + key + '</button>';
@@ -984,15 +984,15 @@
                     }
                     if (cache.onSetProperty) {
                         let _val = isGlobal ? $expr.find('.expr-fn-item[data-global]').map(function () {
-                                let $this = $(this);
-                                return {
-                                    fnCname: $this.attr('data-fn_cname'),
-                                    fnChineseName: $this.attr('data-chinesename'),
-                                    fnName: $this.attr('data-fn_name'),
-                                    fnArgs: $this.attr('data-fn_args') ? JSON.parse(decodeURI($this.attr('data-fn_args'))) : '',
-                                    expr: decodeURI($this.attr('data-fn'))
-                                }
-                            }).get() :
+                            let $this = $(this);
+                            return {
+                                fnCname: $this.attr('data-fn_cname'),
+                                fnChineseName: $this.attr('data-chinesename'),
+                                fnName: $this.attr('data-fn_name'),
+                                fnArgs: $this.attr('data-fn_args') ? JSON.parse(decodeURI($this.attr('data-fn_args'))) : '',
+                                expr: decodeURI($this.attr('data-fn'))
+                            }
+                        }).get() :
                             expr;
                         cache.onSetProperty.call(null, _val);
                     }
@@ -1235,7 +1235,7 @@
                 } else if (fnType === "远程函数") {
                     var async = $eg.find('[data-type="async"]').val(),
                         voluation = $eg.find('[data-type="voluation"]').val();
-                    result = "functions(" + '"' + target + '"' + "," + '"' + fnName + '"' + "," + async +"," + voluation + "," + argsString + ")";
+                    result = "functions(" + '"' + target + '"' + "," + '"' + fnName + '"' + "," + async + "," + voluation + "," + argsString + ")";
                 } else if (fnType === "系统函数") {
                     result = fnName + "(" + argsString + ")"
                 }
@@ -1360,6 +1360,7 @@
             $(document).on("click" + EVENT_NAMESPACE, '.eg .eg-function [data-config="query"], .eg-function [data-config="queryNoConditions"]', {
                 element: element
             }, function (event) {
+                console.log(123)
                 var $this = $(this),
                     $input = $this.prev('input'),
                     mode = $this.attr('data-mode'),
@@ -1370,7 +1371,7 @@
                     data = null;
                 try {
                     data = JSON.parse(val);
-                } catch (err) {};
+                } catch (err) { };
 
                 $content.is(":empty") ?
                     $(this).dbQuerier2({
@@ -1383,6 +1384,23 @@
                     }) :
                     $content.empty();
             });
+            $(document).on("click" + EVENT_NAMESPACE, '.eg .eg-function [data-config="Db"]', { element: element }, function () {
+                var $this = $(this),
+                    $input = $this.prev('input'),
+                    $content = $('.eg:visible .query-config-content'),
+                    val = $input.val(),
+                    data = null;
+                try {
+                    data = JSON.parse(val);
+                } catch (err) { };
+                $content.is(":empty") ?
+                    $(this).Db1({
+                        $target: $input,
+                        data: data || {},
+                        $content: $content
+                    }) :
+                    $content.empty();
+            })
 
             // 全局变量对应关系
             $(document).on("click" + EVENT_NAMESPACE, '.eg .eg-function [data-config="contact"]', {
@@ -1397,7 +1415,7 @@
 
                 try {
                     data = JSON.parse(data);
-                } catch (err) {};
+                } catch (err) { };
 
                 console.log($input, data)
                 FunctionUtil.renderContactTable(data, $content, $input)
@@ -1443,37 +1461,37 @@
                 });
                 if (fnName == "getAttr") {
                     var dataId = args[1],
-                        
+
                         preExpress = GLOBAL_PROPERTY[dataId]["expression"],
                         resultHTML = that.convertExpr(preExpress, functions),
                         preFnName = $(resultHTML).text(),
                         result = decodeURI($(resultHTML).attr('data-fn_args'));
-                         if (preFnName == "executeQuery" || preFnName == "conBox") {
-                         result = JSON.parse(result)
-                         var dbCon = result[0],
-                             preDbName = dbCon.dbName,
-                             preTable = dbCon.table,
-                             prefields = dbCon.fields,
-                             nowTableDetail = AllDbName[preDbName][preTable]["tableDetail"],
-                             fieldNameArr = [],
-                             $content = $('.eg:visible .query-config-content');
-                         nowTableDetail.forEach(function (item) {
-                             if (prefields.includes(item.id)) {
-                                 fieldNameArr.push(item.cname)
-                             }
-                         })
-                         var fieldHtml = renderfieldSpan(fieldNameArr);
-                         $content.empty().append(fieldHtml)
-                     }
+                    if (preFnName == "executeQuery" || preFnName == "conBox") {
+                        result = JSON.parse(result)
+                        var dbCon = result[0],
+                            preDbName = dbCon.dbName,
+                            preTable = dbCon.table,
+                            prefields = dbCon.fields,
+                            nowTableDetail = AllDbName[preDbName][preTable]["tableDetail"],
+                            fieldNameArr = [],
+                            $content = $('.eg:visible .query-config-content');
+                        nowTableDetail.forEach(function (item) {
+                            if (prefields.includes(item.id)) {
+                                fieldNameArr.push(item.cname)
+                            }
+                        })
+                        var fieldHtml = renderfieldSpan(fieldNameArr);
+                        $content.empty().append(fieldHtml)
+                    }
 
-                     function renderfieldSpan(data) {
-                         if (!Array.isArray(data)) return;
-                         var str = "";
-                         data.forEach(function (item, index) {
-                             str += `<div class="label label-success" style="margin:5px;display:inline-block">${item}(${index})</div>`
-                         })
-                         return str;
-                     }
+                    function renderfieldSpan(data) {
+                        if (!Array.isArray(data)) return;
+                        var str = "";
+                        data.forEach(function (item, index) {
+                            str += `<div class="label label-success" style="margin:5px;display:inline-block">${item}(${index})</div>`
+                        })
+                        return str;
+                    }
 
                 }
             });
@@ -1503,7 +1521,7 @@
                 }).sort();
                 if (sameFns.length > 0) {
                     let count = Number(sameFns[sameFns.length - 1].split('_')[1]) || 0;
-                    cFnName = fnName + `_${ count + 1}`;
+                    cFnName = fnName + `_${count + 1}`;
                 }
             }
             if (Array.isArray(args)) {
@@ -1581,10 +1599,10 @@
         $source: null, //page数据来源的DOM
         $result: null, //接收表达式的DOM
         toolbar: [], //[{title: "全局变量", show: "normal", data: global},{title: "日期表达式", show: "normal", data: expression}]
-        onOpen: function () {},
-        onClose: function () {},
-        onSetProperty: function (expr) {},
-        onClearProperty: function () {}
+        onOpen: function () { },
+        onClose: function () { },
+        onSetProperty: function (expr) { },
+        onClearProperty: function () { }
     };
 
     $.fn.exprGenerator.methods = {

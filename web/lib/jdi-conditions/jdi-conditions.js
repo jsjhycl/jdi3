@@ -13,11 +13,11 @@
         this._renderVariableSelect = function ($replace, varibale, queryCondition, multiple) {
             let $select = $('<select data-key="value" class="form-control" style="width: 83%"></select>')
             localOptions = this.outerSideVariable && this.outerSideVariable.map(i => {
-                    return {
-                        name: i.desc + '（登录）',
-                        value: 'LOCAL.' + i.key
-                    }
-                }),
+                return {
+                    name: i.desc + '（登录）',
+                    value: 'LOCAL.' + i.key
+                }
+            }),
                 globalOptions = queryCondition !== 'noGlobal' && this.globalVariable && this.globalVariable.map(i => {
                     return {
                         name: i.desc + '（全局）',
@@ -66,7 +66,7 @@
         getDbData: async function () {
             // var _tableP = new FileService().readFile("./profiles/table.json"),
             var _tableP = await new BuildTableJson().get(),
-                _globalP = new FileService().readFile("./profiles/global.json"), 
+                _globalP = new FileService().readFile("./profiles/global.json"),
                 data = await new BuildTableJson().removeData(_tableP),
                 global = await _globalP;
             if (DataType.isObject(data)) this.AllDbName = data;
@@ -82,16 +82,16 @@
         renderDOM: function (element) {
             var cache = $.data(element, CACHE_KEY),
                 thead = cache.mode === 1 ?
-                '<th>字段</th><th>操作符</th><th>类型</th><th>数据</th>' :
-                '<th>左类型</th><th>左数值</th><th>操作符</th><th>右类型</th><th>右数值</th>',
+                    '<th>字段</th><th>类型</th><th>操作符</th><th>数据</th>' :
+                    '<th>左类型</th><th>左数值</th><th>操作符</th><th>右类型</th><th>右数值</th>',
                 html = '<table class="table table-bordered table-striped table-hover ctable">' +
-                '<thead><tr>' + thead + '<th><button class="btn btn-primary btn-sm add">添加</button></th></tr>' +
-                '</thead><tbody></tbody></table>';
+                    '<thead><tr>' + thead + '<th><button class="btn btn-primary btn-sm add">添加</button></th></tr>' +
+                    '</thead><tbody></tbody></table>';
             if (cache.mode == 4) {
                 html = `
                     <table class="table table-bordered table-striped table-hover ctable">
                                 <thead>
-                                    <tr><th>字段</th><th>操作符</th><th>类型</th><th>数据</th></tr>
+                                    <tr><th>字段</th><th>类型</th><th>操作符</th><th>数据</th></tr>
                                 </thead>
                                 <tbody></tbody>
                             </table>`
@@ -231,8 +231,8 @@
             reduceTypeConfig = !!reduceTypeConfig;
             if (mode === 1) {
                 $tr = $('<tr><td><select class="form-control" data-key="field"></select></td>' +
-                    '<td><select class="form-control" data-key="operator"></select></td>' +
                     '<td><select class="form-control" data-key="type"></select></td>' +
+                    '<td><select class="form-control" data-key="operator"></select></td>' +
                     TableHelper.buildBtnInputTd("btn-config btn-expr", "E", "value", noExpression) +
                     '<td><button class="btn btn-danger btn-sm remove">删除</button></td></tr>');
                 $tbody.append($tr);
@@ -309,8 +309,8 @@
             }
             if (mode === 4) {
                 $tr = $('<tr><td><select class="form-control" data-key="field"></select></td>' +
-                    '<td><select class="form-control" data-key="operator"></select></td>' +
                     '<td><select class="form-control" data-key="type"></select></td>' +
+                    '<td><select class="form-control" data-key="operator"></select></td>' +
                     TableHelper.buildBtnInputTd("btn-config btn-expr", "E", "value", true));
                 $tbody.append($tr);
 
@@ -370,8 +370,8 @@
         dbName: null,
         table: null, //模式1形态下的表名称
         data: null,
-        onStart: function () {},
-        onStop: function () {}
+        onStart: function () { },
+        onStop: function () { }
     };
 
     $.fn.conditions.methods = {

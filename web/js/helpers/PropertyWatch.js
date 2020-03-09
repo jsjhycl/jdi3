@@ -33,7 +33,7 @@ var PropertyWatch = {
             background: "rgb(0,0,0,.6)"
         })
         var $doms = $copyWorkSpace.find('input').not("[type=hidden]"),//zww
-            $textareaDom = $copyWorkSpace.find('input').not("[type=hidden]");//zww
+            $textareaDom = $copyWorkSpace.find('textarea').not("[type=hidden]");//zww
         $textareaDom.each((i, ele) => { $doms.push(ele) });//zww
 
         that.inputToBtn(view, $doms, $workspace, key, name, change)

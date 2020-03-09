@@ -17,7 +17,10 @@ function newEventsProperty() {
         name: "终止值",
         value: "end"
     },
-    ]
+    {
+        name: "数据格式转换",
+        value: "dataSwitch"
+    }]
     this.NumberType = [{
         name: "自然数",
         value: "dayTime"
@@ -29,6 +32,13 @@ function newEventsProperty() {
     {
         name: "字母",
         value: "letter"
+    }]
+    this.dataSwitchConfigure = [{
+        name: "时间格式转换",
+        value: "timeSwitch"
+    }, {
+        name: "其它格式",
+        value: "otherSwitch"
     }
     ]
 
@@ -397,6 +407,8 @@ function newEventsProperty() {
                                 <th class="text-center">字段</th>
                                 <th class="text-center">操作类型</th>
                                 <th class="text-center">数值类型</th>
+                                <th class="text-center">数据格式转换配置</th>
+                                <th class="text-center">数据配置</th>
                             </tr>
                         </thead>
                     <tbody>`;
@@ -406,6 +418,12 @@ function newEventsProperty() {
                         <td>${that._renderPropertyHandleOperation(item.operation)}</td>
                         <td>
                             ${that._renderPropertyHandleType(item.type)}
+                        </td>
+                        <td>
+                            ${that._renderPropertyHandleSwitch(item.switch, item.operation)}
+                        </td>
+                        <td class="propertyHandleOtherConfig">
+                            ${that._renderPropertyConfig(item.otherConfig, item.switch)}
                         </td>
                     </tr>`
         })
@@ -446,6 +464,44 @@ function newEventsProperty() {
                 "data-change": "type",
                 "data-propertyHandleChange": "propertyHandle"
             };
+
+        return that._renderSelect(defaultOption, options, selectedValue, isPrompt, selectClass, attr)
+    }
+    //item.config 
+    this._renderPropertyConfig = function (config, type) {
+        var str = "";
+        if (type == "timeSwitch") {
+            str = `
+                <span>开始</span><input type="text" class="form-control" data-change="allDayStart" value="${config.allDayStart}" data-save="allDayStart"/>
+                <span>半天开始</span><input type="text" class="form-control" disabled="disabled" data-change="halfDayStart" value="${config.halfDayStart}" data-save="halfDayStart"/>
+                <span>当天结束</span><input type="text" class="form-control" data-change="allDayEnd" data-save="allDayEnd" value="${config.allDayEnd}"/>
+                <span>半天当日结束</span><input type="text" class="form-control" disabled="disabled" data-change="halfDayEnd" data-save="halfDayEnd" value="${config.halfDayEnd}"/>
+                <span>次日结束</span><input type="text" class="form-control" data-change="nextAllDayEnd" data-save="nextAllDayEnd" value="${config.nextAllDayEnd}"/>
+                <span>半天次日结束</span><input type="text" class="form-control" disabled="disabled" data-change="nextHalfDayEnd" data-save="nextHalfDayEnd" value="${config.nextHalfDayEnd}"/>
+                `
+        }
+
+        return str;
+    }
+    //渲染属性处理的数据格式转换配置
+    this._renderPropertyHandleSwitch = function (selectedValue, type) {
+        var that = this,
+            defaultOption = {
+                name: "请选择操作类型",
+                value: ""
+            },
+            options = that.dataSwitchConfigure,
+            selectedValue = selectedValue,
+            isPrompt = true,
+            selectClass = "form-control chosen",
+            attr = {
+                "data-save": "switch",
+                "data-change": "switch",
+
+            };
+        if (type != "dataSwitch") {
+            attr.disabled = "disabled"
+        }
 
         return that._renderSelect(defaultOption, options, selectedValue, isPrompt, selectClass, attr)
     }
@@ -884,6 +940,16 @@ function newEventsProperty() {
 
         return result;
     }
+    this.getOtherConfig = function ($td) {
+        var that = this,
+            result = {};
+        $td.find('input').each(function (index, item) {
+            var key = $(item).attr('data-save'),
+                value = $(item).val();
+            result[key] = value;
+        })
+        return result;
+    }
 }
 newEventsProperty.prototype = {
     //渲染属性数据
@@ -1126,6 +1192,8 @@ newEventsProperty.prototype = {
                 config.field = $(tr).find("[data-save='field']").val();
                 config.operation = $(tr).find("[data-save='operation']").val();
                 config.type = $(tr).find("[data-save='type']").val();
+                config.switch = $(tr).find("[data-save='switch']").val();
+                config.otherConfig = that.getOtherConfig($(tr).find('.propertyHandleOtherConfig'))
                 result.handles.push(config)
             })
             results.push(result)
@@ -1328,7 +1396,8 @@ newEventsProperty.prototype = {
                 var config = {
                     field: item.value,
                     operation: "",
-                    type: ""
+                    type: "",
+                    switch: ""
                 }
                 handles.push(config)
             })
@@ -1343,6 +1412,51 @@ newEventsProperty.prototype = {
 
             $(this).parents("tr").eq(0).replaceWith($(html))
             that.bindChosen()
+        })
+        //属性处理操作类型切换时
+        that.$events.on("change" + that.NAME_SPACE, ".propertyHandleVariable [data-change='operation']", function () {
+            var operation = $(this).val(),
+                $target = $(this).parents("tr").eq(0).find("[data-change='switch']");
+            $config = $(this).parents("tr").eq(0).find(".propertyHandleConfig");
+            if (operation != "dataSwitch") {
+                $target.val("")
+                $target.attr("disabled", "disabled")
+            } else {
+                $target.attr("disabled", false)
+            }
+            $config.empty()
+            $('.chosen').trigger('chosen:updated');
+
+        })
+        //属性处理数据格式转换配置
+        that.$events.on("change" + that.NAME_SPACE, ".propertyHandleVariable [data-change='switch']", function () {
+            var changType = $(this).val(),
+                $target = $(this).parents("tr").eq(0).find(".propertyHandleOtherConfig"),
+                str = "";
+            if (changType == "timeSwitch") {
+                str = that._renderPropertyConfig({}, changType)
+            }
+            $target.empty().append(str)
+
+        })
+        //属性处理时间转换函数的  
+        that.$events.on("change" + that.NAME_SPACE, ".propertyHandleVariable .propertyHandleConfig .propertyHandleOtherConfig [data-change='allDayStart']", function () {
+            var value = $(this).val(),
+                $target = $(this).parents("td").eq(0).find("[data-change='halfDayStart']");
+            $(this).val(value.toUpperCase())
+            $target.val(value.toLowerCase())
+        })
+        that.$events.on('change' + that.NAME_SPACE, ".propertyHandleVariable .propertyHandleConfig .propertyHandleOtherConfig [data-change='allDayEnd']", function () {
+            var value = $(this).val(),
+                $target = $(this).parents("td").eq(0).find("[data-change='halfDayEnd']");
+            $(this).val(value.toUpperCase())
+            $target.val(value.toLowerCase())
+        })
+        that.$events.on('change' + that.NAME_SPACE, ".propertyHandleVariable .propertyHandleConfig .propertyHandleOtherConfig [data-change='nextAllDayEnd']", function () {
+            var value = $(this).val(),
+                $target = $(this).parents("td").eq(0).find("[data-change='nextHalfDayEnd']");
+            $(this).val(value.toUpperCase())
+            $target.val(value.toLowerCase())
         })
 
         that.$events.on("change" + that.NAME_SPACE, ".propertyHandleVariable [data-propertyHandleChange='propertyHandle']", function () {

@@ -18,6 +18,7 @@ ChangeCategoryTree.prototype = {
     saveData: function (params) {
         new FileService().writeFile("./profiles/category1.json", JSON.stringify(params), function (res) {
             console.log(res)
+            if (res == undefined) alert("保存成功");
         })
     },
     execute: function () {

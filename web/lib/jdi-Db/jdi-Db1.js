@@ -49,6 +49,7 @@
                                     <div class="Db-content">
                                         <div class="Db"></div>
                                         <div class="form-group">
+                                        <label class="col-sm-12 text-left control-label">查询条件:</label>
                                             <div class="col-lg-12 condition">
                                             </div>
                                         </div>

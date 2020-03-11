@@ -1,6 +1,6 @@
 {
     "name": "jdi客户端",
-    "version": "1.1.38",
+    "version": "1.1.39",
     "list": [{
         "version": "1.1.0",
         "files": [],
@@ -157,5 +157,9 @@
         "version": "1.1.38",
         "files": ["web/js/helpers/PropertyWatch.js","web/js/modals/change.tree.modal.js","web/js/modals/newEventsProperty.js","web/js/modals/saveAs.modal.js","web/lib/buildTree/buildTree.js","web/lib/jdi-conditions/jdi-conditions.js","web/lib/jdi-exprGenerator/jdi-exprGenerator.js", "versions.json"],
         "detail": ["修改属性处理","修改自增问题","调整条件属性位置和签名控件中文名显示问题","优化分类树形编辑"]
+    }, {
+        "version": "1.1.39",
+        "files": ["web/lib/jdi-Db/jdi-Db1.js","web/lib/jdi-dbDesigner/jdi-dbDesigner.css", "versions.json"],
+        "detail": ["增加查询条件名称及注释未使用的css样式"]
     }]
 }

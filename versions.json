@@ -1,6 +1,6 @@
 {
     "name": "jdi客户端",
-    "version": "1.1.39",
+    "version": "1.1.40",
     "list": [{
         "version": "1.1.0",
         "files": [],
@@ -161,5 +161,9 @@
         "version": "1.1.39",
         "files": ["web/lib/jdi-Db/jdi-Db1.js","web/lib/jdi-dbDesigner/jdi-dbDesigner.css", "versions.json"],
         "detail": ["增加查询条件名称及注释未使用的css样式"]
+    }, {
+        "version": "1.1.40",
+        "files": ["web/js/modals/newEvents.modal.js","web/js/modals/newEventsProperty.js", "versions.json"],
+        "detail": ["添加页面计算"]
     }]
 }

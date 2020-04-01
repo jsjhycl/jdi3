@@ -168,20 +168,20 @@ OpenConfigModal.prototype = {
             value: ""
         }, tableSelect.filter(el => !!el), customData["table"]);
         fields1 = [{
-                id: "name",
-                cname: "资源名称"
-            },
-             {
-                id: "customId",
-                cname: "编号"
-            }
+            id: "name",
+            cname: "资源名称"
+        },
+        {
+            id: "customId",
+            cname: "编号"
+        }
         ]
         this.renderCondition($tableConditions, fields1, $tableConditionsWrap, customData["condition"]);
         this.renderFields($tableFields, fields, customData["fields"]);
     },
 
     saveData: function () {
-        
+
         var that = this,
             data = {},
             dbName = this.$body.find('[data-name="dbName"]').val(),
@@ -217,7 +217,7 @@ OpenConfigModal.prototype = {
         });
         jdi.fileApi.setProfile(this.configFile, JSON.stringify(data))
 
-        
+
         this.$modal.css('opacity', 0);
         $(`#${(key === 0 ? 'open_template_modal' : 'open_resource_modal')}`).modal('show');
         this.$modal.css('opacity', 1)
@@ -287,12 +287,14 @@ OpenConfigModal.prototype = {
                 name = $(this).find("option:selected").text(),
                 $tableConditionsWrap = that.$body.find('[data-name="table_conditions_wrap"]'),
                 html = '';
+            if (!value || name == "请选择查询字段") $tableConditionsWrap.empty();
             if (value && that.$modal.find(`[data-condition][data-name="${value}"]`).length <= 0) {
                 html += that.renderConditionItem({
                     col: value,
                     value: ""
                 }, !!that.cate[name], name)
-                $tableConditionsWrap.append(html)
+                $tableConditionsWrap.empty().append(html);//zww
+                // $tableConditionsWrap.append(html)
             };
             that.$body.find(`[data-condition][data-name="${value}"]`).focus()
         });

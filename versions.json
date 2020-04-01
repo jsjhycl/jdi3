@@ -1,6 +1,6 @@
 {
     "name": "jdi客户端",
-    "version": "1.1.40",
+    "version": "1.1.41",
     "list": [{
         "version": "1.1.0",
         "files": [],
@@ -165,5 +165,9 @@
         "version": "1.1.40",
         "files": ["web/js/modals/newEvents.modal.js","web/js/modals/newEventsProperty.js", "versions.json"],
         "detail": ["添加页面计算"]
+    }, {
+        "version": "1.1.41",
+        "files": ["web/designer/index.html","web/js/utils/buildTableJson.js", "versions.json"],
+        "detail": ["更改数据库设计器中元素名称 "]
     }]
 }

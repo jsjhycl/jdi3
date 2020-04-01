@@ -41,6 +41,32 @@ function newEventsProperty() {
         value: "otherSwitch"
     }
     ]
+    this.computerDirection = [{
+        name: "起始列-->终止列",
+        value: "startCloToEndCol"
+    }, {
+        name: "终止列-->起始列",
+        value: "EndColToStartCol"
+    }, {
+        name: "起始行-->终止行",
+        value: "startRowToEndRow"
+    }, {
+        name: "终止行-->起始行",
+        value: "endRowToStartRow"
+    }]
+    this.renderType = [{
+        name: "数字累加",
+        value: "numberAdd"
+    }, {
+        name: "文字累加",
+        value: "charactersAdd"
+    }, {
+        name: '字母累加',
+        value: 'letterAdd'
+    }, {
+        name: '替换',
+        value: 'stringReplace'
+    }]
 
 
     /**
@@ -950,6 +976,130 @@ function newEventsProperty() {
         })
         return result;
     }
+    this.computerPageRenderTr = function (computerPage = {}) {
+        var str = "",
+            that = this;
+        str = `<tr class="computerPageTr">
+                <td class="compageVariable">
+                    ${that._renderCustomVariable(computerPage.variable || "")}
+                </td>
+                <td>
+                    <input type="text" class="form-control" data-save="startRows" value="${computerPage.startRows || ''}">
+                </td>
+                <td>
+                    <input type="text" class="form-control" data-save="endRows" value="${computerPage.endRows || ''}">
+                </td>
+                <td>
+                    ${that._computerPageFields(computerPage.variable, computerPage.startColumns, { "data-save": "startColumns", "data-change": "startColumns" })}
+                </td>
+                <td>
+                    ${that._computerPageFields(computerPage.variable, computerPage.endColumns, { "data-save": "endColumns", "data-change": "endColumns" })}
+                </td>
+                <td>
+                    ${that._renderSelect({ name: "请选择计算方向", value: '' }, that.computerDirection, computerPage.direction, false, "from-control chosen", {
+            "data-save": "direction",
+            "data-change": "direction"
+        })}
+                </td>
+                <td>
+                    <div>
+                        <input type="button" class="form-control operator" value="*">
+                        <input type="button" class="form-control operator " value="+">
+                        <input type="button" class="form-control operator" value="-">
+                        <input type="button" class="form-control operator" value="×">
+                        <input type="button" class="form-control operator" value="÷">
+                        <input type="button" class="form-control operator" value="->">
+                        <input type="button" class="form-control operator" value="(">
+                        <input type="button" class="form-control operator" value=")">
+                    </div>
+                </td>
+                <td>
+                    ${that._computerPageFields(computerPage.variable, computerPage.valuePosition, { "data-save": "valuePosition", "data-change": "valuePosition" })}
+                </td>
+                <td>
+                    <input type="text" class="form-control expression" data-save="expression" value='${computerPage.expression||""}'/>
+                </td>
+                <td>
+                    <div>
+                        <input type="button" class="form-control ruleoperator" value="*">
+                        <input type="button" class="form-control ruleoperator " value="+">
+                        <input type="button" class="form-control ruleoperator" value="-">
+                        <input type="button" class="form-control ruleoperator" value="×">
+                        <input type="button" class="form-control ruleoperator" value="÷">
+                        <input type="button" class="form-control ruleoperator" value="->">
+                        <input type="button" class="form-control ruleoperator" value="(">
+                        <input type="button" class="form-control ruleoperator" value=")">
+                    </div>
+                </td>
+                
+                <td>
+                    ${that._computerPageFields(computerPage.variable, computerPage.ruleValuePosition, { "data-save": "ruleValuePosition", "data-change": "ruleValuePosition" })}
+                </td>
+                <td>
+                    <input type="text" class="form-control ruleExpression" data-save='ruleExpression' value="${computerPage.ruleExpression||''}"/>
+                </td>
+                <td>
+                ${that._renderSelect({ name: "请选择渲染类型", value: '' }, that.renderType, computerPage.renderType, false, "from-control chosen", {
+            "data-save": "renderType",
+            "data-change": "renderType"
+        })}
+                </td>
+                <td>
+                    ${that._computerPageRenderColums(computerPage.variable, computerPage.renderposition, { "data-save": "renderposition", "data-change": "renderposition" })}
+                </td>
+                <td>
+                    ${that.computerPageRenderFields(computerPage.variable, computerPage.renderposition, computerPage.renderFild, { "data-save": "renderFild", "data-change": "renderFild" })}
+                </td>
+            </tr>`;
+        return str;
+    }
+    this.computerPageRenderFields = function (variable, renderposition, selectedValue, attr) {
+        var that = this,
+            defaultOption = { name: "请选择", value: "" },
+            options = [],
+            isPrompt = true,
+            selectClass = "from-control chosen",
+            attr = attr;
+
+        if (variable && renderposition) {
+            var data = {};
+            GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
+                if (variable == item.key) {
+                    console.log(variable, item.key)
+                    data.dbName = item.dbName;
+                    data.table = item.table;
+                    data.id = renderposition
+                }
+            })
+            console.log(data)
+            var options = new BuildTableJson().getOptions(AllDbName, 'fieldSplit', data)
+            console.log(options)
+        }
+        return that._renderSelect(defaultOption, options, selectedValue, isPrompt, selectClass, attr)
+    }
+    this._computerPageRenderColums = function (variable, selectedValue, attr) {
+        var that = this,
+            defaultOption = { name: "请选择", vlaue: "" },
+            options = variable ? that._getpropertyRenderXYoption(variable) : [],
+            isPrompt = true,
+            selectClass = "from-control chosen",
+            attr = attr;
+        options.unshift({ name: "本字段本表", value: "thisFields" })
+        return that._renderSelect(defaultOption, options, selectedValue, isPrompt, selectClass, attr)
+    }
+    this._computerPageFields = function (variable, selectedValue, attr) {
+        var that = this,
+            defaultOption = {
+                name: "请选择",
+                value: ""
+            },
+            options = variable ? that._getpropertyRenderXYoption(variable) : [],
+            selectedValue = selectedValue,
+            isPrompt = true,
+            selectClass = "from-control chosen",
+            attr = attr;
+        return that._renderSelect(defaultOption, options, selectedValue, isPrompt, selectClass, attr)
+    }
 }
 newEventsProperty.prototype = {
     //渲染属性数据
@@ -1046,7 +1196,6 @@ newEventsProperty.prototype = {
             </div>`
         return str;
     },
-
     propertyRender: function (propertyRenders) {
         // if (!propertyRender) {
         //     propertyRender = {}
@@ -1070,6 +1219,37 @@ newEventsProperty.prototype = {
                     </thead>
                     <tbody>
                         ${that._renderPropertyRenderTr(propertyRenders)}
+                    </tbody>
+                </table>
+            </div>`;
+        return str;
+    },
+    //页面计算
+    computerPageRender: function (computerPage) {
+        var that = this,
+            str = `<div class="condition computerPage" ${computerPage ? "" : 'style="display:none"'}>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center">自定义变量</th>
+                            <th class="text-center">起始行</th>
+                            <th class="text-center">终止行</th>
+                            <th class="text-center">起始列</th>
+                            <th class="text-center">终止列</th>
+                            <th class="text-center">计算方向</th>
+                            <th class="text-center">运算符</th>
+                            <th class="text-center">值所在位置</th>
+                            <th class="text-center">表达式</th>
+                            <th class="text-center">规则运算符</th>
+                            <th class="text-center">规则值所在位置</th>
+                            <th class="text-center">规则表达式</th>
+                            <th class="text-center">渲染类型</th>
+                            <th class="text-center">渲染列</th>
+                            <th class="text-center">渲染段</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${that.computerPageRenderTr(computerPage)}
                     </tbody>
                 </table>
             </div>`;
@@ -1123,6 +1303,28 @@ newEventsProperty.prototype = {
 
         that.updataVariable($("[data-change='variable']"))
         return propertyData;
+    },
+    //获取页面计算的数据
+    getComputerPage: function ($tr) {
+        var that = this,
+            result = {
+               
+            };
+        $tr.each(function () {
+                result.variable = $(this).find('[data-save="variable"]').val(),
+                result.startRows = $(this).find('[data-save="expression"]').val(),
+                result.endRows = $(this).find('[data-save="endRows"]').val(),
+                result.startColumns = $(this).find('[data-save="startColumns"]').val(),
+                result.endColumns = $(this).find('[data-save="endColumns"]').val(),
+                result.direction = $(this).find('[data-save="direction"]').val(),
+                result.expression= $(this).find('[data-save="expression"]').val(),
+                result.ruleExpression= $(this).find('[data-save="ruleExpression"]').val(),
+                result.renderType= $(this).find('[data-save="renderType"]').val(),
+                result.renderposition= $(this).find('[data-save="renderposition"]').val(),
+                result.renderFild= $(this).find('[data-save="renderFild"]').val()
+        })
+        console.log(result)
+        return result;
     },
     //获取属性查询
     getPropertyQuery: function ($tr, id, index) {
@@ -1320,6 +1522,8 @@ newEventsProperty.prototype = {
         })
         return data;
     },
+
+
     bindEvents: function () {
         var that = this;
         //属性数据数据库切换时
@@ -1532,6 +1736,69 @@ newEventsProperty.prototype = {
 
 
         })
+        that.$events.on("change" + that.NAME_SPACE, ".computerPage [data-change='variable']", function () {
+            var value = $(this).val(),
+                $startTarget = $('.computerPage [data-change="startColumns"]'),
+                $endTarget = $('.computerPage [data-change="endColumns"]'),
+                $valuePosition = $('.computerPage [data-change="valuePosition"]'),
+                $ruleValuePosition = $('.computerPage [data-change="ruleValuePosition"]'),
+                $renderposition = $('.computerPage [data-change="renderposition"]'),
+                $renderFild = $('.computerPage [data-change="renderFild"]'),
+                startColumns = that._computerPageFields(value, "", { 'data-save': "startColumns", 'data-change': "startColumns" }),
+                endColumns = that._computerPageFields(value, "", { 'data-save': "endColumns", 'data-change': "endColumns" }),
+                valuePosition = that._computerPageFields(value, "", { 'data-save': "valuePosition", 'data-change': "valuePosition" }),
+                renderposition = that._computerPageRenderColums(value, "", { 'data-save': "renderposition", 'data-change': "renderposition" }),
+                ruleValuePosition = that._computerPageFields(value, "", { 'data-save': "ruleValuePosition", 'data-change': "ruleValuePosition" }),
+                renderFild = that.computerPageRenderFields(value, "", "", { "data-save": "renderFild", "data-change": "renderFild" });
+            $startTarget.parents("td").eq(0).empty().append(startColumns);
+            $endTarget.parents("td").eq(0).empty().append(endColumns);
+            $valuePosition.parents('td').eq(0).empty().append(valuePosition);
+            $renderposition.parents('td').eq(0).empty().append(renderposition);
+            $ruleValuePosition.parents('td').eq(0).empty().append(ruleValuePosition);
+            $renderFild.parents('td').eq(0).empty().append(renderFild)
+
+            that.bindChosen()
+        })
+        that.$events.on("click" + that.NAME_SPACE, ".computerPage .operator", function () {
+            var value = $(this).val(),
+                $target = $(this).parents('tr').eq(0).find(".expression");
+            targetValue = $target.val();
+            var newValue = targetValue + value;
+            $target.val(newValue)
+            console.log(value)
+        })
+        that.$events.on("change" + that.NAME_SPACE, ".computerPage [data-change='valuePosition']", function () {
+            var value = $(this).val(),
+                $target = $(this).parents('tr').eq(0).find(".expression");
+            targetValue = $target.val();
+            var newValue = targetValue + value;
+            $target.val(newValue)
+
+        })
+        that.$events.on("click" + that.NAME_SPACE, ".computerPage .ruleoperator", function () {
+            var value = $(this).val(),
+                $target = $(this).parents('tr').eq(0).find(".ruleExpression");
+            targetValue = $target.val();
+            var newValue = targetValue + value;
+            $target.val(newValue)
+        })
+        that.$events.on("change" + that.NAME_SPACE, ".computerPage [data-change='ruleValuePosition']", function () {
+            var value = $(this).val(),
+                $target = $(this).parents('tr').eq(0).find(".ruleExpression");
+            targetValue = $target.val();
+            var newValue = targetValue + value;
+            $target.val(newValue)
+
+        })
+        that.$events.on("change" + that.NAME_SPACE, ".computerPage [data-change='renderposition']", function () {
+            var value = $(this).val(),
+                $field = $(".computerPage [data-change='renderFild']"),
+                variable = $(".computerPage [data-change='variable']").val(),
+                str = that.computerPageRenderFields(variable, value, "", { "data-save": "renderFild", "data-change": "renderFild" });
+            $field.parents('td').eq(0).empty().append(str)
+            that.bindChosen()
+        })
+
 
     }
 

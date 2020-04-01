@@ -122,6 +122,7 @@ function NewEventsModal($modal, $elemts) {
                         ${new newEventsProperty().renderPropertyHandle(event.subscribe.propertyHandle)}
                         ${new newEventsProperty().renderExtendCol(event.subscribe.extendCol)}
                         ${new newEventsProperty().propertyRender(event.subscribe.propertyRender)}
+                        ${new newEventsProperty().computerPageRender(event.subscribe.computerPage)}
                         ${ that.renderSaveHTML(event.subscribe.saveHTML)}
                         ${ that.renderKeySave(event.subscribe.keySave)}
                         ${ that.renderNextProcess(event.subscribe.nextProcess)}
@@ -334,60 +335,6 @@ function NewEventsModal($modal, $elemts) {
             </div>`
         return str;
     }
-
-    // //zww
-    // this.renderExtendCol = function (extendCol) {
-    //     var that = this,
-    //         str = `<div class="conditoion extendCol"  ${extendCol ? "" : 'style="display:none"'}>
-    //     <table class="table table-bordered">
-    //         <thead>
-    //             <tr>
-    //                 <th class="text-center">开始</th>
-    //                 <th class="text-center">结束</th>
-    //                 <th class="text-center">开始截取</th>
-    //                 <th class="text-center">结束截取</th>
-    //             </tr>
-    //         </thead>
-    //         <tbody>
-    //             ${that.renderExtendColTr(extendCol)}
-    //         </tbody>
-    //     </table>
-    // </div>`
-    //     return str;
-    // }
-    // //zww
-    // this.renderExtendColTr = function (extendCol = {}) {
-    //     extendCol = extendCol || {}
-    //     let that = this,
-    //         str = '';
-    //     str += `<tr class="importDbTr">
-    //         <td>
-    //             <input type="text" class="form-control" data-save="startText" value="${extendCol.startText || ""}" >
-    //         </td>
-    //         <td>
-    //             <input type="text" class="form-control" data-save="endText" value="${extendCol.endText || ""}" >
-    //         </td>
-    //         <td>
-    //             <input type="text" class="form-control" data-save="startSubstr" value="${extendCol.startSubstr || ""}" >
-    //         </td>
-    //         <td>
-    //             <input type="text" class="form-control" data-save="endSubstr" value="${extendCol.endSubstr || ""}" >
-    //         </td>
-    //     </tr>`
-    //     return str;
-    // }
-    //zww
-    // this.renderExtentColSelect = function (selectText) {
-    //     var str = `<select class="form-control chosen" data-save="selectText"><option value="">请选择自定义变量</option>`,
-    //         BODY = GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable,
-    //         selectArr = BODY ? GLOBAL_PROPERTY.BODY.customVariable : [];
-    //     selectArr.forEach(item => {
-    //         var selectVal = `${item.desc}(${item.key})`;
-    //         str += `<option value="${selectVal}" ${selectVal == selectText ? "selected" : ""}> ${selectVal}</option>`
-    //     })
-    //     str += "</select>"
-    //     return str;
-    // }//end
     this.renderImportExcel = function (importArea) {
         let that = this,
             str = "";
@@ -1236,6 +1183,7 @@ NewEventsModal.prototype = {
                 propertyQuery = null,
                 propertyHandle = null,
                 propertyRender = null,
+                computerPage = null,
                 importDb = null,
                 extendCol = null; //zww;
             if (that.judgeCheckMehods("propertyData", $(this).find(".triggerMethods:checked"))) {
@@ -1244,6 +1192,9 @@ NewEventsModal.prototype = {
             }
             if (that.judgeCheckMehods("propertyQuery", $(this).find(".triggerMethods:checked"))) {
                 propertyQuery = new newEventsProperty().getPropertyQuery($(this).find(".propertyQueryTr"), id, index)
+            }
+            if (that.judgeCheckMehods("computerPage", $(this).find(".triggerMethods:checked"))) {
+                computerPage = new newEventsProperty().getComputerPage($(this).find('.computerPageTr'))
             }
             if (that.judgeCheckMehods("propertyHandle", $(this).find(".triggerMethods:checked"))) {
                 propertyHandle = new newEventsProperty().getPropertyHandle($(this).find(".propertyHandleTbody"), id, index)
@@ -1351,8 +1302,8 @@ NewEventsModal.prototype = {
                         propertyQuery: propertyQuery,
                         propertyHandle: propertyHandle,
                         propertyRender: propertyRender,
-                        extendCol: extendCol //zww
-
+                        extendCol: extendCol, //zww
+                        computerPage:computerPage   
                     }
                 })
             }
@@ -1486,7 +1437,7 @@ NewEventsModal.prototype = {
             $this.parents('tr').attr('data-check', JSON.stringify(checkArr));
 
             let arr = ["save", "upload", "login", "checkAll", "cancelAll", "changeProperty", "copySend", "notify", "saveHTML",
-                "linkHtml", "nextProcess", "executeFn", "importExcel", "importDb", "keySave", "deleteRow", "propertyData", "propertyQuery", "propertyHandle", "propertyRender", "extendCol"
+                "linkHtml", "nextProcess", "executeFn", "importExcel", "importDb", "keySave", "deleteRow", "propertyData", "propertyQuery", "propertyHandle", "propertyRender", "extendCol", "computerPage"
             ];
 
             if (!arr.includes(value)) {

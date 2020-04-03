@@ -28,13 +28,15 @@
     transition: all .2s;
 }
 .eg .eg-dialog .eg-content {
-    width: calc(100% - 500px);
+    /* width: calc(100% - 500px); */
+    width: 1070px;
 }
 .eg .eg-dialog .eg-sidebar {
     width: 250px;
 }
 .eg .eg-dialog .eg-function {
-    width: 300px;
+    /* width: 300px; */
+    width: calc(100% - 1330px);
 }
 /*内容区域样式*/
 .eg .eg-dialog .eg-content {
@@ -127,10 +129,10 @@
     width: 250px;
     background-color: #2d323d;
 }
-.eg .eg-dialog .eg-sidebar.sidebar-hide{
+/* .eg .eg-dialog .eg-sidebar.sidebar-hide{
     height: 40px;
     transition: all .2s;
-}
+} */
 /*关闭按钮样式*//* 显示隐藏按钮样式 */
 .eg .eg-dialog .eg-sidebar .eg-close,
 .eg .eg-toggle {
@@ -158,7 +160,7 @@
     border: 2px solid white;
     cursor: pointer;
 }
-/* 显示隐藏按钮样式 */
+/* 显示隐藏按钮样式
 .eg .eg-toggle{
     right: 35px;
     transform: rotate(90deg);
@@ -166,7 +168,7 @@
 .eg .eg-toggle.eg-hide{
     transform: rotate(-90deg);
     transition: all .2s;
-}
+} */
 /*工具栏样式*/
 .eg .eg-dialog .eg-sidebar .eg-toolbar {
     position: absolute;
@@ -237,10 +239,10 @@
     border-bottom: 1px solid #ccc;
     text-align: center;
 }
-.eg .eg-dialog .eg-function.add-width{
+/* .eg .eg-dialog .eg-function.add-width{
     width: 540px;
     padding-top: 0;
-}
+} */
 /*悬浮栏样式*/
 .eg .eg-dialog .eg-function,
 .eg .eg-dialog .eg-insertFn {

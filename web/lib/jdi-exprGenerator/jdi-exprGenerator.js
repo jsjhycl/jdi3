@@ -480,7 +480,6 @@
                     '</article>' +
                     '<aside class="eg-sidebar">' +
                     '<span class="change-mode" data-mode="0">切换显示</span>' +
-                    '<i class="eg-toggle">></i>' +
                     '<i class="eg-close">&times;</i>' +
                     '<section class="eg-toolbar"></section>' +
                     '<section class="eg-result">' +
@@ -693,9 +692,11 @@
             if (Array.isArray(functions)) {
                 this.renderToolBar(functions, systemFunction);
                 this.setToolBarData(functions[0]);
-                $eg.find(".eg-function").show().end().find(".eg-content").css("width", "calc(100% - 550px)");
+                // $eg.find(".eg-function").show().end().find(".eg-content").css("width", "calc(100% - 550px)");
+                $eg.find(".eg-function").show().end().find(".eg-function").css("width", "calc(100% - 1330px)");
             } else {
-                $eg.find(".eg-function").hide().end().find(".eg-content").css("width", "calc(100% - 250px)");
+                // $eg.find(".eg-function").hide().end().find(".eg-content").css("width", "calc(100% - 250px)");
+                $eg.find(".eg-function").hide().end().find(".eg-function").css("width", "calc(100% - 250px)");
             }
         },
         renderToolBar: function (functions, systemFunction) {
@@ -796,7 +797,7 @@
             });
             $eg.find(".eg-content,.eg-sidebar,.eg-toolbar,.eg-result,.eg-function,.eg-insertFn").css("z-index", zIndex + 1);
             $eg.find(".eg-close").css("z-index", zIndex + 2);
-            $eg.find(".eg-toggle").css("z-index", zIndex + 2);
+            // $eg.find(".eg-toggle").css("z-index", zIndex + 2);
             $eg.find(".eg-toolbar").css("bottom", rHeight);
             $eg.find(".eg-dialog").width(pageWidth * .75 + sWidth * 2 > 551 ? pageWidth * .75 + sWidth * 2 : 551);
             $eg.fadeIn();
@@ -1034,23 +1035,23 @@
                     cache.onClose();
                 }
             });
-            // 显示隐藏
-            $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-toggle", {
-                element: element
-            }, function (event) {
-                event.stopPropagation();
-                if (!$('.eg .eg-toggle').attr('class').includes('eg-hide')) {
-                    $('.eg .eg-toggle').addClass('eg-hide');
-                    $('.eg .eg-sidebar').addClass('sidebar-hide');
-                    $('.eg .eg-function').addClass('add-width');
-                    $('.eg .eg-toolbar,.eg .eg-result').hide();
-                } else {
-                    $('.eg .eg-toggle').removeClass('eg-hide');
-                    $('.eg .eg-sidebar').removeClass('sidebar-hide');
-                    $('.eg .eg-function').removeClass('add-width');
-                    $('.eg .eg-toolbar,.eg .eg-result').show();
-                }
-            });
+            // // 显示隐藏
+            // $(document).on("click" + EVENT_NAMESPACE, ".eg .eg-toggle", {
+            //     element: element
+            // }, function (event) {
+            //     event.stopPropagation();
+            //     if (!$('.eg .eg-toggle').attr('class').includes('eg-hide')) {
+            //         $('.eg .eg-toggle').addClass('eg-hide');
+            //         $('.eg .eg-sidebar').addClass('sidebar-hide');
+            //         $('.eg .eg-function').addClass('add-width');
+            //         $('.eg .eg-toolbar,.eg .eg-result').hide();
+            //     } else {
+            //         $('.eg .eg-toggle').removeClass('eg-hide');
+            //         $('.eg .eg-sidebar').removeClass('sidebar-hide');
+            //         $('.eg .eg-function').removeClass('add-width');
+            //         $('.eg .eg-toolbar,.eg .eg-result').show();
+            //     }
+            // });
             // 选择一级函数分类
             $(document).on("click" + EVENT_NAMESPACE, ".eg .cpanel .fn-types-item", {
                 element: element

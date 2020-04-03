@@ -13,6 +13,13 @@
     font-size: 12px;
 }
 
+.querier .querier-conditions tbody tr td:first-child{
+    width: 29%;
+}
+.querier .querier-conditions tbody tr td:nth-of-type(2),
+.querier .querier-conditions tbody tr td:nth-of-type(3){
+    width: 21%;
+}
 .querier .querier-conditions tbody tr td .expr {
     float: right;
     margin-right: 2px;
@@ -24,7 +31,7 @@
 .querier .querier-conditions tbody tr td input {
     display: block;
     margin: auto;
-    width: 95%;
+    width: 100%;
 }
 
 .querier .querier-conditions tbody tr td .expr + input {

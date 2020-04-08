@@ -693,9 +693,11 @@
                 this.renderToolBar(functions, systemFunction);
                 this.setToolBarData(functions[0]);
                 // $eg.find(".eg-function").show().end().find(".eg-content").css("width", "calc(100% - 550px)");
-                $eg.find(".eg-function").show().end().find(".eg-function").css("width", "calc(100% - 1330px)");
+                var egPageWidth = $eg.find(".eg-page").width(),
+                    egSidebarWidth = $eg.find(".eg-sidebar").width(),
+                    egFunctionWidth = egPageWidth * .75 + egSidebarWidth;
+                $eg.find(".eg-function").show().css("width", `calc(100% - ${egFunctionWidth}px)`).end().find(".eg-content").css("width", `${egPageWidth * .75}px`);
             } else {
-                // $eg.find(".eg-function").hide().end().find(".eg-content").css("width", "calc(100% - 250px)");
                 $eg.find(".eg-function").hide().end().find(".eg-function").css("width", "calc(100% - 250px)");
             }
         },

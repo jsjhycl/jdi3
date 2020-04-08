@@ -28,15 +28,13 @@
     transition: all .2s;
 }
 .eg .eg-dialog .eg-content {
-    /* width: calc(100% - 500px); */
-    width: 1070px;
+    width: calc(100% - 500px);
 }
 .eg .eg-dialog .eg-sidebar {
     width: 250px;
 }
 .eg .eg-dialog .eg-function {
-    /* width: 300px; */
-    width: calc(100% - 1330px);
+    width: 300px;
 }
 /*内容区域样式*/
 .eg .eg-dialog .eg-content {

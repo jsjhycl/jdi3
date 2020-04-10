@@ -278,13 +278,24 @@
     max-width: 100px;
     text-align: center; 
 }
-
+.eg .eg-dialog .eg-function .table tbody td .input-group{
+    width: 100%;
+}
 .eg .eg-dialog .eg-function .table thead th,
 .eg .eg-dialog .eg-function .table tbody td {
     font-size: 12px;
     font-weight: normal;
     text-align: center;
 }
+/* zww start */
+.eg .eg-dialog .eg-function .conditions .table.table-striped tbody td:first-child{
+    width: 29%;
+}
+.eg .eg-dialog .eg-function .conditions .table.table-striped tbody td:nth-child(2),
+.eg .eg-dialog .eg-function .conditions .table.table-striped tbody td:nth-child(3){
+    width: 21%;
+}
+/* zww end */
 .eg .eg-dialog .eg-function .table thead tr th:first-child {
     width: 65px;
 }

@@ -356,7 +356,7 @@
                     global;
                 if (globalData && Array.isArray(globalData.global)) global = globalData.global;
 
-                let fieldsHtml = '<select><option value="">请选择</option>' + renderFields.map(i => {
+                let fieldsHtml = '<select class="form-control"><option value="">请选择</option>' + renderFields.map(i => {
                     return `<option value="${i.value}">${i.name}</option>`
                 }).join('') + '</select>',
                     trs = global ? global.map(i => {
@@ -696,7 +696,7 @@
                 var egPageWidth = $eg.find(".eg-page").width(),
                     egSidebarWidth = $eg.find(".eg-sidebar").width(),
                     egFunctionWidth = egPageWidth * .75 + egSidebarWidth;
-                $eg.find(".eg-function").show().css("width", `calc(100% - ${egFunctionWidth}px)`).end().find(".eg-content").css("width", `${egPageWidth * .75}px`);
+                $eg.find(".eg-function").show().css("width", `calc(100% - ${egFunctionWidth - 50}px)`).end().find(".eg-content").css("width", `${egPageWidth * .75 - 50}px`);
             } else {
                 $eg.find(".eg-function").hide().end().find(".eg-function").css("width", "calc(100% - 250px)");
             }

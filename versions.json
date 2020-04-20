@@ -1,6 +1,6 @@
 {
     "name": "jdi客户端",
-    "version": "1.1.41",
+    "version": "1.1.42",
     "list": [{
         "version": "1.1.0",
         "files": [],
@@ -168,6 +168,10 @@
     }, {
         "version": "1.1.41",
         "files": ["web/designer/index.html","web/js/utils/buildTableJson.js", "versions.json"],
+        "detail": ["更改数据库设计器中元素名称 "]
+    }, {
+        "version": "1.1.42",
+        "files": ["web/css/index.css","web/js/modals/openConfig.modal.js","web/lib/jdi-dbQuerier/jdi-dbQuerier.css","web/lib/jdi-exprGenerator/jdi-exprGenerator.css","web/lib/jdi-exprGenerator/jdi-exprGenerator.js", "versions.json"],
         "detail": ["更改数据库设计器中元素名称 "]
     }]
 }

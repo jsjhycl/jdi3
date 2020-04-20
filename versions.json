@@ -172,6 +172,6 @@
     }, {
         "version": "1.1.42",
         "files": ["web/css/index.css","web/js/modals/openConfig.modal.js","web/lib/jdi-dbQuerier/jdi-dbQuerier.css","web/lib/jdi-exprGenerator/jdi-exprGenerator.css","web/lib/jdi-exprGenerator/jdi-exprGenerator.js", "versions.json"],
-        "detail": ["更改数据库设计器中元素名称 "]
+        "detail": ["弹出框优化","函数配置优化"]
     }]
 }

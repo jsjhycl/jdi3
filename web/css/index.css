@@ -594,7 +594,7 @@ li {
 
 .ctable tbody tr td .btn-config+input {
     margin-left: 5px;
-    width: 80%;
+    width: 75%;
 }
 
 /*事件触发栏的单独配置*/
@@ -1129,7 +1129,7 @@ li {
 }
 
 #archivePathBatch_modal .archive_content .archive-right li {
-    float: left;
+    /* float: left; */
     display: inline-block;
     width: 170px;
     margin: 5px;
@@ -1164,7 +1164,7 @@ li {
 }
 #archivePathBatch_modal .archive_content .archive-left li .related-control {
     display: inline-block;
-    float: right;
+    /* float: right; */
     width: 125px;
     height: 22px;
     line-height: 22px;

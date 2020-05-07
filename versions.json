@@ -1,6 +1,6 @@
 {
     "name": "jdi客户端",
-    "version": "1.1.2",
+    "version": "1.1.42",
     "list": [{
         "version": "1.1.0",
         "files": [],
@@ -11,7 +11,167 @@
         "detail": ["测试"]
     }, {
         "version": "1.1.2",
-        "files": ["web/designer/index.html", "web/css/common.css", "web/js/index.js", "web/js/controllers/control.js", "web/lib/jresizable/jresizable.js", "versions.json"],
+        "files": ["web/designer/editor.html", "versions.json", "web/js/modals/dbDesigner.modal.js"],
         "detail": ["表格内的文本框去除边框"]
+    }, {
+        "version": "1.1.3",
+        "files": ["main/menu.ts", "versions.json", "main/menu.js", "services/upgrade.js", "services/upgrade.ts"],
+        "detail": ["menu菜单显示当前版本信息"]
+    }, {
+        "version": "1.1.4",
+        "files": ["web/designer/index.html", "web/css/common.css", "web/js/index.js", "web/js/controllers/control.js", "web/js/controllers/workspace.js", "web/js/modals/dbApply.modal.js", "web/js/modals/dbDesigner.modal.js", "web/js/modals/openConfig.modal.js", "web/js/modals/saveAs.modal.js", "web/js/services/service.js", "web/lib/jresizable/jresizable.js", "web/lib/jdi-dbDesigner/jdi-dbDesigner.js", "versions.json"],
+        "detail": ["按钮样式问题", "考勤函数问题", "其他bug解决"]
+    }, {
+        "version": "1.1.5",
+        "files": ["web/js/modals/dbApply.modal.js", "web/js/modals/dbApply.modal.js", "versions.json"],
+        "detail": ["表头显示问题"]
+    }, {
+        "version": "1.1.6",
+        "files": ["web/js/index.js", "versions.json"],
+        "detail": ["域名问题"]
+    }, {
+        "version": "1.1.7",
+        "files": ["config.json", "versions.json"],
+        "detail": ["域名问题"]
+    }, {
+        "version": "1.1.8",
+        "files": ["web/js/modals/publish.modal.js", "web/js/modals/openResurce.modal.js", "versions.json"],
+        "detail": ["发布布局去除删除功能", "删除布局版本问题"]
+    }, {
+        "version": "1.1.9",
+        "files": ["web/js/init.js", "web/js/modals/setDbDesigner.modal.js", "web/lib/databaseDesigner/databaseDesigner.js", "versions.json"],
+        "detail": ["数据库设计优化"]
+    }, {
+        "version": "1.1.10",
+        "files": ["web/lib/jdi-exprGenerator/jdi-exprGenerator.js", "versions.json"],
+        "detail": ["表达式还原"]
+    }, {
+        "version": "1.1.11",
+        "files": ["web/js/utils/buildTableJson.js", "web/lib/jdi-dbDesigner/jdi-dbDesigner.js", "web/lib/jdi-dbQuerier/jdi-dbQuerier.js", "versions.json"],
+        "detail": ["数据库表被删除问题，表格渲染问题"]
+    }, {
+        "version": "1.1.12",
+        "files": ["web/js/modals/newEvents.modal.js", "versions.json"],
+        "detail": ["修改导入Excel区域配置"]
+    }, {
+        "version": "1.1.13",
+        "files": ["web/js/modals/openConfig.modal.js", "versions.json"],
+        "detail": ["配置查询优化"]
+    }, {
+        "version": "1.1.14",
+        "files": ["config.json", "versions.json"],
+        "detail": ["临时域名问题"]
+    }, {
+        "version": "1.1.15",
+        "files": ["web/css/index.css", "web/designer/index.html", "web/js/index.js", "web/js/init.js", "web/js/modals/dbDesigner.modal.js", "web/js/modals/newEvents.modal.js", "web/js/modals/openConfig.modal.js", "web/lib/lodash/lodash.js", "web/lib/ownSaveDesigner/ownSaveDesigner.js", "versions.json"],
+        "detail": ["签名控件修复", "布局配置修改", "引用修改"]
+    }, {
+        "version": "1.1.16",
+        "files": ["web/css/index.css", "web/designer/index.html", "web/js/index.js", "web/js/init.js", "web/js/modals/dbDesigner.modal.js", "web/js/modals/newEvents.modal.js", "web/js/modals/openConfig.modal.js", "web/lib/lodash/lodash.js", "web/lib/ownSaveDesigner/ownSaveDesigner.js", "versions.json"],
+        "detail": ["签名控件修复", "布局配置修改", "引用修改"]
+    }, {
+        "version": "1.1.17",
+        "files": ["data/configs/defaultStyle.json", "services/excel2html.js", "web/css/index.css", "web/designer/editor.html", "web/designer/index.html", "web/js/controllers/contextMenu.js", "web/js/controllers/property.js", "web/js/controllers/propertybar.js", "web/js/controllers/workspace.js", "web/js/helpers/PropertyWatch.js", "web/js/index.js", "web/js/init.js", "web/js/modals/createResource.modal.js", "web/js/modals/dbApply.modal.js", "web/js/modals/dbDesigner.modal.js", "web/js/modals/newEvents.modal.js", "web/js/modals/openConfig.modal.js", "web/js/modals/query.modal.js", "web/js/modals/setDbDesigner.modal.js", "web/js/modals/submit.modal.js", "web/js/utils/common.js", "web/lib/jdi-dbQuerier/jdi-dbQuerier.js", "web/js/modals/change.tree.modal.js", "web/js/modals/changeListen.modal.js", "web/js/utils/arrayTOTree.js", "web/lib/buildTree/buildTree.css", "web/lib/buildTree/buildTree.js", "web/lib/orgChart/html2canvas.js", "web/lib/orgChart/jquery.orgchart.css", "web/lib/orgChart/jquery.orgchart.js", "versions.json"],
+        "detail": ["Excel转HTML格式", "字段截取", "分类编辑", "bug问题修改"]
+    }, {
+        "version": "1.1.18",
+        "files": ["data/configs/defaultStyle.json", "services/excel2html.js", "web/css/index.css", "web/designer/editor.html", "web/designer/index.html", "web/js/controllers/contextMenu.js", "web/js/controllers/property.js", "web/js/controllers/propertybar.js", "web/js/controllers/workspace.js", "web/js/helpers/PropertyWatch.js", "web/js/index.js", "web/js/init.js", "web/js/modals/createResource.modal.js", "web/js/modals/dbApply.modal.js", "web/js/modals/dbDesigner.modal.js", "web/js/modals/newEvents.modal.js", "web/js/modals/openConfig.modal.js", "web/js/modals/query.modal.js", "web/js/modals/setDbDesigner.modal.js", "web/js/modals/submit.modal.js", "web/js/utils/common.js", "web/lib/jdi-dbQuerier/jdi-dbQuerier.js", "web/js/modals/change.tree.modal.js", "web/js/modals/changeListen.modal.js", "web/js/utils/arrayTOTree.js", "web/lib/buildTree/buildTree.css", "web/lib/buildTree/buildTree.js", "web/lib/orgChart/html2canvas.js", "web/lib/orgChart/jquery.orgchart.css", "web/lib/orgChart/jquery.orgchart.js", "services/upgrade.js", "versions.json"],
+        "detail": ["Excel转HTML格式", "字段截取", "分类编辑", "bug问题修改"]
+    }, {
+        "version": "1.1.19",
+        "files": ["data/configs/defaultStyle.json", "services/excel2html.js", "web/css/index.css", "web/designer/editor.html", "web/designer/index.html", "web/js/controllers/contextMenu.js", "web/js/controllers/property.js", "web/js/controllers/propertybar.js", "web/js/controllers/workspace.js", "web/js/helpers/PropertyWatch.js", "web/js/index.js", "web/js/init.js", "web/js/modals/createResource.modal.js", "web/js/modals/dbApply.modal.js", "web/js/modals/dbDesigner.modal.js", "web/js/modals/newEvents.modal.js", "web/js/modals/openConfig.modal.js", "web/js/modals/query.modal.js", "web/js/modals/setDbDesigner.modal.js", "web/js/modals/submit.modal.js", "web/js/utils/common.js", "web/lib/jdi-dbQuerier/jdi-dbQuerier.js", "web/js/modals/change.tree.modal.js", "web/js/modals/changeListen.modal.js", "web/js/utils/arrayTOTree.js", "web/lib/buildTree/buildTree.css", "web/lib/buildTree/buildTree.js", "web/lib/orgChart/html2canvas.js", "web/lib/orgChart/jquery.orgchart.css", "web/lib/orgChart/jquery.orgchart.js", "services/upgrade.js", "web/designer/upgrade.html", "versions.json"],
+        "detail": ["Excel转HTML格式", "字段截取", "分类编辑", "bug问题修改"]
+    }, {
+        "version": "1.1.20",
+        "files": ["web/css/index.css", "web/designer/index.html", "web/designer/editor.html", "web/js/controllers/contextMenu.js", "web/js/controllers/workspace.js", "web/js/helpers/PropertyWatch.js", "web/js/modals/changeListen.modal.js", "web/js/modals/dbApply.modal.js", "web/js/modals/newEvents.modal.js", "web/js/modals/saveAs.modal.js", "web/js/modals/submit.modal.js", "web/lib/buildTree/buildTree.js", "versions.json"],
+        "detail": ["子模块HTML格式化问题", "事件串行执行", "另存逻辑", "其他bug问题修改"]
+    }, {
+        "version": "1.1.21",
+        "files": ["web/designer/editor.html", "web/js/controllers/contextMenu.js", "web/js/modals/newEvents.modal.js", "web/js/modals/query.modal.js", "web/js/utils/qr.js", "web/js/editor.js", "versions.json"],
+        "detail": ["二维码bug", "中文名设置", "子模块修改", "修改查询属性添加事件时候的提示"]
+    }, {
+        "version": "1.1.22",
+        "files": ["services/excel2html.js", "web/js/controllers/contextMenu.js", "web/js/modals/newEvents.modal.js", "web/js/editor.js", "web/js/modals/base.modal.js", "web/js/modals/dbDesigner.modal.js", "versions.json"],
+        "detail": ["部分样式", "中文名设置", "子模块修改", "修改查询属性添加事件时候的提示"]
+    }, {
+        "version": "1.1.23",
+        "files": ["web/designer/index.html", "web/js/modals/changeGlobal.modal.js", "web/js/modals/createResource.modal.js", "web/js/modals/newEvents.modal.js", "web/js/modals/submit.modal.js", "versions.json"],
+        "detail": ["修改布局编号的问题统一问题", "更改变量配置名称", "优化事件串行执行(全局函数)"]
+    }, {
+        "version": "1.1.24",
+        "files": ["web/designer/index.html", "web/js/editor.js", "web/js/modals/archivePath.modal.js", "web/js/modals/changeGlobal.modal.js", "web/js/modals/submit.modal.js", "web/lib/buildTree/buildTree.js", "web/lib/jdi-dbQuerier/jdi-dbQuerier.js", "versions.json"],
+        "detail": ["树结构bug", "子模块样式", "修改表格被删除后导致的显示问题", "变量显示问题"]
+    }, {
+        "version": "1.1.25",
+        "files": ["web/js/modals/createResource.modal.js", "versions.json"],
+        "detail": ["新建布局问题的修改"]
+    }, {
+        "version": "1.1.26",
+        "files": ["web/designer/index.html", "web/js/controllers/accessControl.js", "web/js/controllers/contextMenu.js", "web/js/controllers/property.js", "web/js/controllers/propertybar.js", "web/js/editor.js", "web/js/helpers/conditionsHelper.js", "web/js/index.js", "web/js/init.js", "web/js/modals/changeGlobal.modal.js", "web/js/modals/deleteDb.modal.js", "web/js/modals/newEvents.modal.js", "web/js/utils/buildTableJson.js", "web/js/modals/newEventsProperty.js", "versions.json"],
+        "detail": ["签名控件更改", "表注解修改为表中文名", "注销闲置或未实现代码及修改复制属性文本值", "其他bug修改"]
+    }, {
+        "version": "1.1.27",
+        "files": ["web/js/modals/newEvents.modal.js", "web/js/modals/newEventsProperty.js", "versions.json"],
+        "detail": ["优化扩展表格列", "属性操作的一些优化", "修改属性查询"]
+    }, {
+        "version": "1.1.28",
+        "files": ["web/js/modals/newEvents.modal.js", "versions.json"],
+        "detail": ["优化事件串行执行顺序", "修改扩展表格列bug", "bug处理"]
+    }, {
+        "version": "1.1.29",
+        "files": ["web/js/modals/newEvents.modal.js", "web/css/index.css", "web/js/controllers/contextMenu.js", "web/js/modals/newEventsProperty.js", "web/lib/buildTree/buildTree.js", "versions.json"],
+        "detail": ["修改树形分类 ", "bug处理"]
+    }, {
+        "version": "1.1.30",
+        "files": ["web/js/modals/newEvents.modal.js", "web/js/modals/newEventsProperty.js", "versions.json"],
+        "detail": ["优化事件绑定问题", "保存配置的问题", "触发条件的问题"]
+    }, {
+        "version": "1.1.31",
+        "files": ["web/js/modals/newEvents.modal.js", "web/js/modals/newEventsProperty.js", "data/profiles/dBTable1Config_custom.json", "versions.json"],
+        "detail": ["属性处理的问题", "扩展表格列增加参数", "bug处理"]
+    }, {
+        "version": "1.1.32",
+        "files": ["web/js/modals/changeGlobal.modal.js", "versions.json"],
+        "detail": ["修改保存变量时中文名没有保存上"]
+    }, {
+        "version": "1.1.33",
+        "files": ["web/designer/index.html", "web/js/modals/newEvents.modal.js", "web/js/modals/newEventsProperty.js", "web/js/modals/changeGlobal.modal.js", "versions.json"],
+        "detail": ["注释变量配置和扩展表格列中自定义变量", "配置渲染"]
+    }, {
+        "version": "1.1.34",
+        "files": ["web/js/modals/changeGlobal.modal.js", "versions.json"],
+        "detail": ["修改变量配置"]
+    }, {
+        "version": "1.1.35",
+        "files": ["web/js/modals/changeGlobal.modal.js", "versions.json"],
+        "detail": ["修改变量配置"]
+    }, {
+        "version": "1.1.36",
+        "files": ["web/js/modals/newEvents.modal.js","web/js/modals/query.modal.js", "versions.json"],
+        "detail": ["修改保存后触发配置消失bug","修改事件串行执行顺序bug"]
+    }, {
+        "version": "1.1.37",
+        "files": ["web/js/helpers/PropertyWatch.js","web/js/modals/newEvents.modal.js","web/js/modals/newEventsProperty.js","web/js/modals/saveAs.modal.js", "versions.json"],
+        "detail": ["属性修改函数","属性处理函数","初始化文件","签名控件处理"]
+    }, {
+        "version": "1.1.38",
+        "files": ["web/js/helpers/PropertyWatch.js","web/js/modals/change.tree.modal.js","web/js/modals/newEventsProperty.js","web/js/modals/saveAs.modal.js","web/lib/buildTree/buildTree.js","web/lib/jdi-conditions/jdi-conditions.js","web/lib/jdi-exprGenerator/jdi-exprGenerator.js", "versions.json"],
+        "detail": ["修改属性处理","修改自增问题","调整条件属性位置和签名控件中文名显示问题","优化分类树形编辑"]
+    }, {
+        "version": "1.1.39",
+        "files": ["web/lib/jdi-Db/jdi-Db1.js","web/lib/jdi-dbDesigner/jdi-dbDesigner.css", "versions.json"],
+        "detail": ["增加查询条件名称及注释未使用的css样式"]
+    }, {
+        "version": "1.1.40",
+        "files": ["web/js/modals/newEvents.modal.js","web/js/modals/newEventsProperty.js", "versions.json"],
+        "detail": ["添加页面计算"]
+    }, {
+        "version": "1.1.41",
+        "files": ["web/designer/index.html","web/js/utils/buildTableJson.js", "versions.json"],
+        "detail": ["更改数据库设计器中元素名称 "]
+    }, {
+        "version": "1.1.42",
+        "files": ["web/css/index.css","web/js/modals/openConfig.modal.js","web/lib/jdi-dbQuerier/jdi-dbQuerier.css","web/lib/jdi-exprGenerator/jdi-exprGenerator.css","web/lib/jdi-exprGenerator/jdi-exprGenerator.js", "versions.json"],
+        "detail": ["弹出框优化","函数配置优化"]
     }]
 }

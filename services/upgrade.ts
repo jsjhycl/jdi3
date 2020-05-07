@@ -14,7 +14,7 @@ function requestPromise(url: string) {
 }
 
 const gitUrl: string = 'https://raw.githubusercontent.com/jsjhycl/jdi3/official/',
-    localPath: string = '',//'./resources/app'
+    localPath: string = './resources/app',//'./resources/app'
     versionPath: string = 'versions.json';
 
 /* 获取本地版本信息 */
@@ -55,7 +55,7 @@ async function upgrade(version?: string) {
         // 获取需要更新的版本文件(从当前版本到最新版本所有需要更新的文件都放在files)
         let localVersion = localInfo.version;
         let lindex = remoteInfo.list.findIndex((p: any) => p.version == localVersion);
-        let upgradeItems = remoteInfo.list.splice(lindex);
+        let upgradeItems = remoteInfo.list.splice(lindex + 1);
         let files: string[] = [];
         upgradeItems.forEach((uitem: any, index: number) => {
             uitem.files.forEach((file: string) => {

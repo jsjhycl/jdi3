@@ -17,7 +17,7 @@ function requestPromise(url) {
     });
 }
 exports.requestPromise = requestPromise;
-const gitUrl = 'https://raw.githubusercontent.com/jsjhycl/jdi3/official/', localPath = '', //'./resources/app'
+const gitUrl = 'https://raw.githubusercontent.com/jsjhycl/jdi3/official/', localPath = './resources/app', //'./resources/app'
 versionPath = 'versions.json';
 /* 获取本地版本信息 */
 function getLocalVersion() {
@@ -57,7 +57,7 @@ async function upgrade(version) {
         // 获取需要更新的版本文件(从当前版本到最新版本所有需要更新的文件都放在files)
         let localVersion = localInfo.version;
         let lindex = remoteInfo.list.findIndex((p) => p.version == localVersion);
-        let upgradeItems = remoteInfo.list.splice(lindex);
+        let upgradeItems = remoteInfo.list.splice(lindex + 1);
         let files = [];
         upgradeItems.forEach((uitem, index) => {
             uitem.files.forEach((file) => {

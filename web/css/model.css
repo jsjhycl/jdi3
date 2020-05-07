@@ -48,3 +48,25 @@
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
+/* 弹框中元素框显示隐藏按钮 */
+.modal-content .display-flex{
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+}
+.modal-content .toggle-btn{
+ padding: 1px 8px; 
+ margin:1px 4px 0 0;
+}
+.control-size{
+    float: right;
+    width: 13px;
+    height: 13px;
+    margin-right: 6px;
+    cursor: pointer;
+}
+.control-img{
+    width: 100%;
+    height: 100%;
+    vertical-align: baseline;
+}

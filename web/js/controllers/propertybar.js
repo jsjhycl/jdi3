@@ -57,8 +57,11 @@ Propertybar.prototype = {
             var name = item.name, //把name赋值到name对应属性栏的title
                 value = item.value + suffix, //itemvalue+suffix赋值到value上
                 id = value + "_property", //吧value加_property赋值到id
-                expand = index === 0 ? ' aria-expanded="true"' : "", //index等于0则把aria-expanded="true"赋值到expand控制属性栏的折叠
-                collapse = index === 0 ? "collapse in" : "collapse"; //如果index等于0 collapse in赋值给collapse
+                expand = index === -1 ? ' aria-expanded="true"' : "", //index等于0则把aria-expanded="true"赋值到expand控制属性栏的折叠
+                collapse = index === -1 ? "collapse in" : "collapse"; //如果index等于0 collapse in赋值给collapse
+            /*默认第一个展开*/
+            // expand = index === 0 ? ' aria-expanded="true"' : "", //index等于0则把aria-expanded="true"赋值到expand控制属性栏的折叠
+            // collapse = index === 0 ? "collapse in" : "collapse"; //如果index等于0 collapse in赋值给collapse
 
             html += `<div class="property-group" data-first-filter="${value == "db" ? "" : value}">` +
                 '<header class="property-header" data-toggle="collapse" data-target="#' + id + '"' + expand + '>' +

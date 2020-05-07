@@ -54,7 +54,7 @@
                     <!-- <li><a data-toggle="modal" href="#change_category_moda">分类选项编辑</a></li> -->
                     <li><a data-toggle="modal" href="#change_listen_modal">特殊布局编辑</a></li>
                     <li><a data-toggle="modal" href="#change_tree_modal">分类树形编辑</a></li>
-                    <li><a data-toggle="modal" href="#change_router_modal">路由配置编辑</a></li>
+                    <!-- <li><a data-toggle="modal" href="#change_router_modal">路由配置编辑</a></li>(zww入口暂时注释) -->
                     <li><a data-toggle="modal" href="#change_global_modal" data-first-filter="db">变量配置</a></li>
                     <li><a id="controlRuler">标尺查看器</a></li>
                 </ul>
@@ -956,10 +956,16 @@
 
                 <header class="modal-header">
                     <button class="close" data-dismiss="modal">&times;</button>
+                    <div class="control-size" data-size="reductionSize">
+                        <img class="control-img" src="../images/reductionSize.png" />
+                    </div>
                     <h4>触发配置</h4>
                 </header>
-                <div>切换显示:<input type="checkbox" class="changeView" class="form-control"></div>
-                <div style="width: 1799px;height: 365px;">
+                <div class="display-flex">
+                    <div>切换显示:<input type="checkbox" class="changeView" class="form-control"></div>
+                    <button class="btn btn-info toggle-btn">隐藏</button>
+                </div>
+                <div class="box-content" style="width: 1799px;height: 365px;">
                     <div class="clickbox">
                         <section class="clickModal pm3"></section>
                     </div>

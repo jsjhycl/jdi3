@@ -596,7 +596,12 @@ li {
     margin-left: 5px;
     width: 75%;
 }
-
+.ctable tbody td.methods{
+    width: 115px;
+}
+.ctable tbody.events_tbbody tr.eventsTr > td:nth-of-type(3){
+    width: 16%;
+}
 /*事件触发栏的单独配置*/
 #events_modal input[type=radio],#events_modal input[type=checkbox]{
     vertical-align: middle;
@@ -606,7 +611,12 @@ li {
 #events_modal table div{
     font-size: 12px;
 }
-
+/* 设置表格标题 */
+#events_modal table caption{
+    padding-bottom: 0;
+    color: #555;
+    font-size: 14px;
+}
 /* 嵌套查询模态框样式 */
 #query_nest_modal .query_related_fields span {
     display: inline-block;
@@ -1268,3 +1278,4 @@ li {
     width: 60px;
     text-align: center;
 }
+

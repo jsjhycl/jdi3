@@ -169,8 +169,9 @@ function NewEventsModal($modal, $elemts) {
     this.renderLinkHTMLTable = function (linkHtml) {
         let that = this,
             str = "";
-        str = `<div class="conditoion linkHtml"  ${linkHtml ? "" : 'style="display:none"'}>
+        str = `<div class="condition   linkHtml"  ${linkHtml ? "" : 'style="display:none"'}>
                     <table class="table table-bordered">
+                    <caption>跳转链接</caption>
                         <thead>
                             <tr>
                                 <th class="text-center">HTTP</th>
@@ -189,8 +190,9 @@ function NewEventsModal($modal, $elemts) {
     this.renderImportDb = function (ImportDbData) {
         let that = this,
             str = '';
-        str = `<div class="conditoion importDb"  ${ImportDbData ? "" : 'style="display:none"'}>
+        str = `<div class="condition   importDb"  ${ImportDbData ? "" : 'style="display:none"'}>
                     <table class="table table-bordered">
+                        <caption>导入数据</caption>
                         <thead>
                             <tr>
                                 <th class="text-center">导入的库名</th>
@@ -465,6 +467,7 @@ function NewEventsModal($modal, $elemts) {
             str = '';
         str = `<div class="condition changeProperty" ${property ? "" : 'style="display:none"'}>
                     <table class="table table-bordered">
+                        <caption>属性改变</caption>
                         <thead>
                             <tr>
                                 <th class="text-center"><spa class="add" data-add="renderProperty">＋</span></th>
@@ -487,8 +490,9 @@ function NewEventsModal($modal, $elemts) {
     }
     this.renderCopySendTable = function (copySend) {
         let that = this,
-            str = `<div class="conditoion copySend" ${copySend ? "" : 'style="display:none"'}>
+            str = `<div class="condition   copySend" ${copySend ? "" : 'style="display:none"'}>
                         <table class="table table-bordered">
+                        <caption>数据抄送</caption>
                             <thead>
                                 <tr>
                                     <th ><span class="add" data-add="renderCopySendTr">+</span></th>
@@ -509,6 +513,7 @@ function NewEventsModal($modal, $elemts) {
         let that = this,
             str = `<div class="condition deleteRow" ${deleteData ? "" : 'style="display:none"'}>
                 <table class="table table-bordered" >
+                    <caption>删除</caption>
                     <thead>
                         <tr>
                             <th ><span class="add" data-add="renderDeleteTr">+</span></th>
@@ -1045,21 +1050,18 @@ function NewEventsModal($modal, $elemts) {
             width: "100%",
         })
     }
-
-
-
     //zww
-    this.getExtendCol = function ($tr) {
-        let result = {};
-        $tr.each(function () {
-            result.startText = $(this).find('[data-save="startText"]').val();
-            result.endText = $(this).find('[data-save="endText"]').val();
-            // result.selectText = $(this).find('[data-save="selectText"]').val();
-            result.startSubstr = $(this).find('[data-save="startSubstr"]').val();
-            result.endSubstr = $(this).find('[data-save="endSubstr"]').val();
-        })
-        return result;
-    }
+    // this.getExtendCol = function ($tr) {
+    //     let result = {};
+    //     $tr.each(function () {
+    //         result.startText = $(this).find('[data-save="startText"]').val();
+    //         result.endText = $(this).find('[data-save="endText"]').val();
+    //         // result.selectText = $(this).find('[data-save="selectText"]').val();
+    //         result.startSubstr = $(this).find('[data-save="startSubstr"]').val();
+    //         result.endSubstr = $(this).find('[data-save="endSubstr"]').val();
+    //     })
+    //     return result;
+    // }
 }
 NewEventsModal.prototype = {
     initData: async function (data) {
@@ -1200,7 +1202,7 @@ NewEventsModal.prototype = {
                 propertyHandle = new newEventsProperty().getPropertyHandle($(this).find(".propertyHandleTbody"), id, index)
             }
             if (that.judgeCheckMehods("propertyRender", $(this).find(".triggerMethods:checked"))) {
-                propertyRender = new newEventsProperty().getPropertyRender($(this).find(".propertyRenderTr"))
+                propertyRender = new newEventsProperty().getPropertyRender($(this).find(".propertyRenderTbody"))//propertyRenderTr
             }
             if (that.judgeCheckMehods("commonQuery", $(this).find(".triggerMethods:checked"))) {
                 query = []
@@ -1229,9 +1231,9 @@ NewEventsModal.prototype = {
                 linkHtml = that.getLinkHtml($(this).find('.linkHtmlTr'))
             }
             if (that.judgeCheckMehods("extendCol", $(this).find(".triggerMethods:checked"))) {
-                // extendCol = that.getExtendCol($(this).find('.extendColTr'), id, index)
+                // extendCol = that.getExtendCol($(this).find('.extendColTr'), id, index)//zww
                 extendCol = new newEventsProperty().getExtendCol($(this).find('.extendColTr'), id, index)
-            } //zww
+            }
             if (that.judgeCheckMehods("importDb", $(this).find(".triggerMethods:checked"))) {
                 importDb = that.getImportDb($(this).find(".importDbTr"))
             }
@@ -1303,7 +1305,7 @@ NewEventsModal.prototype = {
                         propertyHandle: propertyHandle,
                         propertyRender: propertyRender,
                         extendCol: extendCol, //zww
-                        computerPage:computerPage   
+                        computerPage: computerPage
                     }
                 })
             }
@@ -1354,7 +1356,9 @@ NewEventsModal.prototype = {
                     subscribe: {}
                 }, trIndex)
             } else if (addType == "_renderPropertyDataTr") { //添加属性查询
-                str = new newEventsProperty()._renderPropertyDataTr([{}])
+                var trIndex = $(this).parents('table').find(".eventsTr:last").attr("index");
+                trIndex = trIndex ? Number(trIndex) + 1 : 0;
+                str = new newEventsProperty()._renderPropertyDataTr([{}], trIndex)
             } else if (addType == "_renderPropertyQueryTr") {
                 str = new newEventsProperty()._renderPropertyQueryTr([{}])
             } else if (addType == "_renderPropertyHandleBodYTr") {
@@ -1366,6 +1370,9 @@ NewEventsModal.prototype = {
                 }])
             } else if (addType == "_renderPropertyRenderTr") {
                 str = new newEventsProperty()._renderPropertyRenderTr([{}])
+            } else if (addType == "renderTriggerConditionTbody") {
+                $(this).parents('td').css("width", 'auto');
+                str = that[addType]();
             } else {
                 str = that[addType]();
             }
@@ -1375,8 +1382,53 @@ NewEventsModal.prototype = {
         })
         //移除一行
         that.$modal.on("click" + that.NAME_SPACE, ".del", function () {
-            let $tr = $(this).parents("tr").eq(0);
-            $tr.remove()
+            var $tr = $(this).parents("tr").eq(0),
+                $eventsTrs = $(this).parents('.eventsTr').eq(0),
+                $trIdx = Number($eventsTrs.attr("index")),
+                trKey = NumberHelper.idToName($trIdx, 1),
+                selectPmText = $('.pm-elem3.selected').text(),
+                resTrsArr = [];
+            if (!$tr.hasClass("eventsTr")) {
+                var $div = $(this).parents(".condition"),
+                    tipsNum = "";
+                if ($div.hasClass("propertyData")) {
+                    tipsNum = "A";
+                } else if ($div.hasClass("propertyQuery")) {
+                    tipsNum = "B";
+                } else if ($div.hasClass("propertyHandle")) {
+                    tipsNum = "C";
+                } else if ($div.hasClass("extendCol")) {
+                    tipsNum = "D";
+                }
+
+                if (tipsNum) {
+                    var $dataIdx = Number($tr.attr("index")),
+                        key = NumberHelper.idToName($dataIdx, 1),
+                        contentsTips = tipsNum + trKey + key;
+
+                    resTrsArr = GLOBAL_PROPERTY.BODY.customVariable.filter(item => {
+                        if (item.key.substr(0, 4) == selectPmText) {
+                            return item.key.substr(5, 3) !== contentsTips
+                        } else {
+                            return item;
+                        }
+                    });
+                }
+            } else {
+                resTrsArr = GLOBAL_PROPERTY.BODY.customVariable.filter(item => {
+                    if (item.key.substr(0, 4) == selectPmText) {
+                        return item.key.substr(6, 1) !== trKey;
+                    } else {
+                        return item;
+                    }
+
+                });
+            }
+            if (resTrsArr.length) GLOBAL_PROPERTY.BODY.customVariable = JSON.parse(JSON.stringify(resTrsArr));
+            if ($(this).parents('.triggerConditionTr').length != 0) {
+                $(this).parents('td').css("width", '16%');
+            }
+            $tr.remove();
         })
         //触发的类型变化时
         that.$modal.on("change" + that.NAME_SPACE, '[data-change-operator="leftType"]', function () {
@@ -1461,7 +1513,7 @@ NewEventsModal.prototype = {
                 dbName = $($(this).parents("tr")[0]).find('[data-change="dbName"]').val();
 
             var $html = that.renderCopySendSelect("field", dbName, tableName, null, "请选择抄送字段", null);
-            // if ($(this).parents("div").attr("class") == "conditoion propertyData") {
+            // if ($(this).parents("div").attr("class") == "condition   propertyData") {
             //     var $str = that.renderCustomfields(dbName, tableName, []),
             //         $checkboxField = $(this).parents("tr").eq(0).find('.checkboxField'),
             //         $propertyQueryFields = $(".propertyQueryFields");
@@ -1607,6 +1659,26 @@ NewEventsModal.prototype = {
                 })
             }
 
+        })
+        //显示隐藏
+        that.$modal.on("click" + that.NAME_SPACE, '.toggle-btn', function () {
+            var $nextItem = $(this).parent().next('div'),
+                $modalHeight = $(this).parents(".modal").height();
+            $nextItem.toggle();
+            $(this).html(`${$nextItem.is(":hidden") ? "显示" : "隐藏"}`);
+            $(this).parents().find(".modal-body").css("max-height", `${$nextItem.is(":hidden") ? ($modalHeight - 80) + "px" : "500px"}`)
+        })
+        that.$modal.on("click" + that.NAME_SPACE, '.control-size', function () {
+            if ($(this).attr("data-size") == "reductionSize") {
+                var $modal = $(this).parents(".modal"),
+                    $wdith = $modal.width(),
+                    $heigt = $modal.height();
+                $(this).parents(".modal-dialog.w1800px").css({ "width": ($wdith - 30) + 'px', "height": ($heigt) + 'px' });
+                $(this).attr("data-size", "maximize").find(".control-img").prop("src", "../images/maximize.png");
+            } else {
+                $(this).parents(".modal-dialog.w1800px").css({ "width": '1808px', "height": '1037px' });
+                $(this).attr("data-size", "reductionSize").find(".control-img").prop("src", "../images/reductionSize.png");
+            }
         })
         that.$modal.on("input change" + that.NAME_SPACE, ".property-color-input", function (event) {
             var $this = $(this),

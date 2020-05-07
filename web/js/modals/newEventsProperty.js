@@ -172,21 +172,24 @@ function newEventsProperty() {
     }
 
     //渲染属性查询的Tr
-    this._renderPropertyDataTr = function (propertyDatas) {
+    this._renderPropertyDataTr = function (propertyDatas, trIndex) {
         var that = this,
             str = "";
+
         if (!Array.isArray(propertyDatas)) {
             return str
         }
-        propertyDatas.forEach(propertyData => {
+        propertyDatas.forEach((propertyData, index) => {
             var propertyData = propertyData ? propertyData : {},
                 cname = propertyData ? propertyData.cname : "",
+                variable = propertyData ? propertyData.variable : "",
                 dbName = propertyData.query ? propertyData.query.dbName : "",
                 tableName = propertyData.query ? propertyData.query.table : "",
                 conditions = propertyData.query ? propertyData.query.conditions : [],
                 fields = propertyData.query ? propertyData.query.fields : [];
-            str += `<tr class="tr propertyDataTr">
-                <td><input type="text" data-save="cname" class="form-control" value="${cname ? cname : ''}"></td>
+            trIndex = trIndex ? trIndex : index
+            str += `<tr class="tr propertyDataTr" index="${trIndex}">
+                <td><input type="text" data-save="cname" data-variable="${variable ? variable : ''}" class="form-control" value="${cname ? cname : ''}"></td>
                 <td>${that._renderDbNameSelect(dbName)}</td>
                 <td>${that._renderTableNameSelect(dbName, tableName)}</td>
                 <td>${that._renderQueryCondition(dbName, tableName, conditions)}</td>
@@ -217,11 +220,11 @@ function newEventsProperty() {
         })
         return str;
     }
-    //渲染自定义变量下拉列表
+    //渲染变量文件
     this._renderCustomVariable = function (selectedValue, isLine) {
         var that = this,
             defaultOption = {
-                name: "请选择自定义变量",
+                name: "请选择变量文件",
                 value: ""
             },
             options = [],
@@ -233,6 +236,7 @@ function newEventsProperty() {
                 "data-change": "variable"
             }
         if (isLine == "isline") {
+            defaultOption.name = "请选择表头变量"
             attr = {
                 "data-save": "XVariable",
                 "data-change": "XVariable"
@@ -535,7 +539,10 @@ function newEventsProperty() {
         var that = this,
             str = "";
         if (!Array.isArray(propertyRenders)) {
-            return str
+            // console.log($(".propertyRenderTbody"))
+            // console.log(JSON.stringify(propertyRenders))
+            // $(".propertyRenderTbody").attr("propertyRendersData", JSON.stringify(propertyRenders));//暂时作为tbody的属性
+            return str;
         }
         propertyRenders.forEach(propertyRender => {
             str += `<tr class="propertyRenderTr">
@@ -546,7 +553,7 @@ function newEventsProperty() {
                                 <td>${that._renderPropertyRenderFields(propertyRender.variable, propertyRender.Xaxis, true)}</td>
                                 <td>${that._renderPropertyRenderYaxis(propertyRender.variable, propertyRender.Yaxis)}</td>
                                 <td>${that._renderPropertyRenderType(propertyRender.renderType)}</td>
-                                <td><input type="text" class="form-control" data-save="renderPositoon" value="${propertyRender.renderPositoon || ''}"></td>
+                                <td class="positoonTD">${that._renderPropertyRenderFields(propertyRender.XVariable, propertyRender.renderPositoon, true, "renderPositoon")}</td>
                                 <td>
                                     <div style = "position:relative">
                                         <input type="text" class="form-control render-color" save-type="style" data-save="color" value="${ propertyRender.renderColor || ""}">
@@ -559,6 +566,27 @@ function newEventsProperty() {
                                     <input type="text" class="form-control" data-save="colWidth" value="${propertyRender.ColWisth || ''}">
                                 </td>
                             </tr>`
+            // str += `<tr class="propertyRenderTr">
+            //                 <td class="text-center"><span class="del">×</span></td>
+            //                 <td>${that._renderCustomVariable(propertyRender.variable || "")}</td>
+            //                 <td>${that._renderCustomVariable(propertyRender.XVariable || '', "isline")}</td>
+            //                 <td class="xlineTD">${that._renderPropertyRenderFields(propertyRender.XVariable, propertyRender.Xline, true, "extrLine")}</td>
+            //                 <td>${that._renderPropertyRenderFields(propertyRender.variable, propertyRender.Xaxis, true)}</td>
+            //                 <td>${that._renderPropertyRenderYaxis(propertyRender.variable, propertyRender.Yaxis)}</td>
+            //                 <td>${that._renderPropertyRenderType(propertyRender.renderType)}</td>
+            //                 <td><input type="text" class="form-control" data-save="renderPositoon" value="${propertyRender.renderPositoon || ''}"></td>
+            //                 <td>
+            //                     <div style = "position:relative">
+            //                         <input type="text" class="form-control render-color" save-type="style" data-save="color" value="${ propertyRender.renderColor || ""}">
+            //                         <div class="property-icon-wrap" style="top:2px">
+            //                             <input type="color" data-belong="render-color" class="property-color-input">
+            //                         <i class="icon icon-color"></i>
+            //                     </div>
+            //                 </td>
+            //                 <td>
+            //                     <input type="text" class="form-control" data-save="colWidth" value="${propertyRender.ColWisth || ''}">
+            //                 </td>
+            //             </tr>`
         })
         return str;
     }
@@ -574,16 +602,16 @@ function newEventsProperty() {
                         ${this._renderHead(extendCol.tableHead)}
                     </td>
                     <td>
-                        <input type="text" class="form-control" data-save="startText" value="${extendCol.startText || ""}" >
+                        <input type="text" class="form-control" data-category="startInpt" data-save="startText" value="${extendCol.startText || ""}" >
                     </td>
                     <td>
-                        <input type="text" class="form-control" data-save="endText" value="${extendCol.endText || ""}" >
+                        <input type="text" class="form-control" data-category="endInpt" data-save="endText" value="${extendCol.endText || ""}" >
                     </td>
                     <td>
-                        <input type="text" class="form-control" data-save="startSubstr" value="${extendCol.startSubstr || ""}" >
+                        <input type="text" class="form-control"  data-save="startSubstr" value="${extendCol.startSubstr || ""}" >
                     </td>
                     <td>
-                        <input type="text" class="form-control" data-save="endSubstr" value="${extendCol.endSubstr || ""}" >
+                        <input type="text" class="form-control"  data-save="endSubstr" value="${extendCol.endSubstr || ""}" >
                     </td>
                     <td>
                         <input type="text" class="form-control" data-save="fieldSplit" value="${extendCol.fieldSplit || ''}"/>
@@ -709,6 +737,11 @@ function newEventsProperty() {
                 "data-save": 'Xline',
                 "data-change": 'Xline'
             }
+        } else if (extrLine == "renderPositoon") {
+            attr = {
+                "data-save": 'renderPositoon'
+            }
+            options = variable ? that._getpropertyRenderPositoon(variable) : [];
         }
         return that._renderSelect(defaultOption, options, selectedValue, isPrompt, selectClass, attr)
     }
@@ -780,6 +813,18 @@ function newEventsProperty() {
         // })
         return options;
     }
+    //显示位置
+    this._getpropertyRenderPositoon = function (variable) {
+        var selectsOptions = [];
+        GLOBAL_PROPERTY.BODY && GLOBAL_PROPERTY.BODY.customVariable && GLOBAL_PROPERTY.BODY.customVariable.forEach(function (item, index) {
+            if (variable == item.key && item.splitMark) {
+                for (let i = 1; i <= Number(item.splitMark); i++) {
+                    selectsOptions.push({ 'name': i, 'value': i })
+                }
+            }
+        })
+        return selectsOptions;
+    }
     //属性渲染的渲染类型
     this._renderPropertyRenderType = function (selectedValue) {
         var that = this,
@@ -826,6 +871,7 @@ function newEventsProperty() {
             };
         return that._renderSelect(defaultOption, options, selectedValue, isPrompt, selectClass, attr)
     }
+    //变量文件对应Y轴
     this._renderPropertyRenderYaxis = function (variable, Yaxis) {
         var that = this,
             str = `<table class="table table-bordered" style="margin-bottom: 0px;">
@@ -979,6 +1025,7 @@ function newEventsProperty() {
     this.computerPageRenderTr = function (computerPage = {}) {
         var str = "",
             that = this;
+        if (computerPage == null) computerPage = {};
         str = `<tr class="computerPageTr">
                 <td class="compageVariable">
                     ${that._renderCustomVariable(computerPage.variable || "")}
@@ -1017,7 +1064,7 @@ function newEventsProperty() {
                     ${that._computerPageFields(computerPage.variable, computerPage.valuePosition, { "data-save": "valuePosition", "data-change": "valuePosition" })}
                 </td>
                 <td>
-                    <input type="text" class="form-control expression" data-save="expression" value='${computerPage.expression||""}'/>
+                    <input type="text" class="form-control expression" data-save="expression" value='${computerPage.expression || ""}'/>
                 </td>
                 <td>
                     <div>
@@ -1036,7 +1083,7 @@ function newEventsProperty() {
                     ${that._computerPageFields(computerPage.variable, computerPage.ruleValuePosition, { "data-save": "ruleValuePosition", "data-change": "ruleValuePosition" })}
                 </td>
                 <td>
-                    <input type="text" class="form-control ruleExpression" data-save='ruleExpression' value="${computerPage.ruleExpression||''}"/>
+                    <input type="text" class="form-control ruleExpression" data-save='ruleExpression' value="${computerPage.ruleExpression || ''}"/>
                 </td>
                 <td>
                 ${that._renderSelect({ name: "请选择渲染类型", value: '' }, that.renderType, computerPage.renderType, false, "from-control chosen", {
@@ -1105,8 +1152,9 @@ newEventsProperty.prototype = {
     //渲染属性数据
     renderPropertyQueryData: function (propertyData) {
         var that = this,
-            str = `<div class="conditoion propertyData" ${propertyData ? "" : 'style="display:none"'}>
+            str = `<div class="condition   propertyData" ${propertyData ? "" : 'style="display:none"'}>
                         <table class="table table-bordered">
+                            <caption>属性数据</caption>
                             <thead>
                                 <tr>
                                     <th class="text-center">变量中文名</th>
@@ -1131,6 +1179,7 @@ newEventsProperty.prototype = {
         var that = this,
             str = `<div class="condition propertyQuery" ${propertyQuerys ? "" : 'style="display:none"'}>
                         <table class = "table table-bordered">
+                            <caption>属性查询</caption>
                             <thead>
                                 <tr>
                                     <th class="text-center">请选择自定义变量</th>
@@ -1152,6 +1201,7 @@ newEventsProperty.prototype = {
 
             str = `<div class="condition propertyHandle" ${propertyHandle ? "" : 'style="display:none"'}>
                     <table class="table table-bordered">
+                        <caption>属性处理</caption>
                         <thead>
                             <tr>
                                 <th class="text-center"><span class="add" data-add="_renderPropertyHandleBodYTr">+</span></th>
@@ -1173,8 +1223,9 @@ newEventsProperty.prototype = {
     renderExtendCol: function (extendCol) {
 
         var that = this,
-            str = `<div class="conditoion extendCol"  ${extendCol ? "" : 'style="display:none"'}>
+            str = `<div class="condition   extendCol"  ${extendCol ? "" : 'style="display:none"'}>
                 <table class="table table-bordered">
+                    <caption>扩展表格列</caption>
                     <thead>
                         <tr>
                             <th class="text-center">变量中文名</th>
@@ -1184,8 +1235,8 @@ newEventsProperty.prototype = {
                             <th class="text-center">结束</th>
                             <th class="text-center">开始截取</th>
                             <th class="text-center">结束截取</th>
-                            <th class="text-center">字段分段</th>
                             <th class="text-center">分段符</th>
+                            <th class="text-center">字段分段</th>
                             <th class="text-center">表头尾列扩展</th>
                         </tr>
                     </thead>
@@ -1195,6 +1246,7 @@ newEventsProperty.prototype = {
                 </table>
             </div>`
         return str;
+
     },
     propertyRender: function (propertyRenders) {
         // if (!propertyRender) {
@@ -1203,21 +1255,22 @@ newEventsProperty.prototype = {
         var that = this,
             str = `<div class="condition propertyRender" ${propertyRenders ? "" : 'style="display:none"'}>
                 <table class="table table-bordered">
+                    <caption>属性渲染</caption>
                     <thead>
                         <tr>
                             <th class="text-center"><span class="add" data-add="_renderPropertyRenderTr">+</span></th>
-                            <th class="text-center">自定义变量</th>
-                            <th class="text-center">X轴变量</th>
-                            <th class="text-center">X轴所在列</th>
-                            <th class="text-center">X轴</th>
-                            <th class="text-center">Y轴</th>
+                            <th class="text-center">变量文件</th>
+                            <th class="text-center">表头变量</th>
+                            <th class="text-center">表头变量<div style="font-size:10px">X轴所在列</div></th>
+                            <th class="text-center">变量文件对应X轴</th>
+                            <th class="text-center">变量文件对应Y轴</th>
                             <th class="text-center">渲染类型</th>
                             <th class="text-center">渲染位置</th>
                             <th class="text-center">渲染颜色</th>
                             <th class="text-center">列宽</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="propertyRenderTbody" data-propertyRenders = '${Array.isArray(propertyRenders) ? "" : JSON.stringify(propertyRenders)}'>
                         ${that._renderPropertyRenderTr(propertyRenders)}
                     </tbody>
                 </table>
@@ -1229,6 +1282,7 @@ newEventsProperty.prototype = {
         var that = this,
             str = `<div class="condition computerPage" ${computerPage ? "" : 'style="display:none"'}>
                 <table class="table table-bordered">
+                    <caption>页面计算</caption>
                     <thead>
                         <tr>
                             <th class="text-center">自定义变量</th>
@@ -1297,7 +1351,8 @@ newEventsProperty.prototype = {
                     }
                 }
             }
-            propertyData.push(propertyDatatr)
+            $('.propertyDataTr').eq(Cindex).find('input[type="text"][data-save="cname"]').attr("data-variable", propertyDatatr.variable)
+            propertyData.push(propertyDatatr);
         })
 
 
@@ -1308,20 +1363,20 @@ newEventsProperty.prototype = {
     getComputerPage: function ($tr) {
         var that = this,
             result = {
-               
+
             };
         $tr.each(function () {
-                result.variable = $(this).find('[data-save="variable"]').val(),
+            result.variable = $(this).find('[data-save="variable"]').val(),
                 result.startRows = $(this).find('[data-save="expression"]').val(),
                 result.endRows = $(this).find('[data-save="endRows"]').val(),
                 result.startColumns = $(this).find('[data-save="startColumns"]').val(),
                 result.endColumns = $(this).find('[data-save="endColumns"]').val(),
                 result.direction = $(this).find('[data-save="direction"]').val(),
-                result.expression= $(this).find('[data-save="expression"]').val(),
-                result.ruleExpression= $(this).find('[data-save="ruleExpression"]').val(),
-                result.renderType= $(this).find('[data-save="renderType"]').val(),
-                result.renderposition= $(this).find('[data-save="renderposition"]').val(),
-                result.renderFild= $(this).find('[data-save="renderFild"]').val()
+                result.expression = $(this).find('[data-save="expression"]').val(),
+                result.ruleExpression = $(this).find('[data-save="ruleExpression"]').val(),
+                result.renderType = $(this).find('[data-save="renderType"]').val(),
+                result.renderposition = $(this).find('[data-save="renderposition"]').val(),
+                result.renderFild = $(this).find('[data-save="renderFild"]').val()
         })
         console.log(result)
         return result;
@@ -1442,6 +1497,7 @@ newEventsProperty.prototype = {
                 splitMark = $(tr).find('[data-save="splitMark"]').val(),
                 tableHead = that.getTableHead($(tr).find(".tableHead tbody tr")),
                 extendHead = that.getExtendHead($(tr).find(".extendHeads tbody tr"));
+
             result.variable = variable;
             result.cname = cname;
             result.oldVariable = oldVariable;
@@ -1454,6 +1510,7 @@ newEventsProperty.prototype = {
             result.tableHead = tableHead;
             result.extendHead = extendHead;
         })
+        if (!!!result.cname) return result;
         var fields = $.extend([], result.tableHead);
         result.extendHead.forEach(item => {
             if (item.name) {
@@ -1463,7 +1520,9 @@ newEventsProperty.prototype = {
         var data = {
             key: result.variable,
             cname: result.cname,
-            fields: fields
+            fields: fields,
+            fieldSplit: result.fieldSplit,
+            splitMark: result.splitMark
         };
         GLOBAL_PROPERTY.BODY.customVariable.forEach(item => {
             if (item.key == result.oldVariable) {
@@ -1501,11 +1560,15 @@ newEventsProperty.prototype = {
         return result;
     },
     //
-    getPropertyRender: function ($tr) {
-
+    getPropertyRender: function ($trs) {
         var that = this,
+            $tr = $trs.find(".propertyRenderTr"),
             data = [];
-
+        if ($tr.length == 0) {
+            data.push(JSON.parse($trs.attr(("data-propertyRenders"))));
+            console.log(data, "data");
+            return data;
+        }
         $tr.each(function () {
             var result = {};
             result.variable = $(this).find('[data-save="variable"]').val();
@@ -1681,9 +1744,12 @@ newEventsProperty.prototype = {
         that.$events.on("change" + that.NAME_SPACE, ".propertyRenderTr [data-change='XVariable']", function () {
             var value = $(this).val(),
                 // str = that._renderPropertyRenderXLine(value, ""),
-                str = that._renderPropertyRenderFields(value, "", true, "extrLine"),
-                $target = $(this).parents("tr").eq(0).find(".xlineTD");
-            $target.empty().append(str)
+                exTr = that._renderPropertyRenderFields(value, "", true, "extrLine"),
+                $exTrTarget = $(this).parents("tr").eq(0).find(".xlineTD"),
+                posTr = that._renderPropertyRenderFields(value, "", true, "renderPositoon"),
+                $posTrTarget = $(this).parents("tr").eq(0).find(".positoonTD")
+            $exTrTarget.empty().append(exTr);
+            $posTrTarget.empty().append(posTr);
             that.bindChosen()
 
         })
@@ -1798,8 +1864,6 @@ newEventsProperty.prototype = {
             $field.parents('td').eq(0).empty().append(str)
             that.bindChosen()
         })
-
-
     }
 
 }
